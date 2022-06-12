@@ -56,6 +56,12 @@ class ProjectScope(val target: Project) {
         }
 
         defaultConfig.targetSdk = 32
+        packagingOptions {
+          resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+          }
+        }
+
         block(AndroidScope(target, this))
       }
     }
@@ -109,6 +115,18 @@ class ProjectScope(val target: Project) {
 }
 
 class AndroidScope(val target: Project, val androidExtension: TestedExtension) {
+  fun compose() {
+    with(target) {
+      with(androidExtension) {
+        buildFeatures.compose = true
+        composeOptions {
+          val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+          kotlinCompilerExtensionVersion = libs.findVersion("compose").get().toString()
+        }
+      }
+    }
+  }
+
   fun hilt() {
     with(target) {
       with(pluginManager) {
