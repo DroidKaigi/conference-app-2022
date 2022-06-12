@@ -13,6 +13,7 @@ dependencies {
   implementation(libs.androidGradlePlugin)
   implementation(libs.kotlinGradlePlugin)
   implementation(libs.spotlessGradlePlugin)
+  implementation(libs.hiltGradlePlugin)
 }
 
 gradlePlugin {
