@@ -3,14 +3,22 @@ androidGradlePlugin = "7.4.0-alpha03"
 kotlin = "1.6.21"
 
 androidxCore = "1.7.0"
+androidDesugarJdkLibs = "1.1.5"
 compose = "1.2.0-beta03"
 androidxLifecycle = "2.3.1"
 androidxActivity = "1.3.1"
 junit = "4.13.2"
 androidxTestExt = "1.1.3"
 androidxTestEspresso = "3.4.0"
+spotless = "6.7.0"
 
 [libraries]
+androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+spotlessGradlePlugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+
+androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 composeMaterial = { module = "androidx.compose.material:material", version.ref = "compose" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
