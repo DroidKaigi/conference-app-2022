@@ -3,7 +3,3 @@ plugins {
   alias(libs.plugins.androidGradleLibraryPlugin) apply false
   alias(libs.plugins.kotlinPlugin) apply false
 }
-
-task clean(type: Delete) {
-  delete rootProject.buildDir
-}
