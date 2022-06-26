@@ -15,4 +15,8 @@ dependencyResolutionManagement {
   }
 }
 rootProject.name = "android-project-template-2022"
-include(":app")
+include(
+  ":app",
+  ":feature-home",
+  ":core-ui",
+)
