@@ -1,11 +1,12 @@
 plugins {
-  id("example.dsl")
+  id("com.example.primitive.androidapplication")
+  id("com.example.primitive.android.compose")
+  id("com.example.primitive.android.hilt")
 }
 
-extensions.configure<com.example.project.template.dsl.ExampleDsl> {
-  androidApplication {
-    compose()
-    hilt()
-  }
-}
+android.namespace = "com.example.project.template"
 
+dependencies {
+  implementation(projects.featureHome)
+  implementation(projects.coreUi)
+}

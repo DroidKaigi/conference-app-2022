@@ -1,17 +1,10 @@
 plugins {
-  id("example.dsl")
+  id("com.example.convention.androidfeature")
 }
 
-example{
-  androidLibrary(namespace = "com.example.project.template.feature.home") {
-    compose()
-    hilt()
-  }
-}
-
+android.namespace = "com.example.project.template.feature.home"
 
 dependencies {
-
   implementation(projects.coreUi)
 
   implementation(libs.androidxCoreKtx)

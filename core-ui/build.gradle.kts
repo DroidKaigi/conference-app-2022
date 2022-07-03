@@ -1,15 +1,10 @@
 plugins {
-  id("example.dsl")
+  id("com.example.primitive.android")
+  id("com.example.primitive.android.compose")
+  id("com.example.primitive.android.hilt")
 }
 
-example {
-  androidLibrary(namespace = "com.example.project.template.core.ui") {
-    compose()
-    hilt()
-  }
-}
-
-//android.namespace = "com.example.project.template.core.ui"
+android.namespace = "com.example.project.template.core.ui"
 
 dependencies {
 }
