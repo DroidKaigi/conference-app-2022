@@ -7,13 +7,13 @@ import com.example.project.template.ui.theme.Androidprojecttemplate2022Theme
 
 @Composable
 fun Greeting(name: String) {
-  Text(text = "Hello $name!")
+    Text(text = "Hello $name!")
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-  Androidprojecttemplate2022Theme {
-    Greeting("Android")
-  }
+    Androidprojecttemplate2022Theme {
+        Greeting("Android")
+    }
 }

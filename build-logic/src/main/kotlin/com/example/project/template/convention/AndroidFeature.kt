@@ -10,6 +10,7 @@ class AndroidFeature : Plugin<Project> {
                 apply("com.example.primitive.android")
                 apply("com.example.primitive.android.compose")
                 apply("com.example.primitive.android.hilt")
+                apply("com.example.primitive.spotless")
             }
         }
     }
