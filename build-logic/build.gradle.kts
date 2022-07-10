@@ -40,6 +40,10 @@ gradlePlugin {
             id = "com.example.primitive.android.hilt"
             implementationClass = "com.example.project.template.primitive.AndroidHiltPlugin"
         }
+        register("spotless") {
+            id = "com.example.primitive.spotless"
+            implementationClass = "com.example.project.template.primitive.SpotlessPlugin"
+        }
 
         // Conventions
         register("androidFeature") {
