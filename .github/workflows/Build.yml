@@ -34,8 +34,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      #      - name: Check spotless
-      #        run: ./gradlew spotlessCheck --stacktrace
+      - name: Check spotless
+        run: ./gradlew spotlessCheck --stacktrace
 
       - name: Check lint
         run: ./gradlew lintDebug --stacktrace
