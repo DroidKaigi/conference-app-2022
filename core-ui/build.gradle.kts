@@ -8,4 +8,4 @@ plugins {
 android.namespace = "com.example.project.template.core.ui"
 
 dependencies {
-}
+ }
