@@ -1,8 +1,8 @@
 plugins {
-    id("com.example.convention.androidfeature")
+    id("droidkaigi.convention.androidfeature")
 }
 
-android.namespace = "com.example.project.template.feature.home"
+android.namespace = "io.github.droidkaigi.confsched2022.feature.home"
 
 dependencies {
     implementation(projects.coreUi)

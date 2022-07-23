@@ -14,7 +14,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "android-project-template-2022"
+rootProject.name = "DroidKaigi2022"
 include(
     ":app",
     ":feature-home",

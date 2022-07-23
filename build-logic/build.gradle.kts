@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.example.project.template.buildlogic"
+group = "droidkaigi.confsched2022.buildlogic"
 
 repositories {
     google()
@@ -25,30 +25,30 @@ gradlePlugin {
     plugins {
         // Primitives
         register("androidApplication") {
-            id = "com.example.primitive.androidapplication"
-            implementationClass = "com.example.project.template.primitive.AndroidApplicationPlugin"
+            id = "droidkaigi.primitive.androidapplication"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidApplicationPlugin"
         }
         register("android") {
-            id = "com.example.primitive.android"
-            implementationClass = "com.example.project.template.primitive.AndroidPlugin"
+            id = "droidkaigi.primitive.android"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidPlugin"
         }
         register("androidCompose") {
-            id = "com.example.primitive.android.compose"
-            implementationClass = "com.example.project.template.primitive.AndroidComposePlugin"
+            id = "droidkaigi.primitive.android.compose"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidComposePlugin"
         }
         register("androidHilt") {
-            id = "com.example.primitive.android.hilt"
-            implementationClass = "com.example.project.template.primitive.AndroidHiltPlugin"
+            id = "droidkaigi.primitive.android.hilt"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidHiltPlugin"
         }
         register("spotless") {
-            id = "com.example.primitive.spotless"
-            implementationClass = "com.example.project.template.primitive.SpotlessPlugin"
+            id = "droidkaigi.primitive.spotless"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.SpotlessPlugin"
         }
 
         // Conventions
         register("androidFeature") {
-            id = "com.example.convention.androidfeature"
-            implementationClass = "com.example.project.template.convention.AndroidFeature"
+            id = "droidkaigi.convention.androidfeature"
+            implementationClass = "io.github.droidkaigi.confsched2022.convention.AndroidFeature"
         }
     }
 }

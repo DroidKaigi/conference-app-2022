@@ -1,11 +1,11 @@
 plugins {
-    id("com.example.primitive.android")
-    id("com.example.primitive.android.compose")
-    id("com.example.primitive.android.hilt")
-    id("com.example.primitive.spotless")
+    id("droidkaigi.primitive.android")
+    id("droidkaigi.primitive.android.compose")
+    id("droidkaigi.primitive.android.hilt")
+    id("droidkaigi.primitive.spotless")
 }
 
-android.namespace = "com.example.project.template.core.ui"
+android.namespace = "io.github.droidkaigi.confsched2022.template.core.ui"
 
 dependencies {
 }
