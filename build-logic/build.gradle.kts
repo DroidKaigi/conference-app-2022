@@ -33,6 +33,10 @@ gradlePlugin {
             id = "droidkaigi.primitive.android"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidPlugin"
         }
+        register("androidKotlin") {
+            id = "droidkaigi.primitive.android.kotlin"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidKotlinPlugin"
+        }
         register("androidCompose") {
             id = "droidkaigi.primitive.android.compose"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidComposePlugin"
@@ -44,6 +48,10 @@ gradlePlugin {
         register("spotless") {
             id = "droidkaigi.primitive.spotless"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.SpotlessPlugin"
+        }
+        register("kotlinMpp") {
+            id = "droidkaigi.primitive.kmp"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpPlugin"
         }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"

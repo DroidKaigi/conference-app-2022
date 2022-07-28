@@ -10,7 +10,6 @@ class AndroidPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
             }
 
             androidLibrary {
@@ -28,20 +27,6 @@ class AndroidPlugin : Plugin<Project> {
                     targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
                     isCoreLibraryDesugaringEnabled = true
                 }
-
-                kotlinOptions {
-                    // Treat all Kotlin warnings as errors (disabled by default)
-                    allWarningsAsErrors = properties["warningsAsErrors"] as? Boolean ?: false
-
-                    freeCompilerArgs = freeCompilerArgs + listOf(
-//              "-opt-in=kotlin.RequiresOptIn",
-                        // Enable experimental coroutines APIs, including Flow
-//              "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    )
-
-                    jvmTarget = org.gradle.api.JavaVersion.VERSION_1_8.toString()
-                }
-
                 dependencies {
                     add("coreLibraryDesugaring", libs.findLibrary("androidDesugarJdkLibs").get())
                 }
