@@ -1,10 +1,11 @@
 [versions]
 androidGradlePlugin = "7.4.0-alpha08"
 kotlin = "1.7.0"
+molecule = "0.3.0"
 
 androidxCore = "1.8.0"
 androidDesugarJdkLibs = "1.2.0"
-compose = "1.2.0-rc03"
+compose = "1.2.0"
 composeCompiler = "1.2.0"
 androidxLifecycle = "2.5.0"
 androidxActivity = "1.5.0"
@@ -21,6 +22,7 @@ androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", vers
 kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 spotlessGradlePlugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "dagger" }
+moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
 
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 

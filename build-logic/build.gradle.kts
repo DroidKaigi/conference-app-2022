@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.kotlinGradlePlugin)
     implementation(libs.spotlessGradlePlugin)
     implementation(libs.hiltGradlePlugin)
+    implementation(libs.moleculeGradlePlugin)
 }
 
 gradlePlugin {
@@ -51,6 +52,10 @@ gradlePlugin {
         register("kotlinMpp") {
             id = "droidkaigi.primitive.kmp"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpPlugin"
+        }
+        register("molecule") {
+            id = "droidkaigi.primitive.molecule"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.MoleculePlugin"
         }
 
         // Conventions
