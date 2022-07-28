@@ -10,11 +10,11 @@ import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.SessionsUiModel.SessionListState
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 
 @HiltViewModel
-class SessionsViewModel @Inject constructor(): ViewModel() {
+class SessionsViewModel @Inject constructor() : ViewModel() {
     val filter = mutableStateOf(false)
     val state = viewModelScope.moleculeComposeState {
         SessionsUiModel(SessionListState.Loading)
