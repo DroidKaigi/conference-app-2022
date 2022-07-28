@@ -1,10 +1,11 @@
 package io.github.droidkaigi.confsched2022
 
-class SessionsUiModel(
-    val sessionListState: SessionListState
+data class SessionsUiModel(
+    val sessionsState: SessionsState,
+    val isFilterOn: Boolean
 ) {
-    sealed interface SessionListState {
-        class Loaded() : SessionListState
-        object Loading : SessionListState
+    sealed interface SessionsState {
+        class Loaded(sessions: Sessions) : SessionsState
+        object Loading : SessionsState
     }
 }

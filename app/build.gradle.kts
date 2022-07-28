@@ -11,4 +11,6 @@ android.namespace = "io.github.droidkaigi.confsched2022"
 dependencies {
     implementation(projects.featureHome)
     implementation(projects.coreUi)
+
+    implementation(libs.hiltNavigationCompose)
 }
