@@ -7,6 +7,7 @@ androidxCore = "1.8.0"
 androidDesugarJdkLibs = "1.2.0"
 compose = "1.2.0"
 composeCompiler = "1.2.0"
+androidxFragment = "1.5.1"
 androidxLifecycle = "2.5.0"
 androidxActivity = "1.6.0-alpha05"
 hiltNavigationCompose = "1.0.0"
@@ -42,6 +43,7 @@ kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collecti
 androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidxLifecycleLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidxActivityActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidxFragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
 hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
