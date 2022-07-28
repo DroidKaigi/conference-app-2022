@@ -10,7 +10,6 @@ class AndroidApplicationPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
-                apply("org.jetbrains.kotlin.android")
             }
 
             androidApplication {
@@ -27,19 +26,6 @@ class AndroidApplicationPlugin : Plugin<Project> {
                     sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
                     targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
                     isCoreLibraryDesugaringEnabled = true
-                }
-
-                kotlinOptions {
-                    // Treat all Kotlin warnings as errors (disabled by default)
-                    allWarningsAsErrors = properties["warningsAsErrors"] as? Boolean ?: false
-
-                    freeCompilerArgs = freeCompilerArgs + listOf(
-//              "-opt-in=kotlin.RequiresOptIn",
-                        // Enable experimental coroutines APIs, including Flow
-//              "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    )
-
-                    jvmTarget = org.gradle.api.JavaVersion.VERSION_1_8.toString()
                 }
 
                 dependencies {

@@ -6,6 +6,7 @@ android.namespace = "io.github.droidkaigi.confsched2022.feature.home"
 
 dependencies {
     implementation(projects.coreUi)
+    implementation(projects.coreModel)
 
     implementation(libs.androidxCoreKtx)
     implementation(libs.composeUi)

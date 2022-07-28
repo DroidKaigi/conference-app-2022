@@ -8,6 +8,7 @@ class AndroidFeature : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("droidkaigi.primitive.android")
+                apply("droidkaigi.primitive.android.kotlin")
                 apply("droidkaigi.primitive.android.compose")
                 apply("droidkaigi.primitive.android.hilt")
                 apply("droidkaigi.primitive.spotless")

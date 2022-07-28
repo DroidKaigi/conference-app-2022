@@ -14,6 +14,7 @@ androidxTestEspresso = "3.4.0"
 dagger = "2.42"
 spotless = "6.7.0"
 ktlint = "0.45.2"
+kotlinxCollectionsImmutable = "0.3.5"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -32,6 +33,8 @@ composeUiTestManifest = { module = "androidx.compose.ui:ui-test-manifest", versi
 
 daggerHiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
+
+kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 
 androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidxLifecycleLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
