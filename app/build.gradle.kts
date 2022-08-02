@@ -9,7 +9,7 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022"
 
 dependencies {
-    implementation(projects.featureHome)
+    implementation(projects.featureSessions)
     implementation(projects.coreUi)
 
     implementation(libs.hiltNavigationCompose)
