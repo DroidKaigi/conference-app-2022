@@ -17,5 +17,4 @@ class MainActivity : ComponentActivity() {
             DroidKaigiApp(calculateWindowSizeClass(this))
         }
     }
-
 }
