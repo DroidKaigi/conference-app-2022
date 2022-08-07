@@ -12,5 +12,10 @@ kotlin {
                 api(libs.kotlinxCoroutinesCore)
             }
         }
+        val androidMain by getting {
+            dependencies{
+                implementation(libs.composeRuntime)
+            }
+        }
     }
 }
