@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 rootProject.name = "DroidKaigi2022"
 include(
     ":app",
+    ":app-ioscombined",
     ":feature-sessions",
     ":core-ui",
     ":core-designsystem",

@@ -53,6 +53,18 @@ gradlePlugin {
             id = "droidkaigi.primitive.kmp"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpPlugin"
         }
+        register("kotlinMppIos") {
+            id = "droidkaigi.primitive.kmp.ios"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpIosPlugin"
+        }
+        register("kotlinMppAndroid") {
+            id = "droidkaigi.primitive.kmp.android"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpAndroidPlugin"
+        }
+        register("kotlinMppIosFramework") {
+            id = "droidkaigi.primitive.kmp.ios.framework"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpIosFrameworkPlugin"
+        }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.MoleculePlugin"
@@ -61,7 +73,11 @@ gradlePlugin {
         // Conventions
         register("androidFeature") {
             id = "droidkaigi.convention.androidfeature"
-            implementationClass = "io.github.droidkaigi.confsched2022.convention.AndroidFeature"
+            implementationClass = "io.github.droidkaigi.confsched2022.convention.AndroidFeaturePlugin"
+        }
+        register("kmp") {
+            id = "droidkaigi.convention.kmp"
+            implementationClass = "io.github.droidkaigi.confsched2022.convention.KmpPlugin"
         }
     }
 }

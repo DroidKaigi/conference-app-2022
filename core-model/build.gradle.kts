@@ -1,6 +1,5 @@
 plugins {
-    id("droidkaigi.primitive.kmp")
-    id("droidkaigi.primitive.android")
+    id("droidkaigi.convention.kmp")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.model"

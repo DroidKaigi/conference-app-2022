@@ -1,6 +1,5 @@
 plugins {
-    id("droidkaigi.primitive.kmp")
-    id("droidkaigi.primitive.android")
+    id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.android.compose")
 }
 
