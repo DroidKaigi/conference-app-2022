@@ -7,8 +7,8 @@ import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.SessionsUiModel.SessionsState
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor() : ViewModel() {
@@ -26,4 +26,3 @@ class SessionsViewModel @Inject constructor() : ViewModel() {
         filter.value = !filter.value
     }
 }
-

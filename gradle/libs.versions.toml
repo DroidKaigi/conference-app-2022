@@ -20,6 +20,8 @@ dagger = "2.43.2"
 spotless = "6.7.0"
 ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
+ktor = "2.0.3"
+kotlinxCoroutines = "1.6.4"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -49,6 +51,10 @@ androidxLifecycleLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-
 androidxActivityActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidxFragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
 hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidxTestEspressoEspressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }

@@ -5,7 +5,7 @@ data class SessionsUiModel(
     val isFilterOn: Boolean
 ) {
     sealed interface SessionsState {
-        class Loaded(sessions: Sessions) : SessionsState
+        class Loaded(sessions: Timetable) : SessionsState
         object Loading : SessionsState
     }
 }

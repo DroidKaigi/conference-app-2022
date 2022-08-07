@@ -10,6 +10,7 @@ kotlin {
             dependencies {
                 implementation(projects.coreModel)
                 implementation(projects.coreDesignsystem)
+                implementation(projects.coreData)
             }
         }
     }
