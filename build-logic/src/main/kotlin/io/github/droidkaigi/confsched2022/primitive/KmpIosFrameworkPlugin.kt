@@ -11,23 +11,20 @@ class KmpIosFrameworkPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             kotlin {
-                val xcf = XCFramework()
+                val xcf = XCFramework("appioscombined")
 
                 iosX64 {
                     binaries.framework {
-                        baseName = "shared"
                         xcf.add(this)
                     }
                 }
                 iosArm64 {
                     binaries.framework {
-                        baseName = "shared"
                         xcf.add(this)
                     }
                 }
                 iosSimulatorArm64 {
                     binaries.framework {
-                        baseName = "shared"
                         xcf.add(this)
                     }
                 }

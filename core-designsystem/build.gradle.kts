@@ -10,8 +10,10 @@ kotlin {
         val commonMain by getting {
         }
         val androidMain by getting {
-            dependencies {
-            }
         }
     }
+}
+
+dependencies {
+    kotlinCompilerPluginClasspath(libs.composeCompiler)
 }
