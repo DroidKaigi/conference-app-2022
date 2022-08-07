@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.primitive
 
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -11,20 +12,13 @@ class KmpIosFrameworkPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             kotlin {
-                val xcf = XCFramework("appioscombined")
-
-                iosX64 {
-                    binaries.framework {
-                        xcf.add(this)
-                    }
-                }
-                iosArm64 {
-                    binaries.framework {
-                        xcf.add(this)
-                    }
-                }
-                iosSimulatorArm64 {
-                    binaries.framework {
+                val xcFrameworkName = "appioscombined"
+                val xcf = XCFramework(xcFrameworkName)
+                val sourceSets = listOf(iosX64(), iosArm64(), iosSimulatorArm64())
+                sourceSets.forEach {
+                    it.binaries.framework {
+                        baseName = xcFrameworkName
+                        isStatic = true
                         xcf.add(this)
                     }
                 }
