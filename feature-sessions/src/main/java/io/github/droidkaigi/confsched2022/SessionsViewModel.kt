@@ -1,8 +1,8 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
@@ -12,8 +12,8 @@ import io.github.droidkaigi.confsched2022.SessionsUiModel.SessionsState
 import io.github.droidkaigi.confsched2022.SessionsUiModel.SessionsState.Loading
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
-import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 
 @HiltViewModel
