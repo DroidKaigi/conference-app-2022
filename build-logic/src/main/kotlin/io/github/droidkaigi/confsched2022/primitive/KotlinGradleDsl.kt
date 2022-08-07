@@ -11,7 +11,7 @@ import java.util.Optional
 fun DependencyHandlerScope.kapt(
     artifact: Optional<Provider<MinimalExternalModuleDependency>>
 ) {
-    add("api", artifact.get())
+    add("kapt", artifact.get())
 }
 
 fun TestedExtension.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
