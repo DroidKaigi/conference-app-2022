@@ -22,6 +22,7 @@ include(
     ":feature-sessions",
     ":core-ui",
     ":core-designsystem",
+    ":core-data",
     ":core-model"
 )
 

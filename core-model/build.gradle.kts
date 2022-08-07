@@ -8,7 +8,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
+                api(libs.kotlinxCollectionsImmutable)
+                api(libs.kotlinxCoroutinesCore)
+            }
+        }
+        val androidMain by getting {
+            dependencies{
+                implementation(libs.composeRuntime)
             }
         }
     }
