@@ -1,8 +1,8 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.coroutines.flow.Flow
 
 interface SessionsRepository {
-    fun sessions(): Flow<Timetable>
+    fun timetable(): Flow<Timetable>
     suspend fun refresh()
 }

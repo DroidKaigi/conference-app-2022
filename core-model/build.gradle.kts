@@ -2,7 +2,7 @@ plugins {
     id("droidkaigi.convention.kmp")
 }
 
-android.namespace = "io.github.droidkaigi.confsched2022.core.data"
+android.namespace = "io.github.droidkaigi.confsched2022.core.model"
 
 kotlin {
     sourceSets {

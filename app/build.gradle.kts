@@ -10,6 +10,7 @@ android.namespace = "io.github.droidkaigi.confsched2022"
 
 dependencies {
     implementation(projects.featureSessions)
+    implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
 

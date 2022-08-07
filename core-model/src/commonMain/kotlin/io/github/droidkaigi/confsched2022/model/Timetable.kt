@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.collections.immutable.ImmutableList
 
