@@ -14,6 +14,18 @@ class KmpIosPlugin : Plugin<Project> {
                 iosX64()
                 iosArm64()
                 iosSimulatorArm64()
+                val iosMain = sourceSets.create("iosMain") {
+                    dependsOn(sourceSets.getByName("commonMain"))
+                }
+                sourceSets.getByName("iosX64Main") {
+                    dependsOn(iosMain)
+                }
+                sourceSets.getByName("iosArm64Main") {
+                    dependsOn(iosMain)
+                }
+                sourceSets.getByName("iosSimulatorArm64Main") {
+                    dependsOn(iosMain)
+                }
             }
         }
     }
