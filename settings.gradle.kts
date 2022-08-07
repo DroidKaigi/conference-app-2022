@@ -20,5 +20,6 @@ include(
     ":app",
     ":feature-sessions",
     ":core-ui",
+    ":core-designsystem",
     ":core-model"
 )
