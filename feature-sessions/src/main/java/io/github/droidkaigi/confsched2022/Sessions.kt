@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.github.droidkaigi.confsched2022.ui.theme.DroidKaigi2022Theme
+import io.github.droidkaigi.confsched2022.designsystem.theme.DroidKaigiTheme
 
 @Composable
 fun Sessions() {
@@ -23,7 +23,7 @@ fun Sessions() {
 @Preview(showBackground = true)
 @Composable
 fun SessionsPreview() {
-    DroidKaigi2022Theme {
+    DroidKaigiTheme {
         Sessions()
     }
 }

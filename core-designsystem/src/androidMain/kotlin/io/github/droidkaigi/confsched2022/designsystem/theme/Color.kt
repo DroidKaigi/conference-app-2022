@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.ui.theme
+package io.github.droidkaigi.confsched2022.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
