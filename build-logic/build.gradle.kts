@@ -61,10 +61,6 @@ gradlePlugin {
             id = "droidkaigi.primitive.kmp.android"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpAndroidPlugin"
         }
-        register("kotlinMppIosFramework") {
-            id = "droidkaigi.primitive.kmp.ios.framework"
-            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpIosFrameworkPlugin"
-        }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.MoleculePlugin"
