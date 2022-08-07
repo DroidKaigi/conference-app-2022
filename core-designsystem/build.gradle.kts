@@ -1,6 +1,5 @@
 plugins {
-    id("droidkaigi.primitive.kmp")
-    id("droidkaigi.primitive.android")
+    id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.android.compose")
 }
 
@@ -11,8 +10,10 @@ kotlin {
         val commonMain by getting {
         }
         val androidMain by getting {
-            dependencies {
-            }
         }
     }
+}
+
+dependencies {
+    kotlinCompilerPluginClasspath(libs.composeCompiler)
 }

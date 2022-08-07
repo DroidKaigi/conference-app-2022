@@ -27,6 +27,7 @@ kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plu
 spotlessGradlePlugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "dagger" }
 moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
+composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 

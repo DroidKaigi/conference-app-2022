@@ -18,8 +18,11 @@ dependencyResolutionManagement {
 rootProject.name = "DroidKaigi2022"
 include(
     ":app",
+    ":appioscombined",
     ":feature-sessions",
     ":core-ui",
     ":core-designsystem",
     ":core-model"
 )
+
+project(":appioscombined").projectDir = file("app-ioscombined")
