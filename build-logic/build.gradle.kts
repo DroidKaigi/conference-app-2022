@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.spotlessGradlePlugin)
     implementation(libs.hiltGradlePlugin)
     implementation(libs.moleculeGradlePlugin)
+    implementation(libs.kotlinSerializationPlugin)
 }
 
 gradlePlugin {
@@ -60,6 +61,10 @@ gradlePlugin {
         register("kotlinMppAndroid") {
             id = "droidkaigi.primitive.kmp.android"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpAndroidPlugin"
+        }
+        register("kotlinMppKotlinSerialization") {
+            id = "droidkaigi.primitive.kmp.serialization"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KotlinSerializationPlugin"
         }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"
