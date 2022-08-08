@@ -17,7 +17,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DroidKaigi2022"
 include(
-    ":app",
+    ":app-android",
     ":appioscombined",
     ":feature-sessions",
     ":core-ui",
@@ -26,4 +26,5 @@ include(
     ":core-model"
 )
 
-project(":appioscombined").projectDir = file("app-ioscombined")
+// for iOS framework name
+project(":appioscombined").projectDir = file("app-ios-combined")
