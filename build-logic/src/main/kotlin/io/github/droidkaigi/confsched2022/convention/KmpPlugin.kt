@@ -10,7 +10,6 @@ class KmpPlugin : Plugin<Project> {
                 apply("droidkaigi.primitive.kmp")
                 apply("droidkaigi.primitive.kmp.android")
                 apply("droidkaigi.primitive.kmp.ios")
-                apply("droidkaigi.primitive.android")
                 apply("droidkaigi.primitive.spotless")
             }
         }

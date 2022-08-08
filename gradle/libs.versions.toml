@@ -36,6 +36,7 @@ moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", ve
 composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 kotlinSerializationPlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
+ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 
