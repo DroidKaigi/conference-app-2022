@@ -10,7 +10,6 @@ data class SessionsUiModel(
 
         data class Loaded(val sessions: Timetable) : SessionsState
 
-
         object Loading : SessionsState
     }
 }

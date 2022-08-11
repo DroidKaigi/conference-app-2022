@@ -13,15 +13,20 @@ import kotlinx.serialization.encoding.Encoder
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentList::class)
-class PersistentListSerializer(private val dataSerializer: KSerializer<String>) :
+class PersistentListSerializer(
+    private val dataSerializer: KSerializer<String>
+) :
     KSerializer<PersistentList<String>> {
     class PersistentListDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
-        @ExperimentalSerializationApi override val serialName: String = "kotlinx.serialization.immutable.persistentList"
+        @ExperimentalSerializationApi override val serialName: String =
+            "kotlinx.serialization.immutable.persistentList"
     }
+
     override val descriptor = PersistentListDescriptor()
     override fun serialize(encoder: Encoder, value: PersistentList<String>) {
         return ListSerializer(dataSerializer).serialize(encoder, value.toList())
     }
+
     override fun deserialize(decoder: Decoder): PersistentList<String> {
         return ListSerializer(dataSerializer).deserialize(decoder).toPersistentList()
     }
