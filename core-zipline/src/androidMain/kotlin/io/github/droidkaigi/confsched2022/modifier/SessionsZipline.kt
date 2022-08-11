@@ -26,6 +26,8 @@ class SessionsZipline @Inject constructor(
 ) {
     private val executorService = Executors.newSingleThreadExecutor { Thread(it, "Zipline") }
     private val dispatcher = executorService.asCoroutineDispatcher()
+
+    // TODO: Use provided client
     private val client = OkHttpClient()
 
     private val manifestUrl = "http://10.0.2.2:8080/manifest.zipline.json"
@@ -77,11 +79,15 @@ class SessionsZipline @Inject constructor(
                 if (loadedZipline == null) {
                     loadedZiplineFlow.catch { it.printStackTrace() }
                 }
-                val zipline = loadedZipline!!.zipline
+                zipline = loadedZipline!!.zipline
                 zipline.take<TimetableModifier>("sessionsModifier")
             } catch (e: Exception) {
                 e.printStackTrace()
-                AndroidTimetableModifier()
+                object : TimetableModifier {
+                    override suspend fun produceModels(timetable: Timetable): Timetable {
+                        return timetable
+                    }
+                }
             }
             val stateFlow =
                 MutableStateFlow(initialTimetable)
@@ -96,7 +102,7 @@ class SessionsZipline @Inject constructor(
             modelStateFlow.emitAll(stateFlow)
 
             coroutineContext.job.invokeOnCompletion {
-                dispatcher.dispatch(EmptyCoroutineContext) { zipline.close() }
+                dispatcher.dispatch(EmptyCoroutineContext) { zipline?.close() }
                 executorService.shutdown()
             }
         }
