@@ -11,7 +11,7 @@ class JsTimetableModifier(
         console.log(timetable)
         return timetable.copy(sessions = timetable.sessions.mapIndexed {index, session ->
             if(index == 0) {
-                session.copy(id = "te")
+                session.copy(id = "test!!!")
             } else {
                 session
             }
