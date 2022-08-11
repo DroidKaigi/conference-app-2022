@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME
 plugins {
     id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.kmp.serialization")
+    id("droidkaigi.primitive.kmp.android.hilt")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.zipline"
@@ -17,6 +18,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.zipline)
+                implementation(projects.coreModel)
             }
         }
         val jsMain by getting {
@@ -42,6 +44,9 @@ dependencies {
     }
 }
 
+rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+    versions.webpackCli.version = "4.10.0"
+}
 
 val compileZipline by tasks.creating(JavaExec::class) {
     dependsOn("compileProductionExecutableKotlinJs")
@@ -50,10 +55,10 @@ val compileZipline by tasks.creating(JavaExec::class) {
     args = listOf(
         "$buildDir/compileSync/main/productionExecutable/kotlin",
         "$buildDir/zipline",
-//        "app.cash.zipline.samples.emojisearch.preparePresenters"
+        "io.github.droidkaigi.confsched2022.presenter.prepareModifiers"
     )
 }
 
-val jsBrowserProductionRun by tasks.getting {
+val jsBrowserDevelopmentRun by tasks.getting {
     dependsOn(compileZipline)
 }

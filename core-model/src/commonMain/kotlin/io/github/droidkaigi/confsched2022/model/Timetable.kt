@@ -1,6 +1,10 @@
 package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.serialization.Serializable
 
 @Immutable
-data class Timetable(val sessions: ImmutableList<Session>)
+@Serializable
+data class Timetable(
+    @Serializable(PersistentListSerializer::class) val sessions: ImmutableList<Session>
+)

@@ -8,6 +8,7 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreModel)
+    implementation(projects.coreZipline)
 
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)

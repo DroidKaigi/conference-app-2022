@@ -1,5 +1,7 @@
 plugins {
     id("droidkaigi.convention.kmp")
+    id("droidkaigi.primitive.kmp.js")
+    id("droidkaigi.primitive.kmp.serialization")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.model"
@@ -10,6 +12,7 @@ kotlin {
             dependencies {
                 api(libs.kotlinxCollectionsImmutable)
                 api(libs.kotlinxCoroutinesCore)
+                implementation(libs.kotlinSerializationJson)
             }
         }
         val androidMain by getting {
