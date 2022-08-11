@@ -94,7 +94,6 @@ class SessionsZipline @Inject constructor(
             launch {
                 timetableFlow.collect {
                     val produceModels = presenter.produceModels(it)
-                    println(produceModels)
                     stateFlow.value = produceModels
                 }
             }
