@@ -27,7 +27,10 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideSessionsRepository(okHttpClient: OkHttpClient, application: Application): SessionsRepository {
+    fun provideSessionsRepository(
+        okHttpClient: OkHttpClient,
+        application: Application
+    ): SessionsRepository {
         val httpClient = HttpClient(OkHttp) {
             engine {
                 config {

@@ -42,14 +42,16 @@ class SessionsViewModel @Inject constructor(
                 SessionsState.Loading
             } else {
                 SessionsState.Loaded(
-                    timetable.copy(sessions = timetable.sessions.filter { session ->
-                        // TODO: migrate to domain
-                        if (filter.value) {
-                            session.isFavorite
-                        } else {
-                            true
-                        }
-                    }.toImmutableList())
+                    timetable.copy(
+                        sessions = timetable.sessions.filter { session ->
+                            // TODO: migrate to domain
+                            if (filter.value) {
+                                session.isFavorite
+                            } else {
+                                true
+                            }
+                        }.toImmutableList()
+                    )
                 )
             }
         }
