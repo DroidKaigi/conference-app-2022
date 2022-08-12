@@ -62,6 +62,10 @@ androidxFragment = { module = "androidx.fragment:fragment", version.ref = "andro
 hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorClientOkHttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktorClientDarwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktorKotlinxSerialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktorContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 zipline = { module = "app.cash.zipline:zipline", version.ref = "zipline" }
