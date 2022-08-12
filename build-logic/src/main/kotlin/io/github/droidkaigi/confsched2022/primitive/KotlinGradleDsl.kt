@@ -14,6 +14,12 @@ fun DependencyHandlerScope.kapt(
     add("kapt", artifact.get())
 }
 
+fun DependencyHandlerScope.kaptTest(
+    artifact: Optional<Provider<MinimalExternalModuleDependency>>
+) {
+    add("kaptTest", artifact.get())
+}
+
 fun TestedExtension.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }

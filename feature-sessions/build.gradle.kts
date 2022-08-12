@@ -9,6 +9,7 @@ dependencies {
     implementation(projects.coreDesignsystem)
     implementation(projects.coreModel)
     implementation(projects.coreZipline)
+    testImplementation(projects.coreTesting)
 
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)
@@ -17,9 +18,6 @@ dependencies {
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
     implementation(libs.androidxActivityActivityCompose)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidxTestExtJunit)
-    androidTestImplementation(libs.androidxTestEspressoEspressoCore)
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)
     debugImplementation(libs.composeUiTestManifest)

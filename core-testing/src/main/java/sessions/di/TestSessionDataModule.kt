@@ -1,0 +1,21 @@
+package io.github.droidkaigi.confsched2022.sessions.di
+
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
+import io.github.droidkaigi.confsched2022.data.sessions.FakeSessionsRepository
+import io.github.droidkaigi.confsched2022.data.sessions.di.SessionDataModule
+import io.github.droidkaigi.confsched2022.model.SessionsRepository
+
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [SessionDataModule::class]
+)
+@Module
+class TestSessionDataModule {
+    @Provides
+    fun provideSessionsRepository(): SessionsRepository {
+        return FakeSessionsRepository()
+    }
+}
