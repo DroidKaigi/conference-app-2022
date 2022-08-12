@@ -1,6 +1,6 @@
 [versions]
 androidGradlePlugin = "7.4.0-alpha09"
-kotlin = "1.7.0"
+kotlin = "1.7.10"
 molecule = "0.3.0"
 
 androidxCore = "1.8.0"
