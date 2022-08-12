@@ -24,7 +24,7 @@ ktor = "2.0.3"
 kotlinxCoroutines = "1.6.4"
 zipline = "0.9.0"
 ziplineSnapshot = "1.0.0-SNAPSHOT"
-okHttp = "4.9.1"
+okHttp = "4.10.0"
 sqldelight = "1.5.3"
 kotlinxSerialization = "1.4.0-RC"
 
