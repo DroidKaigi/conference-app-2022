@@ -4,6 +4,7 @@ plugins {
     id("droidkaigi.primitive.android.compose")
     id("droidkaigi.primitive.android.hilt")
     id("droidkaigi.primitive.spotless")
+    id("droidkaigi.primitive.dependencygraph")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022"

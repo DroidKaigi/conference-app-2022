@@ -46,6 +46,10 @@ gradlePlugin {
             id = "droidkaigi.primitive.android.hilt"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidHiltPlugin"
         }
+        register("dependencyGraph") {
+            id = "droidkaigi.primitive.dependencygraph"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.DependencyGraphPlugin"
+        }
         register("spotless") {
             id = "droidkaigi.primitive.spotless"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.SpotlessPlugin"
