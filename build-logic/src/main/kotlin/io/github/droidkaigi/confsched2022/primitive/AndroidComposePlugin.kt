@@ -17,7 +17,7 @@ class AndroidComposePlugin : Plugin<Project> {
             dependencies {
                 implementation(libs.findLibrary("androidxCoreKtx"))
                 implementation(libs.findLibrary("composeUi"))
-                implementation(libs.findLibrary("composeMaterial"))
+                implementation(libs.findLibrary("composeMaterial3"))
                 implementation(libs.findLibrary("composeUiToolingPreview"))
                 implementation(libs.findLibrary("androidxLifecycleLifecycleRuntimeKtx"))
                 implementation(libs.findLibrary("androidxActivityActivityCompose"))

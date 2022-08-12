@@ -13,7 +13,7 @@ dependencies {
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)
     implementation(libs.composeUi)
-    implementation(libs.composeMaterial)
+    implementation(libs.composeMaterial3)
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
     implementation(libs.androidxActivityActivityCompose)
