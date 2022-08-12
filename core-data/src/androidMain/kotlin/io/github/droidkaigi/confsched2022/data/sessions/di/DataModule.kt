@@ -1,5 +1,10 @@
 package io.github.droidkaigi.confsched2022.data.sessions.di
 
+import PreferenceDatastore
+import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
+import com.russhwolf.settings.datastore.DataStoreSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +21,16 @@ import okhttp3.OkHttpClient
 @InstallIn(SingletonComponent::class)
 @Module
 class DataModule {
+    private val Context.dataStore by preferencesDataStore(
+        name = PreferenceDatastore.NAME,
+    )
+
     @Provides
     @Singleton
-    fun provideSessionsRepository(okHttpClient: OkHttpClient): SessionsRepository {
+    fun provideSessionsRepository(
+        okHttpClient: OkHttpClient,
+        application: Application
+    ): SessionsRepository {
         val httpClient = HttpClient(OkHttp) {
             engine {
                 config {
@@ -27,7 +39,13 @@ class DataModule {
             }
             defaultKtorConfig()
         }
-        return DataSessionsRepository(SessionsApi(httpClient))
+        val preferenceDatastore = PreferenceDatastore(
+            DataStoreSettings(datastore = application.dataStore)
+        )
+        val sessionsApi = SessionsApi(httpClient)
+        return DataSessionsRepository(
+            sessionsApi, preferenceDatastore
+        )
     }
 
     @Provides

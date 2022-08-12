@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Session(
     val id: String,
-    val title: String = "title"
+    val title: String = "title",
+    val isFavorite: Boolean = false
 )

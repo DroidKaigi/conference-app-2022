@@ -13,11 +13,14 @@ kotlin {
                 implementation(libs.ktorClientCore)
                 implementation(libs.ktorKotlinxSerialization)
                 implementation(libs.ktorContentNegotiation)
+                implementation(libs.multiplatformSettingsCoroutines)
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation(libs.ktorClientOkHttp)
+                implementation(libs.androidxDatastorePreferences)
+                implementation(libs.multiplatformSettingsDatastore)
             }
         }
         val iosMain by getting {

@@ -8,7 +8,7 @@ data class SessionsUiModel(
 ) {
     sealed interface SessionsState {
 
-        data class Loaded(val sessions: Timetable) : SessionsState
+        data class Loaded(val timetable: Timetable) : SessionsState
 
         object Loading : SessionsState
     }
