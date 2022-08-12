@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class DataSessionsRepository(val sessionsApi: SessionsApi) : SessionsRepository {
     override fun timetable(): Flow<Timetable> {
-        return flowOf(Timetable(persistentListOf(Session())))
+        return flowOf(Timetable(persistentListOf(Session("id", "title"))))
     }
 
     override suspend fun refresh() {

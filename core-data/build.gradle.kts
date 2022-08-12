@@ -11,6 +11,18 @@ kotlin {
             dependencies {
                 implementation(projects.coreModel)
                 implementation(libs.ktorClientCore)
+                implementation(libs.ktorKotlinxSerialization)
+                implementation(libs.ktorContentNegotiation)
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.ktorClientOkHttp)
+            }
+        }
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.ktorClientDarwin)
             }
         }
     }

@@ -23,19 +23,17 @@ import okhttp3.OkHttpClient
 
 class SessionsZipline @Inject constructor(
     context: Application,
+    okHttpClient: OkHttpClient
 ) {
     private val executorService = Executors.newSingleThreadExecutor { Thread(it, "Zipline") }
     private val dispatcher = executorService.asCoroutineDispatcher()
-
-    // TODO: Use provided client
-    private val client = OkHttpClient()
 
     private val manifestUrl = "http://10.0.2.2:8080/manifest.zipline.json"
 
     private val ziplineLoader = ZiplineLoader(
         context = context,
         dispatcher = dispatcher,
-        httpClient = client,
+        httpClient = okHttpClient,
         eventListener = object : EventListener() {
             override fun manifestParseFailed(
                 applicationName: String,
