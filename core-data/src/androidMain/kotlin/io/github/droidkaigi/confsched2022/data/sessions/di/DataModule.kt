@@ -10,8 +10,8 @@ import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import okhttp3.OkHttpClient
 import javax.inject.Singleton
+import okhttp3.OkHttpClient
 
 @InstallIn(SingletonComponent::class)
 @Module
