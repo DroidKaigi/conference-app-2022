@@ -1,7 +1,7 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.clickable
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,6 +20,7 @@ fun Sessions() {
         }
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SessionsPreview() {
