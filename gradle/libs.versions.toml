@@ -22,6 +22,11 @@ ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
 ktor = "2.0.3"
 kotlinxCoroutines = "1.6.4"
+zipline = "0.9.0"
+ziplineSnapshot = "1.0.0-SNAPSHOT"
+okHttp = "4.9.1"
+sqldelight = "1.5.3"
+kotlinxSerialization = "1.4.0-RC"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -30,6 +35,9 @@ spotlessGradlePlugin = { group = "com.diffplug.spotless", name = "spotless-plugi
 hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "dagger" }
 moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
 composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
+kotlinSerializationPlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
+ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 
@@ -44,7 +52,7 @@ composeMaterial3WindowSizeClass = { module = "androidx.compose.material3:materia
 daggerHiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 
-kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidxNavigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationCompose" }
@@ -55,6 +63,16 @@ hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", vers
 
 ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+
+zipline = { module = "app.cash.zipline:zipline", version.ref = "zipline" }
+ziplineSnapshot = { module = "app.cash.zipline:zipline", version.ref = "ziplineSnapshot" }
+ziplineLoader = { module = "app.cash.zipline:zipline-loader", version.ref = "zipline" }
+
+okHttpCore = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttp" }
+sqldelightDriverAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
+
+kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
