@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 interface SessionsRepository {
     fun timetable(): Flow<Timetable>
     suspend fun refresh()
+    suspend fun setFavorite(sessionId: String, favorite: Boolean)
 }

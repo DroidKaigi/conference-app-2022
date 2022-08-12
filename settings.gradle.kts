@@ -14,6 +14,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // for datastore-okio
+//        maven(url = "https://androidx.dev/snapshots/builds/8938977/artifacts/repository") {
+//            content {
+//                includeGroup("androidx.datastore")
+//            }
+//        }
+        // for zipline
 //        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
