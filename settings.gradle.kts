@@ -33,6 +33,7 @@ include(
     ":core-ui",
     ":core-designsystem",
     ":core-data",
+    ":core-testing",
     ":core-model"
 )
 

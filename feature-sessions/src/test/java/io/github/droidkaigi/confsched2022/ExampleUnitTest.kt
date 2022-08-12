@@ -1,16 +1,24 @@
 package io.github.droidkaigi.confsched2022
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.HiltAndroidTest
+import io.github.droidkaigi.confsched2022.model.SessionsRepository
+import javax.inject.Inject
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class ExampleUnitTest {
+
+    @get:Rule val hiltAndroidRule = HiltAndroidAutoInjectRule(this)
+    @Inject lateinit var sessionsRepository: SessionsRepository
+
     @Test
     fun addition_isCorrect() {
+        println(sessionsRepository)
         assertEquals(4, 2 + 2)
     }
 }
