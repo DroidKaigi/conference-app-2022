@@ -1,9 +1,11 @@
 package io.github.droidkaigi.confsched2022.data.sessions
 
-import PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
-import kotlinx.collections.immutable.toImmutableList
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.fake
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -12,12 +14,10 @@ class DataSessionsRepository(
     val favoriteSessionsDataStore: PreferenceDatastore
 ) : SessionsRepository {
     override fun timetable(): Flow<Timetable> = callbackFlow {
-        val sessions = sessionsApi.sessions()
+        val sessions = sessionsApi.timetable()
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
-            val favoriteMarkedSessions = sessions.map { session ->
-                session.copy(isFavorite = favoriteSessionIds.contains(session.id))
-            }
-            trySend(Timetable(favoriteMarkedSessions.toImmutableList()))
+            val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
+            trySend(Timetable.fake().copy(favorites = favorites))
         }
     }
 
@@ -25,11 +25,11 @@ class DataSessionsRepository(
         // TODO
     }
 
-    override suspend fun setFavorite(sessionId: String, favorite: Boolean) {
+    override suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean) {
         if (favorite) {
-            favoriteSessionsDataStore.addFavorite(sessionId)
+            favoriteSessionsDataStore.addFavorite(sessionId.value)
         } else {
-            favoriteSessionsDataStore.removeFavorite(sessionId)
+            favoriteSessionsDataStore.removeFavorite(sessionId.value)
         }
     }
 }

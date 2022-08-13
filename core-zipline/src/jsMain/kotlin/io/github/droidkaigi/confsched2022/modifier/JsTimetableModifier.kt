@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.modifier
 
-import io.github.droidkaigi.confsched2022.model.Timetable
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
