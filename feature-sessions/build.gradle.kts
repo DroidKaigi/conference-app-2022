@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.composeMaterial3)
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
-    implementation(libs.androidxActivityActivityCompose)
+    implementation(libs.androidxActivityCompose)
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)
     debugImplementation(libs.composeUiTestManifest)

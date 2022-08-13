@@ -11,7 +11,7 @@ composeMaterial3WindowSizeClass = "1.0.0-alpha15"
 composeMaterial3 = "1.0.0-alpha13"
 androidxFragment = "1.5.2"
 androidxLifecycle = "2.5.1"
-androidxActivity = "1.6.0-alpha05"
+androidxActivity = "1.6.0-beta01"
 androidxNavigationCompose = "2.5.1"
 androidxDatastore = "1.0.0"
 hiltNavigationCompose = "1.0.0"
@@ -61,7 +61,7 @@ kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serializatio
 androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidxNavigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationCompose" }
 androidxLifecycleLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
-androidxActivityActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidxActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidxFragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
 androidxDatastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 multiplatformSettingsCoroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
