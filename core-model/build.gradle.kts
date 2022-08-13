@@ -12,6 +12,7 @@ kotlin {
             dependencies {
                 api(libs.kotlinxCollectionsImmutable)
                 api(libs.kotlinxCoroutinesCore)
+                api(libs.kotlinxDatetime)
                 implementation(libs.kotlinSerializationJson)
             }
         }

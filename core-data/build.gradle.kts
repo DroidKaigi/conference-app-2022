@@ -14,6 +14,7 @@ kotlin {
                 implementation(libs.ktorKotlinxSerialization)
                 implementation(libs.ktorContentNegotiation)
                 implementation(libs.multiplatformSettingsCoroutines)
+                implementation(libs.kotlinxDatetime)
             }
         }
         val androidMain by getting {

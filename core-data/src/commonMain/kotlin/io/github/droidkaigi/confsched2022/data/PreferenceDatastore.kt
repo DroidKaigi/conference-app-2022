@@ -1,3 +1,5 @@
+package io.github.droidkaigi.confsched2022.data
+
 import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableSet

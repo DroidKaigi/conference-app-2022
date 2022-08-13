@@ -22,12 +22,15 @@ fun Sessions() {
     Column(modifier = Modifier.padding(32.dp)) {
         when (val sessionState = state.sessionsState) {
             is Loaded -> {
-                for (session in sessionState.timetable.sessions) {
+                val timetable = sessionState.timetable
+                for (session in timetable.timetableItems) {
                     // to LazyColum
                     Text(
                         text = state.toString(),
                         modifier = Modifier.clickable {
-                            hiltViewModel.onFavorite(session.id, !session.isFavorite)
+                            hiltViewModel.onFavoriteToggle(
+                                sessionId = session.id,
+                            )
                         }
                     )
                 }
