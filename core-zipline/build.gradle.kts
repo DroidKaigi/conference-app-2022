@@ -17,8 +17,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.zipline)
                 implementation(projects.coreModel)
+                implementation(libs.zipline)
+                implementation(libs.kermit)
             }
         }
         val jsMain by getting {

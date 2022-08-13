@@ -4,6 +4,7 @@ import android.app.Application
 import app.cash.zipline.EventListener
 import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ZiplineLoader
+import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.Timetable
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class SessionsZipline @Inject constructor(
                 url: String?,
                 exception: Exception
             ) {
-                exception.printStackTrace()
+                Logger.d(exception) { "Zipline manifestParseFailed" }
             }
 
             override fun applicationLoadFailed(
@@ -48,7 +49,7 @@ class SessionsZipline @Inject constructor(
                 manifestUrl: String?,
                 exception: Exception
             ) {
-                exception.printStackTrace()
+                Logger.d(exception) { "Zipline applicationLoadFailed" }
             }
 
             override fun downloadFailed(
@@ -56,7 +57,7 @@ class SessionsZipline @Inject constructor(
                 url: String,
                 exception: Exception
             ) {
-                exception.printStackTrace()
+                Logger.d(exception) { "Zipline downloadFailed" }
             }
         },
         nowEpochMs = { System.currentTimeMillis() }
@@ -80,7 +81,7 @@ class SessionsZipline @Inject constructor(
                 zipline = loadedZipline!!.zipline
                 zipline.take<TimetableModifier>("sessionsModifier")
             } catch (e: Exception) {
-                e.printStackTrace()
+                Logger.d(e) { "zipline load error" }
                 object : TimetableModifier {
                     override suspend fun produceModels(timetable: Timetable): Timetable {
                         return timetable

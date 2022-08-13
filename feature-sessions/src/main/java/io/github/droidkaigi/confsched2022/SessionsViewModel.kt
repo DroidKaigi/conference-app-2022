@@ -59,7 +59,6 @@ class SessionsViewModel @Inject constructor(
     }
 
     fun onToggleFilter() {
-        println("toggle")
         filter.value = !filter.value
     }
 
