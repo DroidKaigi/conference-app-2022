@@ -29,6 +29,7 @@ data class Timetable(
         }
         return copy(timetableItems = TimetableItemList(timetableItems.toImmutableList()))
     }
+
     companion object
 }
 
@@ -47,6 +48,11 @@ fun Timetable.Companion.fake(): Timetable = Timetable(
                 category = TimetableCategory(
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
+                ),
+                room = TimetableRoom(
+                    1000,
+                    MultiLangText("AAAAA JA", "AAAAA EN"),
+                    0
                 ),
                 targetAudience = "TBW",
                 language = "TBD",
@@ -71,12 +77,21 @@ fun Timetable.Companion.fake(): Timetable = Timetable(
                         "Android Framework and Jetpack",
                     ),
                 ),
+                room = TimetableRoom(
+                    1000,
+                    MultiLangText("AAAAA JA", "AAAAA EN"),
+                    0
+                ),
                 targetAudience = "For App developer アプリ開発者向け",
                 language = "JAPANESE",
                 asset = TimetableAsset(
                     videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
                     slideUrl = "https://droidkaigi.jp/2021/",
                 ),
+                levels = persistentListOf(
+                    "INTERMEDIATE",
+                ),
+                description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
                 speakers = persistentListOf(
                     TimetableSpeaker(
                         name = "taka",
@@ -91,24 +106,25 @@ fun Timetable.Companion.fake(): Timetable = Timetable(
                         tagLine = "iOS Engineer",
                     ),
                 ),
-                description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
                 message = null,
-                levels = persistentListOf(
-                    "INTERMEDIATE",
-                ),
             ),
             TimetableItem.Special(
                 id = TimetableItemId("3"),
                 title = MultiLangText("Closing", "Closing"),
-                startsAt = LocalDateTime.parse("2021-10-21T18:00:00")
+                startsAt = LocalDateTime.parse("2021-10-20T10:40:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                endsAt = LocalDateTime.parse("2021-10-21T18:20:00")
+                endsAt = LocalDateTime.parse("2021-10-20T11:00:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                targetAudience = "TBW",
                 category = TimetableCategory(
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
                 ),
+                room = TimetableRoom(
+                    2000,
+                    MultiLangText("BBBB JA", "BBBB EN"),
+                    0
+                ),
+                targetAudience = "TBW",
                 language = "TBD",
                 asset = TimetableAsset(null, null),
                 levels = persistentListOf(
