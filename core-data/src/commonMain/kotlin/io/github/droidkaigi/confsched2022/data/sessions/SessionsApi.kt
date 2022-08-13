@@ -11,6 +11,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
+import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.ktor.client.HttpClient
 import kotlinx.collections.immutable.toImmutableList
@@ -33,8 +34,8 @@ private fun String.toInstantAsJST(): Instant {
 }
 
 internal fun SessionAllResponse.toTimetable(): Timetable {
-    val feedContents = this
-    val speakerIdToSpeaker: Map<String, TimetableSpeaker> = feedContents.speakers
+    val timetableContents = this
+    val speakerIdToSpeaker: Map<String, TimetableSpeaker> = timetableContents.speakers
         .groupBy { it.id }
         .mapValues { (_, apiSpeakers) ->
             apiSpeakers.map { apiSpeaker ->
@@ -46,7 +47,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 )
             }.first()
         }
-    val categoryIdToCategory: Map<Int, TimetableCategory> = feedContents.categories
+    val categoryIdToCategory: Map<Int, TimetableCategory> = timetableContents.categories
         .flatMap { it.items }
         .groupBy { it.id }
         .mapValues { (_, apiCategories) ->
@@ -57,10 +58,21 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 )
             }.first()
         }
+    val roomIdToRoom = timetableContents.rooms
+        .groupBy { it.id }
+        .mapValues { (_, apiRooms) ->
+            apiRooms.map { apiRoom ->
+                TimetableRoom(
+                    id = apiRoom.id,
+                    name = apiRoom.name.toMultiLangText(),
+                    sort = apiRoom.sort,
+                )
+            }.first()
+        }
 
     return Timetable(
         TimetableItemList(
-            feedContents.sessions.map { apiSession ->
+            timetableContents.sessions.map { apiSession ->
                 if (!apiSession.isServiceSession) {
                     TimetableItem.Session(
                         id = TimetableItemId(apiSession.id),
@@ -68,6 +80,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         startsAt = apiSession.startsAt.toInstantAsJST(),
                         endsAt = apiSession.endsAt.toInstantAsJST(),
                         category = categoryIdToCategory[apiSession.sessionCategoryItemId]!!,
+                        room = roomIdToRoom[apiSession.roomId]!!,
                         targetAudience = apiSession.targetAudience,
                         language = apiSession.language,
                         asset = apiSession.asset.toTimetableAsset(),
@@ -85,6 +98,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         startsAt = apiSession.startsAt.toInstantAsJST(),
                         endsAt = apiSession.endsAt.toInstantAsJST(),
                         category = categoryIdToCategory[apiSession.sessionCategoryItemId]!!,
+                        room = roomIdToRoom[apiSession.roomId]!!,
                         targetAudience = apiSession.targetAudience,
                         language = apiSession.language,
                         asset = apiSession.asset.toTimetableAsset(),

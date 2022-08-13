@@ -14,7 +14,7 @@ class DataSessionsRepository(
     val favoriteSessionsDataStore: PreferenceDatastore
 ) : SessionsRepository {
     override fun timetable(): Flow<Timetable> = callbackFlow {
-        val sessions = sessionsApi.timetable()
+//        val sessions = sessionsApi.timetable()
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
             val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
             trySend(Timetable.fake().copy(favorites = favorites))
