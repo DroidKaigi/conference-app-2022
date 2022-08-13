@@ -6,9 +6,12 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
-class HiltAndroidWithComposeAutoInjectRule(private val testInstance: Any) : TestRule {
+class RobotTestRule(
+    private val testInstance: Any
+) : TestRule {
+
+    val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
     override fun apply(base: Statement?, description: Description?): Statement {
-        val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
         return RuleChain
             .outerRule(HiltAndroidAutoInjectRule(testInstance))
             .around(composeTestRule)
