@@ -24,7 +24,7 @@ fun Project.setupAndroid() {
         namespace?.let {
             this.namespace = it
         }
-        compileSdkVersion(32)
+        compileSdkVersion(33)
 
         defaultConfig {
             minSdk = 23
@@ -37,6 +37,11 @@ fun Project.setupAndroid() {
         }
         dependencies {
             add("coreLibraryDesugaring", libs.findLibrary("androidDesugarJdkLibs").get())
+        }
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
         }
 
         defaultConfig.targetSdk = 32

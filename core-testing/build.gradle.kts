@@ -13,9 +13,10 @@ dependencies {
     api(projects.coreModel)
     api(projects.coreData)
     api(libs.robolectric)
+    api(libs.androidxActivityCompose)
     api(libs.hiltAndroidTesting)
-    api(libs.junit)
     api(libs.junit)
     api(libs.androidxTestExtJunit)
     api(libs.androidxTestEspressoEspressoCore)
+    api(libs.composeUiTestJunit4)
 }

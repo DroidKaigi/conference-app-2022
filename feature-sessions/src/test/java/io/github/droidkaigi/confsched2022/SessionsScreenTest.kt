@@ -11,9 +11,9 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class ExampleUnitTest {
+class SessionsScreenTest {
 
-    @get:Rule val hiltAndroidRule = HiltAndroidAutoInjectRule(this)
+    @get:Rule val hiltAndroidRule = HiltAndroidWithComposeAutoInjectRule(this)
     @Inject lateinit var sessionsRepository: SessionsRepository
 
     @Test
