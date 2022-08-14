@@ -24,11 +24,13 @@ import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel.SessionsState
 fun Sessions(modifier: Modifier = Modifier) {
     val hiltViewModel = hiltViewModel<SessionsViewModel>()
     val state by hiltViewModel.state
-    Column(modifier = modifier
-        .padding(32.dp)
-        .windowInsetsPadding(
-        WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-        )) {
+    Column(
+        modifier = modifier
+            .padding(32.dp)
+            .windowInsetsPadding(
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+            )
+    ) {
         when (val sessionState = state.sessionsState) {
             is Loaded -> {
                 val timetable = sessionState.timetable
