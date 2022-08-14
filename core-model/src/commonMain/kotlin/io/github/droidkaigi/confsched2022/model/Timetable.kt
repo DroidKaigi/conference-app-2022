@@ -83,7 +83,10 @@ fun Timetable.Companion.fake(): Timetable {
             add(
                 TimetableItem.Session(
                     id = TimetableItemId("2$index"),
-                    title = MultiLangText("DroidKaigiのアプリのアーキテクチャ$index", "DroidKaigi App Architecture$index"),
+                    title = MultiLangText(
+                        "DroidKaigiのアプリのアーキテクチャ$index",
+                        "DroidKaigi App Architecture$index"
+                    ),
                     startsAt = start
                         .toInstant(TimeZone.of("UTC+9")),
                     endsAt = end
@@ -98,7 +101,7 @@ fun Timetable.Companion.fake(): Timetable {
                     room = TimetableRoom(
                         1000 + index % 3,
                         MultiLangText("${index % 3} JA", "${index % 3} EN"),
-                        0+ index % 3
+                        0 + index % 3
                     ),
                     targetAudience = "For App developer アプリ開発者向け",
                     language = "JAPANESE",
@@ -109,7 +112,10 @@ fun Timetable.Companion.fake(): Timetable {
                     levels = persistentListOf(
                         "INTERMEDIATE",
                     ),
-                    description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
+                    description = "これはディスクリプションです。\n" +
+                        "これはディスクリプションです。\n" +
+                        "これはディスクリプションです。\n" +
+                        "これはディスクリプションです。",
                     speakers = persistentListOf(
                         TimetableSpeaker(
                             name = "taka",
