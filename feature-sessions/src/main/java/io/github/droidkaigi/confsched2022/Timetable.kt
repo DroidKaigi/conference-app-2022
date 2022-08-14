@@ -40,10 +40,10 @@ fun Timetable(
         content(timetableItem.first, timetableItem.second)
     }
     val density = LocalDensity.current
-    val timetableLayout = remember {
+    val timetableLayout = remember(timetable) {
         TimetableLayout(timetable = timetable, density = density)
     }
-    val screen = remember {
+    val screen = remember(timetableLayout) {
         Screen(
             timetableLayout,
             0,
@@ -56,7 +56,7 @@ fun Timetable(
     val scrollableXState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
         screen.scrollX(scrollY)
     })
-    val visibleItemLayouts by remember { screen.visibleItemLayouts }
+    val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
     LazyLayout(
         modifier = modifier
             .scrollable(
@@ -165,11 +165,11 @@ private data class TimetableItemLayout(
 
 private data class TimetableLayout(val timetable: Timetable, val density: Density) {
     val rooms = timetable.timetableItems.map { it.room }.toSet().sortedBy { it.sort }
-    val dayStartTime = timetable.timetableItems.minOf { it.startsAt }
+    val dayStartTime = timetable.timetableItems.minOfOrNull { it.startsAt }
     var timetableHeight = 0
     var timetableWidth = 0
     val timetableLayouts = timetable.timetableItems.map {
-        val timetableItemLayout = TimetableItemLayout(it, rooms, dayStartTime, density)
+        val timetableItemLayout = TimetableItemLayout(it, rooms, dayStartTime!!, density)
         timetableHeight =
             maxOf(timetableHeight, timetableItemLayout.bottom)
         timetableWidth =
