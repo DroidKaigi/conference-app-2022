@@ -1,7 +1,6 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.rememberScrollableState
@@ -46,18 +45,14 @@ fun Timetable(
     }
     val density = LocalDensity.current
     val timetableLayout = remember {
-        derivedStateOf {
-            TimetableLayout(timetable = timetable, density = density)
-        }
+        TimetableLayout(timetable = timetable, density = density)
     }
-    val screen by remember {
-        derivedStateOf {
-            Screen(
-                timetableLayout.value,
-                0,
-                0
-            )
-        }
+    val screen = remember {
+        Screen(
+            timetableLayout,
+            0,
+            0
+        )
     }
     val scrollableYState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
         screen.scrollY(scrollY)
@@ -65,6 +60,7 @@ fun Timetable(
     val scrollableXState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
         screen.scrollX(scrollY)
     })
+    val visibleItemLayouts by remember { screen.visibleItemLayouts }
     LazyLayout(
         modifier = modifier
             .scrollable(
@@ -83,7 +79,6 @@ fun Timetable(
         data class ItemData(val placeable: Placeable, val timetableItem: TimetableItemLayout)
         screen.height = constraint.maxHeight
         screen.width = constraint.maxWidth
-        val visibleItemLayouts = screen.visibleItemLayouts.value
 
         val items = visibleItemLayouts.map { (index, timetableLayout) ->
             ItemData(
@@ -115,13 +110,7 @@ fun TimetablePreview() {
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake()
     ) { timetableItem, isFavorite ->
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
-        ) {
-            Text(timetableItem.toString(), fontSize = 12.sp)
-        }
+        TimetableItem(timetableItem, isFavorite)
     }
 }
 

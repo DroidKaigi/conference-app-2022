@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.data.di
 
-import android.app.Application
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +17,7 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideHttpClient(
-        okHttpClient: OkHttpClient,
-        application: Application
+        okHttpClient: OkHttpClient
     ): HttpClient {
         val httpClient = HttpClient(OkHttp) {
             engine {
