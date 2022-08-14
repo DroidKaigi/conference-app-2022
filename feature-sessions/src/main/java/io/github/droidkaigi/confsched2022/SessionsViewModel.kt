@@ -4,6 +4,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
@@ -37,13 +38,15 @@ class SessionsViewModel @Inject constructor(
 
     val state = moleculeScope.moleculeComposeState(clock = ContextClock) {
         val timetable by timetable.collectAsState(initial = Timetable())
-        val sessionState by derivedStateOf {
-            if (timetable.timetableItems.isEmpty()) {
-                SessionsState.Loading
-            } else {
-                SessionsState.Loaded(
-                    timetable.filtered(filter.value)
-                )
+        val sessionState by remember {
+            derivedStateOf {
+                if (timetable.timetableItems.isEmpty()) {
+                    SessionsState.Loading
+                } else {
+                    SessionsState.Loaded(
+                        timetable.filtered(filter.value)
+                    )
+                }
             }
         }
         SessionsUiModel(sessionState, isFilterOn = filter.value.filterFavorite)

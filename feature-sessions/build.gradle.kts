@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.coreZipline)
     testImplementation(projects.coreTesting)
 
+    implementation(libs.kermit)
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)
     implementation(libs.composeUi)

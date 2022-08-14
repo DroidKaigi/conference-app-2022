@@ -1,16 +1,13 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -19,14 +16,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
@@ -46,18 +41,14 @@ fun Timetable(
     }
     val density = LocalDensity.current
     val timetableLayout = remember {
-        derivedStateOf {
-            TimetableLayout(timetable = timetable, density = density)
-        }
+        TimetableLayout(timetable = timetable, density = density)
     }
-    val screen by remember {
-        derivedStateOf {
-            Screen(
-                timetableLayout.value,
-                0,
-                0
-            )
-        }
+    val screen = remember {
+        Screen(
+            timetableLayout,
+            0,
+            0
+        )
     }
     val scrollableYState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
         screen.scrollY(scrollY)
@@ -65,6 +56,7 @@ fun Timetable(
     val scrollableXState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
         screen.scrollX(scrollY)
     })
+    val visibleItemLayouts by remember { screen.visibleItemLayouts }
     LazyLayout(
         modifier = modifier
             .scrollable(
@@ -83,7 +75,6 @@ fun Timetable(
         data class ItemData(val placeable: Placeable, val timetableItem: TimetableItemLayout)
         screen.height = constraint.maxHeight
         screen.width = constraint.maxWidth
-        val visibleItemLayouts = screen.visibleItemLayouts.value
 
         val items = visibleItemLayouts.map { (index, timetableLayout) ->
             ItemData(
@@ -115,13 +106,7 @@ fun TimetablePreview() {
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake()
     ) { timetableItem, isFavorite ->
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Gray)
-        ) {
-            Text(timetableItem.toString(), fontSize = 12.sp)
-        }
+        TimetableItem(timetableItem, isFavorite)
     }
 }
 

@@ -15,6 +15,9 @@ class AndroidComposePlugin : Plugin<Project> {
                 }
             }
             dependencies {
+                // FIXME: Without this, we can not use 1.2 and comiple error
+                add("kotlinCompilerPluginClasspath", libs.findLibrary("composeCompiler").get())
+
                 implementation(libs.findLibrary("androidxCoreKtx"))
                 implementation(libs.findLibrary("composeUi"))
                 implementation(libs.findLibrary("composeMaterial3"))
