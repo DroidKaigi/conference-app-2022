@@ -16,7 +16,10 @@ fun TimetableItem(
     isFavorited: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.background(Color.Gray).padding(4.dp)) {
+    Column(
+        modifier
+            .background(if (isFavorited) Color.Cyan else Color.Gray)
+            .padding(4.dp)) {
         Text(timetableItem.title.currentLangTitle)
         if (timetableItem is TimetableItem.Session) {
             Text(timetableItem.speakers.joinToString { it.name })

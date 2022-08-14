@@ -23,14 +23,14 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
-    val sessionsRepository: SessionsRepository,
+    private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
     private val filter = mutableStateOf<Filters>(Filters())
 
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-    val timetable = sessionsZipline.timetableModifier(
+    private val timetable = sessionsZipline.timetableModifier(
         coroutineScope = viewModelScope,
         initialTimetable = Timetable(),
         sessionsRepository.timetable()
@@ -60,7 +60,7 @@ class SessionsViewModel @Inject constructor(
         viewModelScope.launch {
             sessionsRepository.setFavorite(
                 sessionId,
-                timetable.value.favorites.contains(sessionId)
+                !timetable.value.favorites.contains(sessionId)
             )
         }
     }

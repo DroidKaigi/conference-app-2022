@@ -26,7 +26,7 @@ class PreferenceDatastore(private val flowSettings: FlowSettings) {
     }
 
     private fun String.toFavoriteSet(): ImmutableSet<String> {
-        return this.split(DELIMITER).toImmutableSet()
+        return this.split(DELIMITER).filter { it.isNotBlank() }.toImmutableSet()
     }
 
     private fun Set<String>.toValue(): String {

@@ -31,21 +31,27 @@ fun Sessions(modifier: Modifier = Modifier) {
                 WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
             )
     ) {
-        when (val sessionState = state.sessionsState) {
-            is Loaded -> {
-                val timetable = sessionState.timetable
-                Timetable(timetable) { timetableItem, isFavorited ->
-                    TimetableItem(timetableItem = timetableItem, isFavorited = isFavorited)
-                }
-            }
-            Loading -> CircularProgressIndicator()
-        }
         Text(
             text = "Filter is ${if (state.isFilterOn) "ON" else "OFF"}",
             modifier = Modifier.clickable {
                 hiltViewModel.onToggleFilter()
             }
         )
+        when (val sessionState = state.sessionsState) {
+            is Loaded -> {
+                val timetable = sessionState.timetable
+                Timetable(timetable) { timetableItem, isFavorited ->
+                    TimetableItem(
+                        modifier = Modifier.clickable {
+                            hiltViewModel.onFavoriteToggle(timetableItem.id)
+                        },
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited
+                    )
+                }
+            }
+            Loading -> CircularProgressIndicator()
+        }
     }
 }
 
