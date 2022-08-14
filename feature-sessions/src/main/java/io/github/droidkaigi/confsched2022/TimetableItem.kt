@@ -24,5 +24,6 @@ fun TimetableItem(
         if (timetableItem is TimetableItem.Session) {
             Text(timetableItem.speakers.joinToString { it.name })
         }
+        Text(timetableItem.startsTimeString)
     }
 }
