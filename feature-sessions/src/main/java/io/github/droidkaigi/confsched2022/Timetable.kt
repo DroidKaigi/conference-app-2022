@@ -16,6 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +30,8 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,11 +48,15 @@ fun Timetable(
     val timetableLayout = remember(timetable) {
         TimetableLayout(timetable = timetable, density = density)
     }
+    val screenScroll = remember {
+        ScreenScroll()
+    }
     val screen = remember(timetableLayout) {
         Screen(
             timetableLayout,
             0,
-            0
+            0,
+            screenScroll
         )
     }
     val scrollableYState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
@@ -59,6 +68,15 @@ fun Timetable(
     val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
     LazyLayout(
         modifier = modifier
+            .drawBehind {
+                screen.lines.value.forEach {
+                    drawLine(
+                        Color.LightGray,
+                        Offset(0F, it.toFloat()),
+                        Offset(screen.width.toFloat(), it.toFloat())
+                    )
+                }
+            }
             .scrollable(
                 orientation = Orientation.Vertical,
                 state = scrollableYState,
@@ -91,8 +109,8 @@ fun Timetable(
         layout(constraint.maxWidth, constraint.maxHeight) {
             items.forEach { (placable, timetableLayout) ->
                 placable.place(
-                    timetableLayout.left + screen.scrollX.value,
-                    timetableLayout.top + screen.scrollY.value
+                    timetableLayout.left + screen.screenScroll.scrollX.value,
+                    timetableLayout.top + screen.screenScroll.scrollY.value
                 )
             }
         }
@@ -129,15 +147,13 @@ private data class TimetableItemLayout(
     val timetableItem: TimetableItem,
     val rooms: List<TimetableRoom>,
     val dayStartTime: Instant,
-    val density: Density
+    val density: Density,
+    val minutePx: Int
 ) {
-    private val minutePx = with(density) {
-        15.dp.roundToPx()
-    }
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) {
-        300.dp.roundToPx()
+        80.dp.roundToPx()
     }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStartTime)
@@ -168,8 +184,17 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     val dayStartTime = timetable.timetableItems.minOfOrNull { it.startsAt }
     var timetableHeight = 0
     var timetableWidth = 0
+    val minutePx = with(density) {
+        4.dp.roundToPx()
+    }
     val timetableLayouts = timetable.timetableItems.map {
-        val timetableItemLayout = TimetableItemLayout(it, rooms, dayStartTime!!, density)
+        val timetableItemLayout = TimetableItemLayout(
+            timetableItem = it,
+            rooms = rooms,
+            dayStartTime = dayStartTime!!,
+            density = density,
+            minutePx = minutePx
+        )
         timetableHeight =
             maxOf(timetableHeight, timetableItemLayout.bottom)
         timetableWidth =
@@ -189,35 +214,46 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     }
 }
 
+private data class ScreenScroll(
+    val scrollX: MutableState<Int> = mutableStateOf(0),
+    val scrollY: MutableState<Int> = mutableStateOf(0)
+)
+
 private class Screen(
     val timetableLayout: TimetableLayout,
     var width: Int,
     var height: Int,
-    val scrollX: MutableState<Int> = mutableStateOf(0),
-    val scrollY: MutableState<Int> = mutableStateOf(0)
+    val screenScroll: ScreenScroll
 ) {
     val visibleItemLayouts: State<List<IndexedValue<TimetableItemLayout>>> =
         derivedStateOf {
             timetableLayout.visibleItemLayouts(
                 width,
                 height,
-                scrollX.value,
-                scrollY.value
+                screenScroll.scrollX.value,
+                screenScroll.scrollY.value
             )
         }
+    val lines = derivedStateOf {
+        val startTime = timetableLayout.dayStartTime ?: return@derivedStateOf listOf()
+        val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
+        (0..10).map {
+            val minuteOffSet = startMinute * timetableLayout.minutePx
+            screenScroll.scrollY.value + timetableLayout.minutePx * 60 * it - minuteOffSet
+        }
+    }
 
     override fun toString(): String {
         return "Screen(" +
             "width=$width, " +
             "height=$height, " +
-            "scrollX=$scrollX, " +
-            "scrollY=$scrollY, " +
+            "scroll=$screenScroll, " +
             "visibleItemLayouts=$visibleItemLayouts" +
             ")"
     }
 
     fun scrollX(scrollX: Float): Float {
-        val currentValue = this.scrollX.value
+        val currentValue = this.screenScroll.scrollX.value
         val nextValue = currentValue + scrollX
         val maxScroll = if (width < timetableLayout.timetableWidth) {
             -(timetableLayout.timetableWidth - width)
@@ -225,12 +261,12 @@ private class Screen(
             0
         }
         val nextPossibleValue = maxOf(minOf(nextValue.toInt(), 0), maxScroll)
-        this.scrollX.value = nextPossibleValue
+        this.screenScroll.scrollX.value = nextPossibleValue
         return nextPossibleValue.toFloat() - currentValue
     }
 
     fun scrollY(scrollY: Float): Float {
-        val currentValue = this.scrollY.value
+        val currentValue = this.screenScroll.scrollY.value
         val nextValue = currentValue + scrollY
         val maxScroll =
             if (height < timetableLayout.timetableHeight) {
@@ -239,7 +275,7 @@ private class Screen(
                 0
             }
         val nextPossibleValue = maxOf(minOf(nextValue.toInt(), 0), maxScroll)
-        this.scrollY.value = nextPossibleValue
+        this.screenScroll.scrollY.value = nextPossibleValue
         return nextPossibleValue.toFloat() - currentValue
     }
 }

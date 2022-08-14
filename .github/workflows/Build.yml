@@ -39,6 +39,7 @@ jobs:
 
       - name: Check lint
         run: ./gradlew lintDebug --stacktrace
+        continue-on-error: true # https://issuetracker.google.com/issues/241787635
 
       - name: Build all build type and flavor permutations
         run: ./gradlew assemble --stacktrace
