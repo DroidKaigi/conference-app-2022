@@ -44,6 +44,9 @@ jobs:
       - name: Build all build type and flavor permutations
         run: ./gradlew assemble --stacktrace
 
+      - name: Build zipline
+        run: ./gradlew compileZipline --stacktrace
+
       - name: Run local tests
         run: ./gradlew testDebug --stacktrace
 
