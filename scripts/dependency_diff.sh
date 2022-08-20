@@ -3,9 +3,6 @@
 # Usage: scripts/dependency_diff.sh from-branch to-branch
 # Example: scripts/dependency_diff.sh main update-compose
 
-echo "dependency diff"
-echo "branch: $1 -> $2, module: $3, configuration: $4"
-
 FROM_DEPENDENCIES_FILE="$(echo "$1" | sed 's/\//\\_/g')-dependency.txt"
 TO_DEPENDENCIES_FILE="$(echo "$2" | sed 's/\//\\_/g')-dependency.txt"
 MODULE=$3
@@ -26,4 +23,9 @@ if [ "$CHECKSUM" != $EXPECTED_CHECKSUM ]; then
   echo "dependency-diff-tldr-r8.jar CHECKSUM is not same"
   exit 1
 fi
-java -jar dependency-diff-tldr-r8.jar "$FROM_DEPENDENCIES_FILE" "$TO_DEPENDENCIES_FILE"
+RESULT=$(java -jar dependency-diff-tldr-r8.jar "$FROM_DEPENDENCIES_FILE" "$TO_DEPENDENCIES_FILE")
+if [ -n "$RESULT" ]; then
+  echo "dependency diff"
+  echo "branch: $1 -> $2, module: $3, configuration: $4"
+  echo "$RESULT"
+fi

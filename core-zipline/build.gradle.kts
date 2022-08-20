@@ -49,8 +49,32 @@ rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.N
     versions.webpackCli.version = "4.10.0"
 }
 
+val copyJoda by tasks.creating(Copy::class) {
+    dependsOn("jsPublicPackageJson")
+    dependsOn("compileProductionExecutableKotlinJs")
+    from(File(rootProject.buildDir, "js/node_modules/@js-joda/core/dist")) {
+
+    }
+    include("**/js-joda.js")
+    include("**/js-joda.js.map")
+    rename("js-joda.js", "@js-joda.js")
+    into("$buildDir/compileSync/main/productionExecutable/kotlin")
+}
+
+val adaptJoda by tasks.creating() {
+    dependsOn(copyJoda)
+    doLast {
+        File("$buildDir/compileSync/main/productionExecutable/kotlin").walk()
+            .filter {
+                it.name == "Kotlin-DateTime-library-kotlinx-datetime-js-ir.js"
+            }
+            .forEach { it.writeText(it.readText().replace("@js-joda/core", "./@js-joda.js")) }
+    }
+}
+
 val compileZipline by tasks.creating(JavaExec::class) {
     dependsOn("compileProductionExecutableKotlinJs")
+    dependsOn(adaptJoda)
     classpath = compilerConfiguration
     main = "app.cash.zipline.gradle.ZiplineCompilerKt"
     args = listOf(

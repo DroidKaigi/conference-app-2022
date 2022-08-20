@@ -14,7 +14,10 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -68,29 +71,29 @@ class SessionsZipline @Inject constructor(
         val modelStateFlow = MutableStateFlow(initialTimetable)
         coroutineScope.launch(dispatcher) {
             var zipline: Zipline? = null
-            val modifier = object : TimetableModifier {
-                override suspend fun produceModels(timetable: Timetable): Timetable {
-                    return timetable
-                }
-            }
-            // If the server works, we will comment in
-//            val modifier = try {
-//                val loadedZiplineFlow = ziplineLoader.load("timeline", flowOf(manifestUrl), { })
-//                loadedZiplineFlow.catch { throwable -> throwable.printStackTrace() }
-//                val loadedZipline = loadedZiplineFlow.firstOrNull()
-//                if (loadedZipline == null) {
-//                    loadedZiplineFlow.catch { it.printStackTrace() }
-//                }
-//                zipline = loadedZipline!!.zipline
-//                zipline.take<TimetableModifier>("sessionsModifier")
-//            } catch (e: Exception) {
-//                Logger.d(e) { "zipline load error" }
-//                object : TimetableModifier {
-//                    override suspend fun produceModels(timetable: Timetable): Timetable {
-//                        return timetable
-//                    }
+//            val modifier = object : TimetableModifier {
+//                override suspend fun produceModels(timetable: Timetable): Timetable {
+//                    return timetable
 //                }
 //            }
+            // If the server works, we will comment in
+            val modifier = try {
+                val loadedZiplineFlow = ziplineLoader.load("timeline", flowOf(manifestUrl), { })
+                loadedZiplineFlow.catch { throwable -> throwable.printStackTrace() }
+                val loadedZipline = loadedZiplineFlow.firstOrNull()
+                if (loadedZipline == null) {
+                    loadedZiplineFlow.catch { it.printStackTrace() }
+                }
+                zipline = loadedZipline!!.zipline
+                zipline.take<TimetableModifier>("sessionsModifier")
+            } catch (e: Exception) {
+                Logger.d(e) { "zipline load error" }
+                object : TimetableModifier {
+                    override suspend fun produceModels(timetable: Timetable): Timetable {
+                        return timetable
+                    }
+                }
+            }
             val stateFlow =
                 MutableStateFlow(initialTimetable)
             launch {

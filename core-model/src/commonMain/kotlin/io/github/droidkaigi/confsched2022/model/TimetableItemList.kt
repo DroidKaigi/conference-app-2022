@@ -1,9 +1,16 @@
+@file:UseSerializers(
+    PersistentListSerializer::class,
+    ImmutableListSerializer::class,
+    ImmutableSetSerializer::class
+)
+
 package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class TimetableItemList(
