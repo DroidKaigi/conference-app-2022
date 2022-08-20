@@ -1,3 +1,8 @@
+@file:UseSerializers(
+    PersistentListSerializer::class,
+    ImmutableListSerializer::class,
+    ImmutableSetSerializer::class
+)
 package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.collections.immutable.ImmutableList
@@ -6,20 +11,22 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
-sealed class TimetableItem(
-    open val id: TimetableItemId,
-    open val title: MultiLangText,
-    open val startsAt: Instant,
-    open val endsAt: Instant,
-    open val category: TimetableCategory,
-    open val room: TimetableRoom,
-    open val targetAudience: String,
-    open val language: String,
-    open val asset: TimetableAsset,
-    open val levels: ImmutableList<String>,
-) {
+sealed class TimetableItem {
+    abstract val id: TimetableItemId
+    abstract val title: MultiLangText
+    abstract val startsAt: Instant
+    abstract val endsAt: Instant
+    abstract val category: TimetableCategory
+    abstract val room: TimetableRoom
+    abstract val targetAudience: String
+    abstract val language: String
+    abstract val asset: TimetableAsset
+    abstract val levels: ImmutableList<String>
+
+    @Serializable
     data class Session(
         override val id: TimetableItemId,
         override val title: MultiLangText,
@@ -34,19 +41,9 @@ sealed class TimetableItem(
         val description: String,
         val speakers: ImmutableList<TimetableSpeaker>,
         val message: MultiLangText?,
-    ) : TimetableItem(
-        id = id,
-        title = title,
-        startsAt = startsAt,
-        endsAt = endsAt,
-        category = category,
-        room = room,
-        targetAudience = targetAudience,
-        language = language,
-        asset = asset,
-        levels = levels,
-    )
+    ) : TimetableItem()
 
+    @Serializable
     data class Special(
         override val id: TimetableItemId,
         override val title: MultiLangText,
@@ -59,18 +56,7 @@ sealed class TimetableItem(
         override val asset: TimetableAsset,
         override val levels: ImmutableList<String>,
         val speakers: ImmutableList<TimetableSpeaker> = persistentListOf(),
-    ) : TimetableItem(
-        id = id,
-        title = title,
-        startsAt = startsAt,
-        endsAt = endsAt,
-        category = category,
-        room = room,
-        targetAudience = targetAudience,
-        language = language,
-        asset = asset,
-        levels = levels,
-    )
+    ) : TimetableItem()
 
     val startsTimeString: String by lazy {
         val localDate = startsAt.toLocalDateTime(TimeZone.currentSystemDefault())

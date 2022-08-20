@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.modifier
 
+import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.Timetable
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,7 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 class JsTimetableModifier() : TimetableModifier {
     override suspend fun produceModels(timetable: Timetable): Timetable {
-        console.log(timetable)
+        Logger.d("Hello JS world!")
         return timetable.copy(
             timetableItems = timetable.timetableItems.copy(
                 timetable.timetableItems.timetableItems.mapIndexed { index, session ->

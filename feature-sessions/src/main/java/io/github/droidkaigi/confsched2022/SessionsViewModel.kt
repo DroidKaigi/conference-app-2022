@@ -26,7 +26,7 @@ class SessionsViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
-    private val filter = mutableStateOf<Filters>(Filters())
+    private val filter = mutableStateOf(Filters())
 
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
