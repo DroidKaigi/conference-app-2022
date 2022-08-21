@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.ui
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

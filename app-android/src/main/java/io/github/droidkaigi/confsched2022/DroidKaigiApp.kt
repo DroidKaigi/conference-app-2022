@@ -34,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.droidkaigi.confsched2022.designsystem.theme.DroidKaigiTheme
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsScreenRoot
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)

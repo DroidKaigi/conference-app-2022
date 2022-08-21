@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.modifier
+package io.github.droidkaigi.confsched2022.zipline
 
 import android.app.Application
 import app.cash.zipline.EventListener
@@ -6,6 +6,7 @@ import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.modifier.TimetableModifier
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext

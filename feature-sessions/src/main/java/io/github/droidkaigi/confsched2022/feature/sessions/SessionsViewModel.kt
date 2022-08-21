@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -13,9 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
-import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel
-import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel.ScheduleState
-import io.github.droidkaigi.confsched2022.modifier.SessionsZipline
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
+import io.github.droidkaigi.confsched2022.moleculeComposeState
+import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine

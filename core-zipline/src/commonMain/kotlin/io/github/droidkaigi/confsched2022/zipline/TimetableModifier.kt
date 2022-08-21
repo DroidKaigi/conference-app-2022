@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.modifier
+package io.github.droidkaigi.confsched2022.zipline
 
 import app.cash.zipline.ZiplineService
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule

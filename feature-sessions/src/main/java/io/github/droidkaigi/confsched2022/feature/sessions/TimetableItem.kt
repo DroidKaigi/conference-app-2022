@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
