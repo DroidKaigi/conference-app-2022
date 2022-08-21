@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.modifier
+package io.github.droidkaigi.confsched2022.zipline
 
 import app.cash.zipline.Zipline
 import kotlinx.coroutines.ExperimentalCoroutinesApi

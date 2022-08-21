@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,10 +25,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import io.github.droidkaigi.confsched2022.designsystem.theme.DroidKaigiTheme
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
-import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel
-import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel.ScheduleState.Loaded
+import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 
 @Composable
 fun SessionsScreenRoot(modifier: Modifier = Modifier) {

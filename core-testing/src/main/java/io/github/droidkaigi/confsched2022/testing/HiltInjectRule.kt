@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.testing
 
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.rules.TestWatcher

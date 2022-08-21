@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

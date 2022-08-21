@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.modifier
+package io.github.droidkaigi.confsched2022.zipline
 
 import android.app.Application
 import app.cash.zipline.EventListener

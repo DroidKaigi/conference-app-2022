@@ -8,8 +8,9 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreModel)
-    implementation(projects.coreZipline)
     testImplementation(projects.coreTesting)
+
+    implementation(projects.coreZipline)
 
     implementation(libs.kermit)
     implementation(libs.hiltNavigationCompose)

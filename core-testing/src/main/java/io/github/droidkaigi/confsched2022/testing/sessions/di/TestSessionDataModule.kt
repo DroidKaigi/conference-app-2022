@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.sessions.di
+package io.github.droidkaigi.confsched2022.testing.sessions.di
 
 import dagger.Module
 import dagger.Provides

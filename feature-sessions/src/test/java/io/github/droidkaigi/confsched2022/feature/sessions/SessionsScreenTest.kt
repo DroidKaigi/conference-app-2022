@@ -1,7 +1,8 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.github.droidkaigi.confsched2022.testing.RobotTestRule
 import javax.inject.Inject
 import org.junit.Rule
 import org.junit.Test

@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.testing
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.rules.RuleChain

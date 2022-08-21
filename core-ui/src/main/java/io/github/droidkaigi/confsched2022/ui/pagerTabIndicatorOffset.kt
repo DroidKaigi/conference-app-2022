@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.ui
 
 import androidx.compose.material3.TabPosition
 import androidx.compose.ui.Modifier
