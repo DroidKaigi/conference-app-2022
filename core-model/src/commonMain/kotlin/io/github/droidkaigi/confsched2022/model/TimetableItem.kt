@@ -1,11 +1,10 @@
 @file:UseSerializers(
     PersistentListSerializer::class,
-    ImmutableListSerializer::class,
-    ImmutableSetSerializer::class
 )
+
 package io.github.droidkaigi.confsched2022.model
 
-import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -24,7 +23,8 @@ sealed class TimetableItem {
     abstract val targetAudience: String
     abstract val language: String
     abstract val asset: TimetableAsset
-    abstract val levels: ImmutableList<String>
+    abstract val levels: PersistentList<String>
+    val day: DroidKaigi2022Day? get() = DroidKaigi2022Day.ofOrNull(startsAt)
 
     @Serializable
     data class Session(
@@ -37,9 +37,9 @@ sealed class TimetableItem {
         override val targetAudience: String,
         override val language: String,
         override val asset: TimetableAsset,
-        override val levels: ImmutableList<String>,
+        override val levels: PersistentList<String>,
         val description: String,
-        val speakers: ImmutableList<TimetableSpeaker>,
+        val speakers: PersistentList<TimetableSpeaker>,
         val message: MultiLangText?,
     ) : TimetableItem()
 
@@ -54,8 +54,8 @@ sealed class TimetableItem {
         override val targetAudience: String,
         override val language: String,
         override val asset: TimetableAsset,
-        override val levels: ImmutableList<String>,
-        val speakers: ImmutableList<TimetableSpeaker> = persistentListOf(),
+        override val levels: PersistentList<String>,
+        val speakers: PersistentList<TimetableSpeaker> = persistentListOf(),
     ) : TimetableItem()
 
     val startsTimeString: String by lazy {

@@ -12,13 +12,14 @@ import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel
-import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel.SessionsState
+import io.github.droidkaigi.confsched2022.modifier.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.modifier.SessionsZipline
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -30,22 +31,33 @@ class SessionsViewModel @Inject constructor(
 
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-    private val timetable = sessionsZipline.timetableModifier(
-        coroutineScope = viewModelScope,
-        initialTimetable = Timetable(),
-        sessionsRepository.timetable()
+    private val ziplineTimetableModifierFlow = sessionsZipline
+        .timetableModifier(coroutineScope = viewModelScope)
+    private val timetableResultFlow = combine(
+        ziplineTimetableModifierFlow,
+        sessionsRepository.droidKaigiScheduleFlow(),
+        ::Pair
     )
+        .map { (modifier, droidKaigiSchedule) -> modifier(droidKaigiSchedule) }
+        .asResult()
 
     val state = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val timetable by timetable.collectAsState(initial = Timetable())
+        val timetableResult by timetableResultFlow.collectAsState(initial = Result.Loading)
+
         val sessionState by remember {
             derivedStateOf {
-                if (timetable.timetableItems.isEmpty()) {
-                    SessionsState.Loading
-                } else {
-                    SessionsState.Loaded(
-                        timetable.filtered(filter.value)
-                    )
+                when (val result = timetableResult) {
+                    Result.Loading -> {
+                        ScheduleState.Loading
+                    }
+                    is Result.Success -> {
+                        ScheduleState.Loaded(result.data.filtered(filter.value))
+                    }
+                    else -> {
+                        // TODO
+                        // SessionsState.Error
+                        ScheduleState.Loading
+                    }
                 }
             }
         }
@@ -56,11 +68,11 @@ class SessionsViewModel @Inject constructor(
         filter.value = filter.value.copy(!filter.value.filterFavorite)
     }
 
-    fun onFavoriteToggle(sessionId: TimetableItemId) {
+    fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
         viewModelScope.launch {
             sessionsRepository.setFavorite(
                 sessionId,
-                !timetable.value.favorites.contains(sessionId)
+                !currentIsFavorite
             )
         }
     }

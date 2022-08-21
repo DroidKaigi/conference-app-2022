@@ -1,7 +1,5 @@
 @file:UseSerializers(
-    PersistentListSerializer::class,
-    ImmutableListSerializer::class,
-    ImmutableSetSerializer::class
+    PersistentSetSerializer::class
 )
 
 package io.github.droidkaigi.confsched2022.model
@@ -9,7 +7,7 @@ package io.github.droidkaigi.confsched2022.model
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -25,8 +23,16 @@ data class Timetable(
 ) {
     val contents by lazy {
         timetableItems.map {
-            it to favorites.contains(it.id)
+            TimetableItemWithFavorite(it, favorites.contains(it.id))
         }
+    }
+
+    fun dayTimetable(droidKaigi2022Day: DroidKaigi2022Day): Timetable {
+        var timetableItems = timetableItems.toList()
+        timetableItems = timetableItems.filter { timetableItem ->
+            timetableItem.day == droidKaigi2022Day
+        }
+        return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
     fun filtered(filters: Filters): Timetable {
@@ -36,7 +42,7 @@ data class Timetable(
                 favorites.contains(timetableItem.id)
             }
         }
-        return copy(timetableItems = TimetableItemList(timetableItems.toImmutableList()))
+        return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
     companion object
@@ -73,73 +79,76 @@ fun Timetable.Companion.fake(): Timetable {
                 ),
             )
         )
-        (0..10).forEach { index ->
-            val start = Instant.fromEpochSeconds(
-                LocalDateTime.parse("2021-10-20T10:10:00")
-                    .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60
-            ).toLocalDateTime(
-                TimeZone.of("UTC+9")
-            )
-            val end = Instant.fromEpochSeconds(
-                LocalDateTime.parse("2021-10-20T10:50:00")
-                    .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60
-            ).toLocalDateTime(
-                TimeZone.of("UTC+9")
-            )
-
-            add(
-                TimetableItem.Session(
-                    id = TimetableItemId("2$index"),
-                    title = MultiLangText(
-                        "DroidKaigiのアプリのアーキテクチャ$index",
-                        "DroidKaigi App Architecture$index"
-                    ),
-                    startsAt = start
-                        .toInstant(TimeZone.of("UTC+9")),
-                    endsAt = end
-                        .toInstant(TimeZone.of("UTC+9")),
-                    category = TimetableCategory(
-                        id = 28654,
-                        title = MultiLangText(
-                            "Android FrameworkとJetpack",
-                            "Android Framework and Jetpack",
-                        ),
-                    ),
-                    room = TimetableRoom(
-                        1000 + index % 3,
-                        MultiLangText("${index % 3} JA", "${index % 3} EN"),
-                        0 + index % 3
-                    ),
-                    targetAudience = "For App developer アプリ開発者向け",
-                    language = "JAPANESE",
-                    asset = TimetableAsset(
-                        videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
-                        slideUrl = "https://droidkaigi.jp/2021/",
-                    ),
-                    levels = persistentListOf(
-                        "INTERMEDIATE",
-                    ),
-                    description = "これはディスクリプションです。\n" +
-                        "これはディスクリプションです。\n" +
-                        "これはディスクリプションです。\n" +
-                        "これはディスクリプションです。",
-                    speakers = persistentListOf(
-                        TimetableSpeaker(
-                            name = "taka",
-                            iconUrl = "https://github.com/takahirom.png",
-                            bio = "Likes Android",
-                            tagLine = "Android Engineer"
-                        ),
-                        TimetableSpeaker(
-                            name = "ry",
-                            iconUrl = "https://github.com/ry-itto.png",
-                            bio = "Likes iOS",
-                            tagLine = "iOS Engineer",
-                        ),
-                    ),
-                    message = null,
+        (-1..1).forEach { day ->
+            (0..20).forEach { index ->
+                val dayOffset = day * 24 * 60 * 60
+                val start = Instant.fromEpochSeconds(
+                    LocalDateTime.parse("2021-10-20T10:10:00")
+                        .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
+                ).toLocalDateTime(
+                    TimeZone.of("UTC+9")
                 )
-            )
+                val end = Instant.fromEpochSeconds(
+                    LocalDateTime.parse("2021-10-20T10:50:00")
+                        .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
+                ).toLocalDateTime(
+                    TimeZone.of("UTC+9")
+                )
+
+                add(
+                    TimetableItem.Session(
+                        id = TimetableItemId("2$index"),
+                        title = MultiLangText(
+                            "DroidKaigiのアプリのアーキテクチャ$index",
+                            "DroidKaigi App Architecture$index"
+                        ),
+                        startsAt = start
+                            .toInstant(TimeZone.of("UTC+9")),
+                        endsAt = end
+                            .toInstant(TimeZone.of("UTC+9")),
+                        category = TimetableCategory(
+                            id = 28654,
+                            title = MultiLangText(
+                                "Android FrameworkとJetpack",
+                                "Android Framework and Jetpack",
+                            ),
+                        ),
+                        room = TimetableRoom(
+                            1000 + index % 3,
+                            MultiLangText("${index % 3} JA", "${index % 3} EN"),
+                            0 + index % 3
+                        ),
+                        targetAudience = "For App developer アプリ開発者向け",
+                        language = "JAPANESE",
+                        asset = TimetableAsset(
+                            videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
+                            slideUrl = "https://droidkaigi.jp/2021/",
+                        ),
+                        levels = persistentListOf(
+                            "INTERMEDIATE",
+                        ),
+                        description = "これはディスクリプションです。\n" +
+                            "これはディスクリプションです。\n" +
+                            "これはディスクリプションです。\n" +
+                            "これはディスクリプションです。",
+                        speakers = persistentListOf(
+                            TimetableSpeaker(
+                                name = "taka",
+                                iconUrl = "https://github.com/takahirom.png",
+                                bio = "Likes Android",
+                                tagLine = "Android Engineer"
+                            ),
+                            TimetableSpeaker(
+                                name = "ry",
+                                iconUrl = "https://github.com/ry-itto.png",
+                                bio = "Likes iOS",
+                                tagLine = "iOS Engineer",
+                            ),
+                        ),
+                        message = null,
+                    )
+                )
+            }
         }
         add(
             TimetableItem.Special(
@@ -171,7 +180,7 @@ fun Timetable.Companion.fake(): Timetable {
     }
     return Timetable(
         timetableItems = TimetableItemList(
-            timetableItems.toImmutableList()
+            timetableItems.toPersistentList()
         ),
         favorites = persistentSetOf()
     )

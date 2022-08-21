@@ -14,7 +14,6 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemList
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.ktor.client.HttpClient
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -108,7 +107,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         levels = apiSession.levels.toPersistentList(),
                     )
                 }
-            }.toImmutableList()
+            }.toPersistentList()
         )
     )
 }

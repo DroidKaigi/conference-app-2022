@@ -10,4 +10,5 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022.template.core.ui"
 
 dependencies {
+    implementation(libs.accompanistPager)
 }

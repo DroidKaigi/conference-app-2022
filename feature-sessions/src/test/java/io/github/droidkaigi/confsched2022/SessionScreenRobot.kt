@@ -25,7 +25,7 @@ class SessionScreenRobot @Inject constructor() {
         function: context(RobotTestRule) SessionScreenRobot.() -> Unit
     ) {
         robotTestRule.composeTestRule.setContent {
-            Sessions()
+            SessionsScreenRoot()
         }
         function(robotTestRule, this@SessionScreenRobot)
     }

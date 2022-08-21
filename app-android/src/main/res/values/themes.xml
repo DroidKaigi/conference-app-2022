@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Androidprojecttemplate2022" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+    <style name="Platform.Theme.DroidKaigi" parent="Theme.Material3.DayNight">
+        <item name="android:statusBarColor">@color/black30</item>
     </style>
+
+    <style name="Theme.DroidKaigi" parent="Platform.Theme.DroidKaigi">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
+
+    <style name="Theme.DroidKaigi.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.DroidKaigi.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="Theme.DroidKaigi.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 </resources>
