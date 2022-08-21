@@ -14,7 +14,7 @@ import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
-import io.github.droidkaigi.confsched2022.moleculeComposeState
+import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
