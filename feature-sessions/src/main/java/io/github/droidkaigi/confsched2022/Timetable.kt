@@ -42,7 +42,7 @@ fun Timetable(
 ) {
     val itemProvider = itemProvider({ timetable.timetableItems.size }) { index ->
         val timetableItem = timetable.contents[index]
-        content(timetableItem.first, timetableItem.second)
+        content(timetableItem.timetableItem, timetableItem.isFavorited)
     }
     val density = LocalDensity.current
     val timetableLayout = remember(timetable) {

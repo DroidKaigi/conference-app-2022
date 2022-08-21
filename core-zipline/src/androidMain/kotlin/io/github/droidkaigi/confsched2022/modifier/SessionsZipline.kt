@@ -5,22 +5,19 @@ import app.cash.zipline.EventListener
 import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
-import io.github.droidkaigi.confsched2022.model.Timetable
-import java.util.concurrent.Executors
-import javax.inject.Inject
-import kotlin.coroutines.EmptyCoroutineContext
+import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import java.util.concurrent.Executors
+import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
 
 class SessionsZipline @Inject constructor(
     context: Application,
@@ -65,17 +62,15 @@ class SessionsZipline @Inject constructor(
 
     fun timetableModifier(
         coroutineScope: CoroutineScope,
-        initialTimetable: Timetable,
-        timetableFlow: Flow<Timetable>
-    ): StateFlow<Timetable> {
-        val modelStateFlow = MutableStateFlow(initialTimetable)
+    ): MutableStateFlow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+        val modifierStateFlow = MutableStateFlow<
+            suspend (DroidKaigiSchedule) -> DroidKaigiSchedule
+            > { timetable ->
+            timetable
+        }
         coroutineScope.launch(dispatcher) {
             var zipline: Zipline? = null
-//            val modifier = object : TimetableModifier {
-//                override suspend fun produceModels(timetable: Timetable): Timetable {
-//                    return timetable
-//                }
-//            }
+//            val modifier =
             // If the server works, we will comment in
             val modifier = try {
                 val loadedZiplineFlow = ziplineLoader.load("timeline", flowOf(manifestUrl), { })
@@ -89,27 +84,20 @@ class SessionsZipline @Inject constructor(
             } catch (e: Exception) {
                 Logger.d(e) { "zipline load error" }
                 object : TimetableModifier {
-                    override suspend fun produceModels(timetable: Timetable): Timetable {
-                        return timetable
+                    override suspend fun produceModels(
+                        schedule: DroidKaigiSchedule
+                    ): DroidKaigiSchedule {
+                        return schedule
                     }
                 }
             }
-            val stateFlow =
-                MutableStateFlow(initialTimetable)
-            launch {
-                timetableFlow.collect {
-                    val produceModels = modifier.produceModels(it)
-                    stateFlow.value = produceModels
-                }
-            }
-
-            modelStateFlow.emitAll(stateFlow)
+            modifierStateFlow.emit { timetable -> modifier.produceModels(timetable) }
 
             coroutineContext.job.invokeOnCompletion {
                 dispatcher.dispatch(EmptyCoroutineContext) { zipline?.close() }
                 executorService.shutdown()
             }
         }
-        return modelStateFlow
+        return modifierStateFlow
     }
 }

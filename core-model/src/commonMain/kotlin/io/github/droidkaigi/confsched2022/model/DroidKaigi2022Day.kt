@@ -30,4 +30,12 @@ enum class DroidKaigi2022Day(val start: Instant, val end: Instant) {
             .parse("2021-10-22T00:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     );
+
+    companion object {
+        fun ofOrNull(time: Instant): DroidKaigi2022Day? {
+            return values().firstOrNull() {
+                time in it.start..it.end
+            }
+        }
+    }
 }

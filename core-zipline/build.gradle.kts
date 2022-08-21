@@ -28,6 +28,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
+                implementation(projects.coreUi)
                 implementation(libs.okHttpCore)
                 implementation(libs.sqldelightDriverAndroid)
                 implementation(libs.ziplineLoader)

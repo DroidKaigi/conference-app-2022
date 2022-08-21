@@ -17,4 +17,5 @@ dependencies {
     implementation(libs.composeMaterial3WindowSizeClass)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.hiltNavigationCompose)
+    implementation(libs.material3)
 }

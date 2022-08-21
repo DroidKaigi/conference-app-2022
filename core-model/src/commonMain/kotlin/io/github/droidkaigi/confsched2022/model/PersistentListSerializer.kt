@@ -1,15 +1,16 @@
 package io.github.droidkaigi.confsched2022.model
 
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializer
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -37,43 +38,45 @@ class PersistentListSerializer(
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@Serializer(forClass = PersistentList::class)
-class ImmutableListSerializer(
+@Serializer(forClass = PersistentSet::class)
+class PersistentSetSerializer(
     private val dataSerializer: KSerializer<String>
 ) :
-    KSerializer<ImmutableList<String>> {
-    class ImmutableListDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
+    KSerializer<PersistentSet<String>> {
+    class PersistentSetDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
         @ExperimentalSerializationApi override val serialName: String =
             "kotlinx.serialization.immutable.persistentList"
     }
 
-    override val descriptor = ImmutableListDescriptor()
-    override fun serialize(encoder: Encoder, value: ImmutableList<String>) {
+    override val descriptor = PersistentSetDescriptor()
+    override fun serialize(encoder: Encoder, value: PersistentSet<String>) {
         return ListSerializer(dataSerializer).serialize(encoder, value.toList())
     }
 
-    override fun deserialize(decoder: Decoder): ImmutableList<String> {
-        return ListSerializer(dataSerializer).deserialize(decoder).toImmutableList()
+    override fun deserialize(decoder: Decoder): PersistentSet<String> {
+        return ListSerializer(dataSerializer).deserialize(decoder).toPersistentSet()
     }
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@Serializer(forClass = ImmutableSet::class)
-class ImmutableSetSerializer(
-    private val dataSerializer: KSerializer<String>
+@Serializer(forClass = PersistentMap::class)
+class PersistentMapSerializer(
+    private val data1Serializer: KSerializer<String>,
+    private val data2Serializer: KSerializer<String>
 ) :
-    KSerializer<ImmutableSet<String>> {
-    class ImmutableSetDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
+    KSerializer<PersistentMap<String, String>> {
+    class PersistentMapDescriptor : SerialDescriptor by serialDescriptor<Map<String, String>>() {
         @ExperimentalSerializationApi override val serialName: String =
             "kotlinx.serialization.immutable.persistentList"
     }
 
-    override val descriptor = ImmutableSetDescriptor()
-    override fun serialize(encoder: Encoder, value: ImmutableSet<String>) {
-        return ListSerializer(dataSerializer).serialize(encoder, value.toList())
+    override val descriptor = PersistentMapDescriptor()
+    override fun serialize(encoder: Encoder, value: PersistentMap<String, String>) {
+        return MapSerializer(data1Serializer, data2Serializer).serialize(encoder, value.toMap())
     }
 
-    override fun deserialize(decoder: Decoder): ImmutableSet<String> {
-        return ListSerializer(dataSerializer).deserialize(decoder).toImmutableSet()
+    override fun deserialize(decoder: Decoder): PersistentMap<String, String> {
+        return MapSerializer(data1Serializer, data2Serializer).deserialize(decoder)
+            .toPersistentMap()
     }
 }
