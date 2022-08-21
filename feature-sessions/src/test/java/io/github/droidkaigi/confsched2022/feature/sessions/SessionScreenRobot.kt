@@ -1,8 +1,7 @@
-package io.github.droidkaigi.confsched2022
+package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsScreenRoot
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
 import javax.inject.Inject
 
