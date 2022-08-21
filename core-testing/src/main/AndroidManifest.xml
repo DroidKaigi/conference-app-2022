@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="io.github.droidkaigi.confsched2022.io.github.droidkaigi.confsched2022.testing.HiltTestActivity"
+            android:name="io.github.droidkaigi.confsched2022.testing.HiltTestActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -2,7 +2,7 @@ package io.github.droidkaigi.confsched2022
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
-import io.github.droidkaigi.confsched2022.io.github.droidkaigi.confsched2022.testing.RobotTestRule
+import io.github.droidkaigi.confsched2022.testing.RobotTestRule
 import javax.inject.Inject
 import org.junit.Rule
 import org.junit.Test
