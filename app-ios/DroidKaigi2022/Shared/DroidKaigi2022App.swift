@@ -5,7 +5,7 @@ import SwiftUI
 struct DroidKaigi2022App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TimetableView(timetable: .companion.fake())
         }
     }
 }
