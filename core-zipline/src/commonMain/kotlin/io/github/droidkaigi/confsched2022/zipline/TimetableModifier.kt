@@ -4,7 +4,7 @@ import app.cash.zipline.ZiplineService
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 
 interface TimetableModifier : ZiplineService {
-    suspend fun produceModels(
+    suspend fun modify(
         schedule: DroidKaigiSchedule
     ): DroidKaigiSchedule
 }

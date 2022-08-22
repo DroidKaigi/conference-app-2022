@@ -84,14 +84,14 @@ class SessionsZipline @Inject constructor(
             } catch (e: Exception) {
                 Logger.d(e) { "zipline load error" }
                 object : TimetableModifier {
-                    override suspend fun produceModels(
+                    override suspend fun modify(
                         schedule: DroidKaigiSchedule
                     ): DroidKaigiSchedule {
                         return schedule
                     }
                 }
             }
-            modifierStateFlow.emit { timetable -> modifier.produceModels(timetable) }
+            modifierStateFlow.emit { timetable -> modifier.modify(timetable) }
 
             coroutineContext.job.invokeOnCompletion {
                 dispatcher.dispatch(EmptyCoroutineContext) { zipline?.close() }

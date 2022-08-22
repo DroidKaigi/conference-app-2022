@@ -16,11 +16,42 @@ class SessionsScreenTest {
     @Inject lateinit var sessionScreenRobot: SessionScreenRobot
 
     @Test
-    fun testFilterToggle() {
+    fun toggleIsOffAtFirst() {
+        sessionScreenRobot(robotTestRule) {
+            checkFilterIsOff()
+        }
+    }
+
+    @Test
+    fun canFilterToggle() {
         sessionScreenRobot(robotTestRule) {
             checkFilterIsOff()
             toggleFilter()
             checkFilterIsOn()
+        }
+    }
+
+    @Test
+    fun visibleTimetable() {
+        sessionScreenRobot(robotTestRule) {
+            checkTimetableVisible()
+        }
+    }
+
+    @Test
+    fun isNotFavoritedAtFirst() {
+        sessionScreenRobot(robotTestRule) {
+            checkTimetableVisible()
+            checkIsFavoriteAt(index = 0, isFavorited = false)
+        }
+    }
+
+    @Test
+    fun canToggleFavorite() {
+        sessionScreenRobot(robotTestRule) {
+            clickFavoriteAt(0)
+            checkIsFavoriteAt(index = 0, isFavorited = true)
+            checkFavoriteIsSavedAt(0)
         }
     }
 }
