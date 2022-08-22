@@ -33,6 +33,6 @@ data class DroidKaigiSchedule(
     }
 }
 
-private fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
+fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
     return of(Timetable.fake())
 }

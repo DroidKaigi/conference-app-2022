@@ -31,19 +31,15 @@ class SessionsViewModel @Inject constructor(
 ) : ViewModel() {
     private val filter = mutableStateOf(Filters())
 
+    private val ziplineTimetableModifierFlow =
+        sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
+    private val timetableResultFlow = combine(
+        ziplineTimetableModifierFlow, sessionsRepository.droidKaigiScheduleFlow(), ::Pair
+    ).map { (modifier, schedule) -> modifier(schedule) }.asResult()
+
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-    private val ziplineTimetableModifierFlow = sessionsZipline
-        .timetableModifier(coroutineScope = viewModelScope)
-    private val timetableResultFlow = combine(
-        ziplineTimetableModifierFlow,
-        sessionsRepository.droidKaigiScheduleFlow(),
-        ::Pair
-    )
-        .map { (modifier, droidKaigiSchedule) -> modifier(droidKaigiSchedule) }
-        .asResult()
-
-    val state = moleculeScope.moleculeComposeState(clock = ContextClock) {
+    val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
         val timetableResult by timetableResultFlow.collectAsState(initial = Result.Loading)
 
         val sessionState by remember {
@@ -73,8 +69,7 @@ class SessionsViewModel @Inject constructor(
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
         viewModelScope.launch {
             sessionsRepository.setFavorite(
-                sessionId,
-                !currentIsFavorite
+                sessionId, !currentIsFavorite
             )
         }
     }
