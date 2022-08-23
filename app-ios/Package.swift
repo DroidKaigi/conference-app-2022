@@ -10,21 +10,27 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "App",
-            targets: ["App"]),
+            name: "AppFeature",
+            targets: ["AppFeature"]),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "App",
+            name: "AppFeature",
+            dependencies: [
+                .target(name: "TimetableFeature")
+            ]
+        ),
+        .target(
+            name: "TimetableFeature",
             dependencies: [
                 .target(name: "appioscombined"),
             ]
         ),
         .testTarget(
-            name: "AppTests",
-            dependencies: ["App"]
+            name: "AppFeatureTests",
+            dependencies: ["AppFeature"]
         ),
         .binaryTarget(
             name: "appioscombined",

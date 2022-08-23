@@ -17,7 +17,12 @@ enum TimetableItemType: Identifiable {
 
 public struct TimetableView: View {
     static let minuteHeight: CGFloat = 4
+    static let timetableStartTime: DateComponents = .init(hour: 10, minute: 0)
 
+    private let dateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        return formatter
+    }()
     let timetable: Timetable
 
     @State var selectedDay: DroidKaigi2022Day = DroidKaigi2022Day.day1
@@ -33,38 +38,48 @@ public struct TimetableView: View {
     }
 
     var roomTimetableItems: [(TimetableRoom, [TimetableItemType])] {
-        let rooms = Set(timetable.timetableItems.map(\.room))
-        return rooms
+        let result = Set(timetable.timetableItems.map(\.room))
             .map { room -> (TimetableRoom, [TimetableItemType]) in
-                let items = timetable.timetableItems
+                var items = timetable.timetableItems
                     .filter {
                         $0.room == room
                     }
                     .reduce([TimetableItemType]()) { result, item in
                         var result = result
                         let lastItem = result.last
-                        if result.isEmpty {
-                            let minute = Calendar.current.component(.minute, from: item.startsAt.toDate())
-                            result.append(.spacing(minute))
-                        }
                         if case .general(let lItem, _) = lastItem, lItem.endsAt != item.startsAt {
-                            let lastEndSec = Int(lItem.endsAt.epochSeconds)
-                            let lastEndMinute = lastEndSec / 60
-                            let nextStartMinute = Int(item.startsAt.epochSeconds) / 60
-                            let spacingMinute = nextStartMinute - lastEndMinute
-                            result.append(.spacing(spacingMinute))
+                            result.append(.spacing(calculateMinute(
+                                startSeconds: Int(lItem.endsAt.epochSeconds),
+                                endSeconds: Int(item.startsAt.epochSeconds)
+                            )))
                         }
-                        let endsMinute = item.endsAt.epochSeconds / 60
-                        let startsMinute = item.startsAt.epochSeconds / 60
-                        result.append(.general(item, Int(endsMinute - startsMinute)))
+                        let minute = calculateMinute(
+                            startSeconds: Int(item.startsAt.epochSeconds),
+                            endSeconds: Int(item.endsAt.epochSeconds)
+                        )
+                        result.append(
+                            TimetableItemType.general(
+                                item,
+                                minute
+                            )
+                        )
 
                         return result
                     }
+                if case let .general(firstItem, _) = items.first {
+                    let hour = Calendar.current.component(.hour, from: firstItem.startsAt.toDate())
+                    let minute = Calendar.current.component(.minute, from: firstItem.startsAt.toDate())
+                    let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - hours.first!, 0) * 60)
+                    items.insert(firstSpacingItem, at: 0)
+                }
+
                 return (room, items)
             }
             .sorted { a, b in
-                return a.0.sort < b.0.sort
+                a.0.sort < b.0.sort
             }
+
+        return result
     }
 
     public init(timetable: Timetable) {
@@ -89,8 +104,9 @@ public struct TimetableView: View {
             ScrollView(.vertical) {
                 HStack(alignment: .top) {
                     VStack(spacing: 0) {
+                        Text("Room")
                         ForEach(hours, id: \.self) { hour in
-                            Text("\(hour):00")
+                            Text(dateComponentsFormatter.string(from: DateComponents(hour: hour, minute: 0))!)
                                 .frame(
                                     height: TimetableView.minuteHeight * 60,
                                     alignment: .top
@@ -121,10 +137,17 @@ public struct TimetableView: View {
             }
         }
     }
+
+    private func calculateMinute(startSeconds: Int, endSeconds: Int) -> Int {
+        let startMinute = startSeconds / 60
+        let endMinute = endSeconds / 60
+
+        return endMinute - startMinute
+    }
 }
 
 #if DEBUG
-struct _Previews: PreviewProvider {
+struct TimetableView_Previews: PreviewProvider {
     static var previews: some View {
         TimetableView(timetable: Timetable.companion.fake())
     }
@@ -135,7 +158,6 @@ func randomColor() -> Color {
     let red = Double.random(in: 0...1)
     let green = Double.random(in: 0...1)
     let blue = Double.random(in: 0...1)
-    print("\(red), \(green), \(blue)")
     return Color(red: red, green: green, blue: blue)
 }
 extension TimetableItem: Identifiable {}

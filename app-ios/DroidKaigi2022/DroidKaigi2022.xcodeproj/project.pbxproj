@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		8C541EE328B1313B00354E7B /* DroidKaigi2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C541ED328B1313800354E7B /* DroidKaigi2022App.swift */; };
 		8C541EE728B1313B00354E7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C541ED528B1313A00354E7B /* Assets.xcassets */; };
-		8C541EF828B1404B00354E7B /* App in Frameworks */ = {isa = PBXBuildFile; productRef = 8C541EF728B1404B00354E7B /* App */; };
+		8CDF83C928B558CF00D4C570 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF83C828B558CF00D4C570 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +24,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C541EF828B1404B00354E7B /* App in Frameworks */,
+				8CDF83C928B558CF00D4C570 /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 			);
 			name = "DroidKaigi2022 (iOS)";
 			packageProductDependencies = (
-				8C541EF728B1404B00354E7B /* App */,
+				8CDF83C828B558CF00D4C570 /* AppFeature */,
 			);
 			productName = "DroidKaigi2022 (iOS)";
 			productReference = 8C541EDA28B1313B00354E7B /* DroidKaigi2022.app */;
@@ -336,9 +336,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8C541EF728B1404B00354E7B /* App */ = {
+		8CDF83C828B558CF00D4C570 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = App;
+			productName = AppFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
