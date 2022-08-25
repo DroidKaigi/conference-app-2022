@@ -9,7 +9,7 @@ enum TimetableItemType: Identifiable {
         switch self {
         case let .general(item, _):
             return item.title.jaTitle
-        case .spacing(_):
+        case .spacing:
             return UUID().uuidString
         }
     }
@@ -75,8 +75,8 @@ public struct TimetableView: View {
 
                 return (room, items)
             }
-            .sorted { a, b in
-                a.0.sort < b.0.sort
+            .sorted {
+                $0.0.sort < $1.0.sort
             }
 
         return result

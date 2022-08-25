@@ -12,7 +12,7 @@ public struct TimetableItemView: View {
         VStack(alignment: .leading) {
             Text(item.title.jaTitle)
             Spacer()
-            Text("\(item.startsAt.toDate().formatted(date: .omitted, time: .shortened)) - \(item.endsAt.toDate().formatted(date: .omitted, time: .shortened))")
+            Text("\(item.startsTimeString) - \(item.endsAt.toDate().formatted(date: .omitted, time: .shortened))")
             if let session = item as? TimetableItem.Session {
                 Text(session.speakers.first!.name)
             }

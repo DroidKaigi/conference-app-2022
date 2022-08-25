@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let package = Package(
+var package = Package(
     name: "DroidKaigiPackage",
     platforms: [
         .iOS(.v15),
@@ -26,9 +26,6 @@ let package = Package(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "appioscombined"),
-            ],
-            plugins: [
-                .plugin(name: "SwiftLintPlugin"),
             ]
         ),
         .testTarget(
@@ -53,3 +50,15 @@ let package = Package(
         ),
     ]
 )
+
+// Append common plugins
+package.targets = package.targets.map { target -> Target in
+    if target.type == .regular || target.type == .test {
+        if target.plugins == nil {
+            target.plugins = []
+        }
+        target.plugins?.append(.plugin(name: "SwiftLintPlugin"))
+    }
+
+    return target
+}

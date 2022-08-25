@@ -10,10 +10,8 @@ struct SwiftLintPlugins: BuildToolPlugin {
                 arguments: [
                     "lint",
                     "--in-process-sourcekit", // alternative to the environment variable
-                    "--path",
                     target.directory.string   // only lint the files in the target directory
                 ],
-                // environment: ["IN_PROCESS_SOURCEKIT": "YES"] // doesn't work in Xcode 13.3
                 environment: [:]
             )
         ]
