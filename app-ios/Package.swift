@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "DroidKaigiPackage",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v15),
     ],
@@ -12,14 +13,27 @@ let package = Package(
         .library(
             name: "AppFeature",
             targets: ["AppFeature"]),
+        .library(name: "Strings", targets: ["Strings"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
     ],
     targets: [
         .target(
             name: "AppFeature",
             dependencies: [
-                .target(name: "TimetableFeature")
+                .target(name: "Strings"),
+                .target(name: "TimetableFeature"),
+            ]
+        ),
+        .target(
+            name: "Strings",
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
             ]
         ),
         .target(
