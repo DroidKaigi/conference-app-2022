@@ -1,4 +1,5 @@
 import SwiftUI
+import Strings
 import TimetableFeature
 
 public struct AppView: View {
@@ -14,7 +15,7 @@ public struct AppView: View {
         TabView(selection: $selectedTab) {
             TimetableView(timetable: .companion.fake())
                 .tabItem {
-                    Label("Timetable", systemImage: "questionmark.circle")
+                    Label(L10n.Timetable.title, systemImage: "questionmark.circle")
                 }
         }
     }
