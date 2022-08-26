@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let package = Package(
+var package = Package(
     name: "DroidKaigiPackage",
     defaultLocalization: "en",
     platforms: [
@@ -49,6 +49,30 @@ let package = Package(
         .binaryTarget(
             name: "appioscombined",
             path: "../app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework"
-        )
+        ),
+        .plugin(
+            name: "SwiftLintPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "SwiftLintBinary"),
+            ]
+        ),
+        .binaryTarget(
+            name: "SwiftLintBinary",
+            url: "https://github.com/realm/SwiftLint/releases/download/0.48.0/SwiftLintBinary-macos.artifactbundle.zip",
+            checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
+        ),
     ]
 )
+
+// Append common plugins
+package.targets = package.targets.map { target -> Target in
+    if target.type == .regular || target.type == .test {
+        if target.plugins == nil {
+            target.plugins = []
+        }
+        target.plugins?.append(.plugin(name: "SwiftLintPlugin"))
+    }
+
+    return target
+}
