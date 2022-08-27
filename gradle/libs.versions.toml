@@ -36,6 +36,7 @@ kotlinxDatetime = "0.4.0"
 accompanistPager = "0.26.1-alpha"
 firebasePlugin = "4.3.13"
 multiplatformFirebaseAuth = "1.6.2"
+firebaseCommon = "1.6.1"
 androidxStartup = "1.1.1"
 
 [libraries]
@@ -96,6 +97,7 @@ sqldelightDriverAndroid = { module = "com.squareup.sqldelight:android-driver", v
 kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref = "multiplatformFirebaseAuth" }
+firebaseCommon = { module = "com.google.firebase:firebase-common", version.ref = "firebaseCommon" }
 
 # test
 

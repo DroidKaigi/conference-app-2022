@@ -25,6 +25,7 @@ kotlin {
                 implementation(libs.ktorClientOkHttp)
                 implementation(libs.androidxDatastorePreferences)
                 implementation(libs.multiplatformSettingsDatastore)
+                implementation(libs.firebaseCommon)
             }
         }
         val iosMain by getting {
