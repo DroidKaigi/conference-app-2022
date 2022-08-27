@@ -2,9 +2,6 @@ package io.github.droidkaigi.confsched2022.primitive
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.configure
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 @Suppress("unused")
 class KmpAndroidPlugin : Plugin<Project> {
@@ -15,15 +12,27 @@ class KmpAndroidPlugin : Plugin<Project> {
             }
             kotlin {
                 android()
+
+                // To fix `./gradlew :core-model:compileDebugUnitTestKotlinAndroid --stacktrace`
+                // e: Expected annotation class 'Immutable' has no actual declaration in module <core-model_debug> for JVM
+                sourceSets.getByName("androidTest")
+                    .dependsOn(sourceSets.getByName("androidMain"))
             }
             android {
                 setupAndroid()
                 sourceSets {
                     getByName("main") {
+                        setRoot("src/androidMain")
                         assets.srcDirs(file("src/androidMain/assets"))
                         manifest.srcFile("src/androidMain/AndroidManifest.xml")
                         java.srcDirs(file("src/androidMain/kotlin"))
                         res.srcDirs(file("src/androidMain/res"))
+                    }
+                    // FIXME: Without this, kaptDebugKotlinAndroid can't see commonMain
+                    // If you can run ./gradlew kaptDebugKotlinAndroid without this,
+                    // please delete this
+                    sourceSets.all {
+                        java.srcDir("src/commonMain/kotlin")
                     }
                 }
             }

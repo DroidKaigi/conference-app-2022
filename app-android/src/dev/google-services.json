@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "1046519477136",
+    "project_id": "ssot-api-staging",
+    "storage_bucket": "ssot-api-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046519477136:android:8f44cb09849b7cd9a8f915",
+        "android_client_info": {
+          "package_name": "io.github.droidkaigi.confsched2022.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046519477136-vfe7p2u356m08kjdt5l0opjes84aa48k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.droidkaigi.confsched2022.dev",
+            "certificate_hash": "0772dcf27fb9f39293fe9b154ac9c260d26a333e"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKhycW0XhuhkjZovzvTN6gvJ8fIFpYRCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046519477136-68ce7mi69ss85q4ro3ti579ldr7q4e6p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.hiltGradlePlugin)
     implementation(libs.moleculeGradlePlugin)
     implementation(libs.kotlinSerializationPlugin)
+    implementation(libs.firebasePlugin)
 }
 
 gradlePlugin {
@@ -37,6 +38,10 @@ gradlePlugin {
         register("androidKotlin") {
             id = "droidkaigi.primitive.android.kotlin"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidKotlinPlugin"
+        }
+        register("androidFirebase") {
+            id = "droidkaigi.primitive.android.firebase"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidFirebasePlugin"
         }
         register("androidCompose") {
             id = "droidkaigi.primitive.android.compose"

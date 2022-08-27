@@ -1,9 +1,19 @@
 package io.github.droidkaigi.confsched2022.data.di
 
+import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.datastore.DataStoreSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.droidkaigi.confsched2022.data.NetworkService
+import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.auth.AuthApi
+import io.github.droidkaigi.confsched2022.data.auth.Authenticator
+import io.github.droidkaigi.confsched2022.data.auth.AuthenticatorImpl
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -13,6 +23,24 @@ import okhttp3.OkHttpClient
 @InstallIn(SingletonComponent::class)
 @Module
 class ApiModule {
+    @Provides
+    @Singleton
+    fun provideNetworkService(
+        httpClient: HttpClient,
+        authApi: AuthApi
+    ): NetworkService {
+        return NetworkService(httpClient, authApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        httpClient: HttpClient,
+        preferenceDatastore: PreferenceDatastore,
+        authenticator: Authenticator
+    ): AuthApi {
+        return AuthApi(httpClient, preferenceDatastore, authenticator)
+    }
 
     @Provides
     @Singleton
@@ -34,5 +62,26 @@ class ApiModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticator(): Authenticator {
+        return AuthenticatorImpl()
+    }
+
+    private val Context.dataStore by preferencesDataStore(
+        name = PreferenceDatastore.NAME,
+    )
+
+    @Provides
+    @Singleton
+    fun provideFlowSettings(application: Application): FlowSettings {
+        return DataStoreSettings(datastore = application.dataStore)
+    }
+    @Provides
+    @Singleton
+    fun providePreferenceDatastore(flowSettings: FlowSettings): PreferenceDatastore {
+        return PreferenceDatastore(flowSettings)
     }
 }

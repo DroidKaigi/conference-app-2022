@@ -1,6 +1,6 @@
 plugins {
     id("droidkaigi.convention.kmp")
-    id("droidkaigi.primitive.android.hilt")
+    id("droidkaigi.primitive.kmp.android.hilt")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.data"
@@ -15,9 +15,12 @@ kotlin {
                 implementation(libs.ktorContentNegotiation)
                 implementation(libs.multiplatformSettingsCoroutines)
                 implementation(libs.kotlinxDatetime)
+                implementation(libs.multiplatformFirebaseAuth)
+                implementation(libs.kermit)
             }
         }
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.ktorClientOkHttp)
                 implementation(libs.androidxDatastorePreferences)
