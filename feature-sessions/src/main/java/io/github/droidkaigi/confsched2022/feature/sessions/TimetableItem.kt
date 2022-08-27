@@ -7,7 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 
 @Composable
@@ -16,14 +18,11 @@ fun TimetableItem(
     isFavorited: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (isFavorited) {
-        MaterialTheme.colorScheme.tertiaryContainer
-    } else {
-        MaterialTheme.colorScheme.secondaryContainer
-    }
+    val roomName = timetableItem.room.name
+    val roomColor = TimetableItemColor.colorOfRoomName(enName = roomName.enTitle)
     Column(
         modifier
-            .background(backgroundColor, MaterialTheme.shapes.small)
+            .background(Color(roomColor), MaterialTheme.shapes.medium)
             .padding(4.dp)
     ) {
         Text(timetableItem.startsTimeString)
