@@ -2,15 +2,13 @@ plugins {
     id("droidkaigi.convention.androidfeature")
 }
 
-android.namespace = "io.github.droidkaigi.confsched2022.feature.sessions"
+android.namespace = "io.github.droidkaigi.confsched2022.feature.contributors"
 
 dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreModel)
     testImplementation(projects.coreTesting)
-
-    implementation(projects.coreZipline)
 
     implementation(libs.kermit)
     implementation(libs.hiltNavigationCompose)

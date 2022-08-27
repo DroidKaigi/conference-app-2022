@@ -13,7 +13,7 @@ private val DarkColorPalette = darkColorScheme(
 )
 
 @Composable
-fun DroidKaigiTheme(
+fun KaigiTheme(
     // Currently, we are not supporting light theme
 //    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit

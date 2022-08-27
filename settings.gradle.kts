@@ -30,6 +30,7 @@ include(
     ":core-zipline",
     ":appioscombined",
     ":feature-sessions",
+    ":feature-contributors",
     ":core-ui",
     ":core-designsystem",
     ":core-data",

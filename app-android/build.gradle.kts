@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation(projects.featureSessions)
+    implementation(projects.featureContributors)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
