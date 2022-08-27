@@ -8,8 +8,8 @@ private val zipline by lazy { Zipline.get() }
 @OptIn(ExperimentalJsExport::class, ExperimentalCoroutinesApi::class)
 @JsExport
 fun prepareModifiers() {
-    zipline.bind<TimetableModifier>(
+    zipline.bind<ScheduleModifier>(
         name = "sessionsModifier",
-        instance = JsTimetableModifier()
+        instance = JsScheduleModifier()
     )
 }

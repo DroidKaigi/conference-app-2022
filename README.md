@@ -70,10 +70,39 @@ The following interface is implemented in Kotlin JS and Android.
 You can add session announcements, etc. here. Since this is an experimental trial, it does not have such a practical role this time.
 
 ```kotlin
-interface TimetableModifier : ZiplineService {
+interface ScheduleModifier : ZiplineService {
     suspend fun modify(
         schedule: DroidKaigiSchedule
     ): DroidKaigiSchedule
+}
+```
+
+```kotlin
+class AndroidScheduleModifier : ScheduleModifier {
+    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
+        return schedule
+    }
+}
+```
+
+```kotlin
+class JsScheduleModifier() : ScheduleModifier {
+    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
+...
+    if (timetableItem is Session &&
+        timetableItem.id == TimetableItemId("1")
+    ) {
+        timetableItem.copy(
+            message = MultiLangText(
+                enTitle = "This is a js message",
+                jaTitle = "これはJSからのメッセージ",
+            )
+        )
+    } else {
+        timetableItem
+    }
+...
+    }
 }
 ```
 
@@ -84,28 +113,21 @@ Jetpack Compose allows reactive streams such as Flow to be easily handled by Rec
 
 ```kotlin
 val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-    val timetableResult by timetableResultFlow.collectAsState(initial = Result.Loading)
+    val scheduleResult by scheduleResultFlow.collectAsState(initial = Result.Loading)
 
-    val sessionState by remember {
+    val scheduleState by remember {
         derivedStateOf {
-            when (val result = timetableResult) {
-                Result.Loading -> {
-                    ScheduleState.Loading
-                }
-                is Result.Success -> {
-                    ScheduleState.Loaded(result.data.filtered(filter.value))
-                }
-                // ...
-            }
+            val scheduleState = ScheduleState.of(scheduleResult)
+            scheduleState.filter(filters.value)
         }
     }
-    SessionsUiModel(sessionState, isFilterOn = filter.value.filterFavorite)
+    SessionsUiModel(scheduleState = scheduleState, isFilterOn = filters.value.filterFavorite)
 }
 ```
 
 ### Create a test with high Fidelity without making it Flaky
 
-I have a problem with Flaky when testing. In this project, we will use Hilt in the JVM for integration testing to avoid emulator-specific problems.
+In this project, we will use Hilt in the JVM for integration testing to avoid emulator-specific problems.
 We also use the Robot testing pattern to separate the how and what of testing, making it scalable.
 
 ```kotlin
@@ -113,7 +135,7 @@ We also use the Robot testing pattern to separate the how and what of testing, m
 fun canToggleFavorite() {
     sessionScreenRobot(robotTestRule) {
         clickFavoriteAt(0)
-        checkIsFavoriteAt(index = 0, isFavorited = true)
+        checkFavoritedAt(index = 0, isFavorited = true)
         checkFavoriteIsSavedAt(0)
     }
 }

@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class SessionScreenRobot @Inject constructor() {
     @Inject lateinit var sessionsRepository: SessionsRepository
-    val fakeSessionsReposiotry: FakeSessionsRepository
+    private val fakeSessionsReposiotry: FakeSessionsRepository
         get() = sessionsRepository as FakeSessionsRepository
 
     context(RobotTestRule)
@@ -36,7 +36,7 @@ class SessionScreenRobot @Inject constructor() {
     }
 
     context(RobotTestRule)
-    fun checkIsFavoriteAt(index: Int, isFavorited: Boolean) {
+    fun checkFavoritedAt(index: Int, isFavorited: Boolean) {
         composeTestRule
             .onFavorite(
                 index

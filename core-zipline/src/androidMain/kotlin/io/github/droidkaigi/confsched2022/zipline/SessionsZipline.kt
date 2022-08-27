@@ -6,9 +6,6 @@ import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
-import java.util.concurrent.Executors
-import javax.inject.Inject
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +15,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import java.util.concurrent.Executors
+import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
 
 class SessionsZipline @Inject constructor(
     context: Application,
@@ -63,11 +63,12 @@ class SessionsZipline @Inject constructor(
     fun timetableModifier(
         coroutineScope: CoroutineScope,
     ): MutableStateFlow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
-        val modifierStateFlow = MutableStateFlow<
-            suspend (DroidKaigiSchedule) -> DroidKaigiSchedule
-            > { timetable ->
-            timetable
+        val androidScheduleModifier = AndroidScheduleModifier()
+        val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
+            androidScheduleModifier.modify(timetable)
         }
+        val modifierStateFlow = MutableStateFlow(defaultModifier)
+
         coroutineScope.launch(dispatcher) {
             var zipline: Zipline? = null
 //            val modifier =
@@ -80,16 +81,10 @@ class SessionsZipline @Inject constructor(
                     loadedZiplineFlow.catch { it.printStackTrace() }
                 }
                 zipline = loadedZipline!!.zipline
-                zipline.take<TimetableModifier>("sessionsModifier")
+                zipline.take<ScheduleModifier>("sessionsModifier")
             } catch (e: Exception) {
                 Logger.d(e) { "zipline load error" }
-                object : TimetableModifier {
-                    override suspend fun modify(
-                        schedule: DroidKaigiSchedule
-                    ): DroidKaigiSchedule {
-                        return schedule
-                    }
-                }
+                androidScheduleModifier
             }
             modifierStateFlow.emit { timetable -> modifier.modify(timetable) }
 
