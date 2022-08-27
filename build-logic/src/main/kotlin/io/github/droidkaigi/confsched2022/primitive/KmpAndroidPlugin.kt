@@ -12,6 +12,9 @@ class KmpAndroidPlugin : Plugin<Project> {
             }
             kotlin {
                 android()
+
+                // To fix `./gradlew :core-model:compileDebugUnitTestKotlinAndroid --stacktrace`
+                // e: Expected annotation class 'Immutable' has no actual declaration in module <core-model_debug> for JVM
                 sourceSets.getByName("androidTest")
                     .dependsOn(sourceSets.getByName("androidMain"))
             }
