@@ -12,6 +12,8 @@ class KmpAndroidPlugin : Plugin<Project> {
             }
             kotlin {
                 android()
+                sourceSets.getByName("androidTest")
+                    .dependsOn(sourceSets.getByName("androidMain"))
             }
             android {
                 setupAndroid()
