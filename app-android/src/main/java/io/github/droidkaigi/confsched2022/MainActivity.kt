@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            DroidKaigiApp(calculateWindowSizeClass(this))
+            KaigiApp(calculateWindowSizeClass(this))
         }
     }
 }
