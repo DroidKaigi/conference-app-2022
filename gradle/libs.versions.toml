@@ -37,6 +37,7 @@ accompanistPager = "0.26.1-alpha"
 firebasePlugin = "4.3.13"
 multiplatformFirebaseAuth = "1.6.2"
 firebaseCommon = "1.6.1"
+firebaseAuth = "1.6.1"
 androidxStartup = "1.1.1"
 
 [libraries]
@@ -98,6 +99,7 @@ kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collecti
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref = "multiplatformFirebaseAuth" }
 firebaseCommon = { module = "com.google.firebase:firebase-common", version.ref = "firebaseCommon" }
+firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 
 # test
 
