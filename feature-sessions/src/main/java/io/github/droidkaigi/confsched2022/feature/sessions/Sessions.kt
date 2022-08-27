@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import io.github.droidkaigi.confsched2022.designsystem.theme.DroidKaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
@@ -38,7 +38,7 @@ fun SessionsScreenRoot(modifier: Modifier = Modifier) {
     var tabState by remember { mutableStateOf(0) }
 
     Sessions(
-        sessionsUiModel = state,
+        uiModel = state,
         modifier = modifier,
         selectedTab = tabState,
         onTimetableClick = {},
@@ -53,7 +53,7 @@ fun SessionsScreenRoot(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Sessions(
-    sessionsUiModel: SessionsUiModel,
+    uiModel: SessionsUiModel,
     modifier: Modifier = Modifier,
     selectedTab: Int,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
@@ -61,7 +61,7 @@ fun Sessions(
     onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit
 ) {
-    val scheduleState = sessionsUiModel.scheduleState
+    val scheduleState = uiModel.scheduleState
     if (scheduleState !is Loaded) {
         CircularProgressIndicator()
         return
@@ -91,7 +91,7 @@ fun Sessions(
             }
         }
         Text(
-            text = "Filter is ${if (sessionsUiModel.isFilterOn) "ON" else "OFF"}",
+            text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
             modifier = Modifier.clickable(onClick = onToggleFilter)
         )
         HorizontalPager(
@@ -115,7 +115,7 @@ fun Sessions(
 @Preview(showBackground = true)
 @Composable
 fun SessionsPreview() {
-    DroidKaigiTheme {
+    KaigiTheme {
         SessionsScreenRoot()
     }
 }

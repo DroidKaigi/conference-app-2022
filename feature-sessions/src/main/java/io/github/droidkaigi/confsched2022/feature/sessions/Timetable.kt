@@ -41,8 +41,8 @@ fun Timetable(
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
     val itemProvider = itemProvider({ timetable.timetableItems.size }) { index ->
-        val timetableItem = timetable.contents[index]
-        content(timetableItem.timetableItem, timetableItem.isFavorited)
+        val timetableItemWithFavorite = timetable.contents[index]
+        content(timetableItemWithFavorite.timetableItem, timetableItemWithFavorite.isFavorited)
     }
     val density = LocalDensity.current
     val timetableLayout = remember(timetable) {
@@ -153,7 +153,7 @@ private data class TimetableItemLayout(
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) {
-        80.dp.roundToPx()
+        192.dp.roundToPx()
     }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStartTime)
@@ -185,7 +185,7 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     var timetableHeight = 0
     var timetableWidth = 0
     val minutePx = with(density) {
-        4.dp.roundToPx()
+        (4.23).dp.roundToPx()
     }
     val timetableLayouts = timetable.timetableItems.map {
         val timetableItemLayout = TimetableItemLayout(

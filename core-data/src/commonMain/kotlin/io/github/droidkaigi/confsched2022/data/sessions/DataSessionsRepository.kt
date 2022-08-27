@@ -15,7 +15,12 @@ class DataSessionsRepository(
     val favoriteSessionsDataStore: PreferenceDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-//        val sessions = sessionsApi.timetable()
+        try {
+            // Currently, this is only for checking auth
+            val sessions = sessionsApi.timetable()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
             val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
             trySend(

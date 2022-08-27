@@ -2,7 +2,7 @@ plugins {
     id("droidkaigi.convention.androidfeature")
 }
 
-android.namespace = "io.github.droidkaigi.confsched2022.feature.home"
+android.namespace = "io.github.droidkaigi.confsched2022.feature.sessions"
 
 dependencies {
     implementation(projects.coreUi)

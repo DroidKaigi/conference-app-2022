@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.sessions
 
+import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.sessions.response.LocaledResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionAllResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionAssetResponse
@@ -13,17 +14,20 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
-import io.ktor.client.HttpClient
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-class SessionsApi(private val httpClient: HttpClient) {
+class SessionsApi(
+    private val networkService: NetworkService,
+) {
     suspend fun timetable(): Timetable {
-//        return httpClient.get("xxxxx").body()
-        return TODO()
+        networkService.checkAuth()
+        return Timetable()
+//        networkService.get<>()
+//        return TODO()
     }
 }
 
