@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.data.sessions
+package io.github.droidkaigi.confsched2022.testing.sessions
 
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository

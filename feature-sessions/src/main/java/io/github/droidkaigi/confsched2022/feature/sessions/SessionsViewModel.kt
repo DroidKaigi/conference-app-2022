@@ -18,52 +18,45 @@ import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
-    private val filter = mutableStateOf(Filters())
+    private val filters = mutableStateOf(Filters())
 
-    private val ziplineTimetableModifierFlow =
+    private val ziplineScheduleModifierFlow =
         sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
-    private val timetableResultFlow = combine(
-        ziplineTimetableModifierFlow, sessionsRepository.droidKaigiScheduleFlow(), ::Pair
-    ).map { (modifier, schedule) -> modifier(schedule) }.asResult()
+    private val scheduleResultFlow = combine(
+        ziplineScheduleModifierFlow,
+        sessionsRepository.droidKaigiScheduleFlow(),
+        ::Pair
+    )
+        .map { (modifier, schedule) -> modifier(schedule) }
+        .asResult()
 
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val timetableResult by timetableResultFlow.collectAsState(initial = Result.Loading)
+        val scheduleResult by scheduleResultFlow.collectAsState(initial = Result.Loading)
 
-        val sessionState by remember {
+        val scheduleState by remember {
             derivedStateOf {
-                when (val result = timetableResult) {
-                    Result.Loading -> {
-                        ScheduleState.Loading
-                    }
-                    is Result.Success -> {
-                        ScheduleState.Loaded(result.data.filtered(filter.value))
-                    }
-                    else -> {
-                        // TODO
-                        // SessionsState.Error
-                        ScheduleState.Loading
-                    }
-                }
+                val scheduleState = ScheduleState.of(scheduleResult)
+                scheduleState.filter(filters.value)
             }
         }
-        SessionsUiModel(sessionState, isFilterOn = filter.value.filterFavorite)
+        SessionsUiModel(scheduleState = scheduleState, isFilterOn = filters.value.filterFavorite)
     }
 
     fun onToggleFilter() {
-        filter.value = filter.value.copy(!filter.value.filterFavorite)
+        filters.value = filters.value.copy(!filters.value.filterFavorite)
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
