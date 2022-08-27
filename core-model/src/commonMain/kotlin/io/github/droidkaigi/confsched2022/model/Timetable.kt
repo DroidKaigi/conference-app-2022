@@ -99,8 +99,8 @@ fun Timetable.Companion.fake(): Timetable {
                     TimetableItem.Session(
                         id = TimetableItemId("2$index"),
                         title = MultiLangText(
-                            "DroidKaigiのアプリのアーキテクチャ$index",
-                            "DroidKaigi App Architecture$index"
+                            "DroidKaigiのアプリのアーキテクチャ$index ${day + 2}",
+                            "DroidKaigi App Architecture$index ${day + 2}"
                         ),
                         startsAt = start
                             .toInstant(TimeZone.of("UTC+9")),

@@ -11,7 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class JsTimetableModifier() : TimetableModifier {
-    override suspend fun produceModels(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
+    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
         Logger.d("Hello JS world!")
         return schedule.copy(
             dayToTimetable = schedule.dayToTimetable.mapValues { timetable ->

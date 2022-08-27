@@ -33,7 +33,7 @@ import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 @Composable
 fun SessionsScreenRoot(modifier: Modifier = Modifier) {
     val viewModel = hiltViewModel<SessionsViewModel>()
-    val state: SessionsUiModel by viewModel.state
+    val state: SessionsUiModel by viewModel.uiModel
 
     var tabState by remember { mutableStateOf(0) }
 
@@ -43,7 +43,10 @@ fun SessionsScreenRoot(modifier: Modifier = Modifier) {
         selectedTab = tabState,
         onTimetableClick = {},
         onTabClicked = { index -> tabState = index },
-        onToggleFilter = { viewModel.onToggleFilter() }
+        onToggleFilter = { viewModel.onToggleFilter() },
+        onFavoriteClick = { timetableItemId, isFavorite ->
+            viewModel.onFavoriteToggle(timetableItemId, isFavorite)
+        }
     )
 }
 
@@ -55,7 +58,8 @@ fun Sessions(
     selectedTab: Int,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onTabClicked: (index: Int) -> Unit,
-    onToggleFilter: () -> Unit
+    onToggleFilter: () -> Unit,
+    onFavoriteClick: (TimetableItemId, Boolean) -> Unit
 ) {
     val scheduleState = sessionsUiModel.scheduleState
     if (scheduleState !is Loaded) {
@@ -98,9 +102,10 @@ fun Sessions(
             val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
             Timetable(timetable) { timetableItem, isFavorited ->
                 TimetableItem(
-                    modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
                     timetableItem = timetableItem,
-                    isFavorited = isFavorited
+                    isFavorited = isFavorited,
+                    modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
+                    onFavoriteClick = onFavoriteClick
                 )
             }
         }
