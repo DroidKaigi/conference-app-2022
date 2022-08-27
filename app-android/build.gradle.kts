@@ -49,4 +49,5 @@ dependencies {
     implementation(libs.hiltNavigationCompose)
     implementation(libs.material3)
     implementation(libs.firebaseCommon)
+    implementation(libs.firebaseAuth)
 }
