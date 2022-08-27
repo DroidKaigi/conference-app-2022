@@ -36,7 +36,7 @@ kotlinxDatetime = "0.4.0"
 accompanistPager = "0.26.1-alpha"
 firebasePlugin = "4.3.13"
 multiplatformFirebaseAuth = "1.6.2"
-firebaseCommon = "1.6.1"
+firebaseCommon = "20.1.1"
 androidxStartup = "1.1.1"
 
 [libraries]
