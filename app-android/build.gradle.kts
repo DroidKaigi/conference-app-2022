@@ -48,4 +48,5 @@ dependencies {
     implementation(libs.androidxStartup)
     implementation(libs.hiltNavigationCompose)
     implementation(libs.material3)
+    implementation(libs.firebaseCommon)
 }
