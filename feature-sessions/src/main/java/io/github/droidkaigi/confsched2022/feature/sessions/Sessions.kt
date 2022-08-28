@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -29,7 +27,6 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
-import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 
 @Composable
 fun SessionsScreenRoot(
@@ -83,23 +80,15 @@ fun Sessions(
             val pagerState = rememberPagerState()
             TabRow(
                 selectedTabIndex = selectedTab,
-                indicator = {
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier.pagerTabIndicatorOffset(pagerState, it),
-                    )
-                }
+                indicator = {},
+                divider = {},
             ) {
                 days.forEachIndexed { index, day ->
-                    Tab(
-                        selected = selectedTab == index,
-                        onClick = { onTabClicked(selectedTab) },
-                        text = {
-                            Text(
-                                text = day.name,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                    SessionDayTab(
+                        index = index,
+                        day = day,
+                        selectedTab = selectedTab,
+                        onTabClicked = onTabClicked
                     )
                 }
             }
@@ -117,9 +106,10 @@ fun Sessions(
                     TimetableItem(
                         timetableItem = timetableItem,
                         isFavorited = isFavorited,
-                        modifier = Modifier.clickable(onClick = {
-                            onTimetableClick(timetableItem.id)
-                        }),
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { onTimetableClick(timetableItem.id) }
+                            ),
                         onFavoriteClick = onFavoriteClick
                     )
                 }
