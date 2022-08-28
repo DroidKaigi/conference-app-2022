@@ -41,16 +41,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.ifTrue
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
-import java.time.format.TextStyle
 
 @Composable
-fun SessionsScreenRoot(modifier: Modifier = Modifier) {
+fun SessionsScreenRoot(
+    modifier: Modifier = Modifier,
+    onNavigationIconClick: () -> Unit = {}
+) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
 
@@ -65,7 +68,8 @@ fun SessionsScreenRoot(modifier: Modifier = Modifier) {
         onToggleFilter = { viewModel.onToggleFilter() },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
-        }
+        },
+        onNavigationIconClick = onNavigationIconClick,
     )
 }
 
@@ -75,92 +79,94 @@ fun Sessions(
     uiModel: SessionsUiModel,
     modifier: Modifier = Modifier,
     selectedTab: Int,
+    onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onTabClicked: (index: Int) -> Unit,
     onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit
 ) {
-    val scheduleState = uiModel.scheduleState
-    if (scheduleState !is Loaded) {
-        CircularProgressIndicator()
-        return
-    }
-    val days = scheduleState.schedule.days
-    Column(
-        modifier = modifier
-            .windowInsetsPadding(
-                WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-            )
-    ) {
-        val pagerState = rememberPagerState()
-        TabRow(
-            selectedTabIndex = selectedTab,
-            indicator = {},
-            divider = {},
+    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+        val scheduleState = uiModel.scheduleState
+        if (scheduleState !is Loaded) {
+            CircularProgressIndicator()
+            return@KaigiScaffold
+        }
+        val days = scheduleState.schedule.days
+        Column(
+            modifier = modifier
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+                )
         ) {
-            days.forEachIndexed { index, day ->
-                val isSelected = selectedTab == index
-                Tab(
-                    selected = isSelected,
-                    onClick = { onTabClicked(selectedTab) },
-                    modifier = Modifier.height(56.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(32.dp))
-                            .ifTrue(isSelected) {
-                                Modifier.background(color = MaterialTheme.colorScheme.secondaryContainer)
-                            },
-                        contentAlignment = Alignment.Center
+            val pagerState = rememberPagerState()
+            TabRow(
+                selectedTabIndex = selectedTab,
+                indicator = {},
+                divider = {},
+            ) {
+                days.forEachIndexed { index, day ->
+                    val isSelected = selectedTab == index
+                    Tab(
+                        selected = isSelected,
+                        onClick = { onTabClicked(selectedTab) },
+                        modifier = Modifier.height(56.dp)
                     ) {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = day.name,
-                                style = androidx.compose.ui.text.TextStyle(
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight(500)
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            Text(
-                                text = "${5 + index}",
-                                style = androidx.compose.ui.text.TextStyle(
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight(500)
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(32.dp))
+                                .ifTrue(isSelected) {
+                                    Modifier.background(color = MaterialTheme.colorScheme.secondaryContainer)
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = day.name,
+                                    style = androidx.compose.ui.text.TextStyle(
+                                        textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight(500)
+                                    ),
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Text(
+                                    text = "${5 + index}",
+                                    style = androidx.compose.ui.text.TextStyle(
+                                        textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight(500)
+                                    ),
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-        Text(
-            text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
-            modifier = Modifier.clickable(onClick = onToggleFilter)
-        )
-        HorizontalPager(
-            count = days.size,
-            state = pagerState
-        ) { dayIndex ->
-            val day = days[dayIndex]
-            val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-            Timetable(timetable) { timetableItem, isFavorited ->
-                TimetableItem(
-                    timetableItem = timetableItem,
-                    isFavorited = isFavorited,
-                    modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
-                    onFavoriteClick = onFavoriteClick
-                )
+            Text(
+                text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
+                modifier = Modifier.clickable(onClick = onToggleFilter)
+            )
+            HorizontalPager(
+                count = days.size,
+                state = pagerState
+            ) { dayIndex ->
+                val day = days[dayIndex]
+                val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+                Timetable(timetable) { timetableItem, isFavorited ->
+                    TimetableItem(
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited,
+                        modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
+                        onFavoriteClick = onFavoriteClick
+                    )
+                }
             }
         }
     }
-}
 
 @Preview(showBackground = true)
 @Composable

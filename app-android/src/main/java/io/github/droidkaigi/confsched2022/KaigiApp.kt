@@ -1,27 +1,18 @@
 package io.github.droidkaigi.confsched2022
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -49,9 +40,8 @@ fun KaigiApp(
     calculateWindowSizeClass: WindowSizeClass,
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
 ) {
-
     KaigiTheme {
-        KaigiAppScaffold(
+        KaigiAppDrawer(
             kaigiAppScaffoldState = kaigiAppScaffoldState,
             drawerSheet = {
                 DrawerSheet(
@@ -67,7 +57,7 @@ fun KaigiApp(
                 navController = kaigiAppScaffoldState.navController,
                 startDestination = SessionsNavGraph.sessionRoute,
             ) {
-                sessionsNavGraph()
+                sessionsNavGraph(kaigiAppScaffoldState::onNavigationClick)
                 contributorsNavGraph()
             }
         }
@@ -92,7 +82,7 @@ fun rememberKaigiAppScaffoldState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KaigiAppScaffold(
+fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     drawerSheet: @Composable () -> Unit,
     content: @Composable () -> Unit
@@ -111,34 +101,7 @@ fun KaigiAppScaffold(
             drawerSheet()
         }
     ) {
-        Scaffold(
-            topBar = {
-                SmallTopAppBar(
-                    title = {
-                        Text("DroidKaigi")
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    kaigiAppScaffoldState.drawerState.open()
-                                }
-                            }
-                        ) {
-                            Icon(imageVector = Icons.Default.Menu, "menu")
-                        }
-                    }
-                )
-            }
-        ) { insetPadding ->
-            Row(
-                Modifier
-                    .fillMaxSize()
-                    .padding(insetPadding)
-            ) {
-                content()
-            }
-        }
+        content()
     }
 }
 
@@ -152,6 +115,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         navController.navigate(drawerItem.navRoute)
         coroutineScope.launch {
             drawerState.close()
+        }
+    }
+
+    fun onNavigationClick() {
+        coroutineScope.launch {
+            drawerState.open()
         }
     }
 
