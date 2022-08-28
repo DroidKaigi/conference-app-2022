@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class SessionScreenRobot @Inject constructor() {
     @Inject lateinit var sessionsRepository: SessionsRepository
-    private val fakeSessionsReposiotry: FakeSessionsRepository
+    private val fakeSessionsRepository: FakeSessionsRepository
         get() = sessionsRepository as FakeSessionsRepository
 
     context(RobotTestRule)
@@ -54,7 +54,7 @@ class SessionScreenRobot @Inject constructor() {
     }
 
     fun checkFavoriteIsSavedAt(index: Int) {
-        fakeSessionsReposiotry.savedFavorites.contains(itemAt(index).id)
+        fakeSessionsRepository.savedFavorites.contains(itemAt(index).id)
     }
 
     private fun AndroidComposeTestRule<*, *>.onFavorite(index: Int): SemanticsNodeInteraction {
