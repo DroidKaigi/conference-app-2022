@@ -110,10 +110,9 @@ fun Sessions(
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(32.dp))
                                 .ifTrue(isSelected) {
-                                    Modifier
-                                        .background(
-                                            color = MaterialTheme.colorScheme.secondaryContainer
-                                        )
+                                    background(
+                                        color = MaterialTheme.colorScheme.secondaryContainer
+                                    )
                                 },
                             contentAlignment = Alignment.Center
                         ) {
