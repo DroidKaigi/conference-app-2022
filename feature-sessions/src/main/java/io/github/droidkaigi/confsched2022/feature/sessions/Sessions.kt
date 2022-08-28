@@ -99,47 +99,12 @@ fun Sessions(
                 divider = {},
             ) {
                 days.forEachIndexed { index, day ->
-                    val isSelected = selectedTab == index
-                    Tab(
-                        selected = isSelected,
-                        onClick = { onTabClicked(selectedTab) },
-                        modifier = Modifier.height(56.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(32.dp))
-                                .ifTrue(isSelected) {
-                                    background(
-                                        color = MaterialTheme.colorScheme.secondaryContainer
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                Text(
-                                    text = day.name,
-                                    style = androidx.compose.ui.text.TextStyle(
-                                        textAlign = TextAlign.Center,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight(500)
-                                    ),
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Text(
-                                    text = "${5 + index}",
-                                    style = androidx.compose.ui.text.TextStyle(
-                                        textAlign = TextAlign.Center,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight(500)
-                                    ),
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                    }
+                    SessionDayTab(
+                        index = index,
+                        day = day,
+                        selectedTab = selectedTab,
+                        onTabClicked = onTabClicked
+                    )
                 }
             }
             Text(
