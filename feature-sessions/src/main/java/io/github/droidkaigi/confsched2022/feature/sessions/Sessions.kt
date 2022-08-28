@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -31,7 +32,10 @@ import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 
 @Composable
-fun SessionsScreenRoot(modifier: Modifier = Modifier) {
+fun SessionsScreenRoot(
+    modifier: Modifier = Modifier,
+    onNavigationIconClick: () -> Unit = {}
+) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
 
@@ -46,7 +50,8 @@ fun SessionsScreenRoot(modifier: Modifier = Modifier) {
         onToggleFilter = { viewModel.onToggleFilter() },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
-        }
+        },
+        onNavigationIconClick = onNavigationIconClick,
     )
 }
 
@@ -56,57 +61,68 @@ fun Sessions(
     uiModel: SessionsUiModel,
     modifier: Modifier = Modifier,
     selectedTab: Int,
+    onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onTabClicked: (index: Int) -> Unit,
     onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit
 ) {
-    val scheduleState = uiModel.scheduleState
-    if (scheduleState !is Loaded) {
-        CircularProgressIndicator()
-        return
-    }
-    val days = scheduleState.schedule.days
-    Column(
-        modifier = modifier
-            .windowInsetsPadding(
-                WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-            )
-    ) {
-        val pagerState = rememberPagerState()
-        TabRow(
-            selectedTabIndex = selectedTab,
-            indicator = {
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, it),
-                )
-            }
-        ) {
-            days.forEachIndexed { index, day ->
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = { onTabClicked(selectedTab) },
-                    text = { Text(text = day.name, maxLines = 2, overflow = TextOverflow.Ellipsis) }
-                )
-            }
+    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+        val scheduleState = uiModel.scheduleState
+        if (scheduleState !is Loaded) {
+            CircularProgressIndicator()
+            return@KaigiScaffold
         }
-        Text(
-            text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
-            modifier = Modifier.clickable(onClick = onToggleFilter)
-        )
-        HorizontalPager(
-            count = days.size,
-            state = pagerState
-        ) { dayIndex ->
-            val day = days[dayIndex]
-            val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-            Timetable(timetable) { timetableItem, isFavorited ->
-                TimetableItem(
-                    timetableItem = timetableItem,
-                    isFavorited = isFavorited,
-                    modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
-                    onFavoriteClick = onFavoriteClick
+        val days = scheduleState.schedule.days
+        Column(
+            modifier = modifier
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
                 )
+        ) {
+            val pagerState = rememberPagerState()
+            TabRow(
+                selectedTabIndex = selectedTab,
+                indicator = {
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier.pagerTabIndicatorOffset(pagerState, it),
+                    )
+                }
+            ) {
+                days.forEachIndexed { index, day ->
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = { onTabClicked(selectedTab) },
+                        text = {
+                            Text(
+                                text = day.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+            }
+            Text(
+                text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
+                modifier = Modifier.clickable(onClick = onToggleFilter)
+            )
+            HorizontalPager(
+                count = days.size,
+                state = pagerState
+            ) { dayIndex ->
+                val day = days[dayIndex]
+                val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+                Timetable(timetable) { timetableItem, isFavorited ->
+                    TimetableItem(
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited,
+                        modifier = Modifier.clickable(onClick = {
+                            onTimetableClick(timetableItem.id)
+                        }),
+                        onFavoriteClick = onFavoriteClick
+                    )
+                }
             }
         }
     }
