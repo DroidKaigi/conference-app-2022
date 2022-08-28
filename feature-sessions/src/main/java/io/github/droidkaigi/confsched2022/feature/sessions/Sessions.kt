@@ -167,6 +167,7 @@ fun Sessions(
             }
         }
     }
+}
 
 @Preview(showBackground = true)
 @Composable
