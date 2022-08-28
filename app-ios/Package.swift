@@ -13,9 +13,11 @@ var package = Package(
         .library(
             name: "AppFeature",
             targets: ["AppFeature"]),
+        .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
     ],
     targets: [
@@ -24,6 +26,13 @@ var package = Package(
             dependencies: [
                 .target(name: "Strings"),
                 .target(name: "TimetableFeature"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "Model",
+            dependencies: [
+                .target(name: "appioscombined"),
             ]
         ),
         .target(
@@ -39,7 +48,8 @@ var package = Package(
         .target(
             name: "TimetableFeature",
             dependencies: [
-                .target(name: "appioscombined"),
+                .target(name: "Model"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .testTarget(
