@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.ui.Result
@@ -29,9 +30,14 @@ data class SessionsUiModel(
                     is Result.Success -> {
                         Loaded(scheduleResult.data)
                     }
-                    else -> {
+                    is Result.Error -> {
                         // TODO
                         // SessionsState.Error
+                        scheduleResult.exception?.let {
+                            Logger.d(it) {
+                                "error"
+                            }
+                        }
                         Loading
                     }
                 }

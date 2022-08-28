@@ -94,6 +94,7 @@ zipline = { module = "app.cash.zipline:zipline", version.ref = "zipline" }
 ziplineSnapshot = { module = "app.cash.zipline:zipline", version.ref = "ziplineSnapshot" }
 ziplineLoader = { module = "app.cash.zipline:zipline-loader", version.ref = "zipline" }
 okHttpCore = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttp" }
+okHttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
 sqldelightDriverAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
 kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }

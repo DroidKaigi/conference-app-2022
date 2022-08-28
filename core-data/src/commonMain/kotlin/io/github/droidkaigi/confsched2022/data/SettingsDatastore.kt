@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 
-class PreferenceDatastore(private val flowSettings: FlowSettings) {
+class SettingsDatastore(private val flowSettings: FlowSettings) {
 
     suspend fun addFavorite(sessionId: String) {
         val favoriteSet = flowSettings.getString(KEY, "").toFavoriteSet().toMutableSet()

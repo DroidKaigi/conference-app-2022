@@ -1,6 +1,7 @@
 plugins {
     id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.kmp.android.hilt")
+    id("droidkaigi.primitive.kmp.serialization")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.data"
@@ -23,6 +24,7 @@ kotlin {
             dependsOn(commonMain)
             dependencies {
                 implementation(libs.ktorClientOkHttp)
+                implementation(libs.okHttpLoggingInterceptor)
                 implementation(libs.androidxDatastorePreferences)
                 implementation(libs.multiplatformSettingsDatastore)
             }

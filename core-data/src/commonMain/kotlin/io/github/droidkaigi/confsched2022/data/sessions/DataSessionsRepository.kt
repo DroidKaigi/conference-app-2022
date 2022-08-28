@@ -1,30 +1,23 @@
 package io.github.droidkaigi.confsched2022.data.sessions
 
-import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
-import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
-    val favoriteSessionsDataStore: PreferenceDatastore
+    val favoriteSessionsDataStore: SettingsDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-        try {
-            // Currently, this is only for checking auth
-            val sessions = sessionsApi.timetable()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val timetable = sessionsApi.timetable()
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
             val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
             trySend(
-                DroidKaigiSchedule.of(Timetable.fake().copy(favorites = favorites))
+                DroidKaigiSchedule.of(timetable.copy(favorites = favorites))
             )
         }
     }

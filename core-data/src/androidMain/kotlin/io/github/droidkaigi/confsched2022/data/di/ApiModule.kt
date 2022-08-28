@@ -9,16 +9,18 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.droidkaigi.confsched2022.core.data.BuildConfig
 import io.github.droidkaigi.confsched2022.data.NetworkService
-import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
 import io.github.droidkaigi.confsched2022.data.auth.Authenticator
 import io.github.droidkaigi.confsched2022.data.auth.AuthenticatorImpl
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -36,24 +38,32 @@ class ApiModule {
     @Singleton
     fun provideAuthApi(
         httpClient: HttpClient,
-        preferenceDatastore: PreferenceDatastore,
+        settingsDatastore: SettingsDatastore,
         authenticator: Authenticator
     ): AuthApi {
-        return AuthApi(httpClient, preferenceDatastore, authenticator)
+        return AuthApi(httpClient, settingsDatastore, authenticator)
     }
 
     @Provides
     @Singleton
     fun provideHttpClient(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        settingsDatastore: SettingsDatastore
     ): HttpClient {
         val httpClient = HttpClient(OkHttp) {
             engine {
                 config {
                     preconfigured = okHttpClient
+                    addInterceptor(HttpLoggingInterceptor().apply {
+                        level = if (BuildConfig.DEBUG) {
+                            HttpLoggingInterceptor.Level.BODY
+                        } else {
+                            HttpLoggingInterceptor.Level.NONE
+                        }
+                    })
                 }
             }
-            defaultKtorConfig()
+            defaultKtorConfig(settingsDatastore)
         }
         return httpClient
     }
@@ -61,7 +71,8 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient()
+        return OkHttpClient.Builder()
+            .build()
     }
 
     @Provides
@@ -71,7 +82,7 @@ class ApiModule {
     }
 
     private val Context.dataStore by preferencesDataStore(
-        name = PreferenceDatastore.NAME,
+        name = SettingsDatastore.NAME,
     )
 
     @Provides
@@ -79,9 +90,10 @@ class ApiModule {
     fun provideFlowSettings(application: Application): FlowSettings {
         return DataStoreSettings(datastore = application.dataStore)
     }
+
     @Provides
     @Singleton
-    fun providePreferenceDatastore(flowSettings: FlowSettings): PreferenceDatastore {
-        return PreferenceDatastore(flowSettings)
+    fun providePreferenceDatastore(flowSettings: FlowSettings): SettingsDatastore {
+        return SettingsDatastore(flowSettings)
     }
 }
