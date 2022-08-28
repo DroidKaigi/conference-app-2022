@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
-import android.content.res.Resources.Theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,11 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +42,6 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.Sched
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.ifTrue
-import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 
 @Composable
 fun SessionsScreenRoot(
@@ -116,7 +110,10 @@ fun Sessions(
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(32.dp))
                                 .ifTrue(isSelected) {
-                                    Modifier.background(color = MaterialTheme.colorScheme.secondaryContainer)
+                                    Modifier
+                                        .background(
+                                            color = MaterialTheme.colorScheme.secondaryContainer
+                                        )
                                 },
                             contentAlignment = Alignment.Center
                         ) {
@@ -160,7 +157,10 @@ fun Sessions(
                     TimetableItem(
                         timetableItem = timetableItem,
                         isFavorited = isFavorited,
-                        modifier = Modifier.clickable(onClick = { onTimetableClick(timetableItem.id) }),
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { onTimetableClick(timetableItem.id) }
+                            ),
                         onFavoriteClick = onFavoriteClick
                     )
                 }
