@@ -26,7 +26,7 @@ class SessionsApi(
     suspend fun timetable(): Timetable {
         return networkService
             .get<SessionAllResponse>(
-                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022",
+                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
                 needAuth = true
             )
             .toTimetable()
