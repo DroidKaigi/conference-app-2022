@@ -42,7 +42,7 @@ class SessionsScreenTest {
     fun isNotFavoritedAtFirst() {
         sessionScreenRobot(robotTestRule) {
             checkTimetableVisible()
-            checkIsFavoriteAt(index = 0, isFavorited = false)
+            checkFavoritedAt(index = 0, isFavorited = false)
         }
     }
 
@@ -50,7 +50,7 @@ class SessionsScreenTest {
     fun canToggleFavorite() {
         sessionScreenRobot(robotTestRule) {
             clickFavoriteAt(0)
-            checkIsFavoriteAt(index = 0, isFavorited = true)
+            checkFavoritedAt(index = 0, isFavorited = true)
             checkFavoriteIsSavedAt(0)
         }
     }

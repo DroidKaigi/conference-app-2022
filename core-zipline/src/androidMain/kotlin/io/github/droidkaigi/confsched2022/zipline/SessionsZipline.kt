@@ -63,11 +63,12 @@ class SessionsZipline @Inject constructor(
     fun timetableModifier(
         coroutineScope: CoroutineScope,
     ): MutableStateFlow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
-        val modifierStateFlow = MutableStateFlow<
-            suspend (DroidKaigiSchedule) -> DroidKaigiSchedule
-            > { timetable ->
-            timetable
+        val androidScheduleModifier = AndroidScheduleModifier()
+        val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
+            androidScheduleModifier.modify(timetable)
         }
+        val modifierStateFlow = MutableStateFlow(defaultModifier)
+
         coroutineScope.launch(dispatcher) {
             var zipline: Zipline? = null
 //            val modifier =
@@ -80,16 +81,10 @@ class SessionsZipline @Inject constructor(
                     loadedZiplineFlow.catch { it.printStackTrace() }
                 }
                 zipline = loadedZipline!!.zipline
-                zipline.take<TimetableModifier>("sessionsModifier")
+                zipline.take<ScheduleModifier>("sessionsModifier")
             } catch (e: Exception) {
                 Logger.d(e) { "zipline load error" }
-                object : TimetableModifier {
-                    override suspend fun modify(
-                        schedule: DroidKaigiSchedule
-                    ): DroidKaigiSchedule {
-                        return schedule
-                    }
-                }
+                androidScheduleModifier
             }
             modifierStateFlow.emit { timetable -> modifier.modify(timetable) }
 
