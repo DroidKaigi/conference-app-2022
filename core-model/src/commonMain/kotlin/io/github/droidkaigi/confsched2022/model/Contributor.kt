@@ -4,9 +4,12 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class Contributor(
     val id: Int,
-    val name: String,
-    val url: String,
-    val image: String
+    val username: String,
+    val profileUrl: String?,
+    val iconUrl: String,
+    val icon32Url: String?,
+    val icon64Url: String?,
+    val icon128Url: String?
 ) {
     companion object
 }
@@ -14,14 +17,20 @@ data class Contributor(
 fun Contributor.Companion.fakes() = persistentListOf(
     Contributor(
         id = 1,
-        name = "Pie",
-        url = "https://developer.android.com/",
-        image = "https://via.placeholder.com/150",
+        username = "Pie",
+        profileUrl = "https://developer.android.com/",
+        iconUrl = "https://via.placeholder.com/150",
+        icon32Url = null,
+        icon64Url = null,
+        icon128Url = null
     ),
     Contributor(
         id = 2,
-        name = "Oreo",
-        url = "https://developer.android.com/",
-        image = "https://via.placeholder.com/150",
+        username = "Oreo",
+        profileUrl = "https://developer.android.com/",
+        iconUrl = "https://via.placeholder.com/150",
+        icon32Url = null,
+        icon64Url = null,
+        icon128Url = null
     )
 )

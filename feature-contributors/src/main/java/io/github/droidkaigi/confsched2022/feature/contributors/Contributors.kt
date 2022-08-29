@@ -32,7 +32,7 @@ fun Contributors(
 
     LazyColumn {
         items(items = contributors, key = { it.id }) { contributor ->
-            Text(contributor.name)
+            Text(contributor.username)
         }
     }
 }
