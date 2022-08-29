@@ -18,7 +18,6 @@ var package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
-        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
     ],
     targets: [
         .target(
@@ -42,7 +41,7 @@ var package = Package(
                 .process("Resources"),
             ],
             plugins: [
-                .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin"),
+                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .target(
@@ -67,10 +66,22 @@ var package = Package(
                 .target(name: "SwiftLintBinary"),
             ]
         ),
+        .plugin(
+            name: "SwiftGenPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "swiftgen"),
+            ]
+        ),
         .binaryTarget(
             name: "SwiftLintBinary",
             url: "https://github.com/realm/SwiftLint/releases/download/0.48.0/SwiftLintBinary-macos.artifactbundle.zip",
             checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
+        ),
+        .binaryTarget(
+          name: "swiftgen",
+          url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
+          checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
         ),
     ]
 )
