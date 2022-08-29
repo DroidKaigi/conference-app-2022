@@ -16,6 +16,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
 import io.github.droidkaigi.confsched2022.testing.sessions.FakeSessionsRepository
+import org.amshove.kluent.shouldContain
 import javax.inject.Inject
 
 class SessionScreenRobot @Inject constructor() {
@@ -54,11 +55,13 @@ class SessionScreenRobot @Inject constructor() {
     }
 
     fun checkFavoriteIsSavedAt(index: Int) {
-        fakeSessionsRepository.savedFavorites.contains(itemAt(index).id)
+        val expected = DroidKaigiSchedule.fake().itemAt(index).id
+        println(fakeSessionsRepository.savedFavorites)
+        fakeSessionsRepository.savedFavorites shouldContain expected
     }
 
     private fun AndroidComposeTestRule<*, *>.onFavorite(index: Int): SemanticsNodeInteraction {
-        val title = itemAt(index)
+        val title = DroidKaigiSchedule.fake().itemAt(index)
             .title
             .currentLangTitle
 
@@ -68,10 +71,9 @@ class SessionScreenRobot @Inject constructor() {
         )
     }
 
-    private fun itemAt(index: Int): TimetableItem {
+    private fun DroidKaigiSchedule.itemAt(index: Int): TimetableItem {
         return checkNotNull(
-            DroidKaigiSchedule.fake()
-                .dayToTimetable[io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1]
+            dayToTimetable[io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1]
         )
             .timetableItems[index]
     }
