@@ -65,51 +65,6 @@ class AndroidFeaturePlugin : Plugin<Project> {
 }
 ```
 
-### Instant logic updates using Kotlin JS
-We are trying to use [https://github.com/cashapp/zipline](cashapp/zipline) as an experimental approach.  
-This allows us to use the regular JVM Kotlin implementation as a fallback, while releasing logic implemented in Javascript, which can be updated instantly as well as development on the Web.  
-We are excited about these possibilities for Kotlin.
-
-The following interface is implemented in Kotlin JS and Android.  
-You can add session announcements, etc. here. Since this is an experimental trial, it does not have such a practical role this time.  
-
-```kotlin
-interface ScheduleModifier : ZiplineService {
-    suspend fun modify(
-        schedule: DroidKaigiSchedule
-    ): DroidKaigiSchedule
-}
-```
-
-```kotlin
-class AndroidScheduleModifier : ScheduleModifier {
-    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
-        return schedule
-    }
-}
-```
-
-```kotlin
-class JsScheduleModifier() : ScheduleModifier {
-    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
-...
-    if (timetableItem is Session &&
-        timetableItem.id == TimetableItemId("1")
-    ) {
-        timetableItem.copy(
-            message = MultiLangText(
-                enTitle = "This is a js message",
-                jaTitle = "これはJSからのメッセージ",
-            )
-        )
-    } else {
-        timetableItem
-    }
-...
-    }
-}
-```
-
 ### Building a UiModel using Compose
 
 [https://github.com/cashapp/molecule](cashapp/molecule) is used to create the UiModel.  
@@ -232,6 +187,51 @@ class SessionScreenRobot @Inject constructor() {
     fun checkFavoriteIsSavedAt(index: Int) {
         val expected = DroidKaigiSchedule.fake().itemAt(index).id
         fakeSessionsRepository.savedFavorites shouldContain expected
+    }
+}
+```
+
+### Instant logic updates using Kotlin JS
+We are trying to use [https://github.com/cashapp/zipline](cashapp/zipline) as an experimental approach.  
+This allows us to use the regular JVM Kotlin implementation as a fallback, while releasing logic implemented in Javascript, which can be updated instantly as well as development on the Web.  
+We are excited about these possibilities for Kotlin.
+
+The following interface is implemented in Kotlin JS and Android.  
+You can add session announcements, etc. here. Since this is an experimental trial, it does not have such a practical role this time.
+
+```kotlin
+interface ScheduleModifier : ZiplineService {
+    suspend fun modify(
+        schedule: DroidKaigiSchedule
+    ): DroidKaigiSchedule
+}
+```
+
+```kotlin
+class AndroidScheduleModifier : ScheduleModifier {
+    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
+        return schedule
+    }
+}
+```
+
+```kotlin
+class JsScheduleModifier() : ScheduleModifier {
+    override suspend fun modify(schedule: DroidKaigiSchedule): DroidKaigiSchedule {
+...
+    if (timetableItem is Session &&
+        timetableItem.id == TimetableItemId("1")
+    ) {
+        timetableItem.copy(
+            message = MultiLangText(
+                enTitle = "This is a js message",
+                jaTitle = "これはJSからのメッセージ",
+            )
+        )
+    } else {
+        timetableItem
+    }
+...
     }
 }
 ```
