@@ -1,14 +1,31 @@
 package io.github.droidkaigi.confsched2022.feature.contributors
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
 
@@ -29,10 +46,50 @@ fun Contributors(
         return
     }
     val contributors = uiModel.contributorsState.contributors
+    var prevUserNameAcronym: Char? = null
 
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth()
+    ) {
         items(items = contributors, key = { it.id }) { contributor ->
-            Text(contributor.username)
+            val userNameAcronym = contributor.username[0]
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.width(64.dp),
+                    text = if (prevUserNameAcronym == userNameAcronym) {
+                        ""
+                    } else {
+                        prevUserNameAcronym = userNameAcronym
+                        userNameAcronym.toString()
+                    },
+                    style = TextStyle(
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight(500),
+                        fontSize = 20.sp
+                    )
+                )
+                AsyncImage(
+                    model = contributor.iconUrl,
+                    contentDescription = contributor.username,
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.clip(CircleShape).background(color = Color.Red),
+                )
+                Text(
+                    text = contributor.username,
+                    style = TextStyle(
+                        fontWeight = FontWeight(500),
+                        fontSize = 14.sp
+                    ),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
         }
     }
 }

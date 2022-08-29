@@ -40,6 +40,7 @@ firebaseCommon = "20.1.1"
 firebaseAuth = "21.0.7"
 androidxStartup = "1.1.1"
 kluent = "1.68"
+coilCompose="2.2.0"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -101,6 +102,7 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref = "multiplatformFirebaseAuth" }
 firebaseCommon = { module = "com.google.firebase:firebase-common", version.ref = "firebaseCommon" }
 firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 
 # test
 
