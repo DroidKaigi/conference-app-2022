@@ -26,69 +26,76 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
 
 @Composable
-fun ContributorsScreenRoot(modifier: Modifier = Modifier) {
+fun ContributorsScreenRoot(
+    modifier: Modifier = Modifier,
+    onNavigationIconClick: () -> Unit = {}
+) {
     val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, modifier)
+    Contributors(uiModel, onNavigationIconClick, modifier)
 }
 
 @Composable
 fun Contributors(
     uiModel: ContributorsUiModel,
-    modifier: Modifier = Modifier,
+    onNavigationIconClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    if (uiModel.contributorsState !is Loaded) {
-        CircularProgressIndicator()
-        return
-    }
-    val contributors = uiModel.contributorsState.contributors
-    var prevUserNameAcronym: Char? = null
+    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+        if (uiModel.contributorsState !is Loaded) {
+            CircularProgressIndicator()
+            return@KaigiScaffold
+        }
+        val contributors = uiModel.contributorsState.contributors
+        var prevUserNameAcronym: Char? = null
 
-    LazyColumn(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        items(items = contributors, key = { it.id }) { contributor ->
-            val userNameAcronym = contributor.username[0]
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(top = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.width(64.dp),
-                    text = if (prevUserNameAcronym == userNameAcronym) {
-                        ""
-                    } else {
-                        prevUserNameAcronym = userNameAcronym
-                        userNameAcronym.toString()
-                    },
-                    style = TextStyle(
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight(500),
-                        fontSize = 20.sp
+        LazyColumn(
+            modifier = modifier.fillMaxWidth()
+        ) {
+            items(items = contributors, key = { it.id }) { contributor ->
+                val userNameAcronym = contributor.username[0]
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.width(64.dp),
+                        text = if (prevUserNameAcronym == userNameAcronym) {
+                            ""
+                        } else {
+                            prevUserNameAcronym = userNameAcronym
+                            userNameAcronym.toString()
+                        },
+                        style = TextStyle(
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight(500),
+                            fontSize = 20.sp
+                        )
                     )
-                )
-                AsyncImage(
-                    model = contributor.iconUrl,
-                    contentDescription = contributor.username,
-                    alignment = Alignment.Center,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.clip(CircleShape).background(color = Color.Red),
-                )
-                Text(
-                    text = contributor.username,
-                    style = TextStyle(
-                        fontWeight = FontWeight(500),
-                        fontSize = 14.sp
-                    ),
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                    AsyncImage(
+                        model = contributor.iconUrl,
+                        contentDescription = contributor.username,
+                        alignment = Alignment.Center,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.clip(CircleShape).background(color = Color.Red),
+                    )
+                    Text(
+                        text = contributor.username,
+                        style = TextStyle(
+                            fontWeight = FontWeight(500),
+                            fontSize = 14.sp
+                        ),
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             }
         }
     }

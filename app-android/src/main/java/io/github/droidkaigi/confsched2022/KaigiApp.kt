@@ -58,7 +58,7 @@ fun KaigiApp(
                 startDestination = SessionsNavGraph.sessionRoute,
             ) {
                 sessionsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                contributorsNavGraph()
+                contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
             }
         }
     }
