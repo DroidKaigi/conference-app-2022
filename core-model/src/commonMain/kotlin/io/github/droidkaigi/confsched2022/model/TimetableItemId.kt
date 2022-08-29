@@ -3,4 +3,4 @@ package io.github.droidkaigi.confsched2022.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-class TimetableItemId(val value: String)
+data class TimetableItemId(val value: String)

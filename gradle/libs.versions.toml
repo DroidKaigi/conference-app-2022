@@ -39,6 +39,7 @@ multiplatformFirebaseAuth = "1.6.2"
 firebaseCommon = "20.1.1"
 firebaseAuth = "21.0.7"
 androidxStartup = "1.1.1"
+kluent = "1.68"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -108,6 +109,7 @@ androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "andr
 androidxTestEspressoEspressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
 hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+kluentAndroid = {module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
 
 [plugins]
 androidGradlePlugin = { id = "com.android.application", version.ref = "androidGradlePlugin" }
