@@ -32,7 +32,7 @@ fun List<Contributor>.fixedSort(): PersistentList<Contributor> {
     return sortedList.toPersistentList()
 }
 
-fun Contributor.Companion.fakeApiResponse(): List<Contributor> = listOf(
+fun Contributor.Companion.fakes(): List<Contributor> = listOf(
     Contributor(
         id = 1,
         username = "Pie",
