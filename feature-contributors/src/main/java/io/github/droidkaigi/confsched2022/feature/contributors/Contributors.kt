@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.contributors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,7 +53,6 @@ fun Contributors(
             return@KaigiScaffold
         }
         val contributors = uiModel.contributorsState.contributors
-        var prevUserNameAcronym: Char? = null
 
         LazyColumn(
             modifier = modifier.fillMaxWidth()
@@ -66,26 +66,14 @@ fun Contributors(
                         .padding(top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.width(64.dp),
-                        text = if (prevUserNameAcronym == userNameAcronym) {
-                            ""
-                        } else {
-                            prevUserNameAcronym = userNameAcronym
-                            userNameAcronym.toString()
-                        },
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight(500),
-                            fontSize = 20.sp
-                        )
-                    )
+                    Spacer(modifier = Modifier.width(16.dp))
                     AsyncImage(
                         model = contributor.iconUrl,
                         contentDescription = contributor.username,
                         alignment = Alignment.Center,
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier.clip(CircleShape).background(color = Color.Red),
+                        modifier = Modifier
+                            .clip(CircleShape)
                     )
                     Text(
                         text = contributor.username,
