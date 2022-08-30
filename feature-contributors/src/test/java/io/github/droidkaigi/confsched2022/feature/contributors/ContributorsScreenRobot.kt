@@ -15,7 +15,7 @@ class ContributorsScreenRobot @Inject constructor() {
 
     context(RobotTestRule)
     fun checkContributorsVisible() {
-        composeTestRule.onNodeWithText(Contributor.fakes()[0].name).assertExists()
+        composeTestRule.onNodeWithText(Contributor.fakes()[0].username).assertExists()
     }
 
     operator fun invoke(
