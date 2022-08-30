@@ -1,8 +1,5 @@
 package io.github.droidkaigi.confsched2022.model
 
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
-
 data class Contributor(
     val id: Int,
     val username: String,
@@ -13,23 +10,6 @@ data class Contributor(
     val icon128Url: String?
 ) {
     companion object
-}
-
-fun List<Contributor>.fixedSort(): PersistentList<Contributor> {
-    val regex = Regex("^[a-zA-Z].*")
-    val sortedList = this.sortedWith(
-        compareBy<Contributor> {
-            if (it.username.matches(regex)) {
-                0
-            } else {
-                1
-            }
-        }.thenBy {
-            it.username
-        }
-    )
-
-    return sortedList.toPersistentList()
 }
 
 fun Contributor.Companion.fakes(): List<Contributor> = listOf(
@@ -95,7 +75,5 @@ fun Contributor.Companion.fakes(): List<Contributor> = listOf(
         icon32Url = "https://via.placeholder.com/32",
         icon64Url = "https://via.placeholder.com/64",
         icon128Url = "https://via.placeholder.com/128"
-    ),
+    )
 )
-
-fun Contributor.Companion.fakes() = fakeApiResponse().fixedSort()
