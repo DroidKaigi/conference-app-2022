@@ -49,7 +49,8 @@ fun TimetableItem(
             overflow = TextOverflow.Ellipsis,
             maxLines = maxTitleLines,
             style = MaterialTheme.typography.titleMedium.copy(
-                letterSpacing = 0.1.sp
+                letterSpacing = 0.1.sp,
+                color = Color.White
             )
         )
         KaigiTag(text = timetableItem.minutesString)
