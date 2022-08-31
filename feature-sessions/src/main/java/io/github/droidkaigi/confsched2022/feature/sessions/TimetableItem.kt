@@ -43,14 +43,14 @@ fun TimetableItem(
     ) {
         Text(
             text = timetableItem.title.currentLangTitle,
+            color = Color.White,
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth(),
             overflow = TextOverflow.Ellipsis,
             maxLines = maxTitleLines,
             style = MaterialTheme.typography.titleMedium.copy(
-                letterSpacing = 0.1.sp,
-                color = Color.White
+                letterSpacing = 0.1.sp
             )
         )
         KaigiTag(text = timetableItem.minutesString)
