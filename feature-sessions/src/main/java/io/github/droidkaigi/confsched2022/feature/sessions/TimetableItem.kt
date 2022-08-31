@@ -38,7 +38,7 @@ fun TimetableItem(
             )
             .background(Color(roomColor), MaterialTheme.shapes.medium)
             .padding(8.dp)
-            .semantics { contentDescription = "isFavorited${isFavorited}" }
+            .semantics { contentDescription = "isFavorited$isFavorited" }
             .testTag("favorite")
     ) {
         Text(
