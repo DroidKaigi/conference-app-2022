@@ -35,7 +35,8 @@ include(
     ":core-designsystem",
     ":core-data",
     ":core-testing",
-    ":core-model"
+    ":core-model",
+    ":preview-screenshots"
 )
 
 // for iOS framework name
