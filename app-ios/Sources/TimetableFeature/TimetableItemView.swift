@@ -26,6 +26,7 @@ public struct TimetableItemView: View {
                 .clipShape(Capsule())
         }
         .padding(8)
+        .frame(maxHeight: .infinity, alignment: .top)
         .background(AssetColors.pink.swiftUIColor)
         .cornerRadius(16)
     }
