@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,12 +32,18 @@ fun TimetableItem(
 ) {
     val roomName = timetableItem.room.name
     val roomColor = TimetableItemColor.colorOfRoomName(enName = roomName.enTitle)
+    val color = if (isFavorited) {
+        Color(roomColor)
+    } else {
+        Color(roomColor).copy(alpha = 0.2F)
+    }
     Column(
         modifier
             .clickable(
                 onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
             )
-            .background(Color(roomColor), MaterialTheme.shapes.medium)
+            .background(color, MaterialTheme.shapes.medium)
+            .border(2.dp, Color(roomColor), MaterialTheme.shapes.medium)
             .padding(8.dp)
             .semantics { contentDescription = "isFavorited$isFavorited" }
             .testTag("favorite")
