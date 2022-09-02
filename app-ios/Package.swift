@@ -20,6 +20,11 @@ var package = Package(
         ),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
+        .library(name: "Theme", targets: ["Theme"]),
+        .library(
+            name: "TimetableFeature",
+            targets: ["TimetableFeature"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
@@ -58,9 +63,20 @@ var package = Package(
             ]
         ),
         .target(
+            name: "Theme",
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
+            ]
+        ),
+        .target(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "Model"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
