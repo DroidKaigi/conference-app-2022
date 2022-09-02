@@ -9,3 +9,4 @@ strings:
     output: L10n.generated.swift
     params:
       publicAccess: true
+      bundle: Bundle.myModule

@@ -9,3 +9,4 @@ xcassets:
     params:
       enumName: AssetColors
       publicAccess: true
+      bundle: Bundle.myModule
