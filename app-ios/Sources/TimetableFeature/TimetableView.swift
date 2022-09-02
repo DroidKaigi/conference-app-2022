@@ -22,6 +22,7 @@ public struct TimetableState: Equatable {
 public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<Timetable>)
+    case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
@@ -87,6 +88,8 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
 
         return .none
     case .refreshResponse(.failure):
+        return .none
+    case .selectItem:
         return .none
     }
 }
