@@ -18,15 +18,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
-import coil.compose.AsyncImage
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 
@@ -51,7 +51,7 @@ fun TimetableDetailScreen(
     modifier: Modifier = Modifier,
     uiModel: TimeTableDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
-){
+) {
     if (uiModel.timetableDetailState !is Loaded) {
         CircularProgressIndicator()
         return
@@ -63,7 +63,7 @@ fun TimetableDetailScreen(
         ) {
             TimetableDetailSessionInfo(
                 title = item.title.currentLangTitle,
-                startsAt= item.startsAt,
+                startsAt = item.startsAt,
                 endsAt = item.startsAt,
                 room = item.room,
                 category = item.category,
@@ -72,9 +72,9 @@ fun TimetableDetailScreen(
             )
 
             if (item is Session)
-            TimetableDetailDescription(
-                description = item.description
-            )
+                TimetableDetailDescription(
+                    description = item.description
+                )
 
             TimetableDetailTargetAudience(
                 targetAudience = item.targetAudience
@@ -99,8 +99,8 @@ fun TimetableDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    language : String,
-    levels : PersistentList<String>,
+    language: String,
+    levels: PersistentList<String>,
 
 ) {
     Column {
@@ -114,7 +114,7 @@ fun TimetableDetailSessionInfo(
 
         Text(
             modifier = modifier,
-            text = "$startsAt $endsAt" ,
+            text = "$startsAt $endsAt",
             style = MaterialTheme.typography.bodySmall,
         )
 
@@ -199,7 +199,7 @@ fun TimetableDetailSpeakers(
                     Spacer(
                         modifier = modifier.padding(horizontal = 16.dp),
                     )
-                    //TODO ClickableにしてSpeaker詳細へ遷移
+                    // TODO ClickableにしてSpeaker詳細へ遷移
                     Text(
                         modifier = modifier,
                         text = speaker.name,
@@ -256,4 +256,3 @@ fun PreviewTimetableDetailScreen() {
         uiModel = TimeTableDetailUiModel(Loaded(fakeTimetableDetail()))
     )
 }
-

@@ -14,7 +14,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-
 data class TimeTableDetailUiModel(
     val timetableDetailState: TimetableDetailState,
 ) {
@@ -44,7 +43,7 @@ data class TimeTableDetailUiModel(
     }
 }
 
-fun fakeTimetableDetail() =  Session(
+fun fakeTimetableDetail() = Session(
     id = TimetableItemId("2"),
     title = MultiLangText("DroidKaigiのアプリのアーキテクチャ", "DroidKaigi App Architecture"),
     startsAt = LocalDateTime.parse("2021-10-20T10:30:00")
@@ -89,4 +88,3 @@ fun fakeTimetableDetail() =  Session(
         "INTERMEDIATE",
     ).toPersistentList(),
 )
-
