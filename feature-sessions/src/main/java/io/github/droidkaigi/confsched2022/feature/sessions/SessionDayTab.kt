@@ -22,12 +22,11 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 internal fun SessionDayTab(
     index: Int,
     day: DroidKaigi2022Day,
-    selectedTab: Int,
+    selected: Boolean,
     onTabClicked: (index: Int) -> Unit
 ) {
-    val isSelected = selectedTab == index
     Tab(
-        selected = isSelected,
+        selected = selected,
         onClick = { onTabClicked(index) },
         modifier = Modifier.height(56.dp)
     ) {

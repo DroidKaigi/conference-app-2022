@@ -17,9 +17,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +32,7 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.Sched
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
+import kotlinx.coroutines.launch
 
 @Composable
 fun SessionsScreenRoot(
@@ -43,14 +42,10 @@ fun SessionsScreenRoot(
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
 
-    var tabState by remember { mutableStateOf(0) }
-
     Sessions(
         uiModel = state,
         modifier = modifier,
-        selectedTab = tabState,
         onTimetableClick = {},
-        onTabClicked = { index -> tabState = index },
         onToggleFilter = { viewModel.onToggleFilter() },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
@@ -64,10 +59,8 @@ fun SessionsScreenRoot(
 fun Sessions(
     uiModel: SessionsUiModel,
     modifier: Modifier = Modifier,
-    selectedTab: Int,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onTabClicked: (index: Int) -> Unit,
     onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit
 ) {
@@ -86,7 +79,7 @@ fun Sessions(
         ) {
             val pagerState = rememberPagerState()
             TabRow(
-                selectedTabIndex = selectedTab,
+                selectedTabIndex = pagerState.currentPage,
                 indicator = {
                     TabIndicator(
                         modifier = Modifier
@@ -96,12 +89,17 @@ fun Sessions(
                 },
                 divider = {},
             ) {
+                val coroutineScope = rememberCoroutineScope()
                 days.forEachIndexed { index, day ->
                     SessionDayTab(
                         index = index,
                         day = day,
-                        selectedTab = selectedTab,
-                        onTabClicked = onTabClicked
+                        selected = pagerState.currentPage == index,
+                        onTabClicked = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(it)
+                            }
+                        }
                     )
                 }
             }
