@@ -24,6 +24,7 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<Timetable>)
     case selectDay(DroidKaigi2022Day)
+    case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
@@ -93,6 +94,8 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .selectDay(day):
         state.selectedDay = day
         return .init(value: .refresh)
+    case .selectItem:
+        return .none
     }
 }
 

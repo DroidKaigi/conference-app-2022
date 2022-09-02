@@ -14,6 +14,10 @@ var package = Package(
             name: "AppFeature",
             targets: ["AppFeature"]
         ),
+        .library(
+            name: "SessionFeature",
+            targets: ["SessionFeature"]
+        ),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "Theme", targets: ["Theme"]),
@@ -30,6 +34,7 @@ var package = Package(
             name: "AppFeature",
             dependencies: [
                 .target(name: "Strings"),
+                .target(name: "SessionFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -38,6 +43,13 @@ var package = Package(
             name: "Model",
             dependencies: [
                 .target(name: "appioscombined"),
+            ]
+        ),
+        .target(
+            name: "SessionFeature",
+            dependencies: [
+                .target(name: "Model"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .target(
