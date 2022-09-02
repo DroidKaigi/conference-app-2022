@@ -4,11 +4,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -27,6 +33,7 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
+import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 
 @Composable
 fun SessionsScreenRoot(
@@ -80,7 +87,13 @@ fun Sessions(
             val pagerState = rememberPagerState()
             TabRow(
                 selectedTabIndex = selectedTab,
-                indicator = {},
+                indicator = {
+                    TabIndicator(
+                        modifier = Modifier
+                            .pagerTabIndicatorOffset(pagerState, it)
+                            .zIndex(-1f),
+                    )
+                },
                 divider = {},
             ) {
                 days.forEachIndexed { index, day ->
@@ -116,6 +129,19 @@ fun Sessions(
             }
         }
     }
+}
+
+@Composable
+private fun TabIndicator(
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = RoundedCornerShape(percent = 50),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp)
+    ) {}
 }
 
 @Preview(showBackground = true)
