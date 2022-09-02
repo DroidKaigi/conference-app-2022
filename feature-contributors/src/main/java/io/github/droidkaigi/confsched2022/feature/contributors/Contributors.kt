@@ -27,6 +27,8 @@ import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
+import io.github.droidkaigi.confsched2022.model.Contributor
+import io.github.droidkaigi.confsched2022.model.fakes
 
 @Composable
 fun ContributorsScreenRoot(
@@ -90,6 +92,13 @@ fun Contributors(
 @Composable
 fun ContributorsPreview() {
     KaigiTheme {
-        ContributorsScreenRoot()
+        Contributors(
+            uiModel = ContributorsUiModel(
+                Loaded(
+                    contributors = Contributor.fakes()
+                )
+            ),
+            onNavigationIconClick = {}
+        )
     }
 }

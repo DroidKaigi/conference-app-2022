@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":feature-contributors"))
     implementation(project(":feature-sessions"))
 
+    implementation(libs.composeUi)
     implementation(libs.showkase.runtime)
     ksp(libs.showkase.processor)
 
