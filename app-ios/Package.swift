@@ -15,16 +15,16 @@ var package = Package(
             targets: ["AppFeature"]
         ),
         .library(
+            name: "TimetableFeature",
+            targets: ["TimetableFeature"]
+        ),
+        .library(
             name: "SessionFeature",
             targets: ["SessionFeature"]
         ),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "Theme", targets: ["Theme"]),
-        .library(
-            name: "TimetableFeature",
-            targets: ["TimetableFeature"]
-        ),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
@@ -34,6 +34,7 @@ var package = Package(
             name: "AppFeature",
             dependencies: [
                 .target(name: "Strings"),
+                .target(name: "Theme"),
                 .target(name: "SessionFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

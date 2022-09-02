@@ -38,7 +38,7 @@ struct TimetableItemView_Previews: PreviewProvider {
         TimetableItemView(
             item: Timetable.companion.fake().timetableItems.first!
         )
-        .previewLayout(.sizeThatFits)
+        .previewLayout(.fixed(width: 200, height: 160))
     }
 }
 #endif
