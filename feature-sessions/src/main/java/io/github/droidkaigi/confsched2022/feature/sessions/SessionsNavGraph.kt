@@ -25,7 +25,7 @@ fun NavGraphBuilder.sessionsNavGraph(
             }
         )
     ) {
-        // TODO savableにする
+        // TODO make it savable
         val id = it.arguments?.getString("id") ?: ""
         TimetableDetailScreenRoot(
             timetableItemId = TimetableItemId(id),

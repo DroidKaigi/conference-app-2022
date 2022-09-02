@@ -36,7 +36,8 @@ fun TimetableDetailScreenRoot(
     timetableItemId: TimetableItemId,
     onNavigationIconClick: () -> Unit = {}
 ) {
-    // TODO　ViewModelのInject、idからTimeTableItemの解決して渡す
+    // TODO　ViewModel's Inject
+    // Find TimeTableItem by id
     val uiModel = fakeTimetableDetail()
 
     TimetableDetailScreen(
@@ -136,7 +137,7 @@ fun TimetableDetailDescription(
 ) {
     Column {
         Spacer(modifier = modifier.padding(16.dp))
-        // TODO 文字量に応じて続きを読むで開閉
+        // TODO expand by amount of text
         Text(
             modifier = modifier,
             text = description,
@@ -199,7 +200,7 @@ fun TimetableDetailSpeakers(
                     Spacer(
                         modifier = modifier.padding(horizontal = 16.dp),
                     )
-                    // TODO ClickableにしてSpeaker詳細へ遷移
+                    // TODO Transition to Speaker detail
                     Text(
                         modifier = modifier,
                         text = speaker.name,
