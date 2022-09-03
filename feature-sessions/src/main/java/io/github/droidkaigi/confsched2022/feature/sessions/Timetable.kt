@@ -3,7 +3,10 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.drag
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
@@ -23,6 +26,8 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
@@ -93,8 +98,9 @@ fun Timetable(
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
-                        // FIXME: Pager swipe is not possible because scrolling is not transmitted to the pager side
-                        if (change.positionChange() != Offset.Zero) change.consume()
+                        if (screen.enableHorizontalScroll(dragAmount.x)) {
+                            if (change.positionChange() != Offset.Zero) change.consume()
+                        }
                         coroutineScope.launch {
                             screen.scroll(
                                 dragAmount,
@@ -260,6 +266,11 @@ class ScreenScrollState(
     val scrollY: Float
         get() = _scrollY.value
 
+    val maxX: Float
+        get() = _scrollX.lowerBound ?: 0f
+    val maxY: Float
+        get() = _scrollY.lowerBound ?: 0f
+
     suspend fun scroll(
         amount: Offset,
         timeMillis: Long,
@@ -291,8 +302,8 @@ class ScreenScrollState(
     }
 
     fun updateBounds(maxX: Float, maxY: Float) {
-        _scrollY.updateBounds(-maxY, 0f)
-        _scrollX.updateBounds(-maxX, 0f)
+        _scrollX.updateBounds(maxX, 0f)
+        _scrollY.updateBounds(maxY, 0f)
     }
 
     fun resetTracking() {
@@ -375,17 +386,27 @@ private class Screen(
         )
     }
 
+    fun enableHorizontalScroll(dragX: Float): Boolean {
+        val nextPossibleX = calculatePossibleScrollX(dragX)
+        return (scrollState.maxX < nextPossibleX && nextPossibleX < 0f)
+    }
+
+    fun enableVerticalScroll(dragY: Float): Boolean {
+        val nextPossibleY = calculatePossibleScrollY(dragY)
+        return (scrollState.maxY < nextPossibleY && nextPossibleY < 0f)
+    }
+
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
         scrollState.updateBounds(
             maxX = if (width < timetableLayout.timetableWidth) {
-                (timetableLayout.timetableWidth - width).toFloat()
+                -(timetableLayout.timetableWidth - width).toFloat()
             } else {
                 0f
             },
             maxY = if (height < timetableLayout.timetableHeight) {
-                (timetableLayout.timetableHeight - height).toFloat()
+                -(timetableLayout.timetableHeight - height).toFloat()
             } else {
                 0f
             }
@@ -395,23 +416,53 @@ private class Screen(
     private fun calculatePossibleScrollX(scrollX: Float): Float {
         val currentValue = scrollState.scrollX
         val nextValue = currentValue + scrollX
-        val maxScroll = if (width < timetableLayout.timetableWidth) {
-            -(timetableLayout.timetableWidth - width)
-        } else {
-            0
-        }
-        return maxOf(minOf(nextValue.toInt(), 0), maxScroll).toFloat()
+        val maxScroll = scrollState.maxX
+        return maxOf(minOf(nextValue, 0f), maxScroll)
     }
 
     private fun calculatePossibleScrollY(scrollY: Float): Float {
         val currentValue = scrollState.scrollY
         val nextValue = currentValue + scrollY
-        val maxScroll = if (height < timetableLayout.timetableHeight) {
-            -(timetableLayout.timetableHeight - height)
-        } else {
-            0
+        val maxScroll = scrollState.maxY
+        return maxOf(minOf(nextValue, 0f), maxScroll)
+    }
+}
+
+/**
+ * Workaround to prevent detectDragGestures from consuming events by default and disabling parent scrolling.
+ *
+ * ref: https://stackoverflow.com/a/72935823
+ */
+private suspend fun PointerInputScope.detectDragGestures(
+    onDragStart: (Offset) -> Unit = { },
+    onDragEnd: () -> Unit = { },
+    onDragCancel: () -> Unit = { },
+    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit
+) {
+    forEachGesture {
+        awaitPointerEventScope {
+            val down = awaitFirstDown(requireUnconsumed = false)
+            var drag: PointerInputChange?
+            val overSlop = Offset.Zero
+            do {
+                drag = awaitTouchSlopOrCancellation(down.id, onDrag)
+                // ! EVERY Default movable GESTURE HAS THIS CHECK
+            } while (drag != null && !drag.isConsumed)
+            if (drag != null) {
+                onDragStart.invoke(drag.position)
+                onDrag(drag, overSlop)
+                if (
+                    !drag(drag.id) {
+                        onDrag(it, it.positionChange())
+                        it.consume()
+                    }
+                ) {
+                    onDragCancel()
+                } else {
+                    onDragEnd()
+                }
+            }
         }
-        return maxOf(minOf(nextValue.toInt(), 0), maxScroll).toFloat()
     }
 }
 
