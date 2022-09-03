@@ -37,7 +37,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
@@ -45,7 +46,7 @@ fun SessionsScreenRoot(
     Sessions(
         uiModel = state,
         modifier = modifier,
-        onTimetableClick = {},
+        onTimetableClick = { onTimetableClick(it) },
         onToggleFilter = { viewModel.onToggleFilter() },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)

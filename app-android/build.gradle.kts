@@ -70,6 +70,7 @@ dependencies {
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
+    implementation(projects.coreModel)
 
     implementation(libs.composeMaterial3WindowSizeClass)
     implementation(libs.androidxNavigationCompose)
