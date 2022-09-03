@@ -1,12 +1,12 @@
 input_dir: Resources/
 output_dir: ${DERIVED_SOURCES_DIR}/
 
-strings:
-  inputs: en.lproj
-  filter: .+\.strings$
+xcassets:
+  inputs: Colors.xcassets
   outputs:
-    templateName: structured-swift5
-    output: L10n.generated.swift
+    templateName: swift5
+    output: AssetColors.generated.swift
     params:
+      enumName: AssetColors
       publicAccess: true
       bundle: Bundle.myModule

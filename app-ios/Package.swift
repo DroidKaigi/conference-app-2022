@@ -12,9 +12,19 @@ var package = Package(
     products: [
         .library(
             name: "AppFeature",
-            targets: ["AppFeature"]),
+            targets: ["AppFeature"]
+        ),
+        .library(
+            name: "TimetableFeature",
+            targets: ["TimetableFeature"]
+        ),
+        .library(
+            name: "SessionFeature",
+            targets: ["SessionFeature"]
+        ),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
+        .library(name: "Theme", targets: ["Theme"]),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
@@ -24,6 +34,8 @@ var package = Package(
             name: "AppFeature",
             dependencies: [
                 .target(name: "Strings"),
+                .target(name: "Theme"),
+                .target(name: "SessionFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -32,6 +44,13 @@ var package = Package(
             name: "Model",
             dependencies: [
                 .target(name: "appioscombined"),
+            ]
+        ),
+        .target(
+            name: "SessionFeature",
+            dependencies: [
+                .target(name: "Model"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .target(
@@ -45,9 +64,20 @@ var package = Package(
             ]
         ),
         .target(
+            name: "Theme",
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
+            ]
+        ),
+        .target(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "Model"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),

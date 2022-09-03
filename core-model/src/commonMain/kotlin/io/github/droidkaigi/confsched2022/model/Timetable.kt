@@ -51,6 +51,16 @@ data class Timetable(
 fun Timetable?.orEmptyContents(): Timetable = this ?: Timetable()
 
 fun Timetable.Companion.fake(): Timetable {
+    var rooms = listOf(
+        TimetableRoom(0, MultiLangText("App Bar", "App Bar"), 0),
+        TimetableRoom(1, MultiLangText("Backdrop", "Backdrop"), 1),
+        TimetableRoom(2, MultiLangText("Cards", "Cards"), 2),
+        TimetableRoom(3, MultiLangText("Dialogs", "Dialogs"), 3),
+    )
+    (0..10).forEach { _ ->
+        rooms += rooms
+    }
+    val roomsIterator = rooms.iterator()
     val timetableItems = buildList {
         add(
             TimetableItem.Special(
@@ -64,11 +74,7 @@ fun Timetable.Companion.fake(): Timetable {
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
                 ),
-                room = TimetableRoom(
-                    1000,
-                    MultiLangText("AAAAA JA", "AAAAA EN"),
-                    0
-                ),
+                room = roomsIterator.next(),
                 targetAudience = "TBW",
                 language = "TBD",
                 asset = TimetableAsset(null, null),
@@ -113,11 +119,7 @@ fun Timetable.Companion.fake(): Timetable {
                                 "Android Framework and Jetpack",
                             ),
                         ),
-                        room = TimetableRoom(
-                            1000 + index % 3,
-                            MultiLangText("${index % 3} JA", "${index % 3} EN"),
-                            0 + index % 3
-                        ),
+                        room = roomsIterator.next(),
                         targetAudience = "For App developer アプリ開発者向け",
                         language = "JAPANESE",
                         asset = TimetableAsset(
@@ -162,11 +164,7 @@ fun Timetable.Companion.fake(): Timetable {
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
                 ),
-                room = TimetableRoom(
-                    2000,
-                    MultiLangText("BBBB JA", "BBBB EN"),
-                    0
-                ),
+                room = roomsIterator.next(),
                 targetAudience = "TBW",
                 language = "TBD",
                 asset = TimetableAsset(null, null),

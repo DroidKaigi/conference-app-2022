@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -68,6 +69,7 @@ fun Timetable(
     val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
     LazyLayout(
         modifier = modifier
+            .clipToBounds()
             .drawBehind {
                 screen.lines.value.forEach {
                     drawLine(
