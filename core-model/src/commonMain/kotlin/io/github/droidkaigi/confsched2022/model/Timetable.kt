@@ -51,6 +51,16 @@ data class Timetable(
 fun Timetable?.orEmptyContents(): Timetable = this ?: Timetable()
 
 fun Timetable.Companion.fake(): Timetable {
+    var rooms = listOf(
+        TimetableRoom(0, MultiLangText("App Bar", "App Bar"), 0),
+        TimetableRoom(1, MultiLangText("Backdrop", "Backdrop"), 1),
+        TimetableRoom(2, MultiLangText("Cards", "Cards"), 2),
+        TimetableRoom(3, MultiLangText("Dialogs", "Dialogs"), 3),
+    )
+    (0..10).forEach { _ ->
+        rooms += rooms
+    }
+    val roomsIterator = rooms.iterator()
     val timetableItems = buildList {
         add(
             TimetableItem.Special(
@@ -64,11 +74,7 @@ fun Timetable.Companion.fake(): Timetable {
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
                 ),
-                room = TimetableRoom(
-                    1000,
-                    MultiLangText("AAAAA JA", "AAAAA EN"),
-                    0
-                ),
+                room = roomsIterator.next(),
                 targetAudience = "TBW",
                 language = "TBD",
                 asset = TimetableAsset(null, null),
@@ -95,58 +101,21 @@ fun Timetable.Companion.fake(): Timetable {
                     TimeZone.of("UTC+9")
                 )
 
+                val fake = TimetableItem.Session.fake()
                 add(
-                    TimetableItem.Session(
-                        id = TimetableItemId("2$index"),
-                        title = MultiLangText(
-                            "DroidKaigiのアプリのアーキテクチャ$index ${day + 2}",
-                            "DroidKaigi App Architecture$index ${day + 2}"
-                        ),
-                        startsAt = start
-                            .toInstant(TimeZone.of("UTC+9")),
-                        endsAt = end
-                            .toInstant(TimeZone.of("UTC+9")),
-                        category = TimetableCategory(
-                            id = 28654,
+                    fake
+                        .copy(
+                            id = TimetableItemId("2$index"),
                             title = MultiLangText(
-                                "Android FrameworkとJetpack",
-                                "Android Framework and Jetpack",
+                                jaTitle = "${fake.title.jaTitle} $day $index",
+                                enTitle = "${fake.title.enTitle} $day $index"
                             ),
-                        ),
-                        room = TimetableRoom(
-                            1000 + index % 3,
-                            MultiLangText("${index % 3} JA", "${index % 3} EN"),
-                            0 + index % 3
-                        ),
-                        targetAudience = "For App developer アプリ開発者向け",
-                        language = "JAPANESE",
-                        asset = TimetableAsset(
-                            videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
-                            slideUrl = "https://droidkaigi.jp/2021/",
-                        ),
-                        levels = persistentListOf(
-                            "INTERMEDIATE",
-                        ),
-                        description = "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。",
-                        speakers = persistentListOf(
-                            TimetableSpeaker(
-                                name = "taka",
-                                iconUrl = "https://github.com/takahirom.png",
-                                bio = "Likes Android",
-                                tagLine = "Android Engineer"
-                            ),
-                            TimetableSpeaker(
-                                name = "ry",
-                                iconUrl = "https://github.com/ry-itto.png",
-                                bio = "Likes iOS",
-                                tagLine = "iOS Engineer",
-                            ),
-                        ),
-                        message = null,
-                    )
+                            room = roomsIterator.next(),
+                            startsAt = start
+                                .toInstant(TimeZone.of("UTC+9")),
+                            endsAt = end
+                                .toInstant(TimeZone.of("UTC+9")),
+                        )
                 )
             }
         }
@@ -162,11 +131,7 @@ fun Timetable.Companion.fake(): Timetable {
                     id = 28657,
                     title = MultiLangText("その他", "Other"),
                 ),
-                room = TimetableRoom(
-                    2000,
-                    MultiLangText("BBBB JA", "BBBB EN"),
-                    0
-                ),
+                room = roomsIterator.next(),
                 targetAudience = "TBW",
                 language = "TBD",
                 asset = TimetableAsset(null, null),

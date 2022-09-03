@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
     implementation(libs.androidxActivityCompose)
     implementation(libs.accompanistPager)
+    implementation(libs.coilCompose)
     testImplementation(libs.kluentAndroid)
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)

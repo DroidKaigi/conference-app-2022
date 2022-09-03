@@ -2,6 +2,7 @@ import appioscombined
 import ComposableArchitecture
 import Model
 import SwiftUI
+import Theme
 
 public struct TimetableState: Equatable {
     public var roomTimetableItems: [TimetableRoomItems]
@@ -22,6 +23,8 @@ public struct TimetableState: Equatable {
 public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<Timetable>)
+    case selectDay(DroidKaigi2022Day)
+    case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
@@ -46,7 +49,7 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
 
                 var items = timetable.timetableItems
                     .filter {
-                        $0.room == room
+                        $0.room == room && $0.day == state.selectedDay
                     }
                     .reduce([TimetableItemType]()) { result, item in
                         var result = result
@@ -88,6 +91,11 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         return .none
     case .refreshResponse(.failure):
         return .none
+    case let .selectDay(day):
+        state.selectedDay = day
+        return .init(value: .refresh)
+    case .selectItem:
+        return .none
     }
 }
 
@@ -101,7 +109,6 @@ public struct TimetableView: View {
     }()
 
     private let store: Store<TimetableState, TimetableAction>
-    @State var selectedDay: DroidKaigi2022Day = DroidKaigi2022Day.day1
 
     public init(store: Store<TimetableState, TimetableAction>) {
         self.store = store
@@ -110,48 +117,82 @@ public struct TimetableView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Picker(selection: $selectedDay) {
+                HStack(spacing: 8) {
                     ForEach(
                         [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
                     ) { day in
-                        Text(day.name).tag(day)
+                        let startDay = Calendar.current.component(.day, from: day.start.toDate())
+                        Button {
+                            viewStore.send(.selectDay(day))
+                        } label: {
+                            VStack(spacing: 0) {
+                                Text(day.name)
+                                    .font(Font.system(size: 12, weight: .semibold))
+                                Text("\(startDay)")
+                                    .font(Font.system(size: 24, weight: .semibold))
+                                    .frame(height: 32)
+                            }
+                            .padding(4)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                viewStore.selectedDay == day
+                                ? AssetColors.secondaryContainer.swiftUIColor
+                                : AssetColors.surface.swiftUIColor
+                            )
+                            .clipShape(Capsule())
+                        }
                     }
-                } label: {
-                    Text("Day select")
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+                .foregroundColor(AssetColors.onSurface.swiftUIColor)
+                .background(AssetColors.surface.swiftUIColor)
 
                 ScrollView(.vertical) {
-                    HStack(alignment: .top) {
+                    HStack(alignment: .top, spacing: 0) {
+                        Spacer()
+                            .frame(width: 16)
                         VStack(spacing: 0) {
-                            Text("Room")
+                            Spacer()
+                                .frame(height: 34)
                             ForEach(viewStore.hours, id: \.self) { hour in
                                 Text(dateComponentsFormatter.string(from: DateComponents(hour: hour, minute: 0))!)
+                                    .font(Font.system(size: 16, weight: .bold, design: .default))
                                     .frame(
                                         height: TimetableView.minuteHeight * 60,
                                         alignment: .top
                                     )
                             }
                         }
+                        Spacer()
+                            .frame(width: 16)
+                        Divider()
+                            .foregroundColor(AssetColors.surfaceVariant.swiftUIColor)
                         ScrollView(.horizontal) {
-                            HStack(alignment: .top) {
+                            HStack(alignment: .top, spacing: 0) {
                                 ForEach(viewStore.roomTimetableItems, id: \.room) { timetableRoomItems in
                                     let room = timetableRoomItems.room
                                     let timetableItems = timetableRoomItems.items
                                     VStack(spacing: 0) {
                                         Text(room.name.jaTitle)
+                                            .font(Font.system(size: 14, weight: .bold, design: .default))
+                                            .padding(.top, 8)
+                                            .padding(.bottom, 16)
+                                        Divider()
+                                            .foregroundColor(AssetColors.surfaceVariant.swiftUIColor)
                                         ForEach(timetableItems) { item in
                                             if case let .general(item, minutes) = item {
                                                 TimetableItemView(item: item)
                                                     .frame(height: CGFloat(minutes) * TimetableView.minuteHeight)
-                                                    .background(randomColor())
                                             } else if case let .spacing(minutes) = item {
                                                 Spacer()
                                                     .frame(maxHeight: CGFloat(minutes) * TimetableView.minuteHeight)
                                             }
                                         }
                                     }
-                                    .frame(width: 200)
+                                    .frame(width: 192)
+                                    Divider()
+                                        .foregroundColor(AssetColors.surfaceVariant.swiftUIColor)
                                 }
                             }
                         }
@@ -161,6 +202,8 @@ public struct TimetableView: View {
             .task {
                 await viewStore.send(.refresh).finish()
             }
+            .foregroundColor(AssetColors.onBackground.swiftUIColor)
+            .background(AssetColors.background.swiftUIColor)
         }
     }
 }
@@ -182,10 +225,3 @@ struct TimetableView_Previews: PreviewProvider {
     }
 }
 #endif
-
-func randomColor() -> Color {
-    let red = Double.random(in: 0...1)
-    let green = Double.random(in: 0...1)
-    let blue = Double.random(in: 0...1)
-    return Color(red: red, green: green, blue: blue)
-}
