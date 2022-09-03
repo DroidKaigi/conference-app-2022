@@ -38,8 +38,8 @@ import kotlinx.coroutines.launch
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit = {},
-    onSearchClicked: () -> Unit,
-    onTodayClicked: () -> Unit
+    onSearchClicked: () -> Unit = {},
+    onTodayClicked: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
@@ -156,9 +156,6 @@ private fun TabIndicator(
 @Composable
 fun SessionsPreview() {
     KaigiTheme {
-        SessionsScreenRoot(
-            onSearchClicked = {},
-            onTodayClicked = {}
-        )
+        SessionsScreenRoot()
     }
 }

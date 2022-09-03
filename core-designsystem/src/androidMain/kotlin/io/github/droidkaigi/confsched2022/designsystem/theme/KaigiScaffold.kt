@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,7 @@ fun KaigiScaffold(
             SmallTopAppBar(
                 title = {
                     Row(
+                        modifier = Modifier.fillMaxSize(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -49,10 +51,10 @@ fun KaigiScaffold(
                         Spacer(modifier = Modifier.weight(1F))
                         if (onSearchClick != null) {
                             IconButton(
-                                modifier = Modifier.size(17.5.dp),
+                                modifier = Modifier.width(17.5.dp),
                                 onClick = onSearchClick,
                             ) {
-                                Image(
+                                Icon(
                                     modifier = Modifier.fillMaxSize(),
                                     imageVector = ImageVector.vectorResource(
                                         id = R.drawable.ic_search
@@ -64,12 +66,10 @@ fun KaigiScaffold(
                         if (onTodayClick != null) {
                             Spacer(modifier = Modifier.width(30.5.dp))
                             IconButton(
-                                modifier = Modifier
-                                    .width(18.dp)
-                                    .height(20.dp),
+                                modifier = Modifier.width(18.dp),
                                 onClick = onTodayClick
                             ) {
-                                Image(
+                                Icon(
                                     modifier = Modifier.fillMaxSize(),
                                     imageVector = ImageVector.vectorResource(
                                         id = R.drawable.ic_today
