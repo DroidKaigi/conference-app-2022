@@ -34,6 +34,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Record SnapShot
+        uses:  ./gradlew recordPaparazziDebug
+
       - name: Check spotless
         run: ./gradlew spotlessCheck --stacktrace
 

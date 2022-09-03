@@ -25,6 +25,8 @@ import com.google.accompanist.pager.rememberPagerState
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
+import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 
@@ -122,6 +124,14 @@ fun Sessions(
 @Composable
 fun SessionsPreview() {
     KaigiTheme {
-        SessionsScreenRoot()
+        Sessions(
+            uiModel = SessionsUiModel(scheduleState = Loading, isFilterOn = false),
+            selectedTab = 0,
+            onNavigationIconClick = {},
+            onFavoriteClick = { _, _ -> },
+            onTabClicked = {},
+            onTimetableClick = {},
+            onToggleFilter = {}
+        )
     }
 }
