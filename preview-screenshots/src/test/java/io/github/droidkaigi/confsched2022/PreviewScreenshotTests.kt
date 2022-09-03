@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Density
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import app.cash.paparazzi.androidHome
+import app.cash.paparazzi.detectEnvironment
 import com.airbnb.android.showkase.models.Showkase
 import com.airbnb.android.showkase.models.ShowkaseBrowserComponent
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -42,6 +44,10 @@ class PreviewScreenshotTests {
 
     @get:Rule
     val paparazzi = Paparazzi(
+        environment = detectEnvironment().copy(
+            platformDir = "${androidHome()}/platforms/android-32",
+            compileSdkVersion = 32
+        ),
         maxPercentDifference = 0.0,
     )
 
