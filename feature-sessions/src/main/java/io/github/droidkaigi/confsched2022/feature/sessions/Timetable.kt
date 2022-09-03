@@ -93,6 +93,7 @@ fun Timetable(
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
+                        // FIXME: Pager swipe is not possible because scrolling is not transmitted to the pager side
                         if (change.positionChange() != Offset.Zero) change.consume()
                         coroutineScope.launch {
                             screen.scroll(
