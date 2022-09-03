@@ -2,15 +2,20 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
@@ -19,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -26,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import io.github.droidkaigi.confsched2022.core.designsystem.R.drawable
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
@@ -53,8 +61,8 @@ fun SessionsScreenRoot(
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
         onNavigationIconClick = onNavigationIconClick,
-        onSearchClicked = onSearchClicked,
-        onTodayClicked = onTodayClicked,
+        onSearchClick = onSearchClicked,
+        onTodayClick = onTodayClicked,
     )
 }
 
@@ -67,13 +75,38 @@ fun Sessions(
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
-    onSearchClicked: () -> Unit,
-    onTodayClicked: () -> Unit
+    onSearchClick: () -> Unit,
+    onTodayClick: () -> Unit
 ) {
     KaigiScaffold(
         onNavigationIconClick = onNavigationIconClick,
-        onSearchClick = onSearchClicked,
-        onTodayClick = onTodayClicked
+        trailingIcons = {
+            IconButton(
+                modifier = Modifier.width(17.5.dp),
+                onClick = onSearchClick,
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = ImageVector.vectorResource(
+                        id = drawable.ic_search
+                    ),
+                    contentDescription = "Search icon in toolbar"
+                )
+            }
+            Spacer(modifier = Modifier.width(30.5.dp))
+            IconButton(
+                modifier = Modifier.width(18.dp),
+                onClick = onTodayClick
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = ImageVector.vectorResource(
+                        id = drawable.ic_today
+                    ),
+                    contentDescription = "Search icon in toolbar"
+                )
+            }
+        }
     ) {
         val scheduleState = uiModel.scheduleState
         if (scheduleState !is Loaded) {
