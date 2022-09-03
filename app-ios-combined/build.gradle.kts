@@ -32,6 +32,7 @@ kotlin {
                 projects.forEach {
                     api(it)
                 }
+                implementation(libs.koin)
             }
         }
     }

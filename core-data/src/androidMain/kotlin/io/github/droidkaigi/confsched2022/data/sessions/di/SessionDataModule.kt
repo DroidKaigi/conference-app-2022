@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.droidkaigi.confsched2022.data.NetworkService
-import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.UserDatastore
 import io.github.droidkaigi.confsched2022.data.sessions.DataSessionsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsApi
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
@@ -19,12 +19,12 @@ class SessionDataModule {
     @Singleton
     fun provideSessionsRepository(
         networkService: NetworkService,
-        preferenceDatastore: PreferenceDatastore
+        userDatastore: UserDatastore
     ): SessionsRepository {
         val sessionsApi = SessionsApi(networkService)
         return DataSessionsRepository(
             sessionsApi = sessionsApi,
-            favoriteSessionsDataStore = preferenceDatastore
+            favoriteSessionsDataStore = userDatastore
         )
     }
 //    @Provides
