@@ -134,8 +134,8 @@ fun Timetable(
         layout(constraint.maxWidth, constraint.maxHeight) {
             items.forEach { (placable, timetableLayout) ->
                 placable.place(
-                    timetableLayout.left + screen.screenScrollState.scrollX.toInt(),
-                    timetableLayout.top + screen.screenScrollState.scrollY.toInt()
+                    timetableLayout.left + screen.scrollState.scrollX.toInt(),
+                    timetableLayout.top + screen.scrollState.scrollY.toInt()
                 )
             }
         }
@@ -319,7 +319,7 @@ class ScreenScrollState(
 
 private class Screen(
     val timetableLayout: TimetableLayout,
-    val screenScrollState: ScreenScrollState,
+    val scrollState: ScreenScrollState,
     private val density: Density,
 ) {
     var width = 0
@@ -332,8 +332,8 @@ private class Screen(
             timetableLayout.visibleItemLayouts(
                 width,
                 height,
-                screenScrollState.scrollX.toInt(),
-                screenScrollState.scrollY.toInt()
+                scrollState.scrollX.toInt(),
+                scrollState.scrollY.toInt()
             )
         }
     val timeHorizontalLines = derivedStateOf {
@@ -341,14 +341,14 @@ private class Screen(
         val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
             val minuteOffSet = startMinute * timetableLayout.minutePx
-            screenScrollState.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
+            scrollState.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
         }
     }
     val roomVerticalLines = derivedStateOf {
         val width = with(density) { timeTableColumnWidth.toPx() }
         val rooms = timetableLayout.rooms
         (0..rooms.lastIndex).map {
-            screenScrollState.scrollX + width * it
+            scrollState.scrollX + width * it
         }
     }
 
@@ -356,7 +356,7 @@ private class Screen(
         return "Screen(" +
             "width=$width, " +
             "height=$height, " +
-            "scroll=$screenScrollState, " +
+            "scroll=$scrollState, " +
             "visibleItemLayouts=$visibleItemLayouts" +
             ")"
     }
@@ -368,7 +368,7 @@ private class Screen(
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        screenScrollState.scroll(
+        scrollState.scroll(
             Offset(nextPossibleX, nextPossibleY),
             timeMillis,
             position
@@ -378,7 +378,7 @@ private class Screen(
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
-        screenScrollState.updateBounds(
+        scrollState.updateBounds(
             maxX = if (width < timetableLayout.timetableWidth) {
                 (timetableLayout.timetableWidth - width).toFloat()
             } else {
@@ -393,7 +393,7 @@ private class Screen(
     }
 
     private fun calculatePossibleScrollX(scrollX: Float): Float {
-        val currentValue = screenScrollState.scrollX
+        val currentValue = scrollState.scrollX
         val nextValue = currentValue + scrollX
         val maxScroll = if (width < timetableLayout.timetableWidth) {
             -(timetableLayout.timetableWidth - width)
@@ -404,7 +404,7 @@ private class Screen(
     }
 
     private fun calculatePossibleScrollY(scrollY: Float): Float {
-        val currentValue = screenScrollState.scrollY
+        val currentValue = scrollState.scrollY
         val nextValue = currentValue + scrollY
         val maxScroll = if (height < timetableLayout.timetableHeight) {
             -(timetableLayout.timetableHeight - height)
