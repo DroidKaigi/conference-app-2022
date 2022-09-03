@@ -13,6 +13,8 @@ fun NavGraphBuilder.sessionsNavGraph(
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
             onNavigationIconClick = onNavigationIconClick,
+            onSearchClicked = { /*TODO: Implement later*/ },
+            onTodayClicked = { /*TODO: Implement later*/ },
             onTimetableClick = onTimetableClick,
         )
     }
