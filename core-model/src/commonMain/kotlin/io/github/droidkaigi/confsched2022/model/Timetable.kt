@@ -101,10 +101,15 @@ fun Timetable.Companion.fake(): Timetable {
                     TimeZone.of("UTC+9")
                 )
 
+                val fake = TimetableItem.Session.fake()
                 add(
-                    TimetableItem.Session.fake()
+                    fake
                         .copy(
                             id = TimetableItemId("2$index"),
+                            title = MultiLangText(
+                                jaTitle = "${fake.title.jaTitle} $day $index",
+                                enTitle = "${fake.title.enTitle} $day $index"
+                            ),
                             room = roomsIterator.next(),
                             startsAt = start
                                 .toInstant(TimeZone.of("UTC+9")),
