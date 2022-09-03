@@ -29,7 +29,9 @@ import io.github.droidkaigi.confsched2022.core.designsystem.R
 fun KaigiScaffold(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
-    content: @Composable () -> Unit
+    onSearchClick: (() -> Unit)? = null,
+    onTodayClick: (() -> Unit)? = null,
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -45,19 +47,33 @@ fun KaigiScaffold(
                             contentDescription = "logo in toolbar"
                         )
                         Spacer(modifier = Modifier.weight(1F))
-                        Icon(
-                            modifier = Modifier.size(17.5.dp),
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_search),
-                            contentDescription = "Search icon in toolbar"
-                        )
-                        Spacer(modifier = Modifier.width(30.5.dp))
-                        Icon(
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(20.dp),
-                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_today),
-                            contentDescription = "Search icon in toolbar"
-                        )
+                        if (onSearchClick != null) {
+                            IconButton(
+                                modifier = Modifier.size(17.5.dp),
+                                onClick = onSearchClick,
+                            ) {
+                                Image(
+                                    modifier = Modifier.fillMaxSize(),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_search),
+                                    contentDescription = "Search icon in toolbar"
+                                )
+                            }
+                        }
+                        if (onTodayClick != null) {
+                            Spacer(modifier = Modifier.width(30.5.dp))
+                            IconButton(
+                                modifier = Modifier
+                                    .width(18.dp)
+                                    .height(20.dp),
+                                onClick = onTodayClick
+                            ) {
+                                Image(
+                                    modifier = Modifier.fillMaxSize(),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_today),
+                                    contentDescription = "Search icon in toolbar"
+                                )
+                            }
+                        }
                     }
                 },
                 navigationIcon = {
@@ -86,7 +102,9 @@ fun KaigiScaffoldPreview() {
     KaigiTheme {
         KaigiScaffold(
             onNavigationIconClick = {},
-            content = {}
+            content = {},
+            onSearchClick = {},
+            onTodayClick = {}
         )
     }
 }

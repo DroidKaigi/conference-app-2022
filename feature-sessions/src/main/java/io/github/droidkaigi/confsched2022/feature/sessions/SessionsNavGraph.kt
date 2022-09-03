@@ -5,7 +5,11 @@ import androidx.navigation.compose.composable
 
 fun NavGraphBuilder.sessionsNavGraph(onNavigationIconClick: () -> Unit) {
     composable(route = SessionsNavGraph.sessionRoute) {
-        SessionsScreenRoot(onNavigationIconClick = onNavigationIconClick)
+        SessionsScreenRoot(
+            onNavigationIconClick = onNavigationIconClick,
+            onSearchClicked = { /*TODO: Implement later*/ },
+            onTodayClicked = { /*TODO: Implement later*/ }
+        )
     }
 }
 

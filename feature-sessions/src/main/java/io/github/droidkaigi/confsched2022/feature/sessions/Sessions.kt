@@ -37,7 +37,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onSearchClicked: () -> Unit,
+    onTodayClicked: () -> Unit
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
@@ -51,6 +53,8 @@ fun SessionsScreenRoot(
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
         onNavigationIconClick = onNavigationIconClick,
+        onSearchClicked = onSearchClicked,
+        onTodayClicked = onTodayClicked,
     )
 }
 
@@ -62,9 +66,15 @@ fun Sessions(
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onToggleFilter: () -> Unit,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit
+    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onSearchClicked: () -> Unit,
+    onTodayClicked: () -> Unit
 ) {
-    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+    KaigiScaffold(
+        onNavigationIconClick = onNavigationIconClick,
+        onSearchClick = onSearchClicked,
+        onTodayClick = onTodayClicked
+    ) {
         val scheduleState = uiModel.scheduleState
         if (scheduleState !is Loaded) {
             CircularProgressIndicator()
@@ -146,6 +156,9 @@ private fun TabIndicator(
 @Composable
 fun SessionsPreview() {
     KaigiTheme {
-        SessionsScreenRoot()
+        SessionsScreenRoot(
+            onSearchClicked = {},
+            onTodayClicked = {}
+        )
     }
 }
