@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
-    val favoriteSessionsDataStore: SettingsDatastore
+    private val favoriteSessionsDataStore: SettingsDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
         val timetable = sessionsApi.timetable()
