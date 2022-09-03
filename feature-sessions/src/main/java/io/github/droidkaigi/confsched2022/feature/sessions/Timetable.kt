@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -16,9 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,12 +52,13 @@ fun Timetable(
     val screenScroll = remember {
         ScreenScroll()
     }
-    val screen = remember(timetableLayout) {
+    val screen = remember(timetableLayout, density) {
         Screen(
             timetableLayout,
             0,
             0,
-            screenScroll
+            screenScroll,
+            density
         )
     }
     val scrollableYState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
@@ -66,14 +68,26 @@ fun Timetable(
         screen.scrollX(scrollY)
     })
     val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
+    val lineColor = MaterialTheme.colorScheme.surfaceVariant
+    val linePxSize = with(LocalDensity.current) { timeTableLineStrokeSize.toPx() }
     LazyLayout(
         modifier = modifier
+            .clipToBounds()
             .drawBehind {
-                screen.lines.value.forEach {
+                screen.timeHorizontalLines.value.forEach {
                     drawLine(
-                        Color.LightGray,
+                        lineColor,
                         Offset(0F, it.toFloat()),
-                        Offset(screen.width.toFloat(), it.toFloat())
+                        Offset(screen.width.toFloat(), it.toFloat()),
+                        linePxSize
+                    )
+                }
+                screen.roomVerticalLines.value.forEach {
+                    drawLine(
+                        lineColor,
+                        Offset(it, 0f),
+                        Offset(it, screen.height.toFloat()),
+                        linePxSize
                     )
                 }
             }
@@ -153,7 +167,7 @@ private data class TimetableItemLayout(
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) {
-        192.dp.roundToPx()
+        timeTableColumnWidth.roundToPx()
     }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStartTime)
@@ -223,7 +237,8 @@ private class Screen(
     val timetableLayout: TimetableLayout,
     var width: Int,
     var height: Int,
-    val screenScroll: ScreenScroll
+    val screenScroll: ScreenScroll,
+    private val density: Density,
 ) {
     val visibleItemLayouts: State<List<IndexedValue<TimetableItemLayout>>> =
         derivedStateOf {
@@ -234,12 +249,19 @@ private class Screen(
                 screenScroll.scrollY.value
             )
         }
-    val lines = derivedStateOf {
+    val timeHorizontalLines = derivedStateOf {
         val startTime = timetableLayout.dayStartTime ?: return@derivedStateOf listOf()
         val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
             val minuteOffSet = startMinute * timetableLayout.minutePx
             screenScroll.scrollY.value + timetableLayout.minutePx * 60 * it - minuteOffSet
+        }
+    }
+    val roomVerticalLines = derivedStateOf {
+        val width = with(density) { timeTableColumnWidth.toPx() }
+        val rooms = timetableLayout.rooms
+        (0..rooms.lastIndex).map {
+            screenScroll.scrollX.value + width * it
         }
     }
 
@@ -279,3 +301,6 @@ private class Screen(
         return nextPossibleValue.toFloat() - currentValue
     }
 }
+
+private val timeTableLineStrokeSize = 1.dp
+private val timeTableColumnWidth = 192.dp

@@ -1,6 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.sessions
 
-import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.UserDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
-    val favoriteSessionsDataStore: PreferenceDatastore
+    val favoriteSessionsDataStore: UserDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
         try {

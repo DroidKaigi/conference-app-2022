@@ -2,7 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
-import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -42,7 +42,7 @@ class SessionScreenRobot @Inject constructor() {
             .onFavorite(
                 index
             )
-            .assert(hasContentDescription("favorite:$isFavorited"))
+            .assert(hasContentDescription("isFavorited$isFavorited"))
     }
 
     context(RobotTestRule)
@@ -66,7 +66,7 @@ class SessionScreenRobot @Inject constructor() {
             .currentLangTitle
 
         return onNode(
-            matcher = hasTestTag("favorite") and hasAnySibling(hasText(title)),
+            matcher = hasTestTag("favorite") and hasAnyChild(hasText(title)),
             useUnmergedTree = true
         )
     }

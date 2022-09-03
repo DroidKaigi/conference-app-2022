@@ -36,11 +36,12 @@ kotlinxDatetime = "0.4.0"
 accompanistPager = "0.26.1-alpha"
 firebasePlugin = "4.3.13"
 multiplatformFirebaseAuth = "1.6.2"
-firebaseCommon = "20.1.1"
-firebaseAuth = "21.0.7"
+firebaseCommon = "20.1.2"
+firebaseAuth = "21.0.8"
 androidxStartup = "1.1.1"
 kluent = "1.68"
 coilCompose="2.2.0"
+koin = "3.2.0"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -104,6 +105,9 @@ multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref 
 firebaseCommon = { module = "com.google.firebase:firebase-common", version.ref = "firebaseCommon" }
 firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+
+# iOS
+koin = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 # test
 

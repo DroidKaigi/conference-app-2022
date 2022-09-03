@@ -46,12 +46,13 @@ class SessionsScreenTest {
         }
     }
 
-    @Test
-    fun canToggleFavorite() {
-        sessionScreenRobot(robotTestRule) {
-            clickFavoriteAt(0)
-            checkFavoritedAt(index = 0, isFavorited = true)
-            checkFavoriteIsSavedAt(0)
-        }
-    }
+// Currently, there are not favorite buttons in timetable
+//    @Test
+//    fun canToggleFavorite() {
+//        sessionScreenRobot(robotTestRule) {
+//            clickFavoriteAt(0)
+//            checkFavoritedAt(index = 0, isFavorited = true)
+//            checkFavoriteIsSavedAt(0)
+//        }
+//    }
 }

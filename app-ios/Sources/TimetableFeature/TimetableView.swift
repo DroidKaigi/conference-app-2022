@@ -2,19 +2,20 @@ import appioscombined
 import ComposableArchitecture
 import Model
 import SwiftUI
+import Theme
 
 public struct TimetableState: Equatable {
-    public var roomTimetableItems: [TimetableRoomItems]
-    public var hours: [Int]
+    public var timetable: Timetable
     public var selectedDay: DroidKaigi2022Day
 
     public init(
-        roomTimetableItems: [TimetableRoomItems] = [],
-        hours: [Int] = [],
+        timetable: Timetable = .init(
+            timetableItems: [],
+            favorites: .init()
+        ),
         selectedDay: DroidKaigi2022Day = .day1
     ) {
-        self.roomTimetableItems = roomTimetableItems
-        self.hours = hours
+        self.timetable = timetable
         self.selectedDay = selectedDay
     }
 }
@@ -22,6 +23,8 @@ public struct TimetableState: Equatable {
 public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<Timetable>)
+    case selectDay(DroidKaigi2022Day)
+    case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
@@ -39,69 +42,20 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
             )
         }
     case let .refreshResponse(.success(timetable)):
-        state.hours = timetable.hours
-
-        state.roomTimetableItems = Set(timetable.timetableItems.map(\.room))
-            .map { room -> TimetableRoomItems in
-
-                var items = timetable.timetableItems
-                    .filter {
-                        $0.room == room
-                    }
-                    .reduce([TimetableItemType]()) { result, item in
-                        var result = result
-                        let lastItem = result.last
-                        if case .general(let lItem, _) = lastItem, lItem.endsAt != item.startsAt {
-                            result.append(.spacing(calculateMinute(
-                                startSeconds: Int(lItem.endsAt.epochSeconds),
-                                endSeconds: Int(item.startsAt.epochSeconds)
-                            )))
-                        }
-                        let minute = calculateMinute(
-                            startSeconds: Int(item.startsAt.epochSeconds),
-                            endSeconds: Int(item.endsAt.epochSeconds)
-                        )
-                        result.append(
-                            TimetableItemType.general(
-                                item,
-                                minute
-                            )
-                        )
-
-                        return result
-                    }
-                if case let .general(firstItem, _) = items.first {
-                    let hour = Calendar.current.component(.hour, from: firstItem.startsAt.toDate())
-                    let minute = Calendar.current.component(.minute, from: firstItem.startsAt.toDate())
-                    let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - state.hours.first!, 0) * 60)
-                    items.insert(firstSpacingItem, at: 0)
-                }
-                return TimetableRoomItems(
-                    room: room,
-                    items: items
-                )
-            }
-            .sorted {
-                $0.room.sort < $1.room.sort
-            }
-
+        state.timetable = timetable
         return .none
     case .refreshResponse(.failure):
+        return .none
+    case let .selectDay(day):
+        state.selectedDay = day
+        return .init(value: .refresh)
+    case .selectItem:
         return .none
     }
 }
 
 public struct TimetableView: View {
-    private static let minuteHeight: CGFloat = 4
-    private static let timetableStartTime: DateComponents = .init(hour: 10, minute: 0)
-
-    private let dateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        return formatter
-    }()
-
     private let store: Store<TimetableState, TimetableAction>
-    @State var selectedDay: DroidKaigi2022Day = DroidKaigi2022Day.day1
 
     public init(store: Store<TimetableState, TimetableAction>) {
         self.store = store
@@ -110,57 +64,44 @@ public struct TimetableView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Picker(selection: $selectedDay) {
+                HStack(spacing: 8) {
                     ForEach(
                         [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
                     ) { day in
-                        Text(day.name).tag(day)
+                        let startDay = Calendar.current.component(.day, from: day.start.toDate())
+                        Button {
+                            viewStore.send(.selectDay(day))
+                        } label: {
+                            VStack(spacing: 0) {
+                                Text(day.name)
+                                    .font(Font.system(size: 12, weight: .semibold))
+                                Text("\(startDay)")
+                                    .font(Font.system(size: 24, weight: .semibold))
+                                    .frame(height: 32)
+                            }
+                            .padding(4)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                viewStore.selectedDay == day
+                                ? AssetColors.secondaryContainer.swiftUIColor
+                                : AssetColors.surface.swiftUIColor
+                            )
+                            .clipShape(Capsule())
+                        }
                     }
-                } label: {
-                    Text("Day select")
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+                .foregroundColor(AssetColors.onSurface.swiftUIColor)
+                .background(AssetColors.surface.swiftUIColor)
 
-                ScrollView(.vertical) {
-                    HStack(alignment: .top) {
-                        VStack(spacing: 0) {
-                            Text("Room")
-                            ForEach(viewStore.hours, id: \.self) { hour in
-                                Text(dateComponentsFormatter.string(from: DateComponents(hour: hour, minute: 0))!)
-                                    .frame(
-                                        height: TimetableView.minuteHeight * 60,
-                                        alignment: .top
-                                    )
-                            }
-                        }
-                        ScrollView(.horizontal) {
-                            HStack(alignment: .top) {
-                                ForEach(viewStore.roomTimetableItems, id: \.room) { timetableRoomItems in
-                                    let room = timetableRoomItems.room
-                                    let timetableItems = timetableRoomItems.items
-                                    VStack(spacing: 0) {
-                                        Text(room.name.jaTitle)
-                                        ForEach(timetableItems) { item in
-                                            if case let .general(item, minutes) = item {
-                                                TimetableItemView(item: item)
-                                                    .frame(height: CGFloat(minutes) * TimetableView.minuteHeight)
-                                                    .background(randomColor())
-                                            } else if case let .spacing(minutes) = item {
-                                                Spacer()
-                                                    .frame(maxHeight: CGFloat(minutes) * TimetableView.minuteHeight)
-                                            }
-                                        }
-                                    }
-                                    .frame(width: 200)
-                                }
-                            }
-                        }
-                    }
-                }
+                TimetableSheetView(store: store)
             }
             .task {
                 await viewStore.send(.refresh).finish()
             }
+            .foregroundColor(AssetColors.onBackground.swiftUIColor)
+            .background(AssetColors.background.swiftUIColor)
         }
     }
 }
@@ -171,9 +112,7 @@ struct TimetableView_Previews: PreviewProvider {
         TimetableView(
             store: .init(
                 initialState: .init(
-                    roomTimetableItems: [],
-                    hours: [10, 11, 12, 13],
-                    selectedDay: .day1
+                    timetable: Timetable.companion.fake()
                 ),
                 reducer: .empty,
                 environment: TimetableEnvironment()
@@ -182,10 +121,3 @@ struct TimetableView_Previews: PreviewProvider {
     }
 }
 #endif
-
-func randomColor() -> Color {
-    let red = Double.random(in: 0...1)
-    let green = Double.random(in: 0...1)
-    let blue = Double.random(in: 0...1)
-    return Color(red: red, green: green, blue: blue)
-}
