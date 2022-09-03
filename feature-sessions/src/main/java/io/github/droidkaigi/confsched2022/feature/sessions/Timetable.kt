@@ -1,25 +1,28 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +33,8 @@ import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.fake
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -49,24 +54,15 @@ fun Timetable(
     val timetableLayout = remember(timetable) {
         TimetableLayout(timetable = timetable, density = density)
     }
-    val screenScroll = remember {
-        ScreenScroll()
-    }
+    val coroutineScope = rememberCoroutineScope()
+    val screenScroll = remember { ScreenScroll() }
     val screen = remember(timetableLayout, density) {
         Screen(
             timetableLayout,
-            0,
-            0,
             screenScroll,
             density
         )
     }
-    val scrollableYState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
-        screen.scrollY(scrollY)
-    })
-    val scrollableXState = rememberScrollableState(consumeScrollDelta = { scrollY: Float ->
-        screen.scrollX(scrollY)
-    })
     val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
     val linePxSize = with(LocalDensity.current) { timeTableLineStrokeSize.toPx() }
@@ -77,8 +73,8 @@ fun Timetable(
                 screen.timeHorizontalLines.value.forEach {
                     drawLine(
                         lineColor,
-                        Offset(0F, it.toFloat()),
-                        Offset(screen.width.toFloat(), it.toFloat()),
+                        Offset(0F, it),
+                        Offset(screen.width.toFloat(), it),
                         linePxSize
                     )
                 }
@@ -91,22 +87,33 @@ fun Timetable(
                     )
                 }
             }
-            .scrollable(
-                orientation = Orientation.Vertical,
-                state = scrollableYState,
-                flingBehavior = ScrollableDefaults.flingBehavior()
-            )
-            .scrollable(
-                orientation = Orientation.Horizontal,
-                state = scrollableXState,
-                flingBehavior = ScrollableDefaults.flingBehavior()
-            ),
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        if (change.positionChange() != Offset.Zero) change.consume()
+                        coroutineScope.launch {
+                            screen.scroll(
+                                dragAmount,
+                                change.uptimeMillis,
+                                change.position
+                            )
+                        }
+                    },
+                    onDragCancel = {
+                        screenScroll.resetTracking()
+                    },
+                    onDragEnd = {
+                        coroutineScope.launch {
+                            screenScroll.flingIfPossible()
+                        }
+                    }
+                )
+            },
         itemProvider = itemProvider
     ) { constraint ->
 
         data class ItemData(val placeable: Placeable, val timetableItem: TimetableItemLayout)
-        screen.height = constraint.maxHeight
-        screen.width = constraint.maxWidth
+        screen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
 
         val items = visibleItemLayouts.map { (index, timetableLayout) ->
             ItemData(
@@ -123,8 +130,8 @@ fun Timetable(
         layout(constraint.maxWidth, constraint.maxHeight) {
             items.forEach { (placable, timetableLayout) ->
                 placable.place(
-                    timetableLayout.left + screen.screenScroll.scrollX.value,
-                    timetableLayout.top + screen.screenScroll.scrollY.value
+                    timetableLayout.left + screen.screenScroll.scrollX.toInt(),
+                    timetableLayout.top + screen.screenScroll.scrollY.toInt()
                 )
             }
         }
@@ -228,25 +235,74 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     }
 }
 
-private data class ScreenScroll(
-    val scrollX: MutableState<Int> = mutableStateOf(0),
-    val scrollY: MutableState<Int> = mutableStateOf(0)
-)
+@Stable
+private class ScreenScroll {
+    private val velocityTracker = VelocityTracker()
+    private val _scrollX = Animatable(0f)
+    private val _scrollY = Animatable(0f)
+
+    val scrollX: Float
+        get() = _scrollX.value
+    val scrollY: Float
+        get() = _scrollY.value
+
+    suspend fun scroll(
+        amount: Offset,
+        timeMillis: Long,
+        position: Offset,
+    ) = coroutineScope {
+        velocityTracker.addPosition(timeMillis = timeMillis, position = position)
+        launch {
+            _scrollX.snapTo(amount.x)
+        }
+        launch {
+            _scrollY.snapTo(amount.y)
+        }
+    }
+
+    suspend fun flingIfPossible() = coroutineScope {
+        val velocity = velocityTracker.calculateVelocity()
+        launch {
+            _scrollX.animateDecay(
+                velocity.x / 2f,
+                exponentialDecay()
+            )
+        }
+        launch {
+            _scrollY.animateDecay(
+                velocity.y / 2f,
+                exponentialDecay()
+            )
+        }
+    }
+
+    fun updateBounds(maxX: Float, maxY: Float) {
+        _scrollY.updateBounds(-maxY, 0f)
+        _scrollX.updateBounds(-maxX, 0f)
+    }
+
+    fun resetTracking() {
+        velocityTracker.resetTracking()
+    }
+}
 
 private class Screen(
     val timetableLayout: TimetableLayout,
-    var width: Int,
-    var height: Int,
     val screenScroll: ScreenScroll,
     private val density: Density,
 ) {
+    var width = 0
+        private set
+    var height = 0
+        private set
+
     val visibleItemLayouts: State<List<IndexedValue<TimetableItemLayout>>> =
         derivedStateOf {
             timetableLayout.visibleItemLayouts(
                 width,
                 height,
-                screenScroll.scrollX.value,
-                screenScroll.scrollY.value
+                screenScroll.scrollX.toInt(),
+                screenScroll.scrollY.toInt()
             )
         }
     val timeHorizontalLines = derivedStateOf {
@@ -254,14 +310,14 @@ private class Screen(
         val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
             val minuteOffSet = startMinute * timetableLayout.minutePx
-            screenScroll.scrollY.value + timetableLayout.minutePx * 60 * it - minuteOffSet
+            screenScroll.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
         }
     }
     val roomVerticalLines = derivedStateOf {
         val width = with(density) { timeTableColumnWidth.toPx() }
         val rooms = timetableLayout.rooms
         (0..rooms.lastIndex).map {
-            screenScroll.scrollX.value + width * it
+            screenScroll.scrollX + width * it
         }
     }
 
@@ -274,31 +330,57 @@ private class Screen(
             ")"
     }
 
-    fun scrollX(scrollX: Float): Float {
-        val currentValue = this.screenScroll.scrollX.value
+    suspend fun scroll(
+        dragAmount: Offset,
+        timeMillis: Long,
+        position: Offset,
+    ) {
+        val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
+        val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
+        screenScroll.scroll(
+            Offset(nextPossibleX, nextPossibleY),
+            timeMillis,
+            position
+        )
+    }
+
+    fun updateBounds(width: Int, height: Int) {
+        this.width = width
+        this.height = height
+        screenScroll.updateBounds(
+            maxX = if (width < timetableLayout.timetableWidth) {
+                (timetableLayout.timetableWidth - width).toFloat()
+            } else {
+                0f
+            },
+            maxY = if (height < timetableLayout.timetableHeight) {
+                (timetableLayout.timetableHeight - height).toFloat()
+            } else {
+                0f
+            }
+        )
+    }
+
+    private fun calculatePossibleScrollX(scrollX: Float): Float {
+        val currentValue = screenScroll.scrollX
         val nextValue = currentValue + scrollX
         val maxScroll = if (width < timetableLayout.timetableWidth) {
             -(timetableLayout.timetableWidth - width)
         } else {
             0
         }
-        val nextPossibleValue = maxOf(minOf(nextValue.toInt(), 0), maxScroll)
-        this.screenScroll.scrollX.value = nextPossibleValue
-        return nextPossibleValue.toFloat() - currentValue
+        return maxOf(minOf(nextValue.toInt(), 0), maxScroll).toFloat()
     }
 
-    fun scrollY(scrollY: Float): Float {
-        val currentValue = this.screenScroll.scrollY.value
+    private fun calculatePossibleScrollY(scrollY: Float): Float {
+        val currentValue = screenScroll.scrollY
         val nextValue = currentValue + scrollY
-        val maxScroll =
-            if (height < timetableLayout.timetableHeight) {
-                -(timetableLayout.timetableHeight - height)
-            } else {
-                0
-            }
-        val nextPossibleValue = maxOf(minOf(nextValue.toInt(), 0), maxScroll)
-        this.screenScroll.scrollY.value = nextPossibleValue
-        return nextPossibleValue.toFloat() - currentValue
+        val maxScroll = if (height < timetableLayout.timetableHeight) {
+            -(timetableLayout.timetableHeight - height)
+        } else {
+            0
+        }
+        return maxOf(minOf(nextValue.toInt(), 0), maxScroll).toFloat()
     }
 }
 
