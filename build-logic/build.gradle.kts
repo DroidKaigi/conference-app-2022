@@ -7,6 +7,7 @@ group = "droidkaigi.confsched2022.buildlogic"
 repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
 }
 
 java {
@@ -22,6 +23,7 @@ dependencies {
     implementation(libs.moleculeGradlePlugin)
     implementation(libs.kotlinSerializationPlugin)
     implementation(libs.firebasePlugin)
+    implementation(libs.mokoResourcesGenerator)
 }
 
 gradlePlugin {
@@ -67,9 +69,14 @@ gradlePlugin {
             id = "droidkaigi.primitive.kmp.ios"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpIosPlugin"
         }
+
         register("kotlinMppAndroid") {
             id = "droidkaigi.primitive.kmp.android"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpAndroidPlugin"
+        }
+        register("mokoResources") {
+            id = "droidkaigi.primitive.kmp.mokoresources"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpMokoResourcesPlugin"
         }
         register("kotlinMppAndroidHilt") {
             id = "droidkaigi.primitive.kmp.android.hilt"

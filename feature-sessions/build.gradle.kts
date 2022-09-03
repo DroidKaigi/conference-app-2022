@@ -9,6 +9,7 @@ dependencies {
     implementation(projects.coreDesignsystem)
     implementation(projects.coreModel)
     testImplementation(projects.coreTesting)
+    implementation(projects.coreResources)
 
     implementation(projects.coreZipline)
 

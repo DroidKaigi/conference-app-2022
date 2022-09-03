@@ -122,7 +122,6 @@ fun Sessions(
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),
-                        onFavoriteClick = onFavoriteClick
                     )
                 }
             }

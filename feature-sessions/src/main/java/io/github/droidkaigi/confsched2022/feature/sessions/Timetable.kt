@@ -126,7 +126,7 @@ fun TimetablePreview() {
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake()
     ) { timetableItem, isFavorite ->
-        TimetableItem(timetableItem, isFavorite, { _, _ -> })
+        TimetableItem(timetableItem, isFavorite)
     }
 }
 

@@ -27,7 +27,6 @@ dependencyResolutionManagement {
 rootProject.name = "DroidKaigi2022"
 include(
     ":app-android",
-    ":core-zipline",
     ":appioscombined",
     ":feature-sessions",
     ":feature-contributors",
@@ -35,7 +34,9 @@ include(
     ":core-designsystem",
     ":core-data",
     ":core-testing",
-    ":core-model"
+    ":core-zipline",
+    ":core-resources",
+    ":core-model",
 )
 
 // for iOS framework name

@@ -12,7 +12,8 @@ kotlin {
         val projects = listOf(
             projects.coreModel,
             projects.coreDesignsystem,
-            projects.coreData
+            projects.coreData,
+            projects.coreResources
         )
         val xcFrameworkName = "appioscombined"
         val xcf = XCFramework(xcFrameworkName)

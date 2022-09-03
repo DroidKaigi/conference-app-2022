@@ -16,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import io.github.droidkaigi.confsched2022.core.resources.MR
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
@@ -126,8 +128,8 @@ fun TimetableDetailSessionInfo(
             style = MaterialTheme.typography.bodySmall,
         )
 
-        // TODO タグリスト
-        // TODO いいねボタン
+        // TODO Tag list
+        // TODO Like button
     }
 }
 
@@ -227,9 +229,10 @@ fun TimetableDetailAssets(
     asset: TimetableAsset,
 ) {
     Column {
+        MR.strings
         Text(
             modifier = modifier,
-            text = "資料",
+            text = stringResource(id = MR.strings.session_material.resourceId),
             style = MaterialTheme.typography.bodyLarge,
         )
 
