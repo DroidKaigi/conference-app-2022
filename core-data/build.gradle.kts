@@ -27,6 +27,7 @@ kotlin {
                 implementation(libs.okHttpLoggingInterceptor)
                 implementation(libs.androidxDatastorePreferences)
                 implementation(libs.multiplatformSettingsDatastore)
+                implementation(libs.okHttpLoggingInterceptor)
             }
         }
         val iosMain by getting {

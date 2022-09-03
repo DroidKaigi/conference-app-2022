@@ -38,14 +38,23 @@ class SessionsScreenTest {
         }
     }
 
-    @Test
-    fun isNotFavoritedAtFirst() {
-        sessionScreenRobot(robotTestRule) {
-            checkTimetableVisible()
-            checkFavoritedAt(index = 0, isFavorited = false)
-        }
-    }
+    // currently there are not favorite buttons
+//    @Test
+//    fun isNotFavoritedAtFirst() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkTimetableVisible()
+//            checkFavoritedAt(index = 0, isFavorited = false)
+//        }
+//    }
 
+    // currently there are not favorite buttons
+//    @Test
+//    fun isNotFavoritedAtFirst() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkTimetableVisible()
+//            checkFavoritedAt(index = 0, isFavorited = false)
+//        }
+//    }
     @Test
     fun canToggleFavorite() {
         sessionScreenRobot(robotTestRule) {
