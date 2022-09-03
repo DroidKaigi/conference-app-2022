@@ -4,10 +4,14 @@
 
 package io.github.droidkaigi.confsched2022.model
 
+import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -41,7 +45,9 @@ sealed class TimetableItem {
         val description: String,
         val speakers: PersistentList<TimetableSpeaker>,
         val message: MultiLangText?,
-    ) : TimetableItem()
+    ) : TimetableItem() {
+        companion object
+    }
 
     @Serializable
     data class Special(
@@ -68,4 +74,52 @@ sealed class TimetableItem {
             .toComponents { minutes, _, _ -> minutes }
         "${minutes}min"
     }
+}
+
+fun TimetableItem.Session.Companion.fake(): Session {
+    return Session(
+        id = TimetableItemId("2"),
+        title = MultiLangText("DroidKaigiのアプリのアーキテクチャ", "DroidKaigi App Architecture"),
+        startsAt = LocalDateTime.parse("2021-10-20T10:30:00")
+            .toInstant(TimeZone.of("UTC+9")),
+        endsAt = LocalDateTime.parse("2021-10-20T10:50:00")
+            .toInstant(TimeZone.of("UTC+9")),
+        category = TimetableCategory(
+            id = 28654,
+            title = MultiLangText(
+                "Android FrameworkとJetpack",
+                "Android Framework and Jetpack",
+            ),
+        ),
+        room = TimetableRoom(
+            id = 2,
+            name = MultiLangText("Room1", "Room2"),
+            sort = 1
+        ),
+        targetAudience = "For App developer アプリ開発者向け",
+        language = "JAPANESE",
+        asset = TimetableAsset(
+            videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
+            slideUrl = "https://droidkaigi.jp/2021/",
+        ),
+        speakers = listOf(
+            TimetableSpeaker(
+                name = "taka",
+                iconUrl = "https://github.com/takahirom.png",
+                bio = "Likes Android",
+                tagLine = "Android Engineer"
+            ),
+            TimetableSpeaker(
+                name = "ry",
+                iconUrl = "https://github.com/ry-itto.png",
+                bio = "Likes iOS",
+                tagLine = "iOS Engineer",
+            ),
+        ).toPersistentList(),
+        description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
+        message = null,
+        levels = listOf(
+            "INTERMEDIATE",
+        ).toPersistentList(),
+    )
 }

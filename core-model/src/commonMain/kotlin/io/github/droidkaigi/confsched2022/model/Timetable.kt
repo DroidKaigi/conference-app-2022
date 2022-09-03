@@ -102,53 +102,15 @@ fun Timetable.Companion.fake(): Timetable {
                 )
 
                 add(
-                    TimetableItem.Session(
-                        id = TimetableItemId("2$index"),
-                        title = MultiLangText(
-                            "DroidKaigiのアプリのアーキテクチャ$index ${day + 2}",
-                            "DroidKaigi App Architecture$index ${day + 2}"
-                        ),
-                        startsAt = start
-                            .toInstant(TimeZone.of("UTC+9")),
-                        endsAt = end
-                            .toInstant(TimeZone.of("UTC+9")),
-                        category = TimetableCategory(
-                            id = 28654,
-                            title = MultiLangText(
-                                "Android FrameworkとJetpack",
-                                "Android Framework and Jetpack",
-                            ),
-                        ),
-                        room = roomsIterator.next(),
-                        targetAudience = "For App developer アプリ開発者向け",
-                        language = "JAPANESE",
-                        asset = TimetableAsset(
-                            videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
-                            slideUrl = "https://droidkaigi.jp/2021/",
-                        ),
-                        levels = persistentListOf(
-                            "INTERMEDIATE",
-                        ),
-                        description = "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。\n" +
-                            "これはディスクリプションです。",
-                        speakers = persistentListOf(
-                            TimetableSpeaker(
-                                name = "taka",
-                                iconUrl = "https://github.com/takahirom.png",
-                                bio = "Likes Android",
-                                tagLine = "Android Engineer"
-                            ),
-                            TimetableSpeaker(
-                                name = "ry",
-                                iconUrl = "https://github.com/ry-itto.png",
-                                bio = "Likes iOS",
-                                tagLine = "iOS Engineer",
-                            ),
-                        ),
-                        message = null,
-                    )
+                    TimetableItem.Session.fake()
+                        .copy(
+                            id = TimetableItemId("2$index"),
+                            room = roomsIterator.next(),
+                            startsAt = start
+                                .toInstant(TimeZone.of("UTC+9")),
+                            endsAt = end
+                                .toInstant(TimeZone.of("UTC+9")),
+                        )
                 )
             }
         }

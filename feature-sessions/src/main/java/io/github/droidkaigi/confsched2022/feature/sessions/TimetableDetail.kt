@@ -27,6 +27,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
+import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 
@@ -38,7 +39,7 @@ fun TimetableDetailScreenRoot(
 ) {
     // TODO　ViewModel's Inject
     // Find TimeTableItem by id
-    val uiModel = fakeTimetableDetail()
+    val uiModel = Session.fake()
 
     TimetableDetailScreen(
         uiModel = TimeTableDetailUiModel(Loaded(uiModel))
@@ -254,6 +255,6 @@ fun TimetableDetailAssets(
 @Composable
 fun PreviewTimetableDetailScreen() {
     TimetableDetailScreen(
-        uiModel = TimeTableDetailUiModel(Loaded(fakeTimetableDetail()))
+        uiModel = TimeTableDetailUiModel(Loaded(Session.fake()))
     )
 }
