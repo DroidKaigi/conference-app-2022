@@ -7,6 +7,6 @@ assignees: ''
 
 ---
 
-**Describe the idea**
+**Idea Description**
 
 **Reference images and links**
