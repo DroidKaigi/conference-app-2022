@@ -84,12 +84,10 @@ val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
 }
 ```
 
-### Create a test with high Fidelity without making it Flaky
+### Testing strategy
 
-In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
-We also use the Robot testing pattern to separate the how and what of testing, making it scalable.
 
-#### Robot testing pattern
+#### Make test scalable by using robot testing pattern
 
 Separate the test into what and how.
 This makes the tests scalable, as there is no need to rewrite many tests when the Compose mechanism, layout, etc. changes.
@@ -146,7 +144,10 @@ class SessionScreenRobot @Inject constructor() {
 ```
 
 
-#### Hilt and Fake
+#### Create a test with high fidelity without making it flaky
+
+In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
+We also use the Robot testing pattern to separate the how and what of testing, making it scalable.
 
 We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.
 The test basically uses the actual dependencies and Fake the Repository, which is the point of contact with the outside world.
@@ -235,3 +236,13 @@ class JsScheduleModifier() : ScheduleModifier {
     }
 }
 ```
+
+
+### LazyLayout
+
+We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
+
+TODO: Screenshot
+
+
+https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
