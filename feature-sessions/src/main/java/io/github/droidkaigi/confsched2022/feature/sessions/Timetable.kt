@@ -15,6 +15,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
@@ -55,7 +58,7 @@ fun Timetable(
         TimetableLayout(timetable = timetable, density = density)
     }
     val coroutineScope = rememberCoroutineScope()
-    val screenScroll = remember { ScreenScroll() }
+    val screenScroll = rememberScreenScrollState()
     val screen = remember(timetableLayout, density) {
         Screen(
             timetableLayout,
@@ -130,8 +133,8 @@ fun Timetable(
         layout(constraint.maxWidth, constraint.maxHeight) {
             items.forEach { (placable, timetableLayout) ->
                 placable.place(
-                    timetableLayout.left + screen.screenScroll.scrollX.toInt(),
-                    timetableLayout.top + screen.screenScroll.scrollY.toInt()
+                    timetableLayout.left + screen.screenScrollState.scrollX.toInt(),
+                    timetableLayout.top + screen.screenScrollState.scrollY.toInt()
                 )
             }
         }
@@ -235,11 +238,21 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     }
 }
 
+@Composable
+fun rememberScreenScrollState(): ScreenScrollState = rememberSaveable(
+    saver = ScreenScrollState.Saver
+) {
+    ScreenScrollState()
+}
+
 @Stable
-private class ScreenScroll {
+class ScreenScrollState(
+    initialScrollX: Float = 0f,
+    initialScrollY: Float = 0f,
+) {
     private val velocityTracker = VelocityTracker()
-    private val _scrollX = Animatable(0f)
-    private val _scrollY = Animatable(0f)
+    private val _scrollX = Animatable(initialScrollX)
+    private val _scrollY = Animatable(initialScrollY)
 
     val scrollX: Float
         get() = _scrollX.value
@@ -284,11 +297,28 @@ private class ScreenScroll {
     fun resetTracking() {
         velocityTracker.resetTracking()
     }
+
+    companion object {
+        val Saver: Saver<ScreenScrollState, *> = listSaver(
+            save = {
+                listOf(
+                    it.scrollX,
+                    it.scrollY,
+                )
+            },
+            restore = {
+                ScreenScrollState(
+                    initialScrollX = it[0],
+                    initialScrollY = it[1],
+                )
+            }
+        )
+    }
 }
 
 private class Screen(
     val timetableLayout: TimetableLayout,
-    val screenScroll: ScreenScroll,
+    val screenScrollState: ScreenScrollState,
     private val density: Density,
 ) {
     var width = 0
@@ -301,8 +331,8 @@ private class Screen(
             timetableLayout.visibleItemLayouts(
                 width,
                 height,
-                screenScroll.scrollX.toInt(),
-                screenScroll.scrollY.toInt()
+                screenScrollState.scrollX.toInt(),
+                screenScrollState.scrollY.toInt()
             )
         }
     val timeHorizontalLines = derivedStateOf {
@@ -310,14 +340,14 @@ private class Screen(
         val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
             val minuteOffSet = startMinute * timetableLayout.minutePx
-            screenScroll.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
+            screenScrollState.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
         }
     }
     val roomVerticalLines = derivedStateOf {
         val width = with(density) { timeTableColumnWidth.toPx() }
         val rooms = timetableLayout.rooms
         (0..rooms.lastIndex).map {
-            screenScroll.scrollX + width * it
+            screenScrollState.scrollX + width * it
         }
     }
 
@@ -325,7 +355,7 @@ private class Screen(
         return "Screen(" +
             "width=$width, " +
             "height=$height, " +
-            "scroll=$screenScroll, " +
+            "scroll=$screenScrollState, " +
             "visibleItemLayouts=$visibleItemLayouts" +
             ")"
     }
@@ -337,7 +367,7 @@ private class Screen(
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        screenScroll.scroll(
+        screenScrollState.scroll(
             Offset(nextPossibleX, nextPossibleY),
             timeMillis,
             position
@@ -347,7 +377,7 @@ private class Screen(
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
-        screenScroll.updateBounds(
+        screenScrollState.updateBounds(
             maxX = if (width < timetableLayout.timetableWidth) {
                 (timetableLayout.timetableWidth - width).toFloat()
             } else {
@@ -362,7 +392,7 @@ private class Screen(
     }
 
     private fun calculatePossibleScrollX(scrollX: Float): Float {
-        val currentValue = screenScroll.scrollX
+        val currentValue = screenScrollState.scrollX
         val nextValue = currentValue + scrollX
         val maxScroll = if (width < timetableLayout.timetableWidth) {
             -(timetableLayout.timetableWidth - width)
@@ -373,7 +403,7 @@ private class Screen(
     }
 
     private fun calculatePossibleScrollY(scrollY: Float): Float {
-        val currentValue = screenScroll.scrollY
+        val currentValue = screenScrollState.scrollY
         val nextValue = currentValue + scrollY
         val maxScroll = if (height < timetableLayout.timetableHeight) {
             -(timetableLayout.timetableHeight - height)
