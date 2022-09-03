@@ -1,5 +1,6 @@
 import appioscombined
 import SwiftUI
+import Theme
 
 public struct TimetableItemView: View {
     let item: TimetableItem
@@ -11,13 +12,23 @@ public struct TimetableItemView: View {
     public var body: some View {
         VStack(alignment: .leading) {
             Text(item.title.jaTitle)
+                .frame(maxWidth: CGFloat.infinity, alignment: .topLeading)
+                .font(Font.system(size: 16, weight: .bold, design: .default))
+                .foregroundColor(AssetColors.white.swiftUIColor)
             Spacer()
-            Text("\(item.startsTimeString) - \(item.endsAt.toDate().formatted(date: .omitted, time: .shortened))")
-            if let session = item as? TimetableItem.Session {
-                Text(session.speakers.first!.name)
-            }
+                .frame(height: 8)
+            Text("\((item.endsAt.epochSeconds - item.startsAt.epochSeconds) / 60)min")
+                .font(Font.system(size: 12, weight: .semibold, design: .default))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .foregroundColor(AssetColors.white.swiftUIColor)
+                .background(AssetColors.surfaceVariant.swiftUIColor.opacity(0.16))
+                .clipShape(Capsule())
         }
-        .padding()
+        .padding(8)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .background(AssetColors.pink.swiftUIColor)
+        .cornerRadius(16)
     }
 }
 
@@ -27,6 +38,7 @@ struct TimetableItemView_Previews: PreviewProvider {
         TimetableItemView(
             item: Timetable.companion.fake().timetableItems.first!
         )
+        .previewLayout(.fixed(width: 200, height: 160))
     }
 }
 #endif

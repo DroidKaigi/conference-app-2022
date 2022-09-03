@@ -5,6 +5,7 @@ import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,5 +36,5 @@ class FakeSessionsRepository : SessionsRepository {
     }
 
     // for test
-    val savedFavorites get() = favorites.value
+    val savedFavorites get(): PersistentSet<TimetableItemId> = favorites.value
 }

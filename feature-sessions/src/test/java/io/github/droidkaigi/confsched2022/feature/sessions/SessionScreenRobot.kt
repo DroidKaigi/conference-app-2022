@@ -2,7 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
-import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -17,6 +17,7 @@ import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
 import io.github.droidkaigi.confsched2022.testing.sessions.FakeSessionsRepository
 import javax.inject.Inject
+import org.amshove.kluent.shouldContain
 
 class SessionScreenRobot @Inject constructor() {
     @Inject lateinit var sessionsRepository: SessionsRepository
@@ -41,7 +42,7 @@ class SessionScreenRobot @Inject constructor() {
             .onFavorite(
                 index
             )
-            .assert(hasContentDescription("favorite:$isFavorited"))
+            .assert(hasContentDescription("isFavorited$isFavorited"))
     }
 
     context(RobotTestRule)
@@ -54,24 +55,25 @@ class SessionScreenRobot @Inject constructor() {
     }
 
     fun checkFavoriteIsSavedAt(index: Int) {
-        fakeSessionsRepository.savedFavorites.contains(itemAt(index).id)
+        val expected = DroidKaigiSchedule.fake().itemAt(index).id
+        println(fakeSessionsRepository.savedFavorites)
+        fakeSessionsRepository.savedFavorites shouldContain expected
     }
 
     private fun AndroidComposeTestRule<*, *>.onFavorite(index: Int): SemanticsNodeInteraction {
-        val title = itemAt(index)
+        val title = DroidKaigiSchedule.fake().itemAt(index)
             .title
             .currentLangTitle
 
         return onNode(
-            matcher = hasTestTag("favorite") and hasAnySibling(hasText(title)),
+            matcher = hasTestTag("favorite") and hasAnyChild(hasText(title)),
             useUnmergedTree = true
         )
     }
 
-    private fun itemAt(index: Int): TimetableItem {
+    private fun DroidKaigiSchedule.itemAt(index: Int): TimetableItem {
         return checkNotNull(
-            DroidKaigiSchedule.fake()
-                .dayToTimetable[io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1]
+            dayToTimetable[io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1]
         )
             .timetableItems[index]
     }
