@@ -31,6 +31,7 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGr
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -57,7 +58,10 @@ fun KaigiApp(
                 navController = kaigiAppScaffoldState.navController,
                 startDestination = SessionsNavGraph.sessionRoute,
             ) {
-                sessionsNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                sessionsNavGraph(
+                    kaigiAppScaffoldState::onNavigationClick,
+                    kaigiAppScaffoldState::onTimeTableClick,
+                )
                 contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
             }
         }
@@ -116,6 +120,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         coroutineScope.launch {
             drawerState.close()
         }
+    }
+
+    fun onTimeTableClick(timetableId: TimetableItemId) {
+        navController.navigate(
+            route = SessionsNavGraph.sessionDetail + timetableId.value
+        )
     }
 
     fun onNavigationClick() {

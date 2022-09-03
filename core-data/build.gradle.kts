@@ -30,6 +30,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(libs.ktorClientDarwin)
+                implementation(libs.koin)
             }
         }
     }
