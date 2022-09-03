@@ -48,11 +48,7 @@ androidComponents {
             val networkFlavor = variant
                 .productFlavors
                 .first { it.first == "network" }
-            val network = if (networkFlavor.second == "dev") {
-                "dev"
-            } else {
-                "prod"
-            }
+            val network = networkFlavor.second
             val buildType = if (variant.buildType == "debug") {
                 "-d"
             } else {
