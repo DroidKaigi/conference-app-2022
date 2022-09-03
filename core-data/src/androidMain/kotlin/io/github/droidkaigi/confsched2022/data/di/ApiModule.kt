@@ -10,7 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.droidkaigi.confsched2022.data.NetworkService
-import io.github.droidkaigi.confsched2022.data.PreferenceDatastore
+import io.github.droidkaigi.confsched2022.data.UserDatastore
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
 import io.github.droidkaigi.confsched2022.data.auth.Authenticator
 import io.github.droidkaigi.confsched2022.data.auth.AuthenticatorImpl
@@ -36,10 +36,10 @@ class ApiModule {
     @Singleton
     fun provideAuthApi(
         httpClient: HttpClient,
-        preferenceDatastore: PreferenceDatastore,
+        userDatastore: UserDatastore,
         authenticator: Authenticator
     ): AuthApi {
-        return AuthApi(httpClient, preferenceDatastore, authenticator)
+        return AuthApi(httpClient, userDatastore, authenticator)
     }
 
     @Provides
@@ -71,7 +71,7 @@ class ApiModule {
     }
 
     private val Context.dataStore by preferencesDataStore(
-        name = PreferenceDatastore.NAME,
+        name = UserDatastore.NAME,
     )
 
     @Provides
@@ -81,7 +81,7 @@ class ApiModule {
     }
     @Provides
     @Singleton
-    fun providePreferenceDatastore(flowSettings: FlowSettings): PreferenceDatastore {
-        return PreferenceDatastore(flowSettings)
+    fun providePreferenceDatastore(flowSettings: FlowSettings): UserDatastore {
+        return UserDatastore(flowSettings)
     }
 }
