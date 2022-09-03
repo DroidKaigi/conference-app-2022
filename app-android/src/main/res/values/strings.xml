@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">android-project-template-2022</string>
+
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">タイムライン</string>
+    <string name="title_about">DroidKaigiとは</string>
+    <string name="title_information">お知らせ</string>
+    <string name="title_map">フロアマップ</string>
+    <string name="title_sponsors">スポンサー</string>
+    <string name="title_contributors">Contributor</string>
+    <string name="title_setting">Setting</string>
 </resources>

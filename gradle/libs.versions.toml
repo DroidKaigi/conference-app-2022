@@ -57,6 +57,7 @@ androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs"
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose"}
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
