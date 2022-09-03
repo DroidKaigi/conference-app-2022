@@ -54,7 +54,9 @@ fun KaigiScaffold(
                             ) {
                                 Image(
                                     modifier = Modifier.fillMaxSize(),
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_search),
+                                    imageVector = ImageVector.vectorResource(
+                                        id = R.drawable.ic_search
+                                    ),
                                     contentDescription = "Search icon in toolbar"
                                 )
                             }
@@ -69,7 +71,9 @@ fun KaigiScaffold(
                             ) {
                                 Image(
                                     modifier = Modifier.fillMaxSize(),
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_today),
+                                    imageVector = ImageVector.vectorResource(
+                                        id = R.drawable.ic_today
+                                    ),
                                     contentDescription = "Search icon in toolbar"
                                 )
                             }
