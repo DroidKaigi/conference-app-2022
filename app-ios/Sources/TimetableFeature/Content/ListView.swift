@@ -1,7 +1,7 @@
 import SwiftUI
 
-internal struct TimetableListView: View {
-    internal var body: some View {
+struct TimetableListView: View {
+    var body: some View {
         Text("TODO: TimetableListView")
     }
 }
