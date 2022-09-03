@@ -9,6 +9,6 @@ kotlin {
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "io.github.droidkaigi.confsched2022.core.resources"
-//    iosBaseLocalizationRegion = "ja" // default "en"
+    multiplatformResourcesPackage = "io.github.droidkaigi.confsched2022.core.res"
+    iosBaseLocalizationRegion = "ja" // default "en"
 }

@@ -22,7 +22,7 @@ class KmpMokoResourcesPlugin : Plugin<Project> {
             android {
                 sourceSets.getByName("main") {
                     // https://github.com/icerockdev/moko-resources/issues/353
-                    res.setSrcDirs(listOf(File(buildDir, "generated/moko/androidMain/res")))
+                    res.srcDir(listOf(File(buildDir, "generated/moko/androidMain/res")))
                 }
             }
         }
