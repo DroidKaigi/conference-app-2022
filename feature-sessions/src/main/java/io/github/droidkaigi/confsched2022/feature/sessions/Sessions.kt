@@ -151,10 +151,8 @@ fun SessionsPreview() {
     KaigiTheme {
         Sessions(
             uiModel = SessionsUiModel(scheduleState = Loading, isFilterOn = false),
-            selectedTab = 0,
             onNavigationIconClick = {},
             onFavoriteClick = { _, _ -> },
-            onTabClicked = {},
             onTimetableClick = {},
             onToggleFilter = {}
         )

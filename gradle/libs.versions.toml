@@ -43,7 +43,7 @@ kluent = "1.68"
 coilCompose="2.2.0"
 koin = "3.2.0"
 ksp = "1.7.10-1.0.6"
-paparazzi = "1.0.0"
+paparazzi = "1.1.0-SNAPSHOT"
 showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 
