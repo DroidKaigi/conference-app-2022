@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: develop-debug-apk
-          path: app-android/build/outputs/apk/debug
+          path: app-android/build/outputs/apk/dev/debug/app-android-dev-debug.apk
           retention-days: 14
 
       - name: Upload build reports

@@ -14,7 +14,6 @@ fun NavGraphBuilder.sessionsNavGraph(
         SessionsScreenRoot(
             onNavigationIconClick = onNavigationIconClick,
             onSearchClicked = { /*TODO: Implement later*/ },
-            onTodayClicked = { /*TODO: Implement later*/ },
             onTimetableClick = onTimetableClick,
         )
     }

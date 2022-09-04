@@ -3,8 +3,7 @@
 )
 
 package io.github.droidkaigi.confsched2022.model
-
-import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,7 +18,7 @@ import kotlinx.serialization.UseSerializers
 @Serializable
 data class Timetable(
     val timetableItems: TimetableItemList = TimetableItemList(),
-    val favorites: ImmutableSet<TimetableItemId> = persistentSetOf(),
+    val favorites: PersistentSet<TimetableItemId> = persistentSetOf(),
 ) {
     val contents by lazy {
         timetableItems.map {
@@ -66,9 +65,9 @@ fun Timetable.Companion.fake(): Timetable {
             TimetableItem.Special(
                 id = TimetableItemId("1"),
                 title = MultiLangText("ウェルカムトーク", "Welcome Talk"),
-                startsAt = LocalDateTime.parse("2021-10-20T10:00:00")
+                startsAt = LocalDateTime.parse("2022-10-06T10:00:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                endsAt = LocalDateTime.parse("2021-10-20T10:20:00")
+                endsAt = LocalDateTime.parse("2022-10-06T10:20:00")
                     .toInstant(TimeZone.of("UTC+9")),
                 category = TimetableCategory(
                     id = 28657,
@@ -89,13 +88,13 @@ fun Timetable.Companion.fake(): Timetable {
             (0..20).forEach { index ->
                 val dayOffset = day * 24 * 60 * 60
                 val start = Instant.fromEpochSeconds(
-                    LocalDateTime.parse("2021-10-20T10:10:00")
+                    LocalDateTime.parse("2022-10-06T10:10:00")
                         .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
                 ).toLocalDateTime(
                     TimeZone.of("UTC+9")
                 )
                 val end = Instant.fromEpochSeconds(
-                    LocalDateTime.parse("2021-10-20T10:50:00")
+                    LocalDateTime.parse("2022-10-06T10:50:00")
                         .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
                 ).toLocalDateTime(
                     TimeZone.of("UTC+9")
@@ -123,9 +122,9 @@ fun Timetable.Companion.fake(): Timetable {
             TimetableItem.Special(
                 id = TimetableItemId("3"),
                 title = MultiLangText("Closing", "Closing"),
-                startsAt = LocalDateTime.parse("2021-10-20T10:40:00")
+                startsAt = LocalDateTime.parse("2022-10-06T10:40:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                endsAt = LocalDateTime.parse("2021-10-20T11:00:00")
+                endsAt = LocalDateTime.parse("2022-10-06T11:00:00")
                     .toInstant(TimeZone.of("UTC+9")),
                 category = TimetableCategory(
                     id = 28657,

@@ -27,10 +27,12 @@ class SessionsApi(
     private val networkService: NetworkService,
 ) {
     suspend fun timetable(): Timetable {
-        networkService.checkAuth()
-        return Timetable()
-//        networkService.get<>()
-//        return TODO()
+        return networkService
+            .get<SessionAllResponse>(
+                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
+                needAuth = true
+            )
+            .toTimetable()
     }
 
     fun timetableItem(timetableItemId: TimetableItemId): Flow<TimetableItem> {
@@ -53,7 +55,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 TimetableSpeaker(
                     name = apiSpeaker.fullName,
                     bio = apiSpeaker.bio,
-                    iconUrl = apiSpeaker.profilePicture,
+                    iconUrl = apiSpeaker.profilePicture.orEmpty(),
                     tagLine = apiSpeaker.tagLine,
                 )
             }.first()
@@ -119,7 +121,12 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         levels = apiSession.levels.toPersistentList(),
                     )
                 }
-            }.toPersistentList()
+            }
+                .sortedWith(
+                    compareBy<TimetableItem> { it.startsAt }
+                        .thenBy { it.room.sort }
+                )
+                .toPersistentList()
         )
     )
 }
