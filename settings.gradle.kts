@@ -31,6 +31,7 @@ include(
     ":appioscombined",
     ":feature-sessions",
     ":feature-contributors",
+    ":feature-about",
     ":core-ui",
     ":core-designsystem",
     ":core-data",
@@ -40,4 +41,3 @@ include(
 
 // for iOS framework name
 project(":appioscombined").projectDir = file("app-ios-combined")
-include(":feature-about")
