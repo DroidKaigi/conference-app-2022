@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Divider
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -108,12 +110,6 @@ fun KaigiAppDrawer(
     val coroutineScope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
-        modifier = Modifier
-            .windowInsetsPadding(
-                WindowInsets.safeDrawing.only(
-                    WindowInsetsSides.Vertical
-                )
-            ),
         drawerState = kaigiAppScaffoldState.drawerState,
         drawerContent = {
             drawerSheet()
@@ -138,7 +134,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     fun onTimeTableClick(timetableId: TimetableItemId) {
         navController.navigate(
-            route = SessionsNavGraph.sessionDetail + timetableId.value
+            route = SessionsNavGraph.sessionDetailRoute(timetableId.value)
         )
     }
 

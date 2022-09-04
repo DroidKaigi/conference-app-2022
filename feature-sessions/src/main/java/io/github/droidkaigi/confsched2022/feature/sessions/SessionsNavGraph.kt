@@ -20,7 +20,7 @@ fun NavGraphBuilder.sessionsNavGraph(
     }
 
     composable(
-        route = "${SessionsNavGraph.sessionDetail}{id}",
+        route = SessionsNavGraph.sessionDetailRoute("{id}"),
         arguments = listOf(
             navArgument("id") {
                 type = NavType.StringType
@@ -38,5 +38,6 @@ fun NavGraphBuilder.sessionsNavGraph(
 
 object SessionsNavGraph {
     const val sessionRoute = "sessions"
-    const val sessionDetail = "session/detail/"
+    fun sessionDetailRoute(sessionId: String) =
+        "session/detail/$sessionId"
 }
