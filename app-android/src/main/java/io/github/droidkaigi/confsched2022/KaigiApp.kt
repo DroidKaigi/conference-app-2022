@@ -1,12 +1,7 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue.Closed
 import androidx.compose.material3.ExperimentalMaterial3Api
