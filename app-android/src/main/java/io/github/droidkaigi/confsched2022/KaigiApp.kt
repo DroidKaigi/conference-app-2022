@@ -113,7 +113,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     fun onTimeTableClick(timetableId: TimetableItemId) {
         navController.navigate(
-            route = SessionsNavGraph.sessionDetail + timetableId.value
+            route = SessionsNavGraph.sessionDetailRoute(timetableId.value)
         )
     }
 
