@@ -2,7 +2,6 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,13 +19,11 @@ import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableItem
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
 
 @Composable
 fun TimetableItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     maxTitleLines: Int = 4
 ) {
@@ -39,9 +36,6 @@ fun TimetableItem(
     }
     Column(
         modifier
-            .clickable(
-                onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
-            )
             .background(color, MaterialTheme.shapes.medium)
             .border(2.dp, Color(roomColor), MaterialTheme.shapes.medium)
             .padding(8.dp)

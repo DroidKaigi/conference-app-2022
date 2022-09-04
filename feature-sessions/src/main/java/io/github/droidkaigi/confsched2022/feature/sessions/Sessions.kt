@@ -2,34 +2,38 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
+import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
@@ -37,7 +41,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onSearchClicked: () -> Unit = {},
+    onTodayClicked: () -> Unit = {},
+    onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
@@ -45,12 +52,13 @@ fun SessionsScreenRoot(
     Sessions(
         uiModel = state,
         modifier = modifier,
-        onTimetableClick = {},
-        onToggleFilter = { viewModel.onToggleFilter() },
+        onTimetableClick = { onTimetableClick(it) },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
         onNavigationIconClick = onNavigationIconClick,
+        onSearchClick = onSearchClicked,
+        onTodayClick = onTodayClicked,
     )
 }
 
@@ -61,25 +69,98 @@ fun Sessions(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onToggleFilter: () -> Unit,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit
+    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onSearchClick: () -> Unit,
+    onTodayClick: () -> Unit
 ) {
-    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
-        val scheduleState = uiModel.scheduleState
-        if (scheduleState !is Loaded) {
-            CircularProgressIndicator()
-            return@KaigiScaffold
+    val scheduleState = uiModel.scheduleState
+    val pagerState = rememberPagerState()
+    KaigiScaffold(
+        modifier = modifier,
+        topBar = {
+            SessionsTopBar(
+                pagerState,
+                scheduleState,
+                onNavigationIconClick,
+                onSearchClick,
+                onTodayClick
+            )
         }
-        val days = scheduleState.schedule.days
+    ) {
         Column(
-            modifier = modifier
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-                )
+            modifier = Modifier
+                .padding(top = 4.dp)
         ) {
-            val pagerState = rememberPagerState()
+            if (scheduleState !is Loaded) {
+                CircularProgressIndicator()
+            } else {
+                val days = scheduleState.schedule.days
+                HorizontalPager(
+                    count = days.size,
+                    state = pagerState
+                ) { dayIndex ->
+                    val day = days[dayIndex]
+                    val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+                    Timetable(timetable) { timetableItem, isFavorited ->
+                        TimetableItem(
+                            timetableItem = timetableItem,
+                            isFavorited = isFavorited,
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = { onTimetableClick(timetableItem.id) }
+                                ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SessionsTopBar(
+    pagerState: PagerState,
+    scheduleState: ScheduleState,
+    onNavigationIconClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onTodayClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        KaigiTopAppBar(
+            onNavigationIconClick = onNavigationIconClick,
+            elevation = 2.dp,
+            trailingIcons = {
+                IconButton(
+                    onClick = onSearchClick,
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.ic_search
+                        ),
+                        contentDescription = "Search icon in toolbar"
+                    )
+                }
+                IconButton(
+                    onClick = onTodayClick
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.ic_today
+                        ),
+                        contentDescription = "Search icon in toolbar"
+                    )
+                }
+            }
+        )
+        (scheduleState as? Loaded)?.schedule?.days?.let { days ->
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
+                containerColor = MaterialTheme.colorScheme
+                    .surfaceColorAtElevation(2.dp),
                 indicator = {
                     TabIndicator(
                         modifier = Modifier
@@ -100,28 +181,6 @@ fun Sessions(
                                 pagerState.animateScrollToPage(it)
                             }
                         }
-                    )
-                }
-            }
-            Text(
-                text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
-                modifier = Modifier.clickable(onClick = onToggleFilter)
-            )
-            HorizontalPager(
-                count = days.size,
-                state = pagerState
-            ) { dayIndex ->
-                val day = days[dayIndex]
-                val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-                Timetable(timetable) { timetableItem, isFavorited ->
-                    TimetableItem(
-                        timetableItem = timetableItem,
-                        isFavorited = isFavorited,
-                        modifier = Modifier
-                            .clickable(
-                                onClick = { onTimetableClick(timetableItem.id) }
-                            ),
-                        onFavoriteClick = onFavoriteClick
                     )
                 }
             }
@@ -146,6 +205,16 @@ private fun TabIndicator(
 @Composable
 fun SessionsPreview() {
     KaigiTheme {
-        SessionsScreenRoot()
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = Loaded(DroidKaigiSchedule.fake()),
+                isFilterOn = false
+            ),
+            onNavigationIconClick = {},
+            onFavoriteClick = { _, _ -> },
+            onTimetableClick = {},
+            onSearchClick = {},
+            onTodayClick = {},
+        )
     }
 }

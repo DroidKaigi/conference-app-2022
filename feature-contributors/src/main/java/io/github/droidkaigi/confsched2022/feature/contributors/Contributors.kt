@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
 
 @Composable
@@ -44,7 +45,11 @@ fun Contributors(
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+    KaigiScaffold(
+        topBar = {
+            KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
+        }
+    ) {
         if (uiModel.contributorsState !is Loaded) {
             CircularProgressIndicator()
             return@KaigiScaffold

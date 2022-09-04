@@ -16,45 +16,12 @@ class SessionsScreenTest {
     @Inject lateinit var sessionScreenRobot: SessionScreenRobot
 
     @Test
-    fun toggleIsOffAtFirst() {
-        sessionScreenRobot(robotTestRule) {
-            checkFilterIsOff()
-        }
-    }
-
-    @Test
-    fun canFilterToggle() {
-        sessionScreenRobot(robotTestRule) {
-            checkFilterIsOff()
-            toggleFilter()
-            checkFilterIsOn()
-        }
-    }
-
-    @Test
     fun visibleTimetable() {
         sessionScreenRobot(robotTestRule) {
             checkTimetableVisible()
         }
     }
 
-    // currently there are not favorite buttons
-//    @Test
-//    fun isNotFavoritedAtFirst() {
-//        sessionScreenRobot(robotTestRule) {
-//            checkTimetableVisible()
-//            checkFavoritedAt(index = 0, isFavorited = false)
-//        }
-//    }
-
-    // currently there are not favorite buttons
-//    @Test
-//    fun isNotFavoritedAtFirst() {
-//        sessionScreenRobot(robotTestRule) {
-//            checkTimetableVisible()
-//            checkFavoritedAt(index = 0, isFavorited = false)
-//        }
-//    }
     @Test
     fun canToggleFavorite() {
         sessionScreenRobot(robotTestRule) {
@@ -63,4 +30,38 @@ class SessionsScreenTest {
             checkFavoriteIsSavedAt(0)
         }
     }
+
+    // currently there are not favorite buttons
+//    @Test
+//    fun isNotFavoritedAtFirst() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkTimetableVisible()
+//            checkFavoritedAt(index = 0, isFavorited = false)
+//        }
+//    }
+// Currently, there are not favorite buttons and filters in timetable
+//    @Test
+//    fun toggleIsOffAtFirst() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkFilterIsOff()
+//        }
+//    }
+//
+//    @Test
+//    fun canFilterToggle() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkFilterIsOff()
+//            toggleFilter()
+//            checkFilterIsOn()
+//        }
+//    }
+//    @Test
+//    fun canToggleFavorite() {
+//        sessionScreenRobot(robotTestRule) {
+//            clickFavoriteAt(0)
+//            checkFavoritedAt(index = 0, isFavorited = true)
+//            checkFavoriteIsSavedAt(0)
+//        }
+//    }
+    >>>>>>> origin/main
 }
