@@ -44,9 +44,7 @@ fun TimetableDetailScreenRoot(
     val viewModel = hiltViewModel<TimeTableDetailViewModel>()
     val uiModel by viewModel.uiModel
 
-    TimetableDetailScreen(
-        uiModel = uiModel
-    )
+    TimetableDetailScreen(uiModel = uiModel)
 
     // TODO BottomNavigationView
 }
@@ -135,8 +133,8 @@ fun TimetableDetailSessionInfo(
             style = MaterialTheme.typography.bodySmall,
         )
 
-        // TODO タグリスト
-        // TODO いいねボタン
+        // TODO TagLines
+        // TODO favorite button
     }
 }
 

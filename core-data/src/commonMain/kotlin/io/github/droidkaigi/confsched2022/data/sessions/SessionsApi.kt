@@ -32,13 +32,14 @@ class SessionsApi(
             .toTimetable()
     }
 
-    suspend fun timetableItem(timetableItemId: TimetableItemId): TimetableItem {
+    suspend fun timetableItem(timetableItemId: TimetableItemId): TimetableItem? {
         return networkService
             .get<SessionAllResponse>(
                 url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
                 needAuth = true
             )
-            .toTimetable().timetableItems.first { it.id.value == timetableItemId.value }
+            // TODO want to return something not nullable, when item is null
+            .toTimetable().timetableItems.firstOrNull { it.id.value == timetableItemId.value }
     }
 }
 

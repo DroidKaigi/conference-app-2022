@@ -12,49 +12,35 @@ import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import io.github.droidkaigi.confsched2022.ui.Result
-import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class TimeTableDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val sessionsRepository: SessionsRepository,
 ) : ViewModel() {
 
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    private val timetableItemIdFlow: StateFlow<TimetableItemId> =
-        savedStateHandle.getStateFlow("timetableItemId", TimetableItemId(""))
 
-    private val timetableItemResult = MutableStateFlow<Result<TimetableItem>>(Result.Loading)
+    private val timetableItemId: TimetableItemId =
+        TimetableItemId(requireNotNull(savedStateHandle.get<String>("id")))
 
-    init {
-        moleculeScope.launch {
-            timetableItemIdFlow.map { id ->
-                sessionsRepository.timetableItemFlow(id).asResult()
-                    .map {
-                        timetableItemResult.emit(it)
-                    }
-            }
-        }
-    }
+    private val result = sessionsRepository.timetableItemFlow(timetableItemId).asResult()
 
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val resultState = timetableItemResult.collectAsState()
+        val aa = result.collectAsState(initial = Result.Loading)
 
         val timetableDetailState by remember {
             derivedStateOf {
-                TimetableDetailState.of(resultState.value)
+                TimetableDetailState.of(aa.value)
             }
         }
         TimeTableDetailUiModel(timetableDetailState)
