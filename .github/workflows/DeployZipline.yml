@@ -16,6 +16,7 @@ jobs:
       id-token: write
       contents: read
       pages: write
+      deployments: write
 
     steps:
       - name: Checkout
