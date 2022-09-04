@@ -33,8 +33,8 @@ import com.google.accompanist.pager.rememberPagerState
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
-import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
@@ -78,16 +78,17 @@ fun Sessions(
     onTodayClick: () -> Unit
 ) {
     val scheduleState = uiModel.scheduleState
-    if (scheduleState !is Loaded) {
-        CircularProgressIndicator()
-        return
-    }
-    val days = scheduleState.schedule.days
     val pagerState = rememberPagerState()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
-            SessionsTopBar(pagerState, days, onNavigationIconClick, onSearchClick, onTodayClick)
+            SessionsTopBar(
+                pagerState,
+                scheduleState,
+                onNavigationIconClick,
+                onSearchClick,
+                onTodayClick
+            )
         }
     ) {
         Column(
@@ -96,21 +97,26 @@ fun Sessions(
                     WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
                 )
         ) {
-            HorizontalPager(
-                count = days.size,
-                state = pagerState
-            ) { dayIndex ->
-                val day = days[dayIndex]
-                val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-                Timetable(timetable) { timetableItem, isFavorited ->
-                    TimetableItem(
-                        timetableItem = timetableItem,
-                        isFavorited = isFavorited,
-                        modifier = Modifier
-                            .clickable(
-                                onClick = { onTimetableClick(timetableItem.id) }
-                            ),
-                    )
+            if (scheduleState !is Loaded) {
+                CircularProgressIndicator()
+            } else {
+                val days = scheduleState.schedule.days
+                HorizontalPager(
+                    count = days.size,
+                    state = pagerState
+                ) { dayIndex ->
+                    val day = days[dayIndex]
+                    val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+                    Timetable(timetable) { timetableItem, isFavorited ->
+                        TimetableItem(
+                            timetableItem = timetableItem,
+                            isFavorited = isFavorited,
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = { onTimetableClick(timetableItem.id) }
+                                ),
+                        )
+                    }
                 }
             }
         }
@@ -121,7 +127,7 @@ fun Sessions(
 @Composable
 fun SessionsTopBar(
     pagerState: PagerState,
-    days: Array<DroidKaigi2022Day>,
+    scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
     onTodayClick: () -> Unit,
@@ -156,31 +162,33 @@ fun SessionsTopBar(
                 }
             }
         )
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = MaterialTheme.colorScheme
-                .surfaceColorAtElevation(2.dp),
-            indicator = {
-                TabIndicator(
-                    modifier = Modifier
-                        .pagerTabIndicatorOffset(pagerState, it)
-                        .zIndex(-1f),
-                )
-            },
-            divider = {},
-        ) {
-            val coroutineScope = rememberCoroutineScope()
-            days.forEachIndexed { index, day ->
-                SessionDayTab(
-                    index = index,
-                    day = day,
-                    selected = pagerState.currentPage == index,
-                    onTabClicked = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(it)
+        (scheduleState as? Loaded)?.schedule?.days?.let { days ->
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                containerColor = MaterialTheme.colorScheme
+                    .surfaceColorAtElevation(2.dp),
+                indicator = {
+                    TabIndicator(
+                        modifier = Modifier
+                            .pagerTabIndicatorOffset(pagerState, it)
+                            .zIndex(-1f),
+                    )
+                },
+                divider = {},
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                days.forEachIndexed { index, day ->
+                    SessionDayTab(
+                        index = index,
+                        day = day,
+                        selected = pagerState.currentPage == index,
+                        onTabClicked = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(it)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
