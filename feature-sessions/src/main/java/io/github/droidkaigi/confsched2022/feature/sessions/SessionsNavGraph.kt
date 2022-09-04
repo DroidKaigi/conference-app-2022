@@ -39,5 +39,5 @@ fun NavGraphBuilder.sessionsNavGraph(
 object SessionsNavGraph {
     const val sessionRoute = "sessions"
     fun sessionDetailRoute(sessionId: String) =
-        "session/detail/${sessionId}"
+        "session/detail/$sessionId"
 }

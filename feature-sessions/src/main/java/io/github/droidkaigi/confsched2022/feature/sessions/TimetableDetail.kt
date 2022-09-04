@@ -111,7 +111,7 @@ fun TimetableDetailSessionInfo(
     language: String,
     levels: PersistentList<String>,
 
-    ) {
+) {
     Column {
         Text(
             modifier = modifier,
