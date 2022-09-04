@@ -17,7 +17,6 @@ import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
-import io.github.droidkaigi.confsched2022.testing.sessions.FakeSessionsRepository
 import javax.inject.Inject
 import org.amshove.kluent.shouldContain
 
