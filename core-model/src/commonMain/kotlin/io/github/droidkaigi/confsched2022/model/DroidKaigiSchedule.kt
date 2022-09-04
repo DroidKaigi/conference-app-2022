@@ -11,15 +11,21 @@ import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class DroidKaigiSchedule(
-    val dayToTimetable: PersistentMap<DroidKaigi2022Day, Timetable>
+    val dayToTimetable: PersistentMap<DroidKaigi2022Day, Timetable>,
+    private val timetable: Timetable
 ) {
     val days = DroidKaigi2022Day.values()
     fun filtered(value: Filters): DroidKaigiSchedule {
         return DroidKaigiSchedule(
             dayToTimetable = dayToTimetable
                 .mapValues { it.value.filtered(value) }
-                .toPersistentMap()
+                .toPersistentMap(),
+            timetable = timetable
         )
+    }
+
+    fun findTimetableItem(id: TimetableItemId): TimetableItemWithFavorite {
+        return timetable.contents.first { id == it.timetableItem.id }
     }
 
     companion object {
@@ -27,7 +33,8 @@ data class DroidKaigiSchedule(
             return DroidKaigiSchedule(
                 DroidKaigi2022Day.values().associateWith { day ->
                     timetable.dayTimetable(day)
-                }.toPersistentMap()
+                }.toPersistentMap(),
+                timetable
             )
         }
     }

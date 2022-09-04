@@ -28,6 +28,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
@@ -59,7 +60,7 @@ fun TimetableDetailScreen(
         CircularProgressIndicator()
         return
     }
-    val item = uiModel.timetableDetailState.timetableItem
+    val (item, isFavorite) = uiModel.timetableDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
@@ -262,6 +263,8 @@ fun TimetableDetailAssets(
 @Composable
 fun PreviewTimetableDetailScreen() {
     TimetableDetailScreen(
-        uiModel = TimeTableDetailUiModel(Loaded(Session.fake()))
+        uiModel = TimeTableDetailUiModel(
+            Loaded(TimetableItemWithFavorite.fake())
+        )
     )
 }

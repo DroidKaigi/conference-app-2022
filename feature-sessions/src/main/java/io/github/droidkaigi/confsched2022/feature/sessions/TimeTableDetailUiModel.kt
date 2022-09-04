@@ -1,8 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
 import co.touchlab.kermit.Logger
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
-import io.github.droidkaigi.confsched2022.model.TimetableItem
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.ui.Result
 
 data class TimeTableDetailUiModel(
@@ -10,12 +9,14 @@ data class TimeTableDetailUiModel(
 ) {
     sealed interface TimetableDetailState {
 
-        data class Loaded(val timetableItem: TimetableItem) : TimetableDetailState
+        data class Loaded(
+            val timetableItemWithFavorite: TimetableItemWithFavorite
+        ) : TimetableDetailState
 
         object Loading : TimetableDetailState
 
         companion object {
-            fun of(timetableItemResult: Result<TimetableItem>): TimetableDetailState {
+            fun of(timetableItemResult: Result<TimetableItemWithFavorite>): TimetableDetailState {
                 return when (timetableItemResult) {
                     Result.Loading -> {
                         Loading

@@ -32,14 +32,14 @@ class TimeTableDetailViewModel @Inject constructor(
     private val timetableItemId: TimetableItemId =
         TimetableItemId(requireNotNull(savedStateHandle.get<String>("id")))
 
-    private val result = sessionsRepository.timetableItemFlow(timetableItemId).asResult()
+    private val timetableItemFlow = sessionsRepository.timetableItemFlow(timetableItemId).asResult()
 
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val aa = result.collectAsState(initial = Result.Loading)
+        val timetableItemResult by timetableItemFlow.collectAsState(initial = Result.Loading)
 
         val timetableDetailState by remember {
             derivedStateOf {
-                TimetableDetailState.of(aa.value)
+                TimetableDetailState.of(timetableItemResult)
             }
         }
         TimeTableDetailUiModel(timetableDetailState)
