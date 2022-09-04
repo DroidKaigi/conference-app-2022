@@ -3,7 +3,6 @@ package io.github.droidkaigi.confsched2022.data.sessions
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import kotlinx.collections.immutable.toPersistentSet
@@ -36,10 +35,7 @@ class DataSessionsRepository(
         }
     }
 
-    override fun timetableItemFlow(timetableItemId: TimetableItemId): Flow<TimetableItem> =
-        callbackFlow {
-            sessionsApi.timetableItem(timetableItemId).collect {
-                trySend(it)
-            }
-        }
+    override fun timetableItemFlow(timetableItemId: TimetableItemId): Flow<TimetableItem> = callbackFlow {
+        trySend(sessionsApi.timetableItem(timetableItemId))
+    }
 }

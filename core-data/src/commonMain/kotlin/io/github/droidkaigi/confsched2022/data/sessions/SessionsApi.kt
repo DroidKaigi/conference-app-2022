@@ -14,10 +14,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
-import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -35,9 +32,13 @@ class SessionsApi(
             .toTimetable()
     }
 
-    fun timetableItem(timetableItemId: TimetableItemId): Flow<TimetableItem> {
-        // TODO from Server
-        return flowOf(Timetable.Companion.fake().timetableItems.first { it.id == timetableItemId })
+    suspend fun timetableItem(timetableItemId: TimetableItemId): TimetableItem {
+        return networkService
+            .get<SessionAllResponse>(
+                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
+                needAuth = true
+            )
+            .toTimetable().timetableItems.first { it.id.value == timetableItemId.value }
     }
 }
 
