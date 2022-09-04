@@ -94,12 +94,6 @@ fun KaigiAppDrawer(
     val coroutineScope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
-        modifier = Modifier
-            .windowInsetsPadding(
-                WindowInsets.safeDrawing.only(
-                    WindowInsetsSides.Vertical
-                )
-            ),
         drawerState = kaigiAppScaffoldState.drawerState,
         drawerContent = {
             drawerSheet()

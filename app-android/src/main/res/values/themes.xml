@@ -14,6 +14,7 @@
     <style name="Theme.DroidKaigi.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.DroidKaigi.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
