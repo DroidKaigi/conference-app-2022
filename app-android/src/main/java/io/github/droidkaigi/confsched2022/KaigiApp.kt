@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
+import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
@@ -72,6 +74,7 @@ fun KaigiApp(
                     kaigiAppScaffoldState::onTimeTableClick,
                 )
                 contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
             }
         }
     }
@@ -151,7 +154,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
 enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
-    About(R.string.title_about, Icons.Default.Android, ""),
+    About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
     Information(R.string.title_information, Icons.Default.Announcement, ""),
     Map(R.string.title_map, Icons.Default.Map, ""),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),

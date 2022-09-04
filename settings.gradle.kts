@@ -31,6 +31,7 @@ include(
     ":appioscombined",
     ":feature-sessions",
     ":feature-contributors",
+    ":feature-about",
     ":core-ui",
     ":core-designsystem",
     ":core-data",

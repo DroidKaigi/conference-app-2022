@@ -10,18 +10,10 @@ var package = Package(
         .iOS(.v15),
     ],
     products: [
-        .library(
-            name: "AppFeature",
-            targets: ["AppFeature"]
-        ),
-        .library(
-            name: "TimetableFeature",
-            targets: ["TimetableFeature"]
-        ),
-        .library(
-            name: "SessionFeature",
-            targets: ["SessionFeature"]
-        ),
+        .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "Assets", targets: ["Assets"]),
+        .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
+        .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "Theme", targets: ["Theme"]),
@@ -38,6 +30,16 @@ var package = Package(
                 .target(name: "SessionFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "Assets",
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .target(
@@ -76,6 +78,7 @@ var package = Package(
         .target(
             name: "TimetableFeature",
             dependencies: [
+                .target(name: "Assets"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
