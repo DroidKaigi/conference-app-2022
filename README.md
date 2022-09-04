@@ -29,7 +29,7 @@ Latest Android Studio **Android Studio Electric Eel | 2022.1.1 Canary 9** and hi
 
 This year's app pretty much takes the idea from [now in android](https://github.com/android/nowinandroid) and adds a lot of ideas to it.
 
-<img width="1111" alt="image" src="https://user-images.githubusercontent.com/1386930/188314420-3eb9f6f4-b38b-4523-a2cb-ebc87549e2d3.png">
+<img width="891" alt="image" src="https://user-images.githubusercontent.com/1386930/188314552-a12ff0bb-851e-465c-a51c-679a7c711e37.png">
 
 
 ### Configurable build logic
