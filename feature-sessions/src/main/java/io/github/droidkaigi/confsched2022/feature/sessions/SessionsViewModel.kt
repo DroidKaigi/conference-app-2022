@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
+import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.model.Filters
@@ -18,11 +19,11 @@ import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
@@ -38,7 +39,14 @@ class SessionsViewModel @Inject constructor(
         sessionsRepository.droidKaigiScheduleFlow(),
         ::Pair
     )
-        .map { (modifier, schedule) -> modifier(schedule) }
+        .map { (modifier, schedule) ->
+            try {
+                modifier(schedule)
+            } catch (e: Exception) {
+                Logger.d(throwable = e) { "Zipline modifier error" }
+                schedule
+            }
+        }
         .asResult()
 
     private val moleculeScope =

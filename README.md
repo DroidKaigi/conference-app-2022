@@ -237,6 +237,9 @@ class JsScheduleModifier() : ScheduleModifier {
 }
 ```
 
+You can check the manifest file to see how it works.
+https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
+
 
 ### LazyLayout
 

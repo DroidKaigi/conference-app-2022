@@ -6,7 +6,7 @@ import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
-import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -22,7 +22,7 @@ class DataSessionsRepository(
             e.printStackTrace()
         }
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
-            val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
+            val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toPersistentSet()
             trySend(
                 DroidKaigiSchedule.of(Timetable.fake().copy(favorites = favorites))
             )
