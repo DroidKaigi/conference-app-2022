@@ -1,4 +1,5 @@
 import appioscombined
+import Assets
 import ComposableArchitecture
 import Model
 import SwiftUI
@@ -63,45 +64,71 @@ public struct TimetableView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
-                HStack(spacing: 8) {
-                    ForEach(
-                        [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
-                    ) { day in
-                        let startDay = Calendar.current.component(.day, from: day.start.toDate())
-                        Button {
-                            viewStore.send(.selectDay(day))
-                        } label: {
-                            VStack(spacing: 0) {
-                                Text(day.name)
-                                    .font(Font.system(size: 12, weight: .semibold))
-                                Text("\(startDay)")
-                                    .font(Font.system(size: 24, weight: .semibold))
-                                    .frame(height: 32)
+            NavigationView {
+                VStack {
+                    HStack(spacing: 8) {
+                        ForEach(
+                            [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
+                        ) { day in
+                            let startDay = Calendar.current.component(.day, from: day.start.toDate())
+                            Button {
+                                viewStore.send(.selectDay(day))
+                            } label: {
+                                VStack(spacing: 0) {
+                                    Text(day.name)
+                                        .font(Font.system(size: 12, weight: .semibold))
+                                    Text("\(startDay)")
+                                        .font(Font.system(size: 24, weight: .semibold))
+                                        .frame(height: 32)
+                                }
+                                .padding(4)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    viewStore.selectedDay == day
+                                    ? AssetColors.secondaryContainer.swiftUIColor
+                                    : AssetColors.surface.swiftUIColor
+                                )
+                                .clipShape(Capsule())
                             }
-                            .padding(4)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                viewStore.selectedDay == day
-                                ? AssetColors.secondaryContainer.swiftUIColor
-                                : AssetColors.surface.swiftUIColor
-                            )
-                            .clipShape(Capsule())
                         }
                     }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
-                .foregroundColor(AssetColors.onSurface.swiftUIColor)
-                .background(AssetColors.surface.swiftUIColor)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
+                    .foregroundColor(AssetColors.onSurface.swiftUIColor)
+                    .background(AssetColors.surface.swiftUIColor)
 
-                TimetableSheetView(store: store)
+                    TimetableSheetView(store: store)
+                }
+                .task {
+                    await viewStore.send(.refresh).finish()
+                }
+                .foregroundColor(AssetColors.onBackground.swiftUIColor)
+                .background(AssetColors.background.swiftUIColor)
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Assets.colorfulLogo.swiftUIImage
+                    }
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Group {
+                            Button {
+                                // TODO: search
+                            } label: {
+                                Assets.search.swiftUIImage
+                                    .renderingMode(.template)
+                            }
+                            Button {
+                                // TODO: switch TimetableView
+                            } label: {
+                                Assets.calendar.swiftUIImage
+                                    .renderingMode(.template)
+                            }
+                        }
+                        .foregroundColor(AssetColors.onSurface.swiftUIColor)
+                    }
+
+                }
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .task {
-                await viewStore.send(.refresh).finish()
-            }
-            .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            .background(AssetColors.background.swiftUIColor)
         }
     }
 }
