@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,7 +57,6 @@ fun SessionsScreenRoot(
         uiModel = state,
         modifier = modifier,
         onTimetableClick = { onTimetableClick(it) },
-        onToggleFilter = { viewModel.onToggleFilter() },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
@@ -75,7 +73,6 @@ fun Sessions(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onToggleFilter: () -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onTodayClick: () -> Unit
@@ -99,10 +96,6 @@ fun Sessions(
                     WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
                 )
         ) {
-            Text(
-                text = "Filter is ${if (uiModel.isFilterOn) "ON" else "OFF"}",
-                modifier = Modifier.clickable(onClick = onToggleFilter)
-            )
             HorizontalPager(
                 count = days.size,
                 state = pagerState
@@ -218,7 +211,6 @@ fun SessionsPreview() {
             onNavigationIconClick = {},
             onFavoriteClick = { _, _ -> },
             onTimetableClick = {},
-            onToggleFilter = {},
             onSearchClick = {},
             onTodayClick = {},
         )
