@@ -48,7 +48,6 @@ fun TimetableDetailScreenRoot(
             timetableItemId = timetableItemId,
         )
     )
-Ta
     val uiModel by viewModel.uiModel
 
     TimetableDetailScreen(
