@@ -3,10 +3,10 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
-import javax.inject.Inject
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -22,45 +22,23 @@ class SessionsScreenTest {
         }
     }
 
+    // currently there are not favorite buttons
+    @Test
+    fun isNotFavoritedAtFirst() {
+        sessionScreenRobot(robotTestRule) {
+            clickToggleTimetable()
+            checkTimetableVisible()
+            checkFavoritedAt(index = 0, isFavorited = false)
+        }
+    }
+
     @Test
     fun canToggleFavorite() {
         sessionScreenRobot(robotTestRule) {
+            clickToggleTimetable()
             clickFavoriteAt(0)
             checkFavoritedAt(index = 0, isFavorited = true)
             checkFavoriteIsSavedAt(0)
         }
     }
-
-    // currently there are not favorite buttons
-//    @Test
-//    fun isNotFavoritedAtFirst() {
-//        sessionScreenRobot(robotTestRule) {
-//            checkTimetableVisible()
-//            checkFavoritedAt(index = 0, isFavorited = false)
-//        }
-//    }
-// Currently, there are not favorite buttons and filters in timetable
-//    @Test
-//    fun toggleIsOffAtFirst() {
-//        sessionScreenRobot(robotTestRule) {
-//            checkFilterIsOff()
-//        }
-//    }
-//
-//    @Test
-//    fun canFilterToggle() {
-//        sessionScreenRobot(robotTestRule) {
-//            checkFilterIsOff()
-//            toggleFilter()
-//            checkFilterIsOn()
-//        }
-//    }
-//    @Test
-//    fun canToggleFavorite() {
-//        sessionScreenRobot(robotTestRule) {
-//            clickFavoriteAt(0)
-//            checkFavoritedAt(index = 0, isFavorited = true)
-//            checkFavoriteIsSavedAt(0)
-//        }
-//    }
 }

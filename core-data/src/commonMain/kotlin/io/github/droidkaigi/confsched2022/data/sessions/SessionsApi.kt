@@ -113,7 +113,12 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         levels = apiSession.levels.toPersistentList(),
                     )
                 }
-            }.toPersistentList()
+            }
+                .sortedWith(
+                    compareBy<TimetableItem> { it.startsAt }
+                        .thenBy { it.room.sort }
+                )
+                .toPersistentList()
         )
     )
 }

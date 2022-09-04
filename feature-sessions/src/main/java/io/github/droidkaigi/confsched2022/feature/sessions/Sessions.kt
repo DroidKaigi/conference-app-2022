@@ -15,7 +15,10 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,22 +46,23 @@ fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
-    onTodayClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
+    var isTimetable by remember { mutableStateOf(true) }
 
     Sessions(
         uiModel = state,
         modifier = modifier,
+        isTimetable = isTimetable,
         onTimetableClick = { onTimetableClick(it) },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
         onNavigationIconClick = onNavigationIconClick,
         onSearchClick = onSearchClicked,
-        onTodayClick = onTodayClicked,
+        onToggleTimetableClick = { isTimetable = !isTimetable },
     )
 }
 
@@ -66,12 +70,13 @@ fun SessionsScreenRoot(
 @Composable
 fun Sessions(
     uiModel: SessionsUiModel,
+    isTimetable: Boolean,
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
-    onTodayClick: () -> Unit
+    onToggleTimetableClick: () -> Unit,
 ) {
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
@@ -83,7 +88,7 @@ fun Sessions(
                 scheduleState,
                 onNavigationIconClick,
                 onSearchClick,
-                onTodayClick
+                onToggleTimetableClick
             )
         }
     ) {
@@ -101,15 +106,25 @@ fun Sessions(
                 ) { dayIndex ->
                     val day = days[dayIndex]
                     val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-                    Timetable(timetable) { timetableItem, isFavorited ->
-                        TimetableItem(
-                            timetableItem = timetableItem,
-                            isFavorited = isFavorited,
-                            modifier = Modifier
-                                .clickable(
-                                    onClick = { onTimetableClick(timetableItem.id) }
-                                ),
-                        )
+                    if (isTimetable) {
+                        Timetable(timetable) { timetableItem, isFavorited ->
+                            TimetableItem(
+                                timetableItem = timetableItem,
+                                isFavorited = isFavorited,
+                                modifier = Modifier
+                                    .clickable(
+                                        onClick = { onTimetableClick(timetableItem.id) }
+                                    ),
+                            )
+                        }
+                    } else {
+                        SessionList(timetable) { timetableItem, isFavorited ->
+                            SessionListItem(
+                                timetableItem = timetableItem,
+                                isFavorited = isFavorited,
+                                onFavoriteClick = onFavoriteClick
+                            )
+                        }
                     }
                 }
             }
@@ -124,7 +139,7 @@ fun SessionsTopBar(
     scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onTodayClick: () -> Unit,
+    onToggleTimetableClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -141,17 +156,17 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_search
                         ),
-                        contentDescription = "Search icon in toolbar"
+                        contentDescription = "Search icon"
                     )
                 }
                 IconButton(
-                    onClick = onTodayClick
+                    onClick = onToggleTimetableClick
                 ) {
                     Icon(
                         painter = painterResource(
                             id = R.drawable.ic_today
                         ),
-                        contentDescription = "Search icon in toolbar"
+                        contentDescription = "Toggle timetable icon"
                     )
                 }
             }
@@ -203,7 +218,7 @@ private fun TabIndicator(
 
 @Preview(showBackground = true)
 @Composable
-fun SessionsPreview() {
+fun SessionsTimetablePreview() {
     KaigiTheme {
         Sessions(
             uiModel = SessionsUiModel(
@@ -211,10 +226,30 @@ fun SessionsPreview() {
                 isFilterOn = false
             ),
             onNavigationIconClick = {},
-            onFavoriteClick = { _, _ -> },
             onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
             onSearchClick = {},
-            onTodayClick = {},
+            onToggleTimetableClick = {},
+            isTimetable = true,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SessionsSessionListPreview() {
+    KaigiTheme {
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = Loaded(DroidKaigiSchedule.fake()),
+                isFilterOn = false
+            ),
+            onNavigationIconClick = {},
+            onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
+            onSearchClick = {},
+            onToggleTimetableClick = {},
+            isTimetable = false,
         )
     }
 }
