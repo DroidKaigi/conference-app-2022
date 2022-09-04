@@ -65,9 +65,9 @@ fun Timetable.Companion.fake(): Timetable {
             TimetableItem.Special(
                 id = TimetableItemId("1"),
                 title = MultiLangText("ウェルカムトーク", "Welcome Talk"),
-                startsAt = LocalDateTime.parse("2021-10-20T10:00:00")
+                startsAt = LocalDateTime.parse("2022-10-06T10:00:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                endsAt = LocalDateTime.parse("2021-10-20T10:20:00")
+                endsAt = LocalDateTime.parse("2022-10-06T10:20:00")
                     .toInstant(TimeZone.of("UTC+9")),
                 category = TimetableCategory(
                     id = 28657,
@@ -88,13 +88,13 @@ fun Timetable.Companion.fake(): Timetable {
             (0..20).forEach { index ->
                 val dayOffset = day * 24 * 60 * 60
                 val start = Instant.fromEpochSeconds(
-                    LocalDateTime.parse("2021-10-20T10:10:00")
+                    LocalDateTime.parse("2022-10-06T10:10:00")
                         .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
                 ).toLocalDateTime(
                     TimeZone.of("UTC+9")
                 )
                 val end = Instant.fromEpochSeconds(
-                    LocalDateTime.parse("2021-10-20T10:50:00")
+                    LocalDateTime.parse("2022-10-06T10:50:00")
                         .toInstant(TimeZone.of("UTC+9")).epochSeconds + index * 25 * 60 + dayOffset
                 ).toLocalDateTime(
                     TimeZone.of("UTC+9")
@@ -122,9 +122,9 @@ fun Timetable.Companion.fake(): Timetable {
             TimetableItem.Special(
                 id = TimetableItemId("3"),
                 title = MultiLangText("Closing", "Closing"),
-                startsAt = LocalDateTime.parse("2021-10-20T10:40:00")
+                startsAt = LocalDateTime.parse("2022-10-06T10:40:00")
                     .toInstant(TimeZone.of("UTC+9")),
-                endsAt = LocalDateTime.parse("2021-10-20T11:00:00")
+                endsAt = LocalDateTime.parse("2022-10-06T11:00:00")
                     .toInstant(TimeZone.of("UTC+9")),
                 category = TimetableCategory(
                     id = 28657,

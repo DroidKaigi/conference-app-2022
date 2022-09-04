@@ -156,7 +156,7 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_search
                         ),
-                        contentDescription = "Search icon in toolbar"
+                        contentDescription = "Search icon"
                     )
                 }
                 IconButton(
@@ -166,7 +166,7 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_today
                         ),
-                        contentDescription = "Search icon in toolbar"
+                        contentDescription = "Toggle timetable icon"
                     )
                 }
             }
