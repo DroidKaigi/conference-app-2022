@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -59,7 +60,13 @@ fun TimetableDetailScreen(
         return
     }
     val item = uiModel.timetableDetailState.timetableItem
-    KaigiScaffold(onNavigationIconClick = onNavigationIconClick) {
+    KaigiScaffold(
+        topBar = {
+            KaigiTopAppBar(
+                onNavigationIconClick = onNavigationIconClick,
+            )
+        }
+    ) {
         Column(
             modifier = modifier.verticalScroll(rememberScrollState())
         ) {
@@ -104,7 +111,7 @@ fun TimetableDetailSessionInfo(
     language: String,
     levels: PersistentList<String>,
 
-) {
+    ) {
     Column {
         Text(
             modifier = modifier,
