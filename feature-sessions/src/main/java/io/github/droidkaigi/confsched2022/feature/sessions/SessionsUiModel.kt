@@ -31,8 +31,6 @@ data class SessionsUiModel(
                         Loaded(scheduleResult.data)
                     }
                     is Result.Error -> {
-                        // TODO
-                        // SessionsState.Error
                         scheduleResult.exception?.let {
                             Logger.d(it) {
                                 "error"

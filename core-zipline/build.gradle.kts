@@ -81,7 +81,7 @@ val compileZipline by tasks.creating(JavaExec::class) {
     args = listOf(
         "$buildDir/compileSync/main/productionExecutable/kotlin",
         "$buildDir/zipline",
-        "io.github.droidkaigi.confsched2022.modifier.prepareModifiers"
+        "io.github.droidkaigi.confsched2022.zipline.prepareModifiers"
     )
 }
 

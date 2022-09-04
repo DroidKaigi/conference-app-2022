@@ -4,7 +4,7 @@ import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
-import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -15,7 +15,7 @@ class DataSessionsRepository(
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
         val timetable = sessionsApi.timetable()
         favoriteSessionsDataStore.favoriteSessionIds().collect { favoriteSessionIds ->
-            val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toImmutableSet()
+            val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toPersistentSet()
             trySend(
                 DroidKaigiSchedule.of(timetable.copy(favorites = favorites))
             )
