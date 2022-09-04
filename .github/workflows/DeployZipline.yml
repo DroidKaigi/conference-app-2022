@@ -15,7 +15,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      pages: read|write
+      pages: write
 
     steps:
       - name: Checkout
