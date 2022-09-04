@@ -40,3 +40,4 @@ include(
 
 // for iOS framework name
 project(":appioscombined").projectDir = file("app-ios-combined")
+include(":feature-about")
