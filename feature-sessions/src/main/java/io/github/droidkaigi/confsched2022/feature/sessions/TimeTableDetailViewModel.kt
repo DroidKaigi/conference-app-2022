@@ -29,7 +29,6 @@ class TimeTableDetailViewModel @Inject constructor(
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-
     private val timetableItemId: TimetableItemId =
         TimetableItemId(requireNotNull(savedStateHandle.get<String>("id")))
 
