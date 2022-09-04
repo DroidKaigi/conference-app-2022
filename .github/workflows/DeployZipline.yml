@@ -3,7 +3,7 @@ name: DeployZipline
 on:
   push:
     branches:
-      - main
+      - setup-deploy-zipline
 concurrency:
   group: deploy-zipline-${{ github.ref }}
   cancel-in-progress: true
@@ -15,6 +15,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pages: read|write
 
     steps:
       - name: Checkout
