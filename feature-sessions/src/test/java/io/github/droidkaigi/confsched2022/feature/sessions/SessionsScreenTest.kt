@@ -22,7 +22,6 @@ class SessionsScreenTest {
         }
     }
 
-    // currently there are not favorite buttons
     @Test
     fun isNotFavoritedAtFirst() {
         sessionScreenRobot(robotTestRule) {
