@@ -26,7 +26,7 @@ fun About(
             KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
         }
     ) {
-        Text("Here is About Screen")
+        Text("This is About Screen")
     }
 }
 
