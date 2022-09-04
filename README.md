@@ -248,8 +248,6 @@ https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 ### LazyLayout
 
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
-
-TODO: Screenshot
-
+<img src="https://user-images.githubusercontent.com/1386930/188336755-596d505e-cd62-4791-abdc-f32cbb4a39a7.png" width="250" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
