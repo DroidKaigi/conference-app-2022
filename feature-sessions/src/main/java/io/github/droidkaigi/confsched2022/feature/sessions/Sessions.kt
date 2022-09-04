@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,6 +82,7 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
+    val timetableState = rememberTimetableState()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
@@ -93,22 +95,17 @@ fun Sessions(
             )
         }
     ) {
-        val timetableState = rememberTimetableState()
-        val hoursList = listOf(
-            "10:00",
-            "11:00",
-            "12:00",
-            "13:00",
-            "14:00",
-            "15:00",
-            "16:00",
-            "17:00",
-            "18:00",
-            "19:00",
-        )
         Row(modifier = modifier) {
-            Hours(hoursList = hoursList, timetableState = timetableState) { modifier, hour ->
-                HoursItem(hour = hour, modifier = modifier)
+            Column(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+            ) {
+                Hours(
+                    timetableState = timetableState,
+                    modifier = modifier
+                ) { modifier, hour ->
+                    HoursItem(hour = hour, modifier = modifier)
+                }
             }
             Column(
                 modifier = Modifier
