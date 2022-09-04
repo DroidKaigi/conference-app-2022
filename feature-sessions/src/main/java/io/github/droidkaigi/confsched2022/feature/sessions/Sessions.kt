@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -92,38 +93,59 @@ fun Sessions(
             )
         }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(top = 4.dp)
-        ) {
-            if (scheduleState !is Loaded) {
-                CircularProgressIndicator()
-            } else {
-                val days = scheduleState.schedule.days
-                HorizontalPager(
-                    count = days.size,
-                    state = pagerState
-                ) { dayIndex ->
-                    val day = days[dayIndex]
-                    val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-                    if (isTimetable) {
-                        Timetable(timetable) { timetableItem, isFavorited ->
-                            TimetableItem(
-                                timetableItem = timetableItem,
-                                isFavorited = isFavorited,
-                                modifier = Modifier
-                                    .clickable(
-                                        onClick = { onTimetableClick(timetableItem.id) }
-                                    ),
-                            )
-                        }
-                    } else {
-                        SessionList(timetable) { timetableItem, isFavorited ->
-                            SessionListItem(
-                                timetableItem = timetableItem,
-                                isFavorited = isFavorited,
-                                onFavoriteClick = onFavoriteClick
-                            )
+        val timetableState = rememberTimetableState()
+        val hoursList = listOf(
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00",
+            "17:00",
+            "18:00",
+            "19:00",
+        )
+        Row(modifier = modifier) {
+            Hours(hoursList = hoursList, timetableState = timetableState) { modifier, hour ->
+                HoursItem(hour = hour, modifier = modifier)
+            }
+            Column(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+            ) {
+                if (scheduleState !is Loaded) {
+                    CircularProgressIndicator()
+                } else {
+                    val days = scheduleState.schedule.days
+                    HorizontalPager(
+                        count = days.size,
+                        state = pagerState
+                    ) { dayIndex ->
+                        val day = days[dayIndex]
+                        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+                        if (isTimetable) {
+                            Timetable(
+                                timetable = timetable,
+                                timetableState = timetableState
+                            ) { timetableItem, isFavorited ->
+                                TimetableItem(
+                                    timetableItem = timetableItem,
+                                    isFavorited = isFavorited,
+                                    modifier = Modifier
+                                        .clickable(
+                                            onClick = { onTimetableClick(timetableItem.id) }
+                                        ),
+                                )
+                            }
+                        } else {
+                            SessionList(timetable) { timetableItem, isFavorited ->
+                                SessionListItem(
+                                    timetableItem = timetableItem,
+                                    isFavorited = isFavorited,
+                                    onFavoriteClick = onFavoriteClick
+                                )
+                            }
                         }
                     }
                 }
