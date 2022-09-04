@@ -33,7 +33,7 @@ data class SessionsUiModel(
                     is Result.Error -> {
                         scheduleResult.exception?.let {
                             Logger.d(it) {
-                                "error"
+                                "scheduleResult error"
                             }
                         }
                         Loading
