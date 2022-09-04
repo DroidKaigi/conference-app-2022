@@ -7,13 +7,10 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.forEachGesture
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
@@ -28,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
@@ -36,8 +32,6 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
@@ -55,195 +49,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-
-data class TimetableState(
-    val screenScrollState: ScreenScrollState,
-    val density: Density,
-)
-
-@Composable
-fun rememberTimetableState(
-    screenScrollState: ScreenScrollState = rememberScreenScrollState(),
-    density: Density = LocalDensity.current,
-): TimetableState = remember {
-    TimetableState(
-        screenScrollState,
-        density
-    )
-}
-
-private data class HoursLayout(
-    val hours: List<String>,
-    val density: Density,
-) {
-    var hoursHeight = 0
-    var hoursWidth = 0
-    val minutePx = with(density) {
-        (4.23).dp.roundToPx()
-    }
-    val hoursLayouts = hours.mapIndexed { index, it ->
-        val hoursItemLayout = HoursItemLayout(
-            index = index,
-            density = density,
-            minutePx = minutePx
-        )
-        hoursHeight =
-            maxOf(hoursHeight, hoursItemLayout.bottom)
-        hoursWidth =
-            maxOf(hoursWidth, hoursItemLayout.width)
-        hoursItemLayout
-    }
-
-    fun visibleItemLayouts(
-        screenHeight: Int,
-        scrollY: Int
-    ): List<IndexedValue<HoursItemLayout>> {
-        return hoursLayouts.withIndex().filter { (_, layout) ->
-            layout.isVisible(screenHeight, scrollY)
-        }
-    }
-}
-
-@Composable
-fun HoursItem(
-    modifier: Modifier = Modifier,
-    hour: String
-) {
-    Text(
-        text = hour,
-        color = Color.White,
-        modifier = modifier,
-        textAlign = TextAlign.Center
-    )
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun Hours(
-    modifier: Modifier = Modifier,
-    timetableState: TimetableState,
-    content: @Composable (Modifier, String) -> Unit,
-) {
-    val itemProvider = itemProvider({ hoursList.size }) { index ->
-        content(modifier, hoursList[index])
-    }
-    val density = timetableState.density
-    val hoursLayout = remember(hoursList) {
-        HoursLayout(
-            hours = hoursList,
-            density = density,
-        )
-    }
-    val coroutineScope = rememberCoroutineScope()
-    val screenScroll = timetableState.screenScrollState
-    val hoursScreen = remember(hoursLayout, density) {
-        HoursScreen(
-            hoursLayout,
-            screenScroll,
-            density
-        )
-    }
-    val visibleItemLayouts by remember(hoursScreen) { hoursScreen.visibleItemLayouts }
-    val lineColor = MaterialTheme.colorScheme.surfaceVariant
-    val linePxSize = with(timetableState.density) { timeTableLineStrokeSize.toPx() }
-    val lineOffset = with(density) {
-        67.dp.roundToPx()
-    }
-    val lineEnd = with(density) {
-        hoursWidth.roundToPx()
-    }
-    LazyLayout(
-        modifier = modifier
-            .width(hoursWidth)
-            .clipToBounds()
-            .drawBehind {
-                hoursScreen.timeHorizontalLines.value.forEach {
-                    drawLine(
-                        lineColor,
-                        Offset(lineOffset.toFloat(), it),
-                        Offset(lineEnd.toFloat(), it),
-                        linePxSize
-                    )
-                }
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-//                        if (hoursScreen.enableHorizontalScroll(dragAmount.x)) {
-//                            if (change.positionChange() != Offset.Zero) change.consume()
-//                        }
-                        if (hoursScreen.enableVerticalScroll(dragAmount.y)) {
-                            if (change.positionChange() != Offset.Zero) change.consume()
-                        }
-                        coroutineScope.launch {
-                            hoursScreen.scroll(
-                                dragAmount,
-                                change.uptimeMillis,
-                                change.position
-                            )
-                        }
-                    },
-                    onDragCancel = {
-                        screenScroll.resetTracking()
-                    },
-                    onDragEnd = {
-                        coroutineScope.launch {
-                            screenScroll.flingIfPossible()
-                        }
-                    }
-                )
-            },
-        itemProvider = itemProvider
-    ) { constraint ->
-
-        data class ItemData(val placeable: Placeable, val hoursItem: HoursItemLayout)
-        hoursScreen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
-
-        val items = visibleItemLayouts.map { (index, hoursLayout) ->
-            ItemData(
-                placeable = measure(
-                    index,
-                    Constraints.fixed(
-                        width = hoursLayout.width,
-                        height = hoursLayout.height
-                    )
-                )[0],
-                hoursItem = hoursLayout
-            )
-        }
-        layout(constraint.maxWidth, constraint.maxHeight) {
-            items.forEach { (placable, hoursLayout) ->
-                placable.place(
-                    hoursLayout.left,
-//                    0,
-                    hoursLayout.top + hoursScreen.scrollState.scrollY.toInt()
-                )
-            }
-        }
-    }
-}
-
-@Preview(device = Devices.PIXEL_4)
-@Composable
-private fun TimetableWithHoursPreview(modifier: Modifier = Modifier) {
-    val timetable = Timetable.fake()
-    val timetableState = rememberTimetableState()
-    Row(modifier = modifier) {
-        Hours(
-            modifier = modifier,
-            timetableState = timetableState,
-        ) { modifier, hour ->
-            HoursItem(hour = hour, modifier = modifier)
-        }
-        Timetable(
-            modifier = modifier,
-            timetable = timetable,
-            timetableState = timetableState
-        ) { timetableItem, isFavorite ->
-            TimetableItem(timetableItem, isFavorite)
-        }
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -377,35 +182,6 @@ private fun itemProvider(
     }
 }
 
-private data class HoursItemLayout(
-    val density: Density,
-    val minutePx: Int,
-    val index: Int
-) {
-    val itemOffset = with(density) {
-        hoursItemTopOffset.roundToPx()
-    }
-    val height = minutePx * 60
-    val width = with(density) {
-        hoursWidth.roundToPx()
-    }
-    val left = 0
-    val top = index * height - itemOffset
-    val right = left + width
-    val bottom = top + height
-
-    fun isVisible(
-        screenHeight: Int,
-        scrollY: Int
-    ): Boolean {
-        val screenTop = -scrollY
-        val screenBottom = -scrollY + screenHeight
-        val yInside =
-            top in screenTop..screenBottom || bottom in screenTop..screenBottom
-        return yInside
-    }
-}
-
 private data class TimetableItemLayout(
     val timetableItem: TimetableItem,
     val rooms: List<TimetableRoom>,
@@ -487,6 +263,22 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
 }
 
 @Composable
+fun rememberTimetableState(
+    screenScrollState: ScreenScrollState = rememberScreenScrollState(),
+    density: Density = LocalDensity.current,
+): TimetableState = remember {
+    TimetableState(
+        screenScrollState,
+        density
+    )
+}
+
+data class TimetableState(
+    val screenScrollState: ScreenScrollState,
+    val density: Density,
+)
+
+@Composable
 fun rememberScreenScrollState(): ScreenScrollState = rememberSaveable(
     saver = ScreenScrollState.Saver
 ) {
@@ -566,94 +358,6 @@ class ScreenScrollState(
                 )
             }
         )
-    }
-}
-
-private class HoursScreen(
-    val hoursLayout: HoursLayout,
-    val scrollState: ScreenScrollState,
-    private val density: Density,
-) {
-    var width = 0
-        private set
-    var height = 0
-        private set
-
-    val visibleItemLayouts: State<List<IndexedValue<HoursItemLayout>>> =
-        derivedStateOf {
-            hoursLayout.visibleItemLayouts(
-                height,
-                scrollState.scrollY.toInt()
-            )
-        }
-
-    val timeHorizontalLines = derivedStateOf {
-        (0..10).map {
-            scrollState.scrollY + hoursLayout.minutePx * 60 * it
-        }
-    }
-
-    override fun toString(): String {
-        return "Screen(" +
-            "width=$width, " +
-            "height=$height, " +
-            "scroll=$scrollState, " +
-            "visibleItemLayouts=$visibleItemLayouts" +
-            ")"
-    }
-
-    suspend fun scroll(
-        dragAmount: Offset,
-        timeMillis: Long,
-        position: Offset,
-    ) {
-        val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.scroll(
-            Offset(0F, nextPossibleY),
-            timeMillis,
-            position
-        )
-    }
-
-    fun enableHorizontalScroll(dragX: Float): Boolean {
-        val nextPossibleX = calculatePossibleScrollX(dragX)
-        return (scrollState.maxX < nextPossibleX && nextPossibleX < 0f)
-    }
-
-    fun enableVerticalScroll(dragY: Float): Boolean {
-        val nextPossibleY = calculatePossibleScrollY(dragY)
-        return (scrollState.maxY < nextPossibleY && nextPossibleY < 0f)
-    }
-
-    fun updateBounds(width: Int, height: Int) {
-        this.width = width
-        this.height = height
-        scrollState.updateBounds(
-            maxX = if (width < hoursLayout.hoursWidth) {
-                -(hoursLayout.hoursWidth - width).toFloat()
-            } else {
-                0f
-            },
-            maxY = if (height < hoursLayout.hoursHeight) {
-                -(hoursLayout.hoursHeight - height).toFloat()
-            } else {
-                0f
-            }
-        )
-    }
-
-    private fun calculatePossibleScrollX(scrollX: Float): Float {
-        val currentValue = scrollState.scrollX
-        val nextValue = currentValue + scrollX
-        val maxScroll = scrollState.maxX
-        return maxOf(minOf(nextValue, 0f), maxScroll)
-    }
-
-    private fun calculatePossibleScrollY(scrollY: Float): Float {
-        val currentValue = scrollState.scrollY
-        val nextValue = currentValue + scrollY
-        val maxScroll = scrollState.maxY
-        return maxOf(minOf(nextValue, 0f), maxScroll)
     }
 }
 
@@ -794,22 +498,3 @@ private suspend fun PointerInputScope.detectDragGestures(
 
 private val timeTableLineStrokeSize = 1.dp
 private val timeTableColumnWidth = 192.dp
-
-private val hoursWidth = 75.dp
-private val hoursItemWidth = 43.dp
-private val hoursItemHeight = 24.dp
-private val hoursItemTopOffset = 11.dp
-private val hoursItemEndOffset = 16.dp
-private val hoursList = listOf(
-    "",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "",
-)
