@@ -45,8 +45,8 @@ class PreviewScreenshotTests {
     @get:Rule
     val paparazzi = Paparazzi(
         environment = detectEnvironment().copy(
-            platformDir = "${androidHome()}/platforms/android-32",
-            compileSdkVersion = 32
+            platformDir = "${androidHome()}/platforms/android-31",
+            compileSdkVersion = 31
         ),
         maxPercentDifference = 0.0,
     )
