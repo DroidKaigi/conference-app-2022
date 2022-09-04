@@ -55,7 +55,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
 data class TimetableState(
     val screenScrollState: ScreenScrollState,
@@ -678,8 +677,6 @@ private class TimetableScreen(
             )
         }
     val timeHorizontalLines = derivedStateOf {
-        val startTime = timetableLayout.dayStartTime ?: return@derivedStateOf listOf()
-        val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
             scrollState.scrollY + timetableLayout.minutePx * 60 * it
         }
