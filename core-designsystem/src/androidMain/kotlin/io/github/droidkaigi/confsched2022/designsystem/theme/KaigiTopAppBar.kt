@@ -11,12 +11,16 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.core.designsystem.R
 
@@ -25,6 +29,7 @@ import io.github.droidkaigi.confsched2022.core.designsystem.R
 fun KaigiTopAppBar(
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
     trailingIcons: (@Composable RowScope.() -> Unit)? = null,
 ) {
     SmallTopAppBar(
@@ -49,6 +54,11 @@ fun KaigiTopAppBar(
             ) {
                 Icon(imageVector = Icons.Default.Menu, "menu")
             }
-        }
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme
+                .colorScheme
+                .surfaceColorAtElevation(elevation)
+        )
     )
 }
