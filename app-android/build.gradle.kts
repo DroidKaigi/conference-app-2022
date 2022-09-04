@@ -73,6 +73,7 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreModel)
 
+    implementation(libs.composeMaterialIcons)
     implementation(libs.composeMaterial3WindowSizeClass)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.androidxStartup)

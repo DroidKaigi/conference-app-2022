@@ -16,22 +16,6 @@ class SessionsScreenTest {
     @Inject lateinit var sessionScreenRobot: SessionScreenRobot
 
     @Test
-    fun toggleIsOffAtFirst() {
-        sessionScreenRobot(robotTestRule) {
-            checkFilterIsOff()
-        }
-    }
-
-    @Test
-    fun canFilterToggle() {
-        sessionScreenRobot(robotTestRule) {
-            checkFilterIsOff()
-            toggleFilter()
-            checkFilterIsOn()
-        }
-    }
-
-    @Test
     fun visibleTimetable() {
         sessionScreenRobot(robotTestRule) {
             checkTimetableVisible()
@@ -46,7 +30,22 @@ class SessionsScreenTest {
         }
     }
 
-// Currently, there are not favorite buttons in timetable
+// Currently, there are not favorite buttons and filters in timetable
+//    @Test
+//    fun toggleIsOffAtFirst() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkFilterIsOff()
+//        }
+//    }
+//
+//    @Test
+//    fun canFilterToggle() {
+//        sessionScreenRobot(robotTestRule) {
+//            checkFilterIsOff()
+//            toggleFilter()
+//            checkFilterIsOn()
+//        }
+//    }
 //    @Test
 //    fun canToggleFavorite() {
 //        sessionScreenRobot(robotTestRule) {
