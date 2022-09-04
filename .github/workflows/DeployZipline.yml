@@ -3,7 +3,7 @@ name: DeployZipline
 on:
   push:
     branches:
-      - setup-deploy-zipline
+      - main
 concurrency:
   group: deploy-zipline-${{ github.ref }}
   cancel-in-progress: true
