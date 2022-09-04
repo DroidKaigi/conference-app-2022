@@ -44,3 +44,9 @@ _sandbox
 # Android Studio captures folder
 captures/
 Footer
+
+# Zipline
+kotlin-js-store/
+
+# Screenshot
+preview-screenshots/
