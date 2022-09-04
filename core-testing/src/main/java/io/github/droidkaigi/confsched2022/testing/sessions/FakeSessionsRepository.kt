@@ -3,7 +3,6 @@ package io.github.droidkaigi.confsched2022.testing.sessions
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
-import io.github.droidkaigi.confsched2022.model.Timetable.Companion
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
