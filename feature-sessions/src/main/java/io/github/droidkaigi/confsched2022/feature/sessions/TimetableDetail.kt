@@ -12,12 +12,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
@@ -31,6 +36,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
+import javax.inject.Inject
 
 @Composable
 fun TimetableDetailScreenRoot(
@@ -38,12 +44,18 @@ fun TimetableDetailScreenRoot(
     timetableItemId: TimetableItemId,
     onNavigationIconClick: () -> Unit = {}
 ) {
-    // TODO　ViewModel's Inject
-    // Find TimeTableItem by id
-    val uiModel = Session.fake()
+
+    val viewModel by viewModel<TimeTableDetailViewModel>(
+        factory = TimeTableDetailViewModel.provideFactory(
+            assistedFactory = viewModelFactory,
+            timetableItemId = timetableItemId,
+        )
+    )
+Ta
+    val uiModel by viewModel.uiModel
 
     TimetableDetailScreen(
-        uiModel = TimeTableDetailUiModel(Loaded(uiModel))
+        uiModel = uiModel
     )
 
     // TODO BottomNavigationView

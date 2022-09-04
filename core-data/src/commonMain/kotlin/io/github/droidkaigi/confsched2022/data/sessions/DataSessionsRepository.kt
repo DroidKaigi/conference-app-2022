@@ -4,6 +4,7 @@ import io.github.droidkaigi.confsched2022.data.UserDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.toImmutableSet
@@ -40,4 +41,11 @@ class DataSessionsRepository(
             favoriteSessionsDataStore.removeFavorite(sessionId.value)
         }
     }
+
+    override fun timetableItemFlow(timetableItemId: TimetableItemId): Flow<TimetableItem> =
+        callbackFlow {
+            sessionsApi.timetableItem(timetableItemId).collect {
+                trySend(it)
+            }
+        }
 }

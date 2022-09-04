@@ -14,7 +14,10 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
+import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -28,6 +31,11 @@ class SessionsApi(
         return Timetable()
 //        networkService.get<>()
 //        return TODO()
+    }
+
+    fun timetableItem(timetableItemId: TimetableItemId): Flow<TimetableItem> {
+        // TODO from Server
+        return flowOf(Timetable.Companion.fake().timetableItems.first { it.id == timetableItemId })
     }
 }
 
