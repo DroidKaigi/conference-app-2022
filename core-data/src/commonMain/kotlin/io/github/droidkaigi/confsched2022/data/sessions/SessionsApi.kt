@@ -24,10 +24,12 @@ class SessionsApi(
     private val networkService: NetworkService,
 ) {
     suspend fun timetable(): Timetable {
-        networkService.checkAuth()
-        return Timetable()
-//        networkService.get<>()
-//        return TODO()
+        return networkService
+            .get<SessionAllResponse>(
+                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
+                needAuth = true
+            )
+            .toTimetable()
     }
 }
 
@@ -45,7 +47,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 TimetableSpeaker(
                     name = apiSpeaker.fullName,
                     bio = apiSpeaker.bio,
-                    iconUrl = apiSpeaker.profilePicture,
+                    iconUrl = apiSpeaker.profilePicture.orEmpty(),
                     tagLine = apiSpeaker.tagLine,
                 )
             }.first()

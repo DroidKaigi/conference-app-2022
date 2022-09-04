@@ -25,16 +25,18 @@ data class SessionsUiModel(
             fun of(scheduleResult: Result<DroidKaigiSchedule>): ScheduleState {
                 return when (scheduleResult) {
                     Result.Loading -> {
-                        ScheduleState.Loading
+                        Loading
                     }
                     is Result.Success -> {
-                        ScheduleState.Loaded(scheduleResult.data)
+                        Loaded(scheduleResult.data)
                     }
                     is Result.Error -> {
                         scheduleResult.exception?.let {
-                            Logger.d("Error", it)
+                            Logger.d(it) {
+                                "error"
+                            }
                         }
-                        ScheduleState.Loading
+                        Loading
                     }
                 }
             }

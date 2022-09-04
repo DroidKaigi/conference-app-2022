@@ -14,15 +14,16 @@ data class ContributorsUiModel(
         object Loading : ContributorsState
 
         companion object {
-            fun of(scheduleResult: Result<PersistentList<Contributor>>): ContributorsState {
-                return when (scheduleResult) {
+            fun of(contributorResult: Result<PersistentList<Contributor>>): ContributorsState {
+                return when (contributorResult) {
                     Result.Loading -> {
                         Loading
                     }
                     is Result.Success -> {
-                        Loaded(scheduleResult.data)
+                        Loaded(contributorResult.data)
                     }
-                    else -> {
+                    is Result.Error -> {
+                        contributorResult.exception?.printStackTrace()
                         // TODO
                         // SessionsState.Error
                         Loading

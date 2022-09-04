@@ -5,7 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.droidkaigi.confsched2022.data.NetworkService
-import io.github.droidkaigi.confsched2022.data.contributors.FakeContributorsRepository
+import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
+import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import javax.inject.Singleton
 
@@ -15,9 +16,15 @@ class ContributorDataModule {
 
     @Provides
     @Singleton
+    fun provideContributorsApi(networkService: NetworkService): ContributorsApi {
+        return ContributorsApi(networkService)
+    }
+
+    @Provides
+    @Singleton
     fun provideContributorsRepository(
-        networkService: NetworkService,
+        contributorsApi: ContributorsApi
     ): ContributorsRepository {
-        return FakeContributorsRepository()
+        return DataContributorsRepository(contributorsApi)
     }
 }
