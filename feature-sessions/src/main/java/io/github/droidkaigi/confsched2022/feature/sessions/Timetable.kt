@@ -190,14 +190,16 @@ private data class TimetableItemLayout(
     val minutePx: Int
 ) {
     val dayStart = when (timetableItem.day) {
-        Day1 -> LocalDateTime.parse("2022-10-05T09:00:00")
+        Day1 -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
-        Day2 -> LocalDateTime.parse("2022-10-06T09:00:00")
+        Day2 -> LocalDateTime.parse("2022-10-06T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
-        Day3 -> Day3.start
-        else -> LocalDateTime.parse("2022-10-05T09:00:00")
+        Day3 -> LocalDateTime.parse("2022-10-07T10:00:00")
+            .toInstant(TimeZone.of("UTC+9"))
+        else -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     }
+    val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) {
@@ -205,7 +207,7 @@ private data class TimetableItemLayout(
     }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStart)
-        .inWholeMinutes.toInt() * minutePx
+        .inWholeMinutes.toInt() * minutePx + topOffset
     val right = left + width
     val bottom = top + height
 
@@ -380,9 +382,10 @@ private class TimetableScreen(
                 scrollState.scrollY.toInt()
             )
         }
+    val topOffset = with(density) { 16.dp.roundToPx() }
     val timeHorizontalLines = derivedStateOf {
         (0..10).map {
-            scrollState.scrollY + timetableLayout.minutePx * 60 * it
+            scrollState.scrollY + timetableLayout.minutePx * 60 * it + topOffset
         }
     }
     val roomVerticalLines = derivedStateOf {
@@ -498,3 +501,4 @@ private suspend fun PointerInputScope.detectDragGestures(
 
 private val timeTableLineStrokeSize = 1.dp
 private val timeTableColumnWidth = 192.dp
+private val horizontalLineTopOffset = 16.dp

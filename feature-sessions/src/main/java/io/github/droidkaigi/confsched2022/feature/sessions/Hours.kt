@@ -75,12 +75,8 @@ fun Hours(
     val visibleItemLayouts by remember(hoursScreen) { hoursScreen.visibleItemLayouts }
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
     val linePxSize = with(timetableState.density) { lineStrokeSize.toPx() }
-    val lineOffset = with(density) {
-        67.dp.roundToPx()
-    }
-    val lineEnd = with(density) {
-        hoursWidth.roundToPx()
-    }
+    val lineOffset = with(density) { 67.dp.roundToPx() }
+    val lineEnd = with(density) { hoursWidth.roundToPx() }
     LazyLayout(
         modifier = modifier
             .width(hoursWidth)
@@ -157,9 +153,7 @@ private data class HoursLayout(
 ) {
     var hoursHeight = 0
     var hoursWidth = 0
-    val minutePx = with(density) {
-        (4.23).dp.roundToPx()
-    }
+    val minutePx = with(density) { (4.23).dp.roundToPx() }
     val hoursLayouts = hours.mapIndexed { index, it ->
         val hoursItemLayout = HoursItemLayout(
             index = index,
@@ -188,15 +182,12 @@ private data class HoursItemLayout(
     val minutePx: Int,
     val index: Int
 ) {
-    val itemOffset = with(density) {
-        hoursItemTopOffset.roundToPx()
-    }
+    val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
+    val itemOffset = with(density) { hoursItemTopOffset.roundToPx() }
     val height = minutePx * 60
-    val width = with(density) {
-        hoursWidth.roundToPx()
-    }
+    val width = with(density) { hoursWidth.roundToPx() }
     val left = 0
-    val top = index * height - itemOffset
+    val top = index * height + topOffset - itemOffset
     val right = left + width
     val bottom = top + height
 
@@ -230,9 +221,10 @@ private class HoursScreen(
             )
         }
 
+    val offset = with(density) { horizontalLineTopOffset.roundToPx() }
     val timeHorizontalLines = derivedStateOf {
         (0..10).map {
-            scrollState.scrollY + hoursLayout.minutePx * 60 * it
+            scrollState.scrollY + hoursLayout.minutePx * 60 * it + offset
         }
     }
 
@@ -354,13 +346,13 @@ private suspend fun PointerInputScope.detectDragGestures(
 }
 
 private val lineStrokeSize = 1.dp
+private val horizontalLineTopOffset = 16.dp
 private val hoursWidth = 75.dp
 private val hoursItemWidth = 43.dp
 private val hoursItemHeight = 24.dp
 private val hoursItemTopOffset = 11.dp
 private val hoursItemEndOffset = 16.dp
 private val hoursList = listOf(
-    "",
     "10:00",
     "11:00",
     "12:00",
@@ -370,5 +362,5 @@ private val hoursList = listOf(
     "16:00",
     "17:00",
     "18:00",
-    "",
+    "19:00",
 )
