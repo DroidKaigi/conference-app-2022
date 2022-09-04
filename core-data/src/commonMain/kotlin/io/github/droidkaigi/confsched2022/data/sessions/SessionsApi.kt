@@ -47,7 +47,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 TimetableSpeaker(
                     name = apiSpeaker.fullName,
                     bio = apiSpeaker.bio,
-                    iconUrl = apiSpeaker.profilePicture,
+                    iconUrl = apiSpeaker.profilePicture.orEmpty(),
                     tagLine = apiSpeaker.tagLine,
                 )
             }.first()
