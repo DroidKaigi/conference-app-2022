@@ -97,7 +97,7 @@ val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
 
 #### Make test scalable by using robot testing pattern
 
-Separate the test into what and how.
+In this project, tests are separated into what and how.
 This makes the tests scalable, as there is no need to rewrite many tests when the Compose mechanism, layout, etc. changes.
 
 The test describes what is to be tested.
@@ -121,7 +121,7 @@ class SessionsScreenTest {
 }
 ```
 
-Robot describes how to test it. It therefore contains implementation details. 
+Robot describes how to test it. It therefore contains implementation details. There is no need to look at this code when adding tests on a regular basis.
 
 ```kotlin
 class SessionScreenRobot @Inject constructor() {
@@ -146,8 +146,6 @@ class SessionScreenRobot @Inject constructor() {
             useUnmergedTree = true
         )
     }
-
-    private fun DroidKaigiSchedule.itemAt(index: Int): TimetableItem {
 ...
 ```
 
@@ -155,9 +153,7 @@ class SessionScreenRobot @Inject constructor() {
 #### Create a test with high fidelity without making it flaky
 
 In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
-We also use the Robot testing pattern to separate the how and what of testing, making it scalable.
-
-We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.
+We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.　　
 The test basically uses the actual dependencies and Fake the Repository, which is the point of contact with the outside world.
 
 ```kotlin
@@ -245,7 +241,7 @@ class JsScheduleModifier() : ScheduleModifier {
 }
 ```
 
-You can check the manifest file to see how it works.
+You can check the manifest file to see how it works.　　
 https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 
 
