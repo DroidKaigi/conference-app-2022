@@ -54,7 +54,6 @@ class SessionScreenRobot @Inject constructor() {
             .performClick()
     }
 
-
     context(RobotTestRule)
     fun clickFavoriteAt(index: Int) {
         composeTestRule
