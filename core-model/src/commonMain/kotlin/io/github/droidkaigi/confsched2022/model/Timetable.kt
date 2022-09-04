@@ -3,8 +3,7 @@
 )
 
 package io.github.droidkaigi.confsched2022.model
-
-import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,7 +18,7 @@ import kotlinx.serialization.UseSerializers
 @Serializable
 data class Timetable(
     val timetableItems: TimetableItemList = TimetableItemList(),
-    val favorites: ImmutableSet<TimetableItemId> = persistentSetOf(),
+    val favorites: PersistentSet<TimetableItemId> = persistentSetOf(),
 ) {
     val contents by lazy {
         timetableItems.map {
