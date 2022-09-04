@@ -24,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
@@ -41,7 +42,9 @@ class SessionsViewModel @Inject constructor(
     )
         .map { (modifier, schedule) ->
             try {
-                modifier(schedule)
+                withTimeout(100) {
+                    modifier(schedule)
+                }
             } catch (e: Exception) {
                 Logger.d(throwable = e) { "Zipline modifier error" }
                 schedule

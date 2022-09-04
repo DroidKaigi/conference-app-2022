@@ -41,7 +41,7 @@ fun SessionListItem(
             .semantics { contentDescription = "isFavorited$isFavorited" },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1F)) {
             Text(
                 text = timetableItem.title.currentLangTitle,
                 color = Color.White,

@@ -15,12 +15,6 @@ import kotlinx.coroutines.TimeoutCancellationException
 
 class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
 
-    // FIXME: delete me
-
-    suspend fun checkAuth() {
-        authApi.authIfNeeded()
-    }
-
     suspend inline fun <reified T : Any> get(
         url: String,
         needAuth: Boolean = false,
