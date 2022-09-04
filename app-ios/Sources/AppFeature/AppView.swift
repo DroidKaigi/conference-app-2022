@@ -1,6 +1,8 @@
+import appioscombined
 import AboutFeature
 import Assets
 import ComposableArchitecture
+import Container
 import ContributorFeature
 import NotificationFeature
 import MapFeature
@@ -70,7 +72,27 @@ public enum AppAction {
 }
 
 public struct AppEnvironment {
-    public init() {}
+    public let contributorsRepository: ContributorsRepository
+    public let sessionsRepository: SessionsRepository
+
+    public init(
+        contributorsRepository: ContributorsRepository,
+        sessionsRepository: SessionsRepository
+    ) {
+        self.contributorsRepository = contributorsRepository
+        self.sessionsRepository = sessionsRepository
+    }
+}
+
+public extension AppEnvironment {
+    static var client: Self {
+        let container = DIContainer()
+
+        return .init(
+            contributorsRepository: container.get(type: ContributorsRepository.self),
+            sessionsRepository: container.get(type: SessionsRepository.self)
+        )
+    }
 }
 
 public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
@@ -300,7 +322,7 @@ struct AppView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AppEnvironment()
+                environment: AppEnvironment.client
             )
         )
     }

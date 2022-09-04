@@ -39,8 +39,10 @@ var package = Package(
         .target(
             name: "AppFeature",
             dependencies: [
+                .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
                 .target(name: "Assets"),
+                .target(name: "Container"),
                 .target(name: "ContributorFeature"),
                 .target(name: "MapFeature"),
                 .target(name: "NotificationFeature"),

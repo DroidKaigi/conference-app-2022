@@ -4,9 +4,10 @@ import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import kotlinx.cinterop.ObjCProtocol
 import kotlinx.cinterop.getOriginalKotlinClass
+import org.koin.core.KoinApplication
 
-fun initKoin() {
-    startKoin {
+fun initKoin(): KoinApplication {
+    return startKoin {
         modules(dataModule)
     }
 }
