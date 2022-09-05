@@ -51,14 +51,9 @@ fun SessionListItem(
             )
 
             Row {
-                KaigiTag(
-                    text = roomName.enTitle,
-                    backgroundColor = roomColor
-                )
+                KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
                 Spacer(modifier = Modifier.width(8.dp))
-                KaigiTag(
-                    text = timetableItem.minutesString,
-                )
+                KaigiTag { Text(timetableItem.minutesString) }
             }
         }
         IconButton(
