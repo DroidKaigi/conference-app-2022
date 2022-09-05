@@ -34,6 +34,7 @@ This year's app pretty much takes the idea from [now in android](https://github.
 
 ### Configurable build logic
 The build logic uses a division similar to that used in module division, such as feature-xxx and core-xxx.
+In this way, plugins are configurable.
 
 Two types of build plugins are included.
 
@@ -54,7 +55,6 @@ plugins {
 * Convention plugins
 
 The Convention plugin for this project is written by combining several primitive plugins.   
-In this way, the plugin is configurable.
 
 ```kotlin
 class AndroidFeaturePlugin : Plugin<Project> {
@@ -156,6 +156,9 @@ In this project, we will use Hilt in the JVM for integration testing to avoid de
 We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.　　
 The test basically uses the actual dependencies and Fake the Repository, which is the point of contact with the outside world.
 
+<img width="666" alt="image" src="https://user-images.githubusercontent.com/1386930/188339262-25092e16-3a19-435f-a241-3e63ba828e15.png">
+
+
 ```kotlin
 @TestInstallIn(
     components = [SingletonComponent::class],
@@ -248,6 +251,8 @@ https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 ### LazyLayout
 
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
+
+
 <img src="https://user-images.githubusercontent.com/1386930/188336755-596d505e-cd62-4791-abdc-f32cbb4a39a7.png" width="250" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
