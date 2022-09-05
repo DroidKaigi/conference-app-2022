@@ -27,6 +27,7 @@ fun HttpClientConfig<*>.defaultKtorConfig(
     }
     install(HttpTimeout) {
         requestTimeoutMillis = 30000
+        socketTimeoutMillis = 30000
     }
 
     defaultRequest {
