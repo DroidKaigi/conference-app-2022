@@ -18,9 +18,10 @@ You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
 
 ### Contributing
-We always welcome any and all contributions! See CONTRIBUTING.md for more information
 
-For Japanese speakers, please see CONTRIBUTING.ja.md
+We always welcome any and all contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information
+
+For Japanese speakers, please see [CONTRIBUTING.ja.md](CONTRIBUTING.ja.md)
 
 ## Requirements
 
