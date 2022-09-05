@@ -145,8 +145,7 @@ fun SessionDetailSessionInfo(
     category: TimetableCategory,
     language: String,
     levels: PersistentList<String>,
-
-    ) {
+) {
     Column {
         Text(
             modifier = modifier,
