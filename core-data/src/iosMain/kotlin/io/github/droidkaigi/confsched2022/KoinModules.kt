@@ -6,17 +6,17 @@ import com.russhwolf.settings.coroutines.toFlowSettings
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
+import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
+import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.DataSessionsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsApi
-import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
-import io.github.droidkaigi.confsched2022.model.ContributorsRepository
-import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
+import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import platform.Foundation.NSUserDefaults
 
@@ -38,4 +38,3 @@ val dataModule = module {
     singleOf(::DataContributorsRepository) bind ContributorsRepository::class
     singleOf(::DataSessionsRepository) bind SessionsRepository::class
 }
-
