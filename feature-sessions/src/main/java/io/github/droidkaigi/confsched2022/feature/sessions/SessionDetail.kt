@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,9 +49,12 @@ fun SessionDetailScreenRoot(
     val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
-    SessionDetailScreen(uiModel = uiModel)
-
-    // TODO BottomNavigationView
+    SessionDetailScreen(
+        uiModel = uiModel,
+        onFavoriteClick = { currentFavorite ->
+            viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
+        }
+    )
 }
 
 @Composable
@@ -55,17 +62,42 @@ fun SessionDetailScreen(
     modifier: Modifier = Modifier,
     uiModel: SessionDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
+    onFavoriteClick: (Boolean) -> Unit = {},
 ) {
     if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
         return
     }
-    val (item, isFavorite) = uiModel.sessionDetailState.timetableItemWithFavorite
+    val (item, isFavorited) = uiModel.sessionDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
                 onNavigationIconClick = onNavigationIconClick,
             )
+        },
+        bottomBar = {
+            BottomAppBar {
+                Row {
+                    Spacer(modifier = Modifier.weight(1F))
+                    FloatingActionButton(
+                        onClick = {
+                            onFavoriteClick(isFavorited)
+                        }
+                    ) {
+                        if (isFavorited) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                                contentDescription = "favorited"
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bookmark),
+                                contentDescription = "not favorited"
+                            )
+                        }
+                    }
+                }
+            }
         }
     ) {
         Column(
