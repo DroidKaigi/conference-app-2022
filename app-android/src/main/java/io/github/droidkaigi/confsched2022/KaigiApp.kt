@@ -117,7 +117,7 @@ fun KaigiAppDrawer(
 
 @OptIn(ExperimentalMaterial3Api::class)
 class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
-    val coroutineScope: CoroutineScope,
+  val coroutineScope: CoroutineScope,
     val navController: NavHostController,
     val drawerState: DrawerState,
 ) {
