@@ -14,6 +14,9 @@
 
 TBD
 
+You can download apk from the GitHub Artifact.
+https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
+
 ### Contributing
 We always welcome any and all contributions! See CONTRIBUTING.md for more information
 
@@ -21,7 +24,7 @@ For Japanese speakers, please see CONTRIBUTING.ja.md
 
 ## Requirements
 
-Latest Android Studio **Android Studio Electric Eel | 2022.1.1 Canary 9** and higher. You can download it from [this page](https://developer.android.com/studio/preview).
+Latest Android Studio **Electric Eel** and higher. You can download it from [this page](https://developer.android.com/studio/preview).
 [iOS Requirements](app-ios/README.md)
 
 ## Tech Stacks
@@ -252,6 +255,6 @@ https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
 
 
-<img src="https://user-images.githubusercontent.com/1386930/188336755-596d505e-cd62-4791-abdc-f32cbb4a39a7.png" width="250" />
+<img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
