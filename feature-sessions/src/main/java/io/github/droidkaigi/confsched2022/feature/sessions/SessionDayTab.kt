@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +32,7 @@ internal fun SessionDayTab(
         selected = selected,
         onClick = { onTabClicked(index) },
         modifier = Modifier.height(56.dp).clip(CircleShape)
+            .clipToBounds()
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
