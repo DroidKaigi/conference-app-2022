@@ -84,13 +84,13 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
-    val listStates = DroidKaigi2022Day.values().map { rememberLazyListState() } .toList()
+    val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
                 pagerState,
-                listStates,
+                if (isTimetable) null else sessionsListListStates,
                 scheduleState,
                 onNavigationIconClick,
                 onSearchClick,
@@ -116,7 +116,7 @@ fun Sessions(
                 } else {
                     SessionsList(
                         pagerState = pagerState,
-                        listStates = listStates,
+                        sessionsListListStates = sessionsListListStates,
                         scheduleState = scheduleState,
                         days = days,
                         onFavoriteClick = onFavoriteClick
@@ -175,7 +175,7 @@ fun Timetable(
 @Composable
 fun SessionsList(
     pagerState: PagerState,
-    listStates: List<LazyListState>,
+    sessionsListListStates: List<LazyListState>,
     scheduleState: Loaded,
     days: Array<DroidKaigi2022Day>,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -186,7 +186,7 @@ fun SessionsList(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        SessionList(timetable, listStates[dayIndex]) { timetableItem, isFavorited ->
+        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited ->
             SessionListItem(
                 timetableItem = timetableItem,
                 isFavorited = isFavorited,
@@ -200,7 +200,7 @@ fun SessionsList(
 @Composable
 fun SessionsTopBar(
     pagerState: PagerState,
-    listStates: List<LazyListState>,
+    sessionsListListStates: List<LazyListState>?,
     scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
@@ -261,7 +261,9 @@ fun SessionsTopBar(
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
                                 if (selected) {
-                                    listStates[index].scrollToItem(index = 0)
+                                    sessionsListListStates?.let {
+                                        sessionsListListStates[index].scrollToItem(index = 0)
+                                    }
                                 }
                             }
                         }

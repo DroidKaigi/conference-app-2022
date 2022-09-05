@@ -14,14 +14,14 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 @Composable
 fun SessionList(
     timetable: Timetable,
-    listState: LazyListState,
+    sessionsListListState: LazyListState,
     modifier: Modifier = Modifier,
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(32.dp),
-        state = listState
+        state = sessionsListListState
     ) {
         items(timetable.contents, key = { it.timetableItem.id.value }) {
             content(
