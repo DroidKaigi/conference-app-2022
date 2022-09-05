@@ -1,8 +1,6 @@
-# DroidKaigi 2022 official app
-
 ![DroidKaigi 2022 logo](https://user-images.githubusercontent.com/1386930/188439339-eb5221fa-51cb-4273-9036-39a6f6da7d84.png)
 
-
+# DroidKaigi 2022 official app
 
 [DroidKaigi 2022](https://droidkaigi.jp/2022/) will be held from October 5 to October 7, 2022. We are developing its application. Let's develop the app together and make it exciting.
 
