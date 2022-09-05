@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
@@ -100,34 +102,90 @@ fun Sessions(
                 CircularProgressIndicator()
             } else {
                 val days = scheduleState.schedule.days
-                HorizontalPager(
-                    count = days.size,
-                    state = pagerState
-                ) { dayIndex ->
-                    val day = days[dayIndex]
-                    val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-                    if (isTimetable) {
-                        Timetable(timetable) { timetableItem, isFavorited ->
-                            TimetableItem(
-                                timetableItem = timetableItem,
-                                isFavorited = isFavorited,
-                                modifier = Modifier
-                                    .clickable(
-                                        onClick = { onTimetableClick(timetableItem.id) }
-                                    ),
-                            )
-                        }
-                    } else {
-                        SessionList(timetable) { timetableItem, isFavorited ->
-                            SessionListItem(
-                                timetableItem = timetableItem,
-                                isFavorited = isFavorited,
-                                onFavoriteClick = onFavoriteClick
-                            )
-                        }
-                    }
+                if (isTimetable) {
+                    Timetable(
+                        pagerState = pagerState,
+                        scheduleState = scheduleState,
+                        days = days,
+                        onTimetableClick = onTimetableClick
+                    )
+                } else {
+                    SessionsList(
+                        pagerState = pagerState,
+                        scheduleState = scheduleState,
+                        days = days,
+                        onFavoriteClick = onFavoriteClick
+                    )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun Timetable(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    scheduleState: Loaded,
+    days: Array<DroidKaigi2022Day>,
+    onTimetableClick: (TimetableItemId) -> Unit,
+) {
+    HorizontalPager(
+        count = days.size,
+        state = pagerState
+    ) { dayIndex ->
+        val day = days[dayIndex]
+        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+        val timetableState = rememberTimetableState()
+        val coroutineScope = rememberCoroutineScope()
+
+        Row(modifier = modifier) {
+            Hours(
+                timetableState = timetableState,
+                modifier = modifier,
+            ) { modifier, hour ->
+                HoursItem(hour = hour, modifier = modifier)
+            }
+
+            Timetable(
+                timetable = timetable,
+                timetableState = timetableState,
+                coroutineScope,
+            ) { timetableItem, isFavorited ->
+                TimetableItem(
+                    timetableItem = timetableItem,
+                    isFavorited = isFavorited,
+                    modifier = Modifier
+                        .clickable(
+                            onClick = { onTimetableClick(timetableItem.id) }
+                        ),
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SessionsList(
+    pagerState: PagerState,
+    scheduleState: Loaded,
+    days: Array<DroidKaigi2022Day>,
+    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+) {
+    HorizontalPager(
+        count = days.size,
+        state = pagerState
+    ) { dayIndex ->
+        val day = days[dayIndex]
+        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+        SessionList(timetable) { timetableItem, isFavorited ->
+            SessionListItem(
+                timetableItem = timetableItem,
+                isFavorited = isFavorited,
+                onFavoriteClick = onFavoriteClick
+            )
         }
     }
 }
