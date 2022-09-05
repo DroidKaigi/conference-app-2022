@@ -1,26 +1,30 @@
 # DroidKaigi 2022 official app
 
-## Development
+![DroidKaigi 2022 logo](https://user-images.githubusercontent.com/1386930/188439339-eb5221fa-51cb-4273-9036-39a6f6da7d84.png)
 
-### Features
+
+
+[DroidKaigi 2022](https://droidkaigi.jp/2022/) will be held from October 5 to October 7, 2022. We are developing its application. Let's develop the app together and make it exciting.
+
+## Features
 
 | top | drawer |
 |---|---|
 | <img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
 
-### Design
+## Design
 
 * [Design Kit](https://www.figma.com/file/XsVzpDZSkEQANgCZLRTDDy/DroidKaigi-2022-Material-3-Design-Kit?node-id=11%3A1833)
 * [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
 
-### Try it out
+## Try it out
 
 TBD
 
 You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
 
-### Contributing
+## Contributing
 
 We always welcome any and all contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information
 
@@ -31,14 +35,14 @@ For Japanese speakers, please see [CONTRIBUTING.ja.md](CONTRIBUTING.ja.md)
 Latest Android Studio **Electric Eel** and higher. You can download it from [this page](https://developer.android.com/studio/preview).
 [iOS Requirements](app-ios/README.md)
 
-## Tech Stacks
+# Tech Stacks
 
 This year's app pretty much takes the idea from [now in android](https://github.com/android/nowinandroid) and adds a lot of ideas to it.
 
 <img width="891" alt="image" src="https://user-images.githubusercontent.com/1386930/188314552-a12ff0bb-851e-465c-a51c-679a7c711e37.png">
 
 
-### Configurable build logic
+## Configurable build logic
 Management methods such as feature-xxx and core-xx, which are used in modularization, are introduced to manage the build logic.
 This method makes the build logic manageable.
 
@@ -79,7 +83,7 @@ class AndroidFeaturePlugin : Plugin<Project> {
 }
 ```
 
-### Building a UiModel using Compose
+## Building a UiModel using Compose
 
 [https://github.com/cashapp/molecule](cashapp/molecule) is used to create the UiModel.  
 Jetpack Compose allows reactive streams such as Flow to be easily handled by Recompose. This also allows you to create an initial State.
@@ -98,10 +102,10 @@ val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
 }
 ```
 
-### Testing strategy
+## Testing strategy
 
 
-#### Make test scalable by using robot testing pattern
+### Make test scalable by using robot testing pattern
 
 In this project, tests are separated into what and how.
 This makes the tests scalable, as there is no need to rewrite many tests when the Compose mechanism, layout, etc. changes.
@@ -156,7 +160,7 @@ class SessionScreenRobot @Inject constructor() {
 ```
 
 
-#### Create a test with high fidelity without making it flaky
+### Create a test with high fidelity without making it flaky
 
 In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
 We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.　　
@@ -205,7 +209,7 @@ class SessionScreenRobot @Inject constructor() {
 }
 ```
 
-### Instant logic updates using Kotlin JS
+## Instant logic updates using Kotlin JS
 We are trying to use [https://github.com/cashapp/zipline](cashapp/zipline) as an experimental approach.  
 This allows us to use the regular JVM Kotlin implementation as a fallback, while releasing logic implemented in Javascript, which can be updated instantly as well as development on the Web.  
 We are excited about these possibilities for Kotlin.
@@ -254,7 +258,7 @@ You can check the manifest file to see how it works.　　
 https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 
 
-### LazyLayout
+## LazyLayout
 
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
 
