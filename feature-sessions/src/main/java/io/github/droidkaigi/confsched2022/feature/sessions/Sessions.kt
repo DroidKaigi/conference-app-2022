@@ -82,7 +82,6 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
-    val timetableState = rememberTimetableState()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
@@ -108,7 +107,6 @@ fun Sessions(
                         pagerState = pagerState,
                         scheduleState = scheduleState,
                         days = days,
-                        timetableState = timetableState,
                         onTimetableClick = onTimetableClick
                     )
                 } else {
@@ -131,25 +129,29 @@ fun Timetable(
     pagerState: PagerState,
     scheduleState: Loaded,
     days: Array<DroidKaigi2022Day>,
-    timetableState: TimetableState,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
-    Row(modifier = modifier) {
-        Hours(
-            timetableState = timetableState,
-            modifier = modifier
-        ) { modifier, hour ->
-            HoursItem(hour = hour, modifier = modifier)
-        }
-        HorizontalPager(
-            count = days.size,
-            state = pagerState
-        ) { dayIndex ->
-            val day = days[dayIndex]
-            val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+    HorizontalPager(
+        count = days.size,
+        state = pagerState
+    ) { dayIndex ->
+        val day = days[dayIndex]
+        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+        val timetableState = rememberTimetableState()
+        val coroutineScope = rememberCoroutineScope()
+
+        Row(modifier = modifier) {
+            Hours(
+                timetableState = timetableState,
+                modifier = modifier,
+            ) { modifier, hour ->
+                HoursItem(hour = hour, modifier = modifier)
+            }
+
             Timetable(
                 timetable = timetable,
-                timetableState = timetableState
+                timetableState = timetableState,
+                coroutineScope,
             ) { timetableItem, isFavorited ->
                 TimetableItem(
                     timetableItem = timetableItem,

@@ -1,11 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.drag
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
@@ -16,22 +11,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.PointerInputScope
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 
 @Composable
 fun HoursItem(
@@ -57,18 +46,17 @@ fun Hours(
         content(modifier, hoursList[index])
     }
     val density = timetableState.density
+    val scrollState = timetableState.screenScrollState
     val hoursLayout = remember(hoursList) {
         HoursLayout(
             hours = hoursList,
             density = density,
         )
     }
-    val coroutineScope = rememberCoroutineScope()
-    val screenScroll = timetableState.screenScrollState
     val hoursScreen = remember(hoursLayout, density) {
         HoursScreen(
             hoursLayout,
-            screenScroll,
+            scrollState,
             density
         )
     }
@@ -90,33 +78,6 @@ fun Hours(
                         linePxSize
                     )
                 }
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, dragAmount ->
-//                        if (hoursScreen.enableHorizontalScroll(dragAmount.x)) {
-//                            if (change.positionChange() != Offset.Zero) change.consume()
-//                        }
-                        if (hoursScreen.enableVerticalScroll(dragAmount.y)) {
-                            if (change.positionChange() != Offset.Zero) change.consume()
-                        }
-                        coroutineScope.launch {
-                            hoursScreen.scroll(
-                                dragAmount,
-                                change.uptimeMillis,
-                                change.position
-                            )
-                        }
-                    },
-                    onDragCancel = {
-                        screenScroll.resetTracking()
-                    },
-                    onDragEnd = {
-                        coroutineScope.launch {
-                            screenScroll.flingIfPossible()
-                        }
-                    }
-                )
             },
         itemProvider = itemProvider
     ) { constraint ->
@@ -206,7 +167,7 @@ private data class HoursItemLayout(
 private class HoursScreen(
     val hoursLayout: HoursLayout,
     val scrollState: ScreenScrollState,
-    private val density: Density,
+    density: Density,
 ) {
     var width = 0
         private set
@@ -237,58 +198,9 @@ private class HoursScreen(
             ")"
     }
 
-    suspend fun scroll(
-        dragAmount: Offset,
-        timeMillis: Long,
-        position: Offset,
-    ) {
-        val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.scroll(
-            Offset(0F, nextPossibleY),
-            timeMillis,
-            position
-        )
-    }
-
-    fun enableHorizontalScroll(dragX: Float): Boolean {
-        val nextPossibleX = calculatePossibleScrollX(dragX)
-        return (scrollState.maxX < nextPossibleX && nextPossibleX < 0f)
-    }
-
-    fun enableVerticalScroll(dragY: Float): Boolean {
-        val nextPossibleY = calculatePossibleScrollY(dragY)
-        return (scrollState.maxY < nextPossibleY && nextPossibleY < 0f)
-    }
-
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
-        scrollState.updateBounds(
-            maxX = if (width < hoursLayout.hoursWidth) {
-                -(hoursLayout.hoursWidth - width).toFloat()
-            } else {
-                0f
-            },
-            maxY = if (height < hoursLayout.hoursHeight) {
-                -(hoursLayout.hoursHeight - height).toFloat()
-            } else {
-                0f
-            }
-        )
-    }
-
-    private fun calculatePossibleScrollX(scrollX: Float): Float {
-        val currentValue = scrollState.scrollX
-        val nextValue = currentValue + scrollX
-        val maxScroll = scrollState.maxX
-        return maxOf(minOf(nextValue, 0f), maxScroll)
-    }
-
-    private fun calculatePossibleScrollY(scrollY: Float): Float {
-        val currentValue = scrollState.scrollY
-        val nextValue = currentValue + scrollY
-        val maxScroll = scrollState.maxY
-        return maxOf(minOf(nextValue, 0f), maxScroll)
     }
 }
 
@@ -304,44 +216,6 @@ private fun itemProvider(
         }
 
         override val itemCount: Int get() = itemCount()
-    }
-}
-
-/**
- * Workaround to prevent detectDragGestures from consuming events by default and disabling parent scrolling.
- *
- * ref: https://stackoverflow.com/a/72935823
- */
-private suspend fun PointerInputScope.detectDragGestures(
-    onDragStart: (Offset) -> Unit = { },
-    onDragEnd: () -> Unit = { },
-    onDragCancel: () -> Unit = { },
-    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit
-) {
-    forEachGesture {
-        awaitPointerEventScope {
-            val down = awaitFirstDown(requireUnconsumed = false)
-            var drag: PointerInputChange?
-            val overSlop = Offset.Zero
-            do {
-                drag = awaitTouchSlopOrCancellation(down.id, onDrag)
-                // ! EVERY Default movable GESTURE HAS THIS CHECK
-            } while (drag != null && !drag.isConsumed)
-            if (drag != null) {
-                onDragStart.invoke(drag.position)
-                onDrag(drag, overSlop)
-                if (
-                    !drag(drag.id) {
-                        onDrag(it, it.positionChange())
-                        it.consume()
-                    }
-                ) {
-                    onDragCancel()
-                } else {
-                    onDragEnd()
-                }
-            }
-        }
     }
 }
 
