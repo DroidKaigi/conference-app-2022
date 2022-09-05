@@ -5,7 +5,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.ui.Result
 
 data class SessionDetailUiModel(
-    val timetableDetailState: SessionDetailState,
+    val sessionDetailState: SessionDetailState,
 ) {
     sealed interface SessionDetailState {
 

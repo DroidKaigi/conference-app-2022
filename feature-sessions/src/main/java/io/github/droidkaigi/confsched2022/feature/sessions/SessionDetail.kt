@@ -56,11 +56,11 @@ fun SessionDetailScreen(
     uiModel: SessionDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
 ) {
-    if (uiModel.timetableDetailState !is Loaded) {
+    if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
         return
     }
-    val (item, isFavorite) = uiModel.timetableDetailState.timetableItemWithFavorite
+    val (item, isFavorite) = uiModel.sessionDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(

@@ -16,9 +16,9 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SessionDetailViewModel @Inject constructor(
@@ -37,12 +37,12 @@ class SessionDetailViewModel @Inject constructor(
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
         val timetableItemResult by timetableItemFlow.collectAsState(initial = Result.Loading)
 
-        val timetableDetailState by remember {
+        val sessionDetailState by remember {
             derivedStateOf {
                 SessionDetailState.of(timetableItemResult)
             }
         }
-        SessionDetailUiModel(timetableDetailState)
+        SessionDetailUiModel(sessionDetailState)
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
