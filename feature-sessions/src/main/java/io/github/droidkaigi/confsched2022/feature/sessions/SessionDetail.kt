@@ -144,7 +144,7 @@ fun SessionDetailSessionInfo(
     language: String,
     levels: PersistentList<String>,
 
-    ) {
+) {
     Column {
         Text(
             modifier = modifier,
