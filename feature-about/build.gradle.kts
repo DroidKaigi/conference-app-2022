@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.androidxActivityCompose)
     implementation(libs.accompanistPager)
     implementation(libs.coilCompose)
+    implementation(libs.androidXChromeCustomTabs)
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)
     debugImplementation(libs.composeUiTestManifest)
