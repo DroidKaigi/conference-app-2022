@@ -114,6 +114,7 @@ fun Sessions(
                         pagerState = pagerState,
                         scheduleState = scheduleState,
                         days = days,
+                        onTimetableClick = onTimetableClick,
                         onFavoriteClick = onFavoriteClick
                     )
                 }
@@ -172,6 +173,7 @@ fun SessionsList(
     pagerState: PagerState,
     scheduleState: Loaded,
     days: Array<DroidKaigi2022Day>,
+    onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
 ) {
     HorizontalPager(
@@ -184,6 +186,7 @@ fun SessionsList(
             SessionListItem(
                 timetableItem = timetableItem,
                 isFavorited = isFavorited,
+                onTimetableClick = onTimetableClick,
                 onFavoriteClick = onFavoriteClick
             )
         }
