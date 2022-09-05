@@ -54,9 +54,15 @@ fun SessionListItem(
             )
 
             Row {
+                Column(modifier = Modifier.width(100.dp)) {
+                    KaigiTag(
+                        text = roomName.enTitle,
+                        backgroundColor = roomColor,
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
                 KaigiTag(
-                    text = roomName.enTitle,
-                    backgroundColor = roomColor
+                    text = timetableItem.startsTimeString,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 KaigiTag(
