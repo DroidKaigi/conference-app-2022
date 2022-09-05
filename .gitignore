@@ -36,7 +36,8 @@ local.properties
 !/.idea/codeStyles/codeStyleConfig.xml
 # Keep the dictionaries.
 !/.idea/dictionaries
-!/.idea/dictionaries/*
+/.idea/dictionaries/*
+!/.idea/dictionaries/kaigiDictionary.xml
 
 # Gradle cache
 .gradle
