@@ -14,8 +14,8 @@ import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
+import javax.inject.Inject
 
 @HiltViewModel
 class ContributorsViewModel @Inject constructor(

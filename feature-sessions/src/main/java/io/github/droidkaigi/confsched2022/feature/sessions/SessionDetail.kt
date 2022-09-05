@@ -108,7 +108,9 @@ fun SessionDetailScreen(
         }
     ) {
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
         ) {
             SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
@@ -150,7 +152,6 @@ fun SessionDetailSessionInfo(
     category: TimetableCategory,
     language: String,
     levels: PersistentList<String>,
-
 ) {
     Column {
         Text(

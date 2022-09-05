@@ -19,12 +19,12 @@ import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
+import javax.inject.Inject
 
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
