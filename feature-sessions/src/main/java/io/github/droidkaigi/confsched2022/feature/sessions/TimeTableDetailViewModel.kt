@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState
+import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.SessionDetailState
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.Result
@@ -39,7 +39,7 @@ class TimeTableDetailViewModel @Inject constructor(
 
         val timetableDetailState by remember {
             derivedStateOf {
-                TimetableDetailState.of(timetableItemResult)
+                SessionDetailState.of(timetableItemResult)
             }
         }
         TimeTableDetailUiModel(timetableDetailState)

@@ -5,18 +5,18 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.ui.Result
 
 data class TimeTableDetailUiModel(
-    val timetableDetailState: TimetableDetailState,
+    val timetableDetailState: SessionDetailState,
 ) {
-    sealed interface TimetableDetailState {
+    sealed interface SessionDetailState {
 
         data class Loaded(
             val timetableItemWithFavorite: TimetableItemWithFavorite
-        ) : TimetableDetailState
+        ) : SessionDetailState
 
-        object Loading : TimetableDetailState
+        object Loading : SessionDetailState
 
         companion object {
-            fun of(timetableItemResult: Result<TimetableItemWithFavorite>): TimetableDetailState {
+            fun of(timetableItemResult: Result<TimetableItemWithFavorite>): SessionDetailState {
                 return when (timetableItemResult) {
                     Result.Loading -> {
                         Loading
