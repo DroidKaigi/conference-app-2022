@@ -15,9 +15,11 @@ class SpotlessPlugin : Plugin<Project> {
                 kotlin {
                     target("**/*.kt")
                     targetExclude("**/build/**/*.kt")
-                    ktlint(
-                        libs.findVersion("ktlint").get().toString()
-                    ).userData(mapOf("android" to "true"))
+                    ktlint(libs.findVersion("ktlint").get().toString())
+                        .userData(mapOf("android" to "true"))
+                        .editorConfigOverride(
+                            mapOf("ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^")
+                        )
                 }
                 format("kts") {
                     target("**/*.kts")
