@@ -110,7 +110,6 @@ private fun navigateToExternalServices(
     }
 }
 
-//Custom Tab
 private fun navigateToCustomTab(url: String, context: Context) {
     val uri = Uri.parse(url)
     CustomTabsIntent.Builder().also { builder ->
