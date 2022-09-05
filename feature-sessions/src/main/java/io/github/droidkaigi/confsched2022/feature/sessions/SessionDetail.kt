@@ -48,7 +48,7 @@ import kotlinx.datetime.Instant
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
-    onNavigationIconClick: () -> Unit = {}
+    onBackIconClick: () -> Unit = {}
 ) {
 
     val viewModel = hiltViewModel<SessionDetailViewModel>()
@@ -56,6 +56,7 @@ fun SessionDetailScreenRoot(
 
     SessionDetailScreen(
         uiModel = uiModel,
+        onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         }
@@ -65,14 +66,14 @@ fun SessionDetailScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailTopAppBar(
-    onNavigationIconClick: () -> Unit,
+    onBackIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
 ) {
     SmallTopAppBar(
         modifier = modifier,
         navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
+            IconButton(onClick = onBackIconClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
                     contentDescription = "close"
@@ -92,7 +93,7 @@ fun SessionDetailTopAppBar(
 fun SessionDetailScreen(
     modifier: Modifier = Modifier,
     uiModel: SessionDetailUiModel,
-    onNavigationIconClick: () -> Unit = {},
+    onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
 ) {
     if (uiModel.sessionDetailState !is Loaded) {
@@ -103,7 +104,7 @@ fun SessionDetailScreen(
     KaigiScaffold(
         topBar = {
             SessionDetailTopAppBar(
-                onNavigationIconClick = onNavigationIconClick,
+                onBackIconClick = onBackIconClick,
             )
         },
         bottomBar = {

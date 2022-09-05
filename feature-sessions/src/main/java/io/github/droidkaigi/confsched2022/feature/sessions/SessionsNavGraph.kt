@@ -8,6 +8,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 
 fun NavGraphBuilder.sessionsNavGraph(
     onNavigationIconClick: () -> Unit,
+    onBackIconClick: () -> Unit,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
     composable(route = SessionsNavGraph.sessionRoute) {
@@ -30,7 +31,7 @@ fun NavGraphBuilder.sessionsNavGraph(
         val id = it.arguments?.getString("id") ?: ""
         SessionDetailScreenRoot(
             timetableItemId = TimetableItemId(id),
-            onNavigationIconClick = onNavigationIconClick,
+            onBackIconClick = onBackIconClick,
         )
     }
 }
