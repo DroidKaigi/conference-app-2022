@@ -259,3 +259,9 @@ We are trying to draw a timetable using LazyLayout, a base implementation of Laz
 <img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
+
+## Special Thanks
+* [Contributors](https://github.com/DroidKaigi/conference-app-2022/graphs/contributors)
+* Designer [Chihokotaro / Chihoko Watanabe](https://twitter.com/chihokotaro)
+* Oversight of Material Design3 [Nabe](https://twitter.com/NabeCott)
+* API Server[Ryunen](https://twitter.com/RyuNen344)
