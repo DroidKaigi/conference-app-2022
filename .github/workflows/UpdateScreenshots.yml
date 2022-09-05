@@ -1,0 +1,25 @@
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  update-screenshot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+      - name: Run Update Screenshots
+        run: ./gradlew recordPaparazziDebug
+
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots
+          path: preview-screenshots/src/test/snapshots/images
+          retention-days: 15
