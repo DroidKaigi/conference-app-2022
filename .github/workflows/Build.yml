@@ -48,10 +48,7 @@ jobs:
         run: ./gradlew compileZipline --stacktrace
 
       - name: Run local tests
-        run: ./gradlew testDebug -x :preview-screenshots:testDebug --stacktrace
-
-      - name: Run screenshot tests
-        run: ./gradlew :preview-screenshots:verifyPaparazziDebug --stacktrace
+        run: ./gradlew testDebug --stacktrace
 
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v3
