@@ -39,10 +39,10 @@ This year's app pretty much takes the idea from [now in android](https://github.
 
 
 ### Configurable build logic
-The build logic uses a division similar to that used in module division, such as feature-xxx and core-xxx.
-In this way, plugins are configurable.
+Management methods such as feature-xxx and core-xx, which are used in modularization, are introduced to manage the build logic.
+This method makes the build logic manageable.
 
-Two types of build plugins are included.
+It is managed by two types of plugins.
 
 * Primitive plugins
 
