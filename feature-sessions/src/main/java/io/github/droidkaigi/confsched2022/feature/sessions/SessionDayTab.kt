@@ -50,7 +50,7 @@ internal fun SessionDayTab(
                 style = TextStyle(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    fontSize = 16.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight(500)
                 ),
                 modifier = Modifier.fillMaxWidth()
