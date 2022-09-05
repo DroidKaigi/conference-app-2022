@@ -56,15 +56,17 @@ jobs:
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v3
         with:
-          name: build-outputs
-          path: app/build/outputs
+          name: develop-debug-apk
+          path: app-android/build/outputs/apk/dev/debug/app-android-dev-debug.apk
+          retention-days: 14
 
       - name: Upload build reports
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: build-reports
-          path: app/build/reports
+          path: app-android/build/reports
+          retention-days: 30
 #  save computation resource for now
 #  androidTest:
 #    needs: build

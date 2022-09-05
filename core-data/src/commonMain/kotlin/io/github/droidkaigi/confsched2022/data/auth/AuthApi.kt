@@ -1,6 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.auth
 
-import io.github.droidkaigi.confsched2022.data.UserDatastore
+import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.header
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.first
 
 class AuthApi(
     private val httpClient: HttpClient,
-    private val userDataStore: UserDatastore,
+    private val userDataStore: SettingsDatastore,
     private val authenticator: Authenticator
 ) {
     suspend fun authIfNeeded() {

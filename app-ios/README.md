@@ -1,7 +1,8 @@
 ## Get Started
 ### Setup
 ```sh
-../gradlew appioscombined:assembleXCFramework
+cd ../
+./gradlew appioscombined:assembleXCFramework
 ```
 
 ### Open project with Xcode

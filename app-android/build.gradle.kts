@@ -67,11 +67,13 @@ androidComponents {
 dependencies {
     implementation(projects.featureSessions)
     implementation(projects.featureContributors)
+    implementation(projects.featureAbout)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
     implementation(projects.coreModel)
 
+    implementation(libs.composeMaterialIcons)
     implementation(libs.composeMaterial3WindowSizeClass)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.androidxStartup)

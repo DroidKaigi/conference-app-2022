@@ -2,20 +2,22 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
-import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import io.github.droidkaigi.confsched2022.data.sessions.FakeSessionsRepository
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.testing.RobotTestRule
-import io.github.droidkaigi.confsched2022.testing.sessions.FakeSessionsRepository
 import javax.inject.Inject
 import org.amshove.kluent.shouldContain
 
@@ -42,7 +44,14 @@ class SessionScreenRobot @Inject constructor() {
             .onFavorite(
                 index
             )
-            .assert(hasContentDescription("isFavorited$isFavorited"))
+            .assert(hasParent(hasContentDescription("isFavorited$isFavorited")))
+    }
+
+    context(RobotTestRule)
+    fun clickToggleTimetable() {
+        composeTestRule
+            .onNodeWithContentDescription("Toggle timetable icon")
+            .performClick()
     }
 
     context(RobotTestRule)
@@ -64,9 +73,11 @@ class SessionScreenRobot @Inject constructor() {
         val title = DroidKaigiSchedule.fake().itemAt(index)
             .title
             .currentLangTitle
+//        println(title)
+//        println(onRoot().printToString())
 
         return onNode(
-            matcher = hasTestTag("favorite") and hasAnyChild(hasText(title)),
+            matcher = hasTestTag("favorite") and hasAnySibling(hasText(title)),
             useUnmergedTree = true
         )
     }

@@ -13,12 +13,13 @@ fun NavGraphBuilder.sessionsNavGraph(
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
             onNavigationIconClick = onNavigationIconClick,
+            onSearchClicked = { /*TODO: Implement later*/ },
             onTimetableClick = onTimetableClick,
         )
     }
 
     composable(
-        route = "${SessionsNavGraph.sessionDetail}{id}",
+        route = SessionsNavGraph.sessionDetailRoute("{id}"),
         arguments = listOf(
             navArgument("id") {
                 type = NavType.StringType
@@ -27,7 +28,7 @@ fun NavGraphBuilder.sessionsNavGraph(
     ) {
         // TODO make it savable
         val id = it.arguments?.getString("id") ?: ""
-        TimetableDetailScreenRoot(
+        SessionDetailScreenRoot(
             timetableItemId = TimetableItemId(id),
             onNavigationIconClick = onNavigationIconClick,
         )
@@ -36,5 +37,6 @@ fun NavGraphBuilder.sessionsNavGraph(
 
 object SessionsNavGraph {
     const val sessionRoute = "sessions"
-    const val sessionDetail = "session/detail/"
+    fun sessionDetailRoute(sessionId: String) =
+        "session/detail/$sessionId"
 }
