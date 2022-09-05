@@ -25,7 +25,7 @@ val dataModule = module {
         AppleSettings(NSUserDefaults.new()!!).toFlowSettings()
     }
     singleOf(::SettingsDatastore)
-    single<HttpClient> {
+    single {
         HttpClient(Darwin) {
             engine {}
             defaultKtorConfig(get())

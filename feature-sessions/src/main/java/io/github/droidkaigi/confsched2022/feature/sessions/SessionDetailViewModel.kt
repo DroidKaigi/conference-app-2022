@@ -10,18 +10,18 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.Result
 import io.github.droidkaigi.confsched2022.ui.asResult
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class TimeTableDetailViewModel @Inject constructor(
+class SessionDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sessionsRepository: SessionsRepository,
 ) : ViewModel() {
@@ -32,17 +32,17 @@ class TimeTableDetailViewModel @Inject constructor(
     private val timetableItemId: TimetableItemId =
         TimetableItemId(requireNotNull(savedStateHandle.get<String>("id")))
 
-    private val result = sessionsRepository.timetableItemFlow(timetableItemId).asResult()
+    private val timetableItemFlow = sessionsRepository.timetableItemFlow(timetableItemId).asResult()
 
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val aa = result.collectAsState(initial = Result.Loading)
+        val timetableItemResult by timetableItemFlow.collectAsState(initial = Result.Loading)
 
-        val timetableDetailState by remember {
+        val sessionDetailState by remember {
             derivedStateOf {
-                TimetableDetailState.of(aa.value)
+                SessionDetailState.of(timetableItemResult)
             }
         }
-        TimeTableDetailUiModel(timetableDetailState)
+        SessionDetailUiModel(sessionDetailState)
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {

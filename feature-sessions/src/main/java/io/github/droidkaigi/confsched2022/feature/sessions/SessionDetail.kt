@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,17 +20,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
@@ -35,42 +40,72 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 
 @Composable
-fun TimetableDetailScreenRoot(
+fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
     onNavigationIconClick: () -> Unit = {}
 ) {
 
-    val viewModel = hiltViewModel<TimeTableDetailViewModel>()
+    val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
-    TimetableDetailScreen(uiModel = uiModel)
-
-    // TODO BottomNavigationView
+    SessionDetailScreen(
+        uiModel = uiModel,
+        onFavoriteClick = { currentFavorite ->
+            viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
+        }
+    )
 }
 
 @Composable
-fun TimetableDetailScreen(
+fun SessionDetailScreen(
     modifier: Modifier = Modifier,
-    uiModel: TimeTableDetailUiModel,
+    uiModel: SessionDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
+    onFavoriteClick: (Boolean) -> Unit = {},
 ) {
-    if (uiModel.timetableDetailState !is Loaded) {
+    if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
         return
     }
-    val item = uiModel.timetableDetailState.timetableItem
+    val (item, isFavorited) = uiModel.sessionDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
                 onNavigationIconClick = onNavigationIconClick,
             )
+        },
+        bottomBar = {
+            BottomAppBar {
+                Row {
+                    Spacer(modifier = Modifier.weight(1F))
+                    FloatingActionButton(
+                        onClick = {
+                            onFavoriteClick(isFavorited)
+                        }
+                    ) {
+                        if (isFavorited) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                                contentDescription = "favorited"
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bookmark),
+                                contentDescription = "not favorited"
+                            )
+                        }
+                    }
+                }
+            }
         }
     ) {
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
         ) {
-            TimetableDetailSessionInfo(
+            SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
                 startsAt = item.startsAt,
                 endsAt = item.startsAt,
@@ -81,19 +116,19 @@ fun TimetableDetailScreen(
             )
 
             if (item is Session)
-                TimetableDetailDescription(
+                SessionDetailDescription(
                     description = item.description
                 )
 
-            TimetableDetailTargetAudience(
+            SessionDetailTargetAudience(
                 targetAudience = item.targetAudience
             )
 
             if (item is Session)
-                TimetableDetailSpeakers(
+                SessionDetailSpeakers(
                     speakers = item.speakers,
                 )
-            TimetableDetailAssets(
+            SessionDetailAssets(
                 asset = item.asset
             )
         }
@@ -101,7 +136,7 @@ fun TimetableDetailScreen(
 }
 
 @Composable
-fun TimetableDetailSessionInfo(
+fun SessionDetailSessionInfo(
     modifier: Modifier = Modifier,
     title: String,
     startsAt: Instant,
@@ -110,7 +145,6 @@ fun TimetableDetailSessionInfo(
     category: TimetableCategory,
     language: String,
     levels: PersistentList<String>,
-
 ) {
     Column {
         Text(
@@ -139,7 +173,7 @@ fun TimetableDetailSessionInfo(
 }
 
 @Composable
-fun TimetableDetailDescription(
+fun SessionDetailDescription(
     modifier: Modifier = Modifier,
     description: String,
 ) {
@@ -156,7 +190,7 @@ fun TimetableDetailDescription(
 }
 
 @Composable
-fun TimetableDetailTargetAudience(
+fun SessionDetailTargetAudience(
     modifier: Modifier = Modifier,
     targetAudience: String,
 ) {
@@ -180,7 +214,7 @@ fun TimetableDetailTargetAudience(
 }
 
 @Composable
-fun TimetableDetailSpeakers(
+fun SessionDetailSpeakers(
     modifier: Modifier = Modifier,
     speakers: List<TimetableSpeaker>,
 ) {
@@ -229,7 +263,7 @@ fun TimetableDetailSpeakers(
 }
 
 @Composable
-fun TimetableDetailAssets(
+fun SessionDetailAssets(
     modifier: Modifier = Modifier,
     asset: TimetableAsset,
 ) {
@@ -260,8 +294,10 @@ fun TimetableDetailAssets(
 
 @Preview
 @Composable
-fun PreviewTimetableDetailScreen() {
-    TimetableDetailScreen(
-        uiModel = TimeTableDetailUiModel(Loaded(Session.fake()))
+fun PreviewSessionDetailScreen() {
+    SessionDetailScreen(
+        uiModel = SessionDetailUiModel(
+            Loaded(TimetableItemWithFavorite.fake())
+        )
     )
 }

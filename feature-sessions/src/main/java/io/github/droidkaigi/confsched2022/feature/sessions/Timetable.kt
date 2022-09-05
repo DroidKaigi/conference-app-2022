@@ -36,20 +36,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day2
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day3
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.fake
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toInstant
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Timetable(
     timetable: Timetable,
+    timetableState: TimetableState,
+    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
@@ -57,39 +64,39 @@ fun Timetable(
         val timetableItemWithFavorite = timetable.contents[index]
         content(timetableItemWithFavorite.timetableItem, timetableItemWithFavorite.isFavorited)
     }
-    val density = LocalDensity.current
+    val density = timetableState.density
     val timetableLayout = remember(timetable) {
         TimetableLayout(timetable = timetable, density = density)
     }
-    val coroutineScope = rememberCoroutineScope()
-    val screenScroll = rememberScreenScrollState()
-    val screen = remember(timetableLayout, density) {
-        Screen(
+    val scrollState = timetableState.screenScrollState
+    val timetableScreen = remember(timetableLayout, density) {
+        TimetableScreen(
             timetableLayout,
-            screenScroll,
+            scrollState,
             density
         )
     }
-    val visibleItemLayouts by remember(screen) { screen.visibleItemLayouts }
+    val visibleItemLayouts by remember(timetableScreen) { timetableScreen.visibleItemLayouts }
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
-    val linePxSize = with(LocalDensity.current) { timeTableLineStrokeSize.toPx() }
+    val linePxSize = with(timetableState.density) { timeTableLineStrokeSize.toPx() }
+
     LazyLayout(
         modifier = modifier
             .clipToBounds()
             .drawBehind {
-                screen.timeHorizontalLines.value.forEach {
+                timetableScreen.timeHorizontalLines.value.forEach {
                     drawLine(
                         lineColor,
                         Offset(0F, it),
-                        Offset(screen.width.toFloat(), it),
+                        Offset(timetableScreen.width.toFloat(), it),
                         linePxSize
                     )
                 }
-                screen.roomVerticalLines.value.forEach {
+                timetableScreen.roomVerticalLines.value.forEach {
                     drawLine(
                         lineColor,
                         Offset(it, 0f),
-                        Offset(it, screen.height.toFloat()),
+                        Offset(it, timetableScreen.height.toFloat()),
                         linePxSize
                     )
                 }
@@ -97,11 +104,11 @@ fun Timetable(
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
-                        if (screen.enableHorizontalScroll(dragAmount.x)) {
+                        if (timetableScreen.enableHorizontalScroll(dragAmount.x)) {
                             if (change.positionChange() != Offset.Zero) change.consume()
                         }
                         coroutineScope.launch {
-                            screen.scroll(
+                            timetableScreen.scroll(
                                 dragAmount,
                                 change.uptimeMillis,
                                 change.position
@@ -109,11 +116,11 @@ fun Timetable(
                         }
                     },
                     onDragCancel = {
-                        screenScroll.resetTracking()
+                        scrollState.resetTracking()
                     },
                     onDragEnd = {
                         coroutineScope.launch {
-                            screenScroll.flingIfPossible()
+                            scrollState.flingIfPossible()
                         }
                     }
                 )
@@ -122,7 +129,7 @@ fun Timetable(
     ) { constraint ->
 
         data class ItemData(val placeable: Placeable, val timetableItem: TimetableItemLayout)
-        screen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
+        timetableScreen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
 
         val items = visibleItemLayouts.map { (index, timetableLayout) ->
             ItemData(
@@ -139,8 +146,8 @@ fun Timetable(
         layout(constraint.maxWidth, constraint.maxHeight) {
             items.forEach { (placable, timetableLayout) ->
                 placable.place(
-                    timetableLayout.left + screen.scrollState.scrollX.toInt(),
-                    timetableLayout.top + screen.scrollState.scrollY.toInt()
+                    timetableLayout.left + timetableScreen.scrollState.scrollX.toInt(),
+                    timetableLayout.top + timetableScreen.scrollState.scrollY.toInt()
                 )
             }
         }
@@ -150,9 +157,13 @@ fun Timetable(
 @Preview
 @Composable
 fun TimetablePreview() {
+    val timetableState = rememberTimetableState()
+    val coroutineScope = rememberCoroutineScope()
     Timetable(
         modifier = Modifier.fillMaxSize(),
-        timetable = Timetable.fake()
+        timetable = Timetable.fake(),
+        timetableState = timetableState,
+        coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
         TimetableItem(timetableItem, isFavorite)
     }
@@ -180,14 +191,25 @@ private data class TimetableItemLayout(
     val density: Density,
     val minutePx: Int
 ) {
+    val dayStart = when (timetableItem.day) {
+        Day1 -> LocalDateTime.parse("2022-10-05T10:00:00")
+            .toInstant(TimeZone.of("UTC+9"))
+        Day2 -> LocalDateTime.parse("2022-10-06T10:00:00")
+            .toInstant(TimeZone.of("UTC+9"))
+        Day3 -> LocalDateTime.parse("2022-10-07T10:00:00")
+            .toInstant(TimeZone.of("UTC+9"))
+        else -> LocalDateTime.parse("2022-10-05T10:00:00")
+            .toInstant(TimeZone.of("UTC+9"))
+    }
+    val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) {
         timeTableColumnWidth.roundToPx()
     }
     val left = rooms.indexOf(timetableItem.room) * width
-    val top = (timetableItem.startsAt - dayStartTime)
-        .inWholeMinutes.toInt() * minutePx
+    val top = (timetableItem.startsAt - dayStart)
+        .inWholeMinutes.toInt() * minutePx + topOffset
     val right = left + width
     val bottom = top + height
 
@@ -243,6 +265,22 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
         }
     }
 }
+
+@Composable
+fun rememberTimetableState(
+    screenScrollState: ScreenScrollState = rememberScreenScrollState(),
+    density: Density = LocalDensity.current,
+): TimetableState = remember {
+    TimetableState(
+        screenScrollState,
+        density
+    )
+}
+
+data class TimetableState(
+    val screenScrollState: ScreenScrollState,
+    val density: Density,
+)
 
 @Composable
 fun rememberScreenScrollState(): ScreenScrollState = rememberSaveable(
@@ -327,7 +365,7 @@ class ScreenScrollState(
     }
 }
 
-private class Screen(
+private class TimetableScreen(
     val timetableLayout: TimetableLayout,
     val scrollState: ScreenScrollState,
     private val density: Density,
@@ -346,12 +384,10 @@ private class Screen(
                 scrollState.scrollY.toInt()
             )
         }
+    val topOffset = with(density) { 16.dp.roundToPx() }
     val timeHorizontalLines = derivedStateOf {
-        val startTime = timetableLayout.dayStartTime ?: return@derivedStateOf listOf()
-        val startMinute = startTime.toLocalDateTime((TimeZone.currentSystemDefault())).minute
         (0..10).map {
-            val minuteOffSet = startMinute * timetableLayout.minutePx
-            scrollState.scrollY + timetableLayout.minutePx * 60 * it - minuteOffSet
+            scrollState.scrollY + timetableLayout.minutePx * 60 * it + topOffset
         }
     }
     val roomVerticalLines = derivedStateOf {
@@ -467,3 +503,4 @@ private suspend fun PointerInputScope.detectDragGestures(
 
 private val timeTableLineStrokeSize = 1.dp
 private val timeTableColumnWidth = 192.dp
+private val horizontalLineTopOffset = 16.dp

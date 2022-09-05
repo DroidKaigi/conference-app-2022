@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.data.sessions
 
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.headers
@@ -22,8 +23,11 @@ fun HttpClientConfig<*>.defaultKtorConfig(
                 useArrayPolymorphism = false
                 ignoreUnknownKeys = true
             }
-
         )
+    }
+    install(HttpTimeout) {
+        requestTimeoutMillis = 30000
+        socketTimeoutMillis = 30000
     }
 
     defaultRequest {

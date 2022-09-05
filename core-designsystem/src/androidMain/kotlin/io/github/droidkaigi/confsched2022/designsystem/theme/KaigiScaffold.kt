@@ -14,12 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 fun KaigiScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit,
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
             topBar()
+        },
+        bottomBar = {
+            bottomBar()
         }
     ) { insetPadding ->
         Row(

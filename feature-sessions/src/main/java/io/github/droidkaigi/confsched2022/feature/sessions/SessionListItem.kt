@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 fun SessionListItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
+    onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     maxTitleLines: Int = 4
@@ -38,6 +40,7 @@ fun SessionListItem(
     Row(
         modifier = modifier
             .fillMaxSize()
+            .clickable { onTimetableClick(timetableItem.id) }
             .semantics { contentDescription = "isFavorited$isFavorited" },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
