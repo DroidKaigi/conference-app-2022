@@ -83,7 +83,7 @@ class AndroidFeaturePlugin : Plugin<Project> {
 
 ## Building a UiModel using Compose
 
-[https://github.com/cashapp/molecule](cashapp/molecule) is used to create the UiModel.  
+[https://github.com/cashapp/molecule](https://github.com/cashapp/molecule) is used to create the UiModel.  
 Jetpack Compose allows reactive streams such as Flow to be easily handled by Recompose. This also allows you to create an initial State.
 
 ```kotlin
@@ -208,7 +208,7 @@ class SessionScreenRobot @Inject constructor() {
 ```
 
 ## Instant logic updates using Kotlin JS
-We are trying to use [https://github.com/cashapp/zipline](cashapp/zipline) as an experimental approach.  
+We are trying to use [https://github.com/cashapp/zipline](https://github.com/cashapp/zipline) as an experimental approach.  
 This allows us to use the regular JVM Kotlin implementation as a fallback, while releasing logic implemented in Javascript, which can be updated instantly as well as development on the Web.  
 We are excited about these possibilities for Kotlin.
 
