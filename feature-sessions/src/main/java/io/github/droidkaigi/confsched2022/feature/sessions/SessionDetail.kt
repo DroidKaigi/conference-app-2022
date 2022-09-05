@@ -23,7 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.SessionDetailState.Loaded
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
@@ -42,7 +42,7 @@ fun SessionDetailScreenRoot(
     onNavigationIconClick: () -> Unit = {}
 ) {
 
-    val viewModel = hiltViewModel<TimeTableDetailViewModel>()
+    val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
     SessionDetailScreen(uiModel = uiModel)
@@ -53,7 +53,7 @@ fun SessionDetailScreenRoot(
 @Composable
 fun SessionDetailScreen(
     modifier: Modifier = Modifier,
-    uiModel: TimeTableDetailUiModel,
+    uiModel: SessionDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
 ) {
     if (uiModel.timetableDetailState !is Loaded) {
@@ -263,7 +263,7 @@ fun SessionDetailAssets(
 @Composable
 fun PreviewSessionDetailScreen() {
     SessionDetailScreen(
-        uiModel = TimeTableDetailUiModel(
+        uiModel = SessionDetailUiModel(
             Loaded(TimetableItemWithFavorite.fake())
         )
     )

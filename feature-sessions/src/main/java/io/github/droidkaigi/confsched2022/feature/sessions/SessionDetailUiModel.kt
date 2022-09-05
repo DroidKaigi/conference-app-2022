@@ -4,7 +4,7 @@ import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.ui.Result
 
-data class TimeTableDetailUiModel(
+data class SessionDetailUiModel(
     val timetableDetailState: SessionDetailState,
 ) {
     sealed interface SessionDetailState {

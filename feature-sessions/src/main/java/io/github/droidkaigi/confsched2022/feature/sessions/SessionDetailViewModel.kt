@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.SessionDetailState
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.Result
@@ -21,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class TimeTableDetailViewModel @Inject constructor(
+class SessionDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sessionsRepository: SessionsRepository,
 ) : ViewModel() {
@@ -42,7 +42,7 @@ class TimeTableDetailViewModel @Inject constructor(
                 SessionDetailState.of(timetableItemResult)
             }
         }
-        TimeTableDetailUiModel(timetableDetailState)
+        SessionDetailUiModel(timetableDetailState)
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
