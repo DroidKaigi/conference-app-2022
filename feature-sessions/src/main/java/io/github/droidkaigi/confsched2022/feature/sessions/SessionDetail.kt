@@ -1,5 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +18,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -176,14 +183,32 @@ fun SessionDetailDescription(
     modifier: Modifier = Modifier,
     description: String,
 ) {
+    val (isReadMore, setIsReadMore) = remember { mutableStateOf(false) }
+    val (isOverFlow, setIsOverFlow) = remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = modifier.padding(16.dp))
         // TODO expand by amount of text
         Text(
-            modifier = modifier,
+            modifier = modifier.animateContentSize(),
             text = description,
             style = MaterialTheme.typography.bodyMedium,
+            maxLines = if (isReadMore) Int.MAX_VALUE else 5,
+            overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
+            onTextLayout = { result ->
+                setIsOverFlow(result.isLineEllipsized(result.lineCount - 1))
+            }
         )
+        if (isOverFlow) {
+            Spacer(modifier = modifier.padding(8.dp))
+            Text(
+                modifier = modifier.clickable {
+                    setIsReadMore(true)
+                },
+                text = stringResource(id = R.string.session_description_read_more_text),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF6EFD9E),
+            )
+        }
         Spacer(modifier = modifier.padding(16.dp))
     }
 }
