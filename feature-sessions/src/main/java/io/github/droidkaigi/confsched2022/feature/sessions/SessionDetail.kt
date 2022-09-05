@@ -23,7 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.TimeTableDetailUiModel.TimetableDetailState.Loaded
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
@@ -36,31 +36,31 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 
 @Composable
-fun TimetableDetailScreenRoot(
+fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
     onNavigationIconClick: () -> Unit = {}
 ) {
 
-    val viewModel = hiltViewModel<TimeTableDetailViewModel>()
+    val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
-    TimetableDetailScreen(uiModel = uiModel)
+    SessionDetailScreen(uiModel = uiModel)
 
     // TODO BottomNavigationView
 }
 
 @Composable
-fun TimetableDetailScreen(
+fun SessionDetailScreen(
     modifier: Modifier = Modifier,
-    uiModel: TimeTableDetailUiModel,
+    uiModel: SessionDetailUiModel,
     onNavigationIconClick: () -> Unit = {},
 ) {
-    if (uiModel.timetableDetailState !is Loaded) {
+    if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
         return
     }
-    val (item, isFavorite) = uiModel.timetableDetailState.timetableItemWithFavorite
+    val (item, isFavorite) = uiModel.sessionDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
@@ -71,7 +71,7 @@ fun TimetableDetailScreen(
         Column(
             modifier = modifier.verticalScroll(rememberScrollState())
         ) {
-            TimetableDetailSessionInfo(
+            SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
                 startsAt = item.startsAt,
                 endsAt = item.startsAt,
@@ -82,19 +82,19 @@ fun TimetableDetailScreen(
             )
 
             if (item is Session)
-                TimetableDetailDescription(
+                SessionDetailDescription(
                     description = item.description
                 )
 
-            TimetableDetailTargetAudience(
+            SessionDetailTargetAudience(
                 targetAudience = item.targetAudience
             )
 
             if (item is Session)
-                TimetableDetailSpeakers(
+                SessionDetailSpeakers(
                     speakers = item.speakers,
                 )
-            TimetableDetailAssets(
+            SessionDetailAssets(
                 asset = item.asset
             )
         }
@@ -102,7 +102,7 @@ fun TimetableDetailScreen(
 }
 
 @Composable
-fun TimetableDetailSessionInfo(
+fun SessionDetailSessionInfo(
     modifier: Modifier = Modifier,
     title: String,
     startsAt: Instant,
@@ -140,7 +140,7 @@ fun TimetableDetailSessionInfo(
 }
 
 @Composable
-fun TimetableDetailDescription(
+fun SessionDetailDescription(
     modifier: Modifier = Modifier,
     description: String,
 ) {
@@ -157,7 +157,7 @@ fun TimetableDetailDescription(
 }
 
 @Composable
-fun TimetableDetailTargetAudience(
+fun SessionDetailTargetAudience(
     modifier: Modifier = Modifier,
     targetAudience: String,
 ) {
@@ -181,7 +181,7 @@ fun TimetableDetailTargetAudience(
 }
 
 @Composable
-fun TimetableDetailSpeakers(
+fun SessionDetailSpeakers(
     modifier: Modifier = Modifier,
     speakers: List<TimetableSpeaker>,
 ) {
@@ -230,7 +230,7 @@ fun TimetableDetailSpeakers(
 }
 
 @Composable
-fun TimetableDetailAssets(
+fun SessionDetailAssets(
     modifier: Modifier = Modifier,
     asset: TimetableAsset,
 ) {
@@ -261,9 +261,9 @@ fun TimetableDetailAssets(
 
 @Preview
 @Composable
-fun PreviewTimetableDetailScreen() {
-    TimetableDetailScreen(
-        uiModel = TimeTableDetailUiModel(
+fun PreviewSessionDetailScreen() {
+    SessionDetailScreen(
+        uiModel = SessionDetailUiModel(
             Loaded(TimetableItemWithFavorite.fake())
         )
     )
