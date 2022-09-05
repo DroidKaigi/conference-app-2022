@@ -10,6 +10,9 @@
 
 ### Design
 
+* [Design Kit](https://www.figma.com/file/XsVzpDZSkEQANgCZLRTDDy/DroidKaigi-2022-Material-3-Design-Kit?node-id=11%3A1833)
+* [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
+
 ### Try it out
 
 TBD
