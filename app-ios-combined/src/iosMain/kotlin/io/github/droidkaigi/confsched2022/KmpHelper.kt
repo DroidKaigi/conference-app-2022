@@ -13,7 +13,6 @@ fun initKoin(authenticator: Authenticator): KoinApplication {
         modules(
             dataModule,
             module {
-                single<ScopeProvider> { MainScopeProvider() }
                 single { authenticator }
             }
         )
