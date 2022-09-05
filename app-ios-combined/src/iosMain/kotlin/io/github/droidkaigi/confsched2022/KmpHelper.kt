@@ -1,14 +1,22 @@
 package io.github.droidkaigi.confsched2022
 
+import io.github.droidkaigi.confsched2022.data.auth.Authenticator
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import kotlinx.cinterop.ObjCProtocol
 import kotlinx.cinterop.getOriginalKotlinClass
 import org.koin.core.KoinApplication
+import org.koin.dsl.module
 
-fun initKoin(): KoinApplication {
+fun initKoin(authenticator: Authenticator): KoinApplication {
     return startKoin {
-        modules(dataModule)
+        modules(
+            dataModule,
+            module {
+                single<ScopeProvider> { MainScopeProvider() }
+                single { authenticator }
+            }
+        )
     }
 }
 

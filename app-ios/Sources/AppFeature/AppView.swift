@@ -1,6 +1,7 @@
 import appioscombined
 import AboutFeature
 import Assets
+import Auth
 import ComposableArchitecture
 import Container
 import ContributorFeature
@@ -86,11 +87,18 @@ public struct AppEnvironment {
 
 public extension AppEnvironment {
     static var client: Self {
-        let container = DIContainer()
+        let container = DIContainer(authenticator: Auth.Authenticator())
 
         return .init(
             contributorsRepository: container.get(type: ContributorsRepository.self),
             sessionsRepository: container.get(type: SessionsRepository.self)
+        )
+    }
+
+    static var mock: Self {
+        return .init(
+            contributorsRepository: FakeContributorsRepository(),
+            sessionsRepository: FakeSessionsRepository()
         )
     }
 }
@@ -99,8 +107,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     timetableReducer.pullback(
         state: \.timetableState,
         action: /AppAction.timetable,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                sessionsRepository: $0.sessionsRepository
+            )
         }
     ),
     aboutReducer.pullback(
@@ -322,7 +332,7 @@ struct AppView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AppEnvironment.client
+                environment: AppEnvironment.mock
             )
         )
     }
