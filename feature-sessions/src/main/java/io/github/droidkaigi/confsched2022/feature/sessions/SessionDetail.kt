@@ -189,7 +189,6 @@ fun SessionDetailDescription(
     var isOverFlow by remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = modifier.padding(16.dp))
-        // TODO expand by amount of text
         Text(
             modifier = modifier.animateContentSize(),
             text = description,
