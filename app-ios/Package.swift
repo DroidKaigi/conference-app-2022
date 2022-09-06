@@ -33,7 +33,16 @@ var package = Package(
         .target(
             name: "AboutFeature",
             dependencies: [
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .target(
