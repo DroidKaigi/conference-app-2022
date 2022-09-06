@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -82,11 +84,13 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
+    val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
                 pagerState,
+                if (isTimetable) null else sessionsListListStates,
                 scheduleState,
                 onNavigationIconClick,
                 onSearchClick,
@@ -112,6 +116,7 @@ fun Sessions(
                 } else {
                     SessionsList(
                         pagerState = pagerState,
+                        sessionsListListStates = sessionsListListStates,
                         scheduleState = scheduleState,
                         days = days,
                         onTimetableClick = onTimetableClick,
@@ -171,6 +176,7 @@ fun Timetable(
 @Composable
 fun SessionsList(
     pagerState: PagerState,
+    sessionsListListStates: List<LazyListState>,
     scheduleState: Loaded,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
@@ -182,7 +188,7 @@ fun SessionsList(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        SessionList(timetable) { timetableItem, isFavorited ->
+        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited ->
             SessionListItem(
                 timetableItem = timetableItem,
                 isFavorited = isFavorited,
@@ -197,6 +203,7 @@ fun SessionsList(
 @Composable
 fun SessionsTopBar(
     pagerState: PagerState,
+    sessionsListListStates: List<LazyListState>?,
     scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
@@ -248,13 +255,19 @@ fun SessionsTopBar(
             ) {
                 val coroutineScope = rememberCoroutineScope()
                 days.forEachIndexed { index, day ->
+                    val selected = pagerState.currentPage == index
                     SessionDayTab(
                         index = index,
                         day = day,
-                        selected = pagerState.currentPage == index,
+                        selected = selected,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
+                                if (selected) {
+                                    sessionsListListStates?.let {
+                                        sessionsListListStates[index].scrollToItem(index = 0)
+                                    }
+                                }
                             }
                         }
                     )
