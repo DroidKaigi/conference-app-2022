@@ -182,17 +182,18 @@ fun SessionScheduleInfo(
     val sessionEndDateTime = endTime
         .toLocalDateTime(TimeZone.currentSystemDefault())
 
-    fun LocalDateTime.toTime() = "${hour}:${minute}"
+    fun LocalDateTime.toTime() = "$hour:$minute"
 
     val sessionSchedule =
-        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
+            "${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
 
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
-            painterResource(id = drawable.ic_schedule),
+            painterResource(id = R.drawable.ic_schedule),
             contentDescription = "Schedule-Icon",
         )
         Spacer(modifier = Modifier.size(8.dp))
