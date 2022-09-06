@@ -6,44 +6,46 @@ import SwiftUI
 import Theme
 
 public struct TimetableState: Equatable {
-    public var timetable: Timetable
+    public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
 
     public init(
-        timetable: Timetable = .init(
-            timetableItems: [],
-            favorites: .init()
-        ),
+        dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1
     ) {
-        self.timetable = timetable
+        self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
     }
 }
 
 public enum TimetableAction {
     case refresh
-    case refreshResponse(TaskResult<Timetable>)
+    case refreshResponse(TaskResult<[DroidKaigi2022Day: Timetable]>)
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
-    public init() {}
+    public let sessionsRepository: SessionsRepository
+
+    public init(sessionsRepository: SessionsRepository) {
+        self.sessionsRepository = sessionsRepository
+    }
 }
 
-public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, _ in
+public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
         return .task {
-            await .refreshResponse(
+            try await environment.sessionsRepository.refresh()
+            return await .refreshResponse(
                 TaskResult {
-                    Timetable.companion.fake()
+                    try await environment.sessionsRepository.droidKaigiScheduleFlow().collect()
                 }
             )
         }
-    case let .refreshResponse(.success(timetable)):
-        state.timetable = timetable
+    case let .refreshResponse(.success(dayToTimetable)):
+        state.dayToTimetable = dayToTimetable
         return .none
     case .refreshResponse(.failure):
         return .none
@@ -139,10 +141,12 @@ struct TimetableView_Previews: PreviewProvider {
         TimetableView(
             store: .init(
                 initialState: .init(
-                    timetable: Timetable.companion.fake()
+                    dayToTimetable: DroidKaigiSchedule.companion.fake().dayToTimetable
                 ),
                 reducer: .empty,
-                environment: TimetableEnvironment()
+                environment: TimetableEnvironment(
+                    sessionsRepository: FakeSessionsRepository()
+                )
             )
         )
     }

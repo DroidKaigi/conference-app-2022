@@ -1,6 +1,9 @@
+import appioscombined
 import AboutFeature
 import Assets
+import Auth
 import ComposableArchitecture
+import Container
 import ContributorFeature
 import NotificationFeature
 import MapFeature
@@ -70,15 +73,44 @@ public enum AppAction {
 }
 
 public struct AppEnvironment {
-    public init() {}
+    public let contributorsRepository: ContributorsRepository
+    public let sessionsRepository: SessionsRepository
+
+    public init(
+        contributorsRepository: ContributorsRepository,
+        sessionsRepository: SessionsRepository
+    ) {
+        self.contributorsRepository = contributorsRepository
+        self.sessionsRepository = sessionsRepository
+    }
+}
+
+public extension AppEnvironment {
+    static var client: Self {
+        let container = DIContainer(authenticator: Auth.Authenticator())
+
+        return .init(
+            contributorsRepository: container.get(type: ContributorsRepository.self),
+            sessionsRepository: container.get(type: SessionsRepository.self)
+        )
+    }
+
+    static var mock: Self {
+        return .init(
+            contributorsRepository: FakeContributorsRepository(),
+            sessionsRepository: FakeSessionsRepository()
+        )
+    }
 }
 
 public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     timetableReducer.pullback(
         state: \.timetableState,
         action: /AppAction.timetable,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                sessionsRepository: $0.sessionsRepository
+            )
         }
     ),
     aboutReducer.pullback(
@@ -300,7 +332,7 @@ struct AppView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AppEnvironment()
+                environment: AppEnvironment.mock
             )
         )
     }

@@ -38,4 +38,3 @@ struct SettingView_Previews: PreviewProvider {
     }
 }
 #endif
-

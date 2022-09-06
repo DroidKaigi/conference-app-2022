@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,6 +52,9 @@ import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun SessionDetailScreenRoot(
@@ -176,6 +180,39 @@ fun SessionDetailScreen(
 }
 
 @Composable
+fun SessionScheduleInfo(
+    modifier: Modifier = Modifier,
+    startTime: Instant,
+    endTime: Instant
+) {
+    val sessionStartDateTime = startTime
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+    val sessionEndDateTime = endTime
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+
+    fun LocalDateTime.toTime() = "$hour:$minute"
+
+    val sessionSchedule =
+        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
+            "${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painterResource(id = R.drawable.ic_schedule),
+            contentDescription = "Schedule-Icon",
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            text = sessionSchedule,
+            style = MaterialTheme.typography.labelMedium,
+        )
+    }
+}
+
+@Composable
 fun SessionDetailSessionInfo(
     modifier: Modifier = Modifier,
     title: String,
@@ -195,10 +232,9 @@ fun SessionDetailSessionInfo(
 
         Spacer(modifier = modifier.padding(16.dp))
 
-        Text(
-            modifier = modifier,
-            text = "$startsAt $endsAt",
-            style = MaterialTheme.typography.bodySmall,
+        SessionScheduleInfo(
+            startTime = startsAt,
+            endTime = endsAt
         )
 
         Text(
