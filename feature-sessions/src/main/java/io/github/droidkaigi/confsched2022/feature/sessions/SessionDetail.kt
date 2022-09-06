@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,12 +50,15 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
+import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -65,18 +69,32 @@ import kotlinx.datetime.toLocalDateTime
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
-    onBackIconClick: () -> Unit = {}
+    onBackIconClick: () -> Unit = {},
+    onNavigateFloorMapClick: () -> Unit,
 ) {
 
     val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
+
+    val shareManager = LocalShareManager.current
+    val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
-        }
+        },
+        onShareClick = { shareManager.share(it.title.currentLangTitle) },
+        onNavigateFloorMapClick = onNavigateFloorMapClick,
+        onRegisterCalendarClick = {
+            calendarRegistration.register(
+                startsAtMilliSeconds = it.startsAt.toEpochMilliseconds(),
+                endsAtMilliSeconds = it.endsAt.toEpochMilliseconds(),
+                title = it.title.currentLangTitle,
+                location = it.room.name.currentLangTitle,
+            )
+        },
     )
 }
 
@@ -112,6 +130,9 @@ fun SessionDetailScreen(
     uiModel: SessionDetailUiModel,
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
+    onShareClick: (TimetableItem) -> Unit = {},
+    onNavigateFloorMapClick: () -> Unit = {},
+    onRegisterCalendarClick: (TimetableItem) -> Unit = {},
 ) {
     if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
@@ -126,7 +147,31 @@ fun SessionDetailScreen(
         },
         bottomBar = {
             BottomAppBar {
-                Row {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        IconButton(onClick = { onShareClick(item) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_share),
+                                contentDescription = "share",
+                            )
+                        }
+                        IconButton(onClick = onNavigateFloorMapClick) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_02),
+                                contentDescription = "go to floor map",
+                            )
+                        }
+                        IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_today),
+                                contentDescription = "register calendar",
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.weight(1F))
                     FloatingActionButton(
                         onClick = {
