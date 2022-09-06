@@ -41,7 +41,7 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit = {},
-    versionName: String = versionName(LocalContext.current)
+    versionName: String? = versionName(LocalContext.current)
 ) {
     About(onNavigationIconClick, modifier, versionName)
 }
@@ -50,7 +50,7 @@ fun AboutScreenRoot(
 fun About(
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
-    versionName: String
+    versionName: String?
 ) {
     KaigiScaffold(
         // TODO: Display titles instead of icons
@@ -145,10 +145,12 @@ fun About(
                     text = "アプリバージョン",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
-                    text = versionName,
-                    style = MaterialTheme.typography.labelLarge
-                )
+                if (versionName != null) {
+                    Text(
+                        text = versionName,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
             }
         }
     }
@@ -201,11 +203,13 @@ private fun navigateToCustomTab(url: String, context: Context) {
     }
 }
 
-private fun versionName(context: Context) = context.packageManager
-    .getPackageInfo(
-        context.packageName,
-        0
-    ).versionName
+private fun versionName(context: Context) = runCatching {
+    context.packageManager
+        .getPackageInfo(
+            context.packageName,
+            0
+        ).versionName
+}.getOrNull()
 
 @Preview(showBackground = true)
 @Composable
