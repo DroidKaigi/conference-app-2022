@@ -365,6 +365,8 @@ fun SessionDetailAssets(
     modifier: Modifier = Modifier,
     asset: TimetableAsset,
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Column {
         Text(
             modifier = modifier,
@@ -378,7 +380,12 @@ fun SessionDetailAssets(
             modifier = modifier,
             painter = painterResource(id = R.drawable.ic_video_cam),
             text = "MOVIE",
-            onClick = {},
+            onClick = {
+                val videoUrl = asset.videoUrl
+                if (videoUrl != null) {
+                    uriHandler.openUri(videoUrl)
+                }
+            },
         )
 
         Spacer(modifier = modifier.padding(8.dp))
@@ -387,7 +394,12 @@ fun SessionDetailAssets(
             modifier = modifier,
             painter = painterResource(id = R.drawable.ic_photo_library),
             text = "スライド",
-            onClick = {},
+            onClick = {
+                val slideUrl = asset.slideUrl
+                if (slideUrl != null) {
+                    uriHandler.openUri(slideUrl)
+                }
+            },
         )
     }
 }
