@@ -302,6 +302,12 @@ fun SessionsTopBar(
         (scheduleState as? Loaded)?.schedule?.days?.let { days ->
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme
+                            .surfaceColorAtElevation(2.dp)
+                    )
+                    .padding(16.dp),
                 containerColor = MaterialTheme.colorScheme
                     .surfaceColorAtElevation(2.dp),
                 indicator = {
