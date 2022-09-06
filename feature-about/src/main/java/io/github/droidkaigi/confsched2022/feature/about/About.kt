@@ -51,15 +51,17 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 @Composable
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    versionName: String? = versionName(LocalContext.current)
 ) {
-    About(onNavigationIconClick, modifier)
+    About(onNavigationIconClick, modifier, versionName)
 }
 
 @Composable
 fun About(
     onNavigationIconClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    versionName: String?
 ) {
     KaigiScaffold(
         // TODO: Display titles instead of icons
@@ -118,15 +120,15 @@ fun About(
                 ) {
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.TWITTER
+                        serviceType = ExternalServices.Twitter
                     )
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.YOUTUBE
+                        serviceType = ExternalServices.Youtube
                     )
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.MEDIUM
+                        serviceType = ExternalServices.Medium
                     )
                 }
             }
@@ -171,8 +173,25 @@ fun About(
                     }
                 )
             }
-            // TODO: Implementation of this part
-            // TODO: https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=421%3A1959
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(vertical = 18.dp, horizontal = 32.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "アプリバージョン",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (versionName != null) {
+                    Text(
+                        text = versionName,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
         }
     }
 }
@@ -253,10 +272,18 @@ private fun navigateToCustomTab(url: String, context: Context) {
     }
 }
 
+private fun versionName(context: Context) = runCatching {
+    context.packageManager
+        .getPackageInfo(
+            context.packageName,
+            0
+        ).versionName
+}.getOrNull()
+
 @Preview(showBackground = true)
 @Composable
 fun AboutPreview() {
     KaigiTheme {
-        AboutScreenRoot()
+        AboutScreenRoot(versionName = "1.2.3")
     }
 }

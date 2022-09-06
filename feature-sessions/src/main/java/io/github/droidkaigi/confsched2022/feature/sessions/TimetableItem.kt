@@ -54,6 +54,6 @@ fun TimetableItem(
                 letterSpacing = 0.1.sp
             )
         )
-        KaigiTag(text = timetableItem.minutesString)
+        KaigiTag { Text(timetableItem.minutesString) }
     }
 }

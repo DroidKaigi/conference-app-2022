@@ -1,11 +1,15 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -22,17 +26,26 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -245,14 +258,31 @@ fun SessionDetailDescription(
     modifier: Modifier = Modifier,
     description: String,
 ) {
+    var isReadMore by remember { mutableStateOf(false) }
+    var isOverFlow by remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = modifier.padding(16.dp))
-        // TODO expand by amount of text
         Text(
-            modifier = modifier,
+            modifier = modifier.animateContentSize(),
             text = description,
             style = MaterialTheme.typography.bodyMedium,
+            maxLines = if (isReadMore) Int.MAX_VALUE else 5,
+            overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
+            onTextLayout = { result ->
+                isOverFlow = result.isLineEllipsized(result.lineCount - 1)
+            }
         )
+        if (isOverFlow) {
+            Spacer(modifier = modifier.padding(8.dp))
+            Text(
+                modifier = modifier.clickable {
+                    isReadMore = true
+                },
+                text = stringResource(id = R.string.session_description_read_more_text),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF6EFD9E),
+            )
+        }
         Spacer(modifier = modifier.padding(16.dp))
     }
 }
@@ -335,6 +365,8 @@ fun SessionDetailAssets(
     modifier: Modifier = Modifier,
     asset: TimetableAsset,
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Column {
         Text(
             modifier = modifier,
@@ -344,28 +376,70 @@ fun SessionDetailAssets(
 
         Spacer(modifier = modifier.padding(16.dp))
 
-        Text(
+        SessionDetailAssetsItem(
             modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_video_cam),
             text = "MOVIE",
-            style = MaterialTheme.typography.bodyMedium,
+            onClick = {
+                val videoUrl = asset.videoUrl
+                if (videoUrl != null) {
+                    uriHandler.openUri(videoUrl)
+                }
+            },
         )
 
         Spacer(modifier = modifier.padding(8.dp))
 
+        SessionDetailAssetsItem(
+            modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_photo_library),
+            text = "スライド",
+            onClick = {
+                val slideUrl = asset.slideUrl
+                if (slideUrl != null) {
+                    uriHandler.openUri(slideUrl)
+                }
+            },
+        )
+    }
+}
+
+@Composable
+private fun SessionDetailAssetsItem(
+    modifier: Modifier = Modifier,
+    painter: Painter,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .height(36.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         Text(
             modifier = modifier,
-            text = "スライド",
+            text = text,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewSessionDetailScreen() {
-    SessionDetailScreen(
-        uiModel = SessionDetailUiModel(
-            Loaded(TimetableItemWithFavorite.fake())
+    KaigiTheme {
+        SessionDetailScreen(
+            uiModel = SessionDetailUiModel(
+                Loaded(TimetableItemWithFavorite.fake())
+            )
         )
-    )
+    }
 }

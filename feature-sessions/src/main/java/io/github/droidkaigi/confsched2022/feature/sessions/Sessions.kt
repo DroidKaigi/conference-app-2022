@@ -1,11 +1,15 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,10 +46,13 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.Sched
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun SessionsScreenRoot(
@@ -188,16 +197,67 @@ fun SessionsList(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited ->
-            SessionListItem(
-                timetableItem = timetableItem,
-                isFavorited = isFavorited,
-                onTimetableClick = onTimetableClick,
-                onFavoriteClick = onFavoriteClick
-            )
+        var currentStartTime = ""
+        val timeHeaderAndTimetableItems = remember(timetable) {
+            val list = mutableListOf<Pair<DurationTime?, TimetableItemWithFavorite>>()
+            timetable.contents.forEachIndexed { index, timetableItemWithFavorite ->
+                val startLocalDateTime = timetableItemWithFavorite.timetableItem.startsAt
+                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                val endLocalDateTime = timetableItemWithFavorite.timetableItem.endsAt
+                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                val startTime = startLocalDateTime.time.toString()
+                val endTime = endLocalDateTime.time.toString()
+                if (index > 0 && startTime == currentStartTime) {
+                    list.add(Pair(null, timetableItemWithFavorite))
+                } else {
+                    currentStartTime = startTime
+                    list.add(Pair(DurationTime(startTime, endTime), timetableItemWithFavorite))
+                }
+            }
+            list.toList()
+        }
+        SessionList(
+            timetable = timeHeaderAndTimetableItems,
+            sessionsListListState = sessionsListListStates[dayIndex]
+        ) { (timeHeader, timetableItemWithFavorite) ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
+                    .padding(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier.width(85.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            timeHeader?.let {
+                                Text(text = it.startAt)
+                                Box(
+                                    modifier = Modifier
+                                        .size(1.dp, 2.dp)
+                                        .background(MaterialTheme.colorScheme.onBackground)
+                                ) { }
+                                Text(text = it.endAt)
+                            }
+                        }
+                    }
+                    SessionListItem(
+                        timetableItem = timetableItemWithFavorite.timetableItem,
+                        isFavorited = timetableItemWithFavorite.isFavorited,
+                        onFavoriteClick = onFavoriteClick
+                    )
+                }
+            }
         }
     }
 }
+
+data class DurationTime(val startAt: String, val endAt: String)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
