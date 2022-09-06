@@ -4,19 +4,29 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,8 +96,8 @@ fun About(
             Column(
                 modifier = Modifier
                     .padding(
-                        start = 17.dp,
-                        end = 17.dp,
+                        start = 16.dp,
+                        end = 16.dp,
                         bottom = 32.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -129,9 +140,38 @@ fun About(
                     ),
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
-            Column {
-                // TODO: Implementation of this part
-                // TODO: https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=421%3A1883
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Outlined.Train,
+                    textResId = string.about_access,
+                    onClick = {
+                        // TODO: Implement access screen
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Outlined.Person,
+                    textResId = string.about_staff,
+                    onClick = {
+                        // TODO: Implement show staff screen
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.PrivacyTip,
+                    textResId = string.about_privacy,
+                    onClick = {
+                        // TODO: Implement privacy policy
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.Folder,
+                    textResId = string.about_license,
+                    onClick = {
+                        // TODO: Implement license
+                    }
+                )
             }
 
             Row(
@@ -153,6 +193,35 @@ fun About(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AuxiliaryInformationRow(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    @StringRes textResId: Int,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.padding(start = 20.dp),
+            imageVector = imageVector,
+            contentDescription = null
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            text = stringResource(id = textResId)
+        )
     }
 }
 
