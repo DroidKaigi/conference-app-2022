@@ -2,6 +2,7 @@
 androidGradlePlugin = "7.4.0-alpha10"
 kotlin = "1.7.10"
 molecule = "0.4.0"
+buildkonfig = "0.13.3"
 
 androidxCore = "1.8.0"
 androidDesugarJdkLibs = "1.2.2"
@@ -52,6 +53,7 @@ hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-pl
 moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
 composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 kotlinSerializationPlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+buildkonfigPlugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
 ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
 ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 firebasePlugin = { module = "com.google.gms:google-services", version.ref = "firebasePlugin" }

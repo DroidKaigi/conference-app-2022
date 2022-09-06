@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.contributors
 
+import io.github.droidkaigi.confsched2022.BuildKonfig
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.contributors.response.ContributorsResponse
 import io.github.droidkaigi.confsched2022.model.Contributor
@@ -11,7 +12,7 @@ class ContributorsApi(
 ) {
     suspend fun contributors(): PersistentList<Contributor> {
         return networkService.get<ContributorsResponse>(
-            url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/contributors",
+            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/contributors",
             needAuth = true
         ).toContributorList()
     }

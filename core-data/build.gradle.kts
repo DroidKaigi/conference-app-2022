@@ -1,7 +1,10 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.kmp.android.hilt")
     id("droidkaigi.primitive.kmp.serialization")
+    id("droidkaigi.primitive.kmp.buildkonfig")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.data"
@@ -36,5 +39,16 @@ kotlin {
                 implementation(libs.koin)
             }
         }
+    }
+}
+
+buildkonfig {
+    packageName = "io.github.droidkaigi.confsched2022"
+
+    defaultConfigs {
+        buildConfigField(STRING, "apiUrl", "https://ssot-api-staging.an.r.appspot.com")
+    }
+    defaultConfigs("prod") {
+        buildConfigField(STRING, "apiUrl", "https://ssot-api.droidkaigi.jp")
     }
 }
