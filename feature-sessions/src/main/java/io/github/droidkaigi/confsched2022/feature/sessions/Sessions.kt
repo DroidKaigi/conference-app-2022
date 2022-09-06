@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -300,37 +302,48 @@ fun SessionsTopBar(
             }
         )
         (scheduleState as? Loaded)?.schedule?.days?.let { days ->
-            TabRow(
-                selectedTabIndex = pagerState.currentPage,
-                containerColor = MaterialTheme.colorScheme
-                    .surfaceColorAtElevation(2.dp),
-                indicator = {
-                    TabIndicator(
-                        modifier = Modifier
-                            .pagerTabIndicatorOffset(pagerState, it)
-                            .zIndex(-1f),
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
                     )
-                },
-                divider = {},
+                    .padding(12.dp)
             ) {
-                val coroutineScope = rememberCoroutineScope()
-                days.forEachIndexed { index, day ->
-                    val selected = pagerState.currentPage == index
-                    SessionDayTab(
-                        index = index,
-                        day = day,
-                        selected = selected,
-                        onTabClicked = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(it)
-                                if (selected) {
-                                    sessionsListListStates?.let {
-                                        sessionsListListStates[index].scrollToItem(index = 0)
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    containerColor = MaterialTheme
+                        .colorScheme
+                        .surfaceColorAtElevation(2.dp),
+                    indicator = {
+                        TabIndicator(
+                            modifier = Modifier
+                                .pagerTabIndicatorOffset(pagerState, it)
+                                .zIndex(-1f),
+                        )
+                    },
+                    divider = {
+
+                    }
+                ) {
+                    val coroutineScope = rememberCoroutineScope()
+                    days.forEachIndexed { index, day ->
+                        val selected = pagerState.currentPage == index
+                        SessionDayTab(
+                            index = index,
+                            day = day,
+                            selected = selected,
+                            onTabClicked = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(it)
+                                    if (selected) {
+                                        sessionsListListStates?.let {
+                                            sessionsListListStates[index].scrollToItem(index = 0)
+                                        }
                                     }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
