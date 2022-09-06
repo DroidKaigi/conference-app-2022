@@ -70,8 +70,9 @@ fun KaigiApp(
                 startDestination = SessionsNavGraph.sessionRoute,
             ) {
                 sessionsNavGraph(
-                    kaigiAppScaffoldState::onNavigationClick,
-                    kaigiAppScaffoldState::onTimeTableClick,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
+                    onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
                 )
                 contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
                 aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
@@ -131,6 +132,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     fun onTimeTableClick(timetableId: TimetableItemId) {
         navController.navigate(
             route = SessionsNavGraph.sessionDetailRoute(timetableId.value)
+        )
+    }
+
+    fun onSearchClick() {
+        navController.navigate(
+            route = SessionsNavGraph.sessionSearchRoute()
         )
     }
 
