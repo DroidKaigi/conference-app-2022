@@ -12,25 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 
 @Composable
 fun SessionList(
-    timetable: Timetable,
+    timetable: List<Pair<DurationTime?, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     modifier: Modifier = Modifier,
-    content: @Composable (TimetableItem, Boolean, Int) -> Unit,
+    content: @Composable (Pair<DurationTime?, TimetableItemWithFavorite>) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = sessionsListListState
     ) {
-        itemsIndexed(timetable.contents) { index, item ->
-            key(item.timetableItem.id.value) {
-                content(
-                    item.timetableItem,
-                    item.isFavorited,
-                    index
-                )
+        itemsIndexed(timetable) { _, item ->
+            key(item.second.timetableItem.id.value) {
+                content(item)
             }
         }
     }

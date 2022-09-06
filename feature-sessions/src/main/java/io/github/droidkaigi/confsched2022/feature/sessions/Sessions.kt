@@ -46,6 +46,7 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.Sched
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
@@ -198,30 +199,32 @@ fun SessionsList(
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
         var currentStartTime = ""
-        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited, index ->
-            val startLocalDateTime = timetableItem.startsAt
-                .toLocalDateTime(TimeZone.of("UTC+9"))
-            val endLocalDateTime = timetableItem.endsAt
-                .toLocalDateTime(TimeZone.of("UTC+9"))
-            val startTime = LocalTime(
-                hour = startLocalDateTime.hour,
-                minute = startLocalDateTime.minute
-            ).toString()
-            val endTime = LocalTime(
-                hour = endLocalDateTime.hour,
-                minute = endLocalDateTime.minute
-            ).toString()
-            var displayTime = true
-            if (index == 0) currentStartTime = startTime
-            else if (index > 0 && startTime == currentStartTime) {
-                displayTime = false
-            } else {
-                currentStartTime = startTime
+        val timeHeaderAndTimetableItems: List<Pair<DurationTime?, TimetableItemWithFavorite>> = remember(timetable) {
+            val list = mutableListOf<Pair<DurationTime?, TimetableItemWithFavorite>>()
+            timetable.contents.forEachIndexed { index, timetableItemWithFavorite ->
+                val startLocalDateTime = timetableItemWithFavorite.timetableItem.startsAt
+                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                val endLocalDateTime = timetableItemWithFavorite.timetableItem.endsAt
+                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                val startTime = startLocalDateTime.time.toString()
+                val endTime = endLocalDateTime.time.toString()
+                if (index > 0 && startTime == currentStartTime) {
+                    list.add(Pair(null, timetableItemWithFavorite))
+                } else {
+                    currentStartTime = startTime
+                    list.add(Pair(DurationTime(startTime, endTime), timetableItemWithFavorite))
+                }
             }
+            list.toList()
+        }
+        SessionList(
+            timetable = timeHeaderAndTimetableItems,
+            sessionsListListState = sessionsListListStates[dayIndex]
+        ) { (timeHeader, timetableItemWithFavorite) ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onTimetableClick(timetableItem.id) }
+                    .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
                     .padding(12.dp)
             ) {
                 Row(
@@ -233,20 +236,20 @@ fun SessionsList(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            if (displayTime) {
-                                Text(text = startTime)
+                            timeHeader?.let {
+                                Text(text = it.startAt)
                                 Box(
                                     modifier = Modifier
                                         .size(1.dp, 2.dp)
                                         .background(MaterialTheme.colorScheme.onBackground)
                                 ) { }
-                                Text(text = endTime)
+                                Text(text = it.endAt)
                             }
                         }
                     }
                     SessionListItem(
-                        timetableItem = timetableItem,
-                        isFavorited = isFavorited,
+                        timetableItem = timetableItemWithFavorite.timetableItem,
+                        isFavorited = timetableItemWithFavorite.isFavorited,
                         onFavoriteClick = onFavoriteClick
                     )
                 }
@@ -254,6 +257,8 @@ fun SessionsList(
         }
     }
 }
+
+data class DurationTime(val startAt: String, val endAt: String)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
