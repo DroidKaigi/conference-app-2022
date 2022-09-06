@@ -141,11 +141,24 @@ fun About(
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                val context = LocalContext.current
+                val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textResId = string.about_access,
                     onClick = {
-                        // TODO: Implement access screen
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(googleMapUrl)
+                        )
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            navigateToCustomTab(
+                                url = googleMapUrl,
+                                context = context,
+                            )
+                        }
                     }
                 )
 
