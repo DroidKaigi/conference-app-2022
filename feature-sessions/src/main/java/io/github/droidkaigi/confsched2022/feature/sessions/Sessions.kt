@@ -198,7 +198,7 @@ fun SessionsList(
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
         var currentStartTime = ""
-        val timeHeaderAndTimetableItems: List<Pair<DurationTime?, TimetableItemWithFavorite>> = remember(timetable) {
+        val timeHeaderAndTimetableItems = remember(timetable) {
             val list = mutableListOf<Pair<DurationTime?, TimetableItemWithFavorite>>()
             timetable.contents.forEachIndexed { index, timetableItemWithFavorite ->
                 val startLocalDateTime = timetableItemWithFavorite.timetableItem.startsAt
