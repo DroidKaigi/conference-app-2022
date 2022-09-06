@@ -94,8 +94,8 @@ fun About(
             Column(
                 modifier = Modifier
                     .padding(
-                        start = 17.dp,
-                        end = 17.dp,
+                        start = 16.dp,
+                        end = 16.dp,
                         bottom = 32.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -138,7 +138,7 @@ fun About(
                     ),
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
-            Column(modifier = Modifier.padding(horizontal = 17.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textResId = string.about_access,
