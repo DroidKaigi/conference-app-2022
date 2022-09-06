@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -31,7 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -369,28 +374,60 @@ fun SessionDetailAssets(
 
         Spacer(modifier = modifier.padding(16.dp))
 
-        Text(
+        SessionDetailAssetsItem(
             modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_video_cam),
             text = "MOVIE",
-            style = MaterialTheme.typography.bodyMedium,
+            onClick = {},
         )
 
         Spacer(modifier = modifier.padding(8.dp))
 
+        SessionDetailAssetsItem(
+            modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_photo_library),
+            text = "スライド",
+            onClick = {},
+        )
+    }
+}
+
+@Composable
+private fun SessionDetailAssetsItem(
+    modifier: Modifier = Modifier,
+    painter: Painter,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .height(36.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         Text(
             modifier = modifier,
-            text = "スライド",
+            text = text,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewSessionDetailScreen() {
-    SessionDetailScreen(
-        uiModel = SessionDetailUiModel(
-            Loaded(TimetableItemWithFavorite.fake())
+    KaigiTheme {
+        SessionDetailScreen(
+            uiModel = SessionDetailUiModel(
+                Loaded(TimetableItemWithFavorite.fake())
+            )
         )
-    )
+    }
 }
