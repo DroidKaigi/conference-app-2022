@@ -18,9 +18,9 @@ import io.github.droidkaigi.confsched2022.data.auth.AuthenticatorImpl
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module

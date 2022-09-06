@@ -105,15 +105,15 @@ fun About(
                 ) {
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.Twitter()
+                        serviceType = ExternalServices.TWITTER
                     )
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.YouTube()
+                        serviceType = ExternalServices.YOUTUBE
                     )
                     ExternalServiceImage(
                         context = context,
-                        serviceType = ExternalServices.Medium()
+                        serviceType = ExternalServices.MEDIUM
                     )
                 }
             }

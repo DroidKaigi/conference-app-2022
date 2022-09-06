@@ -10,10 +10,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,11 +27,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -43,7 +48,7 @@ import kotlinx.datetime.Instant
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
-    onNavigationIconClick: () -> Unit = {}
+    onBackIconClick: () -> Unit = {}
 ) {
 
     val viewModel = hiltViewModel<SessionDetailViewModel>()
@@ -51,9 +56,36 @@ fun SessionDetailScreenRoot(
 
     SessionDetailScreen(
         uiModel = uiModel,
+        onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SessionDetailTopAppBar(
+    onBackIconClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
+) {
+    SmallTopAppBar(
+        modifier = modifier,
+        navigationIcon = {
+            IconButton(onClick = onBackIconClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "close"
+                )
+            }
+        },
+        title = {},
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme
+                .colorScheme
+                .surfaceColorAtElevation(elevation)
+        )
     )
 }
 
@@ -61,7 +93,7 @@ fun SessionDetailScreenRoot(
 fun SessionDetailScreen(
     modifier: Modifier = Modifier,
     uiModel: SessionDetailUiModel,
-    onNavigationIconClick: () -> Unit = {},
+    onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
 ) {
     if (uiModel.sessionDetailState !is Loaded) {
@@ -71,8 +103,8 @@ fun SessionDetailScreen(
     val (item, isFavorited) = uiModel.sessionDetailState.timetableItemWithFavorite
     KaigiScaffold(
         topBar = {
-            KaigiTopAppBar(
-                onNavigationIconClick = onNavigationIconClick,
+            SessionDetailTopAppBar(
+                onBackIconClick = onBackIconClick,
             )
         },
         bottomBar = {
@@ -101,7 +133,9 @@ fun SessionDetailScreen(
         }
     ) {
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
         ) {
             SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
@@ -143,7 +177,6 @@ fun SessionDetailSessionInfo(
     category: TimetableCategory,
     language: String,
     levels: PersistentList<String>,
-
 ) {
     Column {
         Text(

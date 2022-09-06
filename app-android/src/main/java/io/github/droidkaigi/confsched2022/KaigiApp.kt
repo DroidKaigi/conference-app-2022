@@ -71,6 +71,7 @@ fun KaigiApp(
             ) {
                 sessionsNavGraph(
                     kaigiAppScaffoldState::onNavigationClick,
+                    kaigiAppScaffoldState::onBackIconClick,
                     kaigiAppScaffoldState::onTimeTableClick,
                 )
                 contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
@@ -138,6 +139,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         coroutineScope.launch {
             drawerState.open()
         }
+    }
+
+    fun onBackIconClick() {
+        navController.popBackStack()
     }
 
     private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)
