@@ -20,7 +20,7 @@ public struct TimetableState: Equatable {
 
 public enum TimetableAction {
     case refresh
-    case refreshResponse(TaskResult<[DroidKaigi2022Day: Timetable]>)
+    case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
 }
@@ -36,16 +36,21 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
-        return .task {
-            try await environment.sessionsRepository.refresh()
-            return await .refreshResponse(
-                TaskResult {
-                    try await environment.sessionsRepository.droidKaigiScheduleFlow().collect()
-                }
-            )
+        return .run { subscriber in
+            for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
+                await subscriber.send(
+                    .refreshResponse(
+                        TaskResult {
+                            result
+                        }
+                    )
+                )
+            }
         }
-    case let .refreshResponse(.success(dayToTimetable)):
-        state.dayToTimetable = dayToTimetable
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
+    case let .refreshResponse(.success(droidKaigiSchedule)):
+        state.dayToTimetable = droidKaigiSchedule.dayToTimetable
         return .none
     case .refreshResponse(.failure):
         return .none

@@ -16,15 +16,15 @@ class FlowCollector<T>: Kotlinx_coroutines_coreFlowCollector {
 }
 
 public extension Kotlinx_coroutines_coreFlow {
-    func collect<T>() async throws -> T {
-        return try await withCheckedThrowingContinuation { [weak self] continuation in
-            self?.collect(collector: FlowCollector<T>(
-                callback: { value in
-                    continuation.resume(returning: value)
-                }
-            ), completionHandler: { error in
+    func stream<T>() -> AsyncThrowingStream<T, Error> {
+        return AsyncThrowingStream { [weak self] continuation in
+            self?.collect(collector: FlowCollector<T>(callback: { value in
+                continuation.yield(value)
+            }), completionHandler: { error in
                 if let error = error {
-                    continuation.resume(throwing: error)
+                    continuation.finish(throwing: error)
+                } else {
+                    continuation.finish()
                 }
             })
         }
