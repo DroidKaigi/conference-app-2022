@@ -9,15 +9,18 @@ struct TimetableSheetView: View {
         var hours: [Int]
 
         init(state: TimetableState) {
-            let hours = state.timetable.hours
-
-            self.hours = hours
-            self.roomTimetableItems = Set(state.timetable.timetableItems.map(\.room))
+            guard let timetable = state.dayToTimetable[state.selectedDay] else {
+                self.roomTimetableItems = []
+                self.hours = []
+                return
+            }
+            self.hours = timetable.hours
+            self.roomTimetableItems = Set(timetable.timetableItems.map(\.room))
                 .map { room in
 
-                    var items = state.timetable.timetableItems
+                    var items = timetable.timetableItems
                         .filter {
-                            $0.room == room && $0.day == state.selectedDay
+                            $0.room == room
                         }
                         .reduce([TimetableItemType]()) { result, item in
                             var result = result
@@ -44,7 +47,7 @@ struct TimetableSheetView: View {
                     if case let .general(firstItem, _) = items.first {
                         let hour = Calendar.current.component(.hour, from: firstItem.startsAt.toDate())
                         let minute = Calendar.current.component(.minute, from: firstItem.startsAt.toDate())
-                        let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - hours.first!, 0) * 60)
+                        let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - timetable.hours.first!, 0) * 60)
                         items.insert(firstSpacingItem, at: 0)
                     }
                     return TimetableRoomItems(
@@ -129,10 +132,12 @@ struct TimetableSheetView_Previews: PreviewProvider {
         TimetableSheetView(
             store: .init(
                 initialState: .init(
-                    timetable: Timetable.companion.fake()
+                    dayToTimetable: DroidKaigiSchedule.companion.fake().dayToTimetable
                 ),
                 reducer: .empty,
-                environment: TimetableEnvironment()
+                environment: TimetableEnvironment(
+                    sessionsRepository: FakeSessionsRepository()
+                )
             )
         )
     }
