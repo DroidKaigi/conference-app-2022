@@ -38,7 +38,7 @@ fun NavGraphBuilder.sessionsNavGraph(
     composable(
         route = SessionsNavGraph.sessionSearchRoute(),
     ) {
-        Search()
+        SearchRoot()
     }
 }
 
