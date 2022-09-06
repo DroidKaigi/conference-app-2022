@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -184,8 +185,8 @@ fun SessionDetailDescription(
     modifier: Modifier = Modifier,
     description: String,
 ) {
-    val (isReadMore, setIsReadMore) = remember { mutableStateOf(false) }
-    val (isOverFlow, setIsOverFlow) = remember { mutableStateOf(false) }
+    var isReadMore by remember { mutableStateOf(false) }
+    var isOverFlow by remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = modifier.padding(16.dp))
         // TODO expand by amount of text
@@ -196,14 +197,14 @@ fun SessionDetailDescription(
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
             overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
             onTextLayout = { result ->
-                setIsOverFlow(result.isLineEllipsized(result.lineCount - 1))
+                isOverFlow = result.isLineEllipsized(result.lineCount - 1)
             }
         )
         if (isOverFlow) {
             Spacer(modifier = modifier.padding(8.dp))
             Text(
                 modifier = modifier.clickable {
-                    setIsReadMore(true)
+                    isReadMore = true
                 },
                 text = stringResource(id = R.string.session_description_read_more_text),
                 style = MaterialTheme.typography.bodyMedium,
