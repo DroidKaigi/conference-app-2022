@@ -59,9 +59,7 @@ fun SessionListItem(
                 KaigiTag(
                     labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     backgroundColor = MaterialTheme.colorScheme.secondaryContainer
-                ) { 
-                    Text(timetableItem.minutesString) 
-                }
+                ) { Text(timetableItem.minutesString) }
             }
         }
         IconButton(
