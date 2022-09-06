@@ -1,6 +1,5 @@
 import ComposableArchitecture
 import SwiftUI
-import Strings
 import Theme
 
 public struct AboutState: Equatable {
@@ -32,15 +31,15 @@ public struct AboutView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
-                AboutViewAssets.logoCharacter.swiftUIImage
+                Assets.logoCharacter.swiftUIImage
                 VStack(alignment: .leading, spacing: 24) {
                     Text(L10n.About.whatIsDroidKaigi)
                         .font(Font.system(size: 32, weight: .medium))
                     Text(L10n.About.description)
                     HStack(spacing: 16) {
-                        AboutViewAssets.twitter.swiftUIImage
-                        AboutViewAssets.youtube.swiftUIImage
-                        AboutViewAssets.medium.swiftUIImage
+                        Assets.twitter.swiftUIImage
+                        Assets.youtube.swiftUIImage
+                        Assets.medium.swiftUIImage
                         Spacer()
                     }
                 }

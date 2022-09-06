@@ -1,5 +1,3 @@
-import Strings
-
 struct AboutNavigationItem {
     let image: ImageAsset
     let title: String
@@ -8,22 +6,22 @@ struct AboutNavigationItem {
     static var items: [Self] {
         [
             AboutNavigationItem(
-                image: AboutViewAssets.train,
+                image: Assets.train,
                 title: L10n.About.access,
                 action: .openAccess
             ),
             AboutNavigationItem(
-                image: AboutViewAssets.person,
+                image: Assets.person,
                 title: L10n.About.staffs,
                 action: .openStaffs
             ),
             AboutNavigationItem(
-                image: AboutViewAssets.shield,
+                image: Assets.shield,
                 title: L10n.About.privacyPolicy,
                 action: .openPrivacyPolicy
             ),
             AboutNavigationItem(
-                image: AboutViewAssets.folder,
+                image: Assets.folder,
                 title: L10n.About.license,
                 action: .openLicense
             ),

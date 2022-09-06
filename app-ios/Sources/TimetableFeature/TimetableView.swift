@@ -1,5 +1,4 @@
 import appioscombined
-import Assets
 import ComposableArchitecture
 import Model
 import SwiftUI

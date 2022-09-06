@@ -1,6 +1,5 @@
 import appioscombined
 import AboutFeature
-import Assets
 import Auth
 import ComposableArchitecture
 import Container
@@ -13,7 +12,6 @@ import SessionFeature
 import SettingFeature
 import SponsorFeature
 import SwiftUI
-import Strings
 
 public enum AppTab {
     case timetable

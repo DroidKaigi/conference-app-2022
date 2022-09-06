@@ -8,5 +8,3 @@ xcassets:
     output: Assets.generated.swift
     params:
       enumName: Assets
-      publicAccess: true
-      bundle: Bundle.myModule

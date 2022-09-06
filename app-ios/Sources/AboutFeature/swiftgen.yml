@@ -7,4 +7,11 @@ xcassets:
     templateName: swift5
     output: Assets.generated.swift
     params:
-      enumName: AboutViewAssets
+      enumName: Assets
+
+strings:
+  inputs: en.lproj
+  filter: .+\.strings$
+  outputs:
+    templateName: structured-swift5
+    output: L10n.generated.swift

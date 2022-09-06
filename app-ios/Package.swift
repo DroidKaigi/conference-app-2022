@@ -15,13 +15,11 @@ var package = Package(
         .library(name: "Auth", targets: ["Auth"]),
         .library(name: "Container", targets: ["Container"]),
         .library(name: "ContributorFeature", targets: ["ContributorFeature"]),
-        .library(name: "Assets", targets: ["Assets"]),
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
-        .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
     ],
@@ -33,7 +31,6 @@ var package = Package(
         .target(
             name: "AboutFeature",
             dependencies: [
-                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -50,23 +47,18 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
-                .target(name: "Assets"),
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
                 .target(name: "MapFeature"),
                 .target(name: "NotificationFeature"),
                 .target(name: "SponsorFeature"),
-                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]
-        ),
-        .target(
-            name: "Assets",
+            ],
             resources: [
                 .process("swiftgen.yml"),
                 .process("Resources"),
@@ -133,16 +125,6 @@ var package = Package(
             ]
         ),
         .target(
-            name: "Strings",
-            resources: [
-                .process("swiftgen.yml"),
-                .process("Resources"),
-            ],
-            plugins: [
-                .plugin(name: "SwiftGenPlugin"),
-            ]
-        ),
-        .target(
             name: "Theme",
             resources: [
                 .process("swiftgen.yml"),
@@ -155,10 +137,16 @@ var package = Package(
         .target(
             name: "TimetableFeature",
             dependencies: [
-                .target(name: "Assets"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .testTarget(
