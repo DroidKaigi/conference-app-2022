@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,13 +49,19 @@ fun SessionListItem(
                 color = Color.White,
                 modifier = Modifier,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = maxTitleLines
+                maxLines = maxTitleLines,
+                style = MaterialTheme.typography.titleLarge
             )
-
+            Spacer(modifier = Modifier.height(10.dp))
             Row {
                 KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
                 Spacer(modifier = Modifier.width(8.dp))
-                KaigiTag { Text(timetableItem.minutesString) }
+                KaigiTag(
+                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+                ) { 
+                    Text(timetableItem.minutesString) 
+                }
             }
         }
         IconButton(
