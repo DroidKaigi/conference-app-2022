@@ -50,6 +50,7 @@ fun About(
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
+        // TODO: Display titles instead of icons
         topBar = {
             KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
         }
@@ -126,9 +127,11 @@ fun About(
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
             Column {
-                // TODO
+                // TODO: Implementation of this part
+                // TODO: https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=421%3A1883
             }
-            // TODO
+            // TODO: Implementation of this part
+            // TODO: https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=421%3A1959
         }
     }
 }
