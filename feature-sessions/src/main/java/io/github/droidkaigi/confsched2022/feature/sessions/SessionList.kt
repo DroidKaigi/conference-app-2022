@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.Timetable
@@ -16,18 +18,20 @@ fun SessionList(
     timetable: Timetable,
     sessionsListListState: LazyListState,
     modifier: Modifier = Modifier,
-    content: @Composable (TimetableItem, Boolean) -> Unit,
+    content: @Composable (TimetableItem, Boolean, Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(32.dp),
         state = sessionsListListState
     ) {
-        items(timetable.contents, key = { it.timetableItem.id.value }) {
-            content(
-                it.timetableItem,
-                it.isFavorited
-            )
+        itemsIndexed(timetable.contents) { index, item ->
+            key(item.timetableItem.id.value) {
+                content(
+                    item.timetableItem,
+                    item.isFavorited,
+                    index
+                )
+            }
         }
     }
 }

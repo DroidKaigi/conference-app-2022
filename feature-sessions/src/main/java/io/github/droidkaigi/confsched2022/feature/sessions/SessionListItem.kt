@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +32,6 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 fun SessionListItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
-    onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     maxTitleLines: Int = 4
@@ -40,7 +41,6 @@ fun SessionListItem(
     Row(
         modifier = modifier
             .fillMaxSize()
-            .clickable { onTimetableClick(timetableItem.id) }
             .semantics { contentDescription = "isFavorited$isFavorited" },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -50,9 +50,10 @@ fun SessionListItem(
                 color = Color.White,
                 modifier = Modifier,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = maxTitleLines
+                maxLines = maxTitleLines,
+                style = MaterialTheme.typography.titleLarge
             )
-
+            Spacer(modifier = Modifier.height(10.dp))
             Row {
                 KaigiTag(
                     text = roomName.enTitle,
@@ -61,6 +62,8 @@ fun SessionListItem(
                 Spacer(modifier = Modifier.width(8.dp))
                 KaigiTag(
                     text = timetableItem.minutesString,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer
                 )
             }
         }

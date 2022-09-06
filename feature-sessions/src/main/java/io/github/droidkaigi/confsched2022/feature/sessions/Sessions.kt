@@ -1,11 +1,15 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +50,9 @@ import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun SessionsScreenRoot(
@@ -188,13 +197,60 @@ fun SessionsList(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited ->
-            SessionListItem(
-                timetableItem = timetableItem,
-                isFavorited = isFavorited,
-                onTimetableClick = onTimetableClick,
-                onFavoriteClick = onFavoriteClick
-            )
+        var currentStartTime = ""
+        SessionList(timetable, sessionsListListStates[dayIndex]) { timetableItem, isFavorited, index ->
+            val startLocalDateTime = timetableItem.startsAt
+                .toLocalDateTime(TimeZone.of("UTC+9"))
+            val endLocalDateTime = timetableItem.endsAt
+                .toLocalDateTime(TimeZone.of("UTC+9"))
+            val startTime = LocalTime(
+                hour = startLocalDateTime.hour,
+                minute = startLocalDateTime.minute
+            ).toString()
+            val endTime = LocalTime(
+                hour = endLocalDateTime.hour,
+                minute = endLocalDateTime.minute
+            ).toString()
+            var displayTime = true
+            if (index == 0) currentStartTime = startTime
+            else if (index > 0 && startTime == currentStartTime) {
+                displayTime = false
+            } else {
+                currentStartTime = startTime
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onTimetableClick(timetableItem.id) }
+                    .padding(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier.width(85.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            if (displayTime) {
+                                Text(text = startTime)
+                                Box(
+                                    modifier = Modifier
+                                        .size(1.dp, 2.dp)
+                                        .background(MaterialTheme.colorScheme.onBackground)
+                                ) { }
+                                Text(text = endTime)
+                            }
+                        }
+                    }
+                    SessionListItem(
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited,
+                        onFavoriteClick = onFavoriteClick
+                    )
+                }
+            }
         }
     }
 }
