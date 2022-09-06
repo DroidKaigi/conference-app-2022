@@ -1,7 +1,4 @@
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -41,7 +38,6 @@ jobs:
         run: ./gradlew preview-screenshots:verifyPaparazziDebug
 
       - name: Error Screenshot tests
-        continue-on-error: true
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
         uses: actions/upload-artifact@v3
         with:
@@ -49,11 +45,10 @@ jobs:
           path: preview-screenshots/out/failures
 
       - name: Comment PR
-        continue-on-error: true
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
             There are differences in Compose previews. Please check your build and download the diff artifact.
-            https://github.com/DroidKaigi/conference-app-2022/actions/workflows/ScreenShotTest.yml
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
