@@ -89,7 +89,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         targetAudience = apiSession.targetAudience,
                         language = apiSession.language,
                         asset = apiSession.asset.toTimetableAsset(),
-                        description = apiSession.description,
+                        description = apiSession.description ?: "",
                         speakers = apiSession.speakers
                             .map { speakerIdToSpeaker[it]!! }
                             .toPersistentList(),
