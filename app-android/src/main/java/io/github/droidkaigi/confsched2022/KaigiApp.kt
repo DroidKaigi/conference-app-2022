@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
@@ -19,6 +20,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -71,8 +73,8 @@ fun KaigiApp(
             KaigiAppDrawer(
                 kaigiAppScaffoldState = kaigiAppScaffoldState,
                 showPermanently = usePersistentNavigationDrawer,
-                drawerSheet = {
-                    DrawerSheet(
+                drawerSheetContent = {
+                    DrawerSheetContent(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
                         onClickDrawerItem = { drawerItem ->
                             kaigiAppScaffoldState.navigate(drawerItem)
@@ -129,19 +131,19 @@ fun rememberKaigiAppScaffoldState(
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     showPermanently: Boolean,
-    drawerSheet: @Composable () -> Unit,
+    drawerSheetContent: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
     if (showPermanently) {
         PermanentNavigationDrawer(
-            drawerContent = { drawerSheet() },
+            drawerContent = { PermanentDrawerSheet { drawerSheetContent() } },
         ) {
             content()
         }
     } else {
         ModalNavigationDrawer(
             drawerState = kaigiAppScaffoldState.drawerState,
-            drawerContent = { drawerSheet() },
+            drawerContent = { ModalDrawerSheet { drawerSheetContent() } },
         ) {
             content()
         }
@@ -215,36 +217,34 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerSheet(
+fun ColumnScope.DrawerSheetContent(
     selectedDrawerItem: DrawerItem?,
     onClickDrawerItem: (DrawerItem) -> Unit
 ) {
-    ModalDrawerSheet {
-        Image(
-            painter = painterResource(id = R.drawable.img_navigation_drawer_lookup),
-            contentDescription = null,
-            modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
+    Image(
+        painter = painterResource(id = R.drawable.img_navigation_drawer_lookup),
+        contentDescription = null,
+        modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
+    )
+    DrawerItem.values().forEach { drawerItem ->
+        NavigationDrawerItem(
+            icon = {
+                Icon(imageVector = drawerItem.icon, contentDescription = null)
+            },
+            label = {
+                Text(stringResource(drawerItem.titleResId))
+            },
+            selected = drawerItem == selectedDrawerItem,
+            onClick = {
+                onClickDrawerItem(drawerItem)
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
-        DrawerItem.values().forEach { drawerItem ->
-            NavigationDrawerItem(
-                icon = {
-                    Icon(imageVector = drawerItem.icon, contentDescription = null)
-                },
-                label = {
-                    Text(stringResource(drawerItem.titleResId))
-                },
-                selected = drawerItem == selectedDrawerItem,
-                onClick = {
-                    onClickDrawerItem(drawerItem)
-                },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+            Divider(
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
             )
-            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
-                Divider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
-                )
-            }
         }
     }
 }
