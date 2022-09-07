@@ -10,6 +10,7 @@ fun NavGraphBuilder.sessionsNavGraph(
     onNavigationIconClick: () -> Unit,
     onBackIconClick: () -> Unit,
     onTimetableClick: (TimetableItemId) -> Unit,
+    onNavigateFloorMapClick: () -> Unit,
 ) {
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
@@ -32,6 +33,7 @@ fun NavGraphBuilder.sessionsNavGraph(
         SessionDetailScreenRoot(
             timetableItemId = TimetableItemId(id),
             onBackIconClick = onBackIconClick,
+            onNavigateFloorMapClick = onNavigateFloorMapClick,
         )
     }
 }
