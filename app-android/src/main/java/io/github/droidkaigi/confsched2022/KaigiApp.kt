@@ -176,18 +176,43 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 }
 
-enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
-    Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
-    About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
-    Information(R.string.title_information, Icons.Default.Announcement, ""),
-    Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
+enum class DrawerGroup {
+    Session, Information, Others
+}
+
+enum class DrawerItem(
+    val group: DrawerGroup,
+    val titleResId: Int,
+    val icon: ImageVector,
+    val navRoute: String
+) {
+    Sessions(
+        DrawerGroup.Session,
+        R.string.title_sessions,
+        Icons.Default.Event,
+        SessionsNavGraph.sessionRoute
+    ),
+    About(
+        DrawerGroup.Information,
+        R.string.title_about,
+        Icons.Default.Android,
+        AboutNavGraph.aboutRoute
+    ),
+    Information(
+        DrawerGroup.Information,
+        R.string.title_information,
+        Icons.Default.Announcement,
+        ""
+    ),
+    Map(DrawerGroup.Information, R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
+    Sponsors(DrawerGroup.Others, R.string.title_sponsors, Icons.Default.Business, ""),
     Contributors(
+        DrawerGroup.Others,
         R.string.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(R.string.title_setting, Icons.Default.Settings, "");
+    Setting(DrawerGroup.Others, R.string.title_setting, Icons.Default.Settings, "");
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
