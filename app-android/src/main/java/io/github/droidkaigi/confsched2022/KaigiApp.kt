@@ -69,7 +69,10 @@ fun KaigiApp(
                     DrawerSheet(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
                         onClickDrawerItem = { drawerItem ->
-                            kaigiAppScaffoldState.navigate(drawerItem)
+                            kaigiAppScaffoldState.navigate(
+                                drawerItem = drawerItem,
+                                selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem!!
+                            )
                         }
                     )
                 }
@@ -134,8 +137,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val navController: NavHostController,
     val drawerState: DrawerState,
 ) {
-    fun navigate(drawerItem: DrawerItem) {
-        navController.navigate(drawerItem.navRoute)
+    fun navigate(drawerItem: DrawerItem, selectedDrawerItem: DrawerItem) {
+        navController.navigate(drawerItem.navRoute) {
+            popUpTo(selectedDrawerItem.navRoute) {
+                inclusive = true
+            }
+        }
         coroutineScope.launch {
             drawerState.close()
         }
