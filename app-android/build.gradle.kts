@@ -67,6 +67,7 @@ androidComponents {
 dependencies {
     implementation(projects.featureSessions)
     implementation(projects.featureContributors)
+    implementation(projects.featureMap)
     implementation(projects.featureAbout)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)

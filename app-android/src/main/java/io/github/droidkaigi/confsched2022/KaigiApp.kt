@@ -42,6 +42,8 @@ import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
+import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
+import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
@@ -69,10 +71,7 @@ fun KaigiApp(
                     DrawerSheet(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
                         onClickDrawerItem = { drawerItem ->
-                            kaigiAppScaffoldState.navigate(
-                                drawerItem = drawerItem,
-                                selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem!!
-                            )
+                            kaigiAppScaffoldState.navigate(drawerItem)
                         }
                     )
                 }
@@ -90,6 +89,7 @@ fun KaigiApp(
                     )
                     contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
                     aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                    mapGraph()
                 }
             }
         }
@@ -137,12 +137,8 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     val navController: NavHostController,
     val drawerState: DrawerState,
 ) {
-    fun navigate(drawerItem: DrawerItem, selectedDrawerItem: DrawerItem) {
-        navController.navigate(drawerItem.navRoute) {
-            popUpTo(selectedDrawerItem.navRoute) {
-                inclusive = true
-            }
-        }
+    fun navigate(drawerItem: DrawerItem) {
+        navController.navigate(drawerItem.navRoute)
         coroutineScope.launch {
             drawerState.close()
         }
@@ -184,7 +180,7 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
     About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
     Information(R.string.title_information, Icons.Default.Announcement, ""),
-    Map(R.string.title_map, Icons.Default.Map, ""),
+    Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
     Contributors(
         R.string.title_contributors,
