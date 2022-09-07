@@ -46,7 +46,7 @@ fun TimetableItem(
             color = Color.White,
             modifier = Modifier
                 .padding(bottom = 8.dp)
-                .weight(1f)
+                .weight(weight = 1f, fill = false)
                 .fillMaxWidth(),
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium.copy(
