@@ -45,8 +45,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode.Expand
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -230,6 +234,45 @@ fun SessionDetailScreen(
 }
 
 @Composable
+fun SessionTagsLine(
+    startsAt: Instant,
+    endsAt: Instant,
+    room: TimetableRoom,
+    category: TimetableCategory,
+    levels: PersistentList<String>,
+) {
+    val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    FlowRow(
+        mainAxisSize = Expand,
+        mainAxisSpacing = 8.dp,
+        crossAxisSpacing = 8.dp
+    ) {
+        KaigiTag(
+            backgroundColor = Color(AppBar.color)
+        ) {
+            Text(room.name.currentLangTitle)
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(sessionMinutes + "min")
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(category.title.currentLangTitle)
+        }
+        levels.forEach {
+            KaigiTag(
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                Text(text = it)
+            }
+        }
+    }
+}
+
+@Composable
 fun SessionScheduleInfo(
     modifier: Modifier = Modifier,
     startTime: Instant,
@@ -280,20 +323,22 @@ fun SessionDetailSessionInfo(
             style = MaterialTheme.typography.headlineSmall,
         )
 
-        Spacer(modifier = modifier.padding(16.dp))
+        Spacer(modifier = modifier.padding(24.dp))
+
+        SessionTagsLine(
+            startsAt = startsAt,
+            endsAt = endsAt,
+            room = room,
+            category = category,
+            levels = levels
+        )
+
+        Spacer(modifier = modifier.padding(24.dp))
 
         SessionScheduleInfo(
             startTime = startsAt,
             endTime = endsAt
         )
-
-        Text(
-            modifier = modifier,
-            text = room.name.currentLangTitle,
-            style = MaterialTheme.typography.bodySmall,
-        )
-
-        // TODO TagLines
         // TODO favorite button
     }
 }
