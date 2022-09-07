@@ -393,3 +393,22 @@ fun SessionsSessionListPreview() {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun SessionsLoadingPreview() {
+    KaigiTheme {
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = ScheduleState.Loading,
+                isFilterOn = false
+            ),
+            onNavigationIconClick = {},
+            onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
+            onSearchClick = {},
+            onToggleTimetableClick = {},
+            isTimetable = false,
+        )
+    }
+}
