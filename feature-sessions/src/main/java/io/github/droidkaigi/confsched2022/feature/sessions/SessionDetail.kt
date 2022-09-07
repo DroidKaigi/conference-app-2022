@@ -385,7 +385,7 @@ fun SessionDetailTargetAudience(
     Column {
         Text(
             modifier = modifier,
-            text = "対象者",
+            text = stringResource(id = R.string.session_target_audience),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -409,7 +409,7 @@ fun SessionDetailSpeakers(
     Column {
         Text(
             modifier = modifier,
-            text = "スピーカー",
+            text = stringResource(id = R.string.session_speaker),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -465,7 +465,7 @@ fun SessionDetailAssets(
     Column {
         Text(
             modifier = modifier,
-            text = "資料",
+            text = stringResource(id = R.string.session_material),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -474,7 +474,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = modifier,
             painter = painterResource(id = R.drawable.ic_video_cam),
-            text = "MOVIE",
+            text = stringResource(id = R.string.session_movie),
             onClick = {
                 val videoUrl = asset.videoUrl
                 if (videoUrl != null) {
@@ -488,7 +488,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = modifier,
             painter = painterResource(id = R.drawable.ic_photo_library),
-            text = "スライド",
+            text = stringResource(id = R.string.session_slide),
             onClick = {
                 val slideUrl = asset.slideUrl
                 if (slideUrl != null) {
