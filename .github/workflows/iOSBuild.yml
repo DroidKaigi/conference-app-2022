@@ -39,6 +39,7 @@ jobs:
           name: XCFrameworks
           path: app-ios-combined/build/XCFrameworks/
       - name: Build Modules that includes plugin
+        working-directory: app-ios
         run: |
           scripts/build.sh build Assets
           scripts/build.sh build Theme
