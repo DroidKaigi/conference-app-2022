@@ -167,19 +167,28 @@ fun Timetable(
                 HoursItem(hour = hour, modifier = modifier)
             }
 
-            Timetable(
-                timetable = timetable,
-                timetableState = timetableState,
-                coroutineScope,
-            ) { timetableItem, isFavorited ->
-                TimetableItem(
-                    timetableItem = timetableItem,
-                    isFavorited = isFavorited,
-                    modifier = Modifier
-                        .clickable(
-                            onClick = { onTimetableClick(timetableItem.id) }
-                        ),
-                )
+            Column(modifier = Modifier.weight(1f)) {
+                Rooms(
+                    rooms = timetable.rooms,
+                    timetableState = timetableState
+                ) { modifier, room ->
+                    RoomItem(modifier = modifier, room = room)
+                }
+
+                Timetable(
+                    timetable = timetable,
+                    timetableState = timetableState,
+                    coroutineScope,
+                ) { timetableItem, isFavorited ->
+                    TimetableItem(
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited,
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { onTimetableClick(timetableItem.id) }
+                            ),
+                    )
+                }
             }
         }
     }

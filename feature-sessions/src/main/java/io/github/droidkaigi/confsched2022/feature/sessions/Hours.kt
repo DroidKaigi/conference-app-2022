@@ -220,7 +220,7 @@ private fun itemProvider(
 }
 
 private val lineStrokeSize = 1.dp
-private val horizontalLineTopOffset = 16.dp
+private val horizontalLineTopOffset = 48.dp
 private val hoursWidth = 75.dp
 private val hoursItemWidth = 43.dp
 private val hoursItemHeight = 24.dp
