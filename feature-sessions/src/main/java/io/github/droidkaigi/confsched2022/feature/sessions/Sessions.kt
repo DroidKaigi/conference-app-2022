@@ -60,6 +60,7 @@ import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -288,6 +289,20 @@ fun SessionsTopBar(
     onToggleTimetableClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(key1 = sessionPagerListScrollState.pagerState) {
+        snapshotFlow {
+            sessionPagerListScrollState.pagerState.currentPage
+        }.collect{
+            sessionPagerListScrollState.changedCurrentPage(it)
+        }
+    }
+    LaunchedEffect(key1 = sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState) {
+        snapshotFlow {
+            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState
+        }.collect {
+            sessionPagerListScrollState.changedCurrentPage(sessionPagerListScrollState.pagerState.currentPage)
+        }
+    }
     Column(
         modifier = modifier
     ) {
@@ -344,7 +359,7 @@ fun SessionsTopBar(
                         index = index,
                         day = day,
                         selected = selected,
-                        scrolled = if(isTimetable) sessionPagerListScrollState.currentTimeTableScrolled else sessionPagerListScrollState.currentSessionsListScrolled,
+                        scrolled = if(isTimetable) sessionPagerListScrollState.oldPageTimeTableScrolled else sessionPagerListScrollState.oldPageSessionsListScrolled,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
@@ -452,19 +467,41 @@ class SessionPagerListScrollState (
     val timetableStates: List<TimetableState>,
     val sessionsListListStates: List<LazyListState>
 ){
-    private val _currentTimeTableScrolled
+    private var _oldPage = pagerState.currentPage
+    private var _currentPage = pagerState.currentPage
+
+    private val _currentTimetableScrolled
         get() = timetableStates[pagerState.currentPage].screenScrollState.scrollY < 0
 
-    val currentTimeTableScrolled get() = _currentTimeTableScrolled
+    val currentTimetableScrolled get() = _currentTimetableScrolled
+
+    private val _oldPageTimeTableScrolled
+        get() = timetableStates[_oldPage].screenScrollState.scrollY < 0
+
+    val oldPageTimeTableScrolled get() = _oldPageTimeTableScrolled
+
+//    val timetableScrolled get() =
 
     private val _currentSessionsListScrolled
         get() = sessionsListListStates[pagerState.currentPage].layoutInfo.beforeContentPadding > 0
 
     val currentSessionsListScrolled get() = _currentSessionsListScrolled
 
+    private val _oldPageSessionsListScrolled
+        get() = sessionsListListStates[_oldPage].layoutInfo.beforeContentPadding < 0
+
+    val oldPageSessionsListScrolled get() = _oldPageSessionsListScrolled
+
     suspend fun scrollToSessionsListItem(index: Int) = coroutineScope {
         launch {
             sessionsListListStates[pagerState.currentPage].scrollToItem(index)
+        }
+    }
+
+    suspend fun changedCurrentPage(page: Int) = coroutineScope {
+        launch {
+            _oldPage = _currentPage
+            _currentPage = page
         }
     }
 
