@@ -19,9 +19,11 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
@@ -57,7 +59,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaigiApp(
-    calculateWindowSizeClass: WindowSizeClass,
+    windowSizeClass: WindowSizeClass,
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
 ) {
     KaigiTheme {
@@ -65,8 +67,10 @@ fun KaigiApp(
             LocalShareManager provides AndroidShareManager(LocalContext.current),
             LocalCalendarRegistration provides AndroidCalendarRegistration(LocalContext.current),
         ) {
+            val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
             KaigiAppDrawer(
                 kaigiAppScaffoldState = kaigiAppScaffoldState,
+                showPermanently = usePersistentNavigationDrawer,
                 drawerSheet = {
                     DrawerSheet(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
@@ -96,6 +100,14 @@ fun KaigiApp(
     }
 }
 
+private val WindowSizeClass.usePersistentNavigationDrawer: Boolean
+    get() = when (widthSizeClass) {
+        WindowWidthSizeClass.Compact -> false
+        WindowWidthSizeClass.Medium -> false
+        WindowWidthSizeClass.Expanded -> true
+        else -> false
+    }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberKaigiAppScaffoldState(
@@ -116,18 +128,23 @@ fun rememberKaigiAppScaffoldState(
 @Composable
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
+    showPermanently: Boolean,
     drawerSheet: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
-    ModalNavigationDrawer(
-        drawerState = kaigiAppScaffoldState.drawerState,
-        drawerContent = {
-            drawerSheet()
+    if (showPermanently) {
+        PermanentNavigationDrawer(
+            drawerContent = { drawerSheet() },
+        ) {
+            content()
         }
-    ) {
-        content()
+    } else {
+        ModalNavigationDrawer(
+            drawerState = kaigiAppScaffoldState.drawerState,
+            drawerContent = { drawerSheet() },
+        ) {
+            content()
+        }
     }
 }
 
