@@ -45,9 +45,7 @@ fun SearchScreen(
 ) {
     KaigiScaffold(
         topBar = {
-            KaigiTopAppBar(
-                onNavigationIconClick = { },
-            )
+
         },
         content = {
             Column {
@@ -122,10 +120,16 @@ private fun SearchedItem(timetableItemWithFavorite: TimetableItemWithFavorite) {
             Row {
                 timetableItemWithFavorite.timetableItem
                 Text(timetableItemWithFavorite.timetableItem.title.currentLangTitle)
-                if(timetableItemWithFavorite.isFavorited) {
-                    Icon(painter = painterResource(id = R.drawable.ic_bookmark_filled), contentDescription = "book_mark_icon")
+                if (timetableItemWithFavorite.isFavorited) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                        contentDescription = "book_mark_icon"
+                    )
                 } else {
-                    Icon(painter = painterResource(id = R.drawable.ic_bookmark), contentDescription = "book_mark_icon")
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark),
+                        contentDescription = "book_mark_icon"
+                    )
                 }
             }
             Text(timetableItemWithFavorite.timetableItem.startsAt.toString())

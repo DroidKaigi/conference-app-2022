@@ -33,7 +33,6 @@ fun NavGraphBuilder.sessionsNavGraph(
         val id = it.arguments?.getString("id") ?: ""
         SessionDetailScreenRoot(
             timetableItemId = TimetableItemId(id),
-            onNavigationIconClick = onNavigationIconClick,
             onBackIconClick = onBackIconClick,
             onNavigateFloorMapClick = onNavigateFloorMapClick,
         )

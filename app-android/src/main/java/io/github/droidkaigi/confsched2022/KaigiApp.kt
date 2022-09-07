@@ -82,6 +82,7 @@ fun KaigiApp(
                     sessionsNavGraph(
                         kaigiAppScaffoldState::onNavigationClick,
                         kaigiAppScaffoldState::onBackIconClick,
+                        kaigiAppScaffoldState::onSearchClick,
                         kaigiAppScaffoldState::onTimeTableClick,
                         kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
