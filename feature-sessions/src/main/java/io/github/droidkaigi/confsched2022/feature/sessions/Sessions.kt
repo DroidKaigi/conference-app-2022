@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,7 +30,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -53,6 +56,7 @@ import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 
 @Composable
 fun SessionsScreenRoot(
@@ -276,6 +280,13 @@ fun SessionsTopBar(
         KaigiTopAppBar(
             onNavigationIconClick = onNavigationIconClick,
             elevation = 2.dp,
+            title = {
+                Image(
+                    modifier = Modifier.size(30.dp),
+                    imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
+                    contentDescription = "logo in toolbar"
+                )
+            },
             trailingIcons = {
                 IconButton(
                     onClick = onSearchClick,
