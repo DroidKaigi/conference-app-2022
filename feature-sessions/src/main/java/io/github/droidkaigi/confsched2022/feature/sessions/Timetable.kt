@@ -232,7 +232,7 @@ private data class TimetableItemLayout(
 }
 
 private data class TimetableLayout(val timetable: Timetable, val density: Density) {
-    val rooms = timetable.timetableItems.map { it.room }.toSet().sortedBy { it.sort }
+    val rooms = timetable.rooms
     val dayStartTime = timetable.timetableItems.minOfOrNull { it.startsAt }
     var timetableHeight = 0
     var timetableWidth = 0
@@ -384,7 +384,7 @@ private class TimetableScreen(
                 scrollState.scrollY.toInt()
             )
         }
-    val topOffset = with(density) { 16.dp.roundToPx() }
+    val topOffset = with(density) { 0.dp.roundToPx() }
     val timeHorizontalLines = derivedStateOf {
         (0..10).map {
             scrollState.scrollY + timetableLayout.minutePx * 60 * it + topOffset
