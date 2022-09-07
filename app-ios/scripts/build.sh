@@ -9,7 +9,7 @@ PLATFORM_IOS="iOS Simulator,name=iPhone 13 Pro,OS=15.5"
 
 echo "⚙️  Building $SCHEME..."
 set -o pipefail && xcodebuild $TYPE \
--workspace $WORKSPACE \
+-project $PROJECT \
 -scheme "$SCHEME" \
 -configuration $CONFIGURATION \
 -destination platform="$PLATFORM_IOS"
