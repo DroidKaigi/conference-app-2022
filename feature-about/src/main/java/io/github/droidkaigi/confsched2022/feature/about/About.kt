@@ -64,8 +64,9 @@ fun About(
     versionName: String?
 ) {
     KaigiScaffold(
-        // TODO: Display titles instead of icons
         topBar = {
+            // TODO: Replace with Slot API pattern
+            // see: https://github.com/DroidKaigi/conference-app-2022/issues/238
             KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
         }
     ) {

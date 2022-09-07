@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.core.designsystem.R.font
 
 val fonts = FontFamily(
-    Font(font.montserrat_variable_font_wght)
+    Font(font.montserrat_medium)
 )
 
 // Set of Material typography styles to start with
