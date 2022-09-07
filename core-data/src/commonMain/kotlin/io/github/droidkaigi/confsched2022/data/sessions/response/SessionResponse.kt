@@ -8,7 +8,7 @@ internal data class SessionResponse(
     val isServiceSession: Boolean,
     val title: LocaledResponse,
     val speakers: List<String>,
-    val description: String = "",
+    val description: String?,
     val startsAt: String,
     val endsAt: String,
     val language: String,
