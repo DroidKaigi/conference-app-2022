@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-kmm-module:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
@@ -29,7 +29,7 @@ jobs:
           path: app-ios-combined/build/XCFrameworks/
   build-ios:
     needs: build-kmm-module
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - name: Download xcframeworks
