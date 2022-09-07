@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,11 +23,15 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,6 +55,8 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -94,11 +101,13 @@ fun Sessions(
     val scheduleState = uiModel.scheduleState
     val pagerState = rememberPagerState()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
+    val timetableListStates = DroidKaigi2022Day.values().map { rememberTimetableState() }.toList()
     KaigiScaffold(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
                 pagerState,
+                if (isTimetable) timetableListStates else null,
                 if (isTimetable) null else sessionsListListStates,
                 scheduleState,
                 onNavigationIconClick,
@@ -119,6 +128,7 @@ fun Sessions(
                     Timetable(
                         pagerState = pagerState,
                         scheduleState = scheduleState,
+                        timetableListStates = timetableListStates,
                         days = days,
                         onTimetableClick = onTimetableClick
                     )
@@ -142,6 +152,7 @@ fun Sessions(
 fun Timetable(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
+    timetableListStates: List<TimetableState>,
     scheduleState: Loaded,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -152,7 +163,7 @@ fun Timetable(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        val timetableState = rememberTimetableState()
+        val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
 
         Row(modifier = modifier) {
@@ -263,6 +274,7 @@ data class DurationTime(val startAt: String, val endAt: String)
 @Composable
 fun SessionsTopBar(
     pagerState: PagerState,
+    sessionsTimetableState: List<TimetableState>?,
     sessionsListListStates: List<LazyListState>?,
     scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
@@ -300,6 +312,9 @@ fun SessionsTopBar(
             }
         )
         (scheduleState as? Loaded)?.schedule?.days?.let { days ->
+            val positionY by remember(pagerState.currentPage) {
+                derivedStateOf { sessionsTimetableState?.getOrNull(pagerState.currentPage)?.screenScrollState?.scrollY ?: 0f }
+            }
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 modifier = Modifier
@@ -326,6 +341,7 @@ fun SessionsTopBar(
                         index = index,
                         day = day,
                         selected = selected,
+                        positionY < 0,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
@@ -355,6 +371,25 @@ private fun TabIndicator(
             .height(56.dp)
     ) {}
 }
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun rememberSessionPagerState(
+    pagerState: PagerState = rememberPagerState(),
+    timeTableStates: List<TimetableState>
+): SessionPagerState = remember {
+    SessionPagerState(
+        pagerState,
+        timeTableStates
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Stable
+data class SessionPagerState(
+    val pagerState: PagerState,
+    val timeTableStates: List<TimetableState>
+)
 
 @Preview(showBackground = true)
 @Composable

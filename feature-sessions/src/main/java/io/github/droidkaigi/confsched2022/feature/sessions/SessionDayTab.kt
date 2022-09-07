@@ -25,6 +25,7 @@ internal fun SessionDayTab(
     index: Int,
     day: DroidKaigi2022Day,
     selected: Boolean,
+    scrolled: Boolean,
     onTabClicked: (index: Int) -> Unit
 ) {
     Tab(
@@ -47,16 +48,18 @@ internal fun SessionDayTab(
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
-            Text(
-                text = "${5 + index}",
-                style = TextStyle(
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight(500)
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+            if(!scrolled) {
+                Text(
+                    text = "${5 + index}",
+                    style = TextStyle(
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight(500)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
