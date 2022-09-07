@@ -40,6 +40,7 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.Sched
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
@@ -112,7 +113,8 @@ private fun SearchTextField() {
 private fun SearchedItemListField(schedule: DroidKaigiSchedule) {
     LazyColumn {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
-            items(timeTable.contents) {
+            val sessions = timeTable.filtered(Filters(filterSession = true)).contents
+            items(sessions) {
                 SearchedItem(it)
             }
         }

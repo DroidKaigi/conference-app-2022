@@ -3,6 +3,8 @@
 )
 
 package io.github.droidkaigi.confsched2022.model
+
+import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -40,6 +42,9 @@ data class Timetable(
             timetableItems = timetableItems.filter { timetableItem ->
                 favorites.contains(timetableItem.id)
             }
+        }
+        if (filters.filterSession) {
+            timetableItems = timetableItems.filterIsInstance<Session>()
         }
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
