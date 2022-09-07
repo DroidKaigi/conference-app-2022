@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,17 +47,24 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 
 @Composable
-fun SearchRoot() {
+fun SearchRoot(
+    onItemClick: () -> Unit = {},
+    onBookMarkClick: () -> Unit = {}
+) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
     SearchScreen(
-        uiModel = state
+        uiModel = state,
+        onItemClick = onItemClick,
+        onBookMarkClick = onBookMarkClick,
     )
 }
 
 @Composable
 fun SearchScreen(
-    uiModel: SessionsUiModel
+    uiModel: SessionsUiModel,
+    onItemClick: () -> Unit,
+    onBookMarkClick: () -> Unit,
 ) {
     KaigiScaffold(
         topBar = {},
@@ -65,7 +73,11 @@ fun SearchScreen(
                 SearchTextField()
                 when (uiModel.scheduleState) {
                     is Loaded -> {
-                        SearchedItemListField(uiModel.scheduleState.schedule)
+                        SearchedItemListField(
+                            schedule = uiModel.scheduleState.schedule,
+                            onItemClick = onItemClick,
+                            onBookMarkClick = onBookMarkClick,
+                        )
                     }
                     is Loading -> {
                         FullScreenLoading()
@@ -82,7 +94,7 @@ private fun SearchTextField() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 10.dp),
+            .padding(vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
         OutlinedTextField(
@@ -110,7 +122,11 @@ private fun SearchTextField() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun SearchedItemListField(schedule: DroidKaigiSchedule) {
+private fun SearchedItemListField(
+    schedule: DroidKaigiSchedule,
+    onItemClick: () -> Unit,
+    onBookMarkClick: () -> Unit
+) {
     LazyColumn {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
             val sessions = timeTable.filtered(Filters(filterSession = true)).contents
@@ -119,7 +135,11 @@ private fun SearchedItemListField(schedule: DroidKaigiSchedule) {
                 SearchedHeader(day = dayToTimeTable)
             }
             items(sessions) {
-                SearchedItem(it)
+                SearchedItem(
+                    timetableItemWithFavorite = it,
+                    onItemClick = onItemClick,
+                    onBookMarkClick = onBookMarkClick,
+                )
             }
         }
     }
@@ -142,10 +162,15 @@ private fun SearchedHeader(day: DroidKaigi2022Day) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchedItem(timetableItemWithFavorite: TimetableItemWithFavorite) {
+private fun SearchedItem(
+    timetableItemWithFavorite: TimetableItemWithFavorite,
+    onItemClick: () -> Unit,
+    onBookMarkClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .wrapContentHeight()
+            .clickable { onItemClick.invoke() }
             .heightIn(min = 120.dp, max = 140.dp)
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
@@ -181,7 +206,8 @@ private fun SearchedItem(timetableItemWithFavorite: TimetableItemWithFavorite) {
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(timeTable.title.currentLangTitle)
-                        Text(timeTable.startsTimeString)
+
+                        Text("From ${timeTable.startsTimeString}. At ${timeTable.room.name.currentLangTitle}")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
@@ -203,6 +229,7 @@ private fun SearchedItem(timetableItemWithFavorite: TimetableItemWithFavorite) {
                                 modifier = Modifier
                                     .size(30.dp)
                                     .weight(1f)
+                                    .clickable { onBookMarkClick.invoke() }
                             )
                         }
                     }
@@ -225,11 +252,10 @@ private fun FullScreenLoading() {
 @Preview(showBackground = true)
 @Composable
 private fun SearchedItemPreview() {
-    val fakeSession =
-        io.github.droidkaigi.confsched2022.model.TimetableItem.Session.Companion.fake()
+    val fakeSession = Session.fake()
     val favorite = true
     val timeTableWithFavorite = TimetableItemWithFavorite(fakeSession, favorite)
-    SearchedItem(timetableItemWithFavorite = timeTableWithFavorite)
+    SearchedItem(timetableItemWithFavorite = timeTableWithFavorite, {}, {})
 }
 
 @Preview
