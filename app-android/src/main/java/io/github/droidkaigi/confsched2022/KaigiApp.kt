@@ -69,7 +69,10 @@ fun KaigiApp(
                     DrawerSheet(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
                         onClickDrawerItem = { drawerItem ->
-                            kaigiAppScaffoldState.navigate(drawerItem, kaigiAppScaffoldState.selectedDrawerItem!!)
+                            kaigiAppScaffoldState.navigate(
+                                drawerItem = drawerItem,
+                                selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem!!
+                            )
                         }
                     )
                 }
