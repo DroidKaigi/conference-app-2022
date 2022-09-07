@@ -8,21 +8,39 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.feature.information.R.string
 
 @Composable
-fun InformationScreenRoot() {
-    Information()
+fun InformationScreenRoot(onNavigationIconClick: () -> Unit) {
+    Information(onNavigationIconClick)
 }
 
 @Composable
-fun Information() {
-    Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
+fun Information(onNavigationIconClick: () -> Unit) {
+    KaigiScaffold(
+        topBar = {
+            KaigiTopAppBar(
+                onNavigationIconClick = onNavigationIconClick,
+                title = {
+                    Text(
+                        text = stringResource(id = string.information_top_app_bar_title),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+            )
+        }
     ) {
-        Text(
-            text = "Information's screen is unavailable.",
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        Box(
+            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Information's screen is unavailable.",
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }

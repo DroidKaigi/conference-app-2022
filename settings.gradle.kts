@@ -33,6 +33,7 @@ include(
     ":feature-contributors",
     ":feature-about",
     ":feature-map",
+    ":feature-information",
     ":core-ui",
     ":core-designsystem",
     ":core-data",

@@ -44,6 +44,8 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGr
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
+import io.github.droidkaigi.confsched2022.feature.information.InformationNavGraph
+import io.github.droidkaigi.confsched2022.feature.information.informationGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
@@ -90,6 +92,7 @@ fun KaigiApp(
                     contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
                     aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
                     mapGraph()
+                    informationGraph(kaigiAppScaffoldState::onNavigationClick)
                 }
             }
         }
@@ -179,7 +182,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
     About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
-    Information(R.string.title_information, Icons.Default.Announcement, ""),
+    Information(R.string.title_information, Icons.Default.Announcement, InformationNavGraph.informationRoute),
     Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
     Contributors(
