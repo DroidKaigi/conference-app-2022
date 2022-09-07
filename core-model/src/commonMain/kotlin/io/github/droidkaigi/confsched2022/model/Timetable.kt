@@ -46,6 +46,11 @@ data class Timetable(
         if (filters.filterSession) {
             timetableItems = timetableItems.filterIsInstance<Session>()
         }
+        if (filters.searchWord.isNotBlank()) {
+            timetableItems = timetableItems.filter { timetableItem ->
+                timetableItem.title.currentLangTitle.contains(filters.searchWord)
+            }
+        }
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
