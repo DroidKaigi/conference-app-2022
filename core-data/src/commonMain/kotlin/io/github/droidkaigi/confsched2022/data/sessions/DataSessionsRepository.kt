@@ -17,7 +17,7 @@ class DataSessionsRepository(
 ) : SessionsRepository {
     private val timetableFlow = MutableStateFlow(Timetable())
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-        if(timetableFlow.value.isEmpty()){
+        if (timetableFlow.value.isEmpty()) {
             refresh()
         }
         combine(
