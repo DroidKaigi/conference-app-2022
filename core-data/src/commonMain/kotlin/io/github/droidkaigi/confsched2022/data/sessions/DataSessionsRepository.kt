@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
@@ -18,7 +17,9 @@ class DataSessionsRepository(
 ) : SessionsRepository {
     private val timetableFlow = MutableStateFlow(Timetable())
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-        launch { refresh() }
+        if(timetableFlow.value.isEmpty()){
+            refresh()
+        }
         combine(
             timetableFlow,
             favoriteSessionsDataStore.favoriteSessionIds(),
