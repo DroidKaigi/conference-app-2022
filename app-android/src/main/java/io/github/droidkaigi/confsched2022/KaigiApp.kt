@@ -23,12 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -42,7 +44,11 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGr
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
+import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
+import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -53,29 +59,35 @@ fun KaigiApp(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
 ) {
     KaigiTheme {
-        KaigiAppDrawer(
-            kaigiAppScaffoldState = kaigiAppScaffoldState,
-            drawerSheet = {
-                DrawerSheet(
-                    selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
-                    onClickDrawerItem = { drawerItem ->
-                        kaigiAppScaffoldState.navigate(drawerItem)
-                    }
-                )
-            }
+        CompositionLocalProvider(
+            LocalShareManager provides AndroidShareManager(LocalContext.current),
+            LocalCalendarRegistration provides AndroidCalendarRegistration(LocalContext.current),
         ) {
-            NavHost(
-                modifier = Modifier,
-                navController = kaigiAppScaffoldState.navController,
-                startDestination = SessionsNavGraph.sessionRoute,
+            KaigiAppDrawer(
+                kaigiAppScaffoldState = kaigiAppScaffoldState,
+                drawerSheet = {
+                    DrawerSheet(
+                        selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
+                        onClickDrawerItem = { drawerItem ->
+                            kaigiAppScaffoldState.navigate(drawerItem)
+                        }
+                    )
+                }
             ) {
-                sessionsNavGraph(
-                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                    onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
-                    onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
-                )
-                contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                NavHost(
+                    modifier = Modifier,
+                    navController = kaigiAppScaffoldState.navController,
+                    startDestination = SessionsNavGraph.sessionRoute,
+                ) {
+                    sessionsNavGraph(
+                        kaigiAppScaffoldState::onNavigationClick,
+                        kaigiAppScaffoldState::onBackIconClick,
+                        kaigiAppScaffoldState::onTimeTableClick,
+                        kaigiAppScaffoldState::onNavigateFloorMapClick,
+                    )
+                    contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                    aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                }
             }
         }
     }
@@ -141,10 +153,18 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         )
     }
 
+    fun onNavigateFloorMapClick() {
+        TODO("Floor map is not yet implemented.")
+    }
+
     fun onNavigationClick() {
         coroutineScope.launch {
             drawerState.open()
         }
+    }
+
+    fun onBackIconClick() {
+        navController.popBackStack()
     }
 
     private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)

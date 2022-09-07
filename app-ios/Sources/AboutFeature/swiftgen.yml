@@ -1,0 +1,10 @@
+input_dir: Resources/
+output_dir: ${DERIVED_SOURCES_DIR}/
+
+xcassets:
+  inputs: Assets.xcassets
+  outputs:
+    templateName: swift5
+    output: Assets.generated.swift
+    params:
+      enumName: AboutViewAssets

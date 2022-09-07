@@ -28,6 +28,9 @@ fun Project.setupAndroid() {
 
         defaultConfig {
             minSdk = 23
+
+            versionCode = 1
+            versionName = "1.0.0"
         }
 
         compileOptions {

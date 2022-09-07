@@ -2,6 +2,7 @@
 androidGradlePlugin = "7.4.0-alpha10"
 kotlin = "1.7.10"
 molecule = "0.4.0"
+buildkonfig = "0.13.3"
 
 androidxCore = "1.8.0"
 androidDesugarJdkLibs = "1.2.2"
@@ -22,7 +23,7 @@ dagger = "2.43.2"
 spotless = "6.7.0"
 ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
-ktor = "2.1.0"
+ktor = "2.1.1"
 kotlinxCoroutines = "1.6.4"
 zipline = "0.9.1"
 ziplineSnapshot = "1.0.0-SNAPSHOT"
@@ -42,6 +43,7 @@ androidxStartup = "1.1.1"
 kluent = "1.68"
 coilCompose="2.2.0"
 koin = "3.2.0"
+androidXChromeCustomTabs = "1.4.0"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -51,6 +53,7 @@ hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-pl
 moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
 composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 kotlinSerializationPlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+buildkonfigPlugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
 ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
 ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 firebasePlugin = { module = "com.google.gms:google-services", version.ref = "firebasePlugin" }
@@ -79,6 +82,7 @@ androidxActivityCompose = { module = "androidx.activity:activity-compose", versi
 androidxFragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
 androidxDatastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 androidxStartup =  { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
+androidXChromeCustomTabs = { module = "androidx.browser:browser", version.ref = "androidXChromeCustomTabs" }
 
 multiplatformSettingsCoroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
 multiplatformSettingsDatastore = { module = "com.russhwolf:multiplatform-settings-datastore", version.ref = "multiplatformSettings" }

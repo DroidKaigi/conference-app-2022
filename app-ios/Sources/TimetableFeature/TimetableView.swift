@@ -6,44 +6,51 @@ import SwiftUI
 import Theme
 
 public struct TimetableState: Equatable {
-    public var timetable: Timetable
+    public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
 
     public init(
-        timetable: Timetable = .init(
-            timetableItems: [],
-            favorites: .init()
-        ),
+        dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1
     ) {
-        self.timetable = timetable
+        self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
     }
 }
 
 public enum TimetableAction {
     case refresh
-    case refreshResponse(TaskResult<Timetable>)
+    case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
 }
 
 public struct TimetableEnvironment {
-    public init() {}
+    public let sessionsRepository: SessionsRepository
+
+    public init(sessionsRepository: SessionsRepository) {
+        self.sessionsRepository = sessionsRepository
+    }
 }
 
-public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, _ in
+public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
-        return .task {
-            await .refreshResponse(
-                TaskResult {
-                    Timetable.companion.fake()
-                }
-            )
+        return .run { subscriber in
+            for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
+                await subscriber.send(
+                    .refreshResponse(
+                        TaskResult {
+                            result
+                        }
+                    )
+                )
+            }
         }
-    case let .refreshResponse(.success(timetable)):
-        state.timetable = timetable
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
+    case let .refreshResponse(.success(droidKaigiSchedule)):
+        state.dayToTimetable = droidKaigiSchedule.dayToTimetable
         return .none
     case .refreshResponse(.failure):
         return .none
@@ -139,10 +146,12 @@ struct TimetableView_Previews: PreviewProvider {
         TimetableView(
             store: .init(
                 initialState: .init(
-                    timetable: Timetable.companion.fake()
+                    dayToTimetable: DroidKaigiSchedule.companion.fake().dayToTimetable
                 ),
                 reducer: .empty,
-                environment: TimetableEnvironment()
+                environment: TimetableEnvironment(
+                    sessionsRepository: FakeSessionsRepository()
+                )
             )
         )
     }

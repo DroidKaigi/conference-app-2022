@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.drag
@@ -32,6 +33,11 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.ScrollAxisRange
+import androidx.compose.ui.semantics.horizontalScrollAxisRange
+import androidx.compose.ui.semantics.scrollBy
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.verticalScrollAxisRange
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
@@ -82,6 +88,7 @@ fun Timetable(
 
     LazyLayout(
         modifier = modifier
+            .focusGroup()
             .clipToBounds()
             .drawBehind {
                 timetableScreen.timeHorizontalLines.value.forEach {
@@ -122,6 +129,28 @@ fun Timetable(
                         coroutineScope.launch {
                             scrollState.flingIfPossible()
                         }
+                    }
+                )
+            }
+            .semantics {
+                horizontalScrollAxisRange = ScrollAxisRange(
+                    value = { -scrollState.scrollX },
+                    maxValue = { -scrollState.maxX },
+                )
+                verticalScrollAxisRange = ScrollAxisRange(
+                    value = { -scrollState.scrollY },
+                    maxValue = { -scrollState.maxY },
+                )
+                scrollBy(
+                    action = { x: Float, y: Float ->
+                        coroutineScope.launch {
+                            scrollState.scroll(
+                                amount = Offset(x, y),
+                                timeMillis = 0,
+                                position = Offset.Zero
+                            )
+                        }
+                        return@scrollBy true
                     }
                 )
             },

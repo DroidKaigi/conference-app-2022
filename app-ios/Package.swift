@@ -12,6 +12,8 @@ var package = Package(
     products: [
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "Auth", targets: ["Auth"]),
+        .library(name: "Container", targets: ["Container"]),
         .library(name: "ContributorFeature", targets: ["ContributorFeature"]),
         .library(name: "Assets", targets: ["Assets"]),
         .library(name: "MapFeature", targets: ["MapFeature"]),
@@ -24,20 +26,33 @@ var package = Package(
         .library(name: "Theme", targets: ["Theme"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.5.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.39.1"),
     ],
     targets: [
         .target(
             name: "AboutFeature",
             dependencies: [
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            resources: [
+                .process("swiftgen.yml"),
+                .process("Resources"),
+            ],
+            plugins: [
+                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .target(
             name: "AppFeature",
             dependencies: [
+                .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
                 .target(name: "Assets"),
+                .target(name: "Auth"),
+                .target(name: "Container"),
                 .target(name: "ContributorFeature"),
                 .target(name: "MapFeature"),
                 .target(name: "NotificationFeature"),
@@ -58,6 +73,20 @@ var package = Package(
             ],
             plugins: [
                 .plugin(name: "SwiftGenPlugin"),
+            ]
+        ),
+        .target(
+            name: "Auth",
+            dependencies: [
+                .target(name: "appioscombined"),
+                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+            ]
+        ),
+        .target(
+            name: "Container",
+            dependencies: [
+                .target(name: "Auth"),
+                .target(name: "appioscombined"),
             ]
         ),
         .target(
