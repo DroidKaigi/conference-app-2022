@@ -51,14 +51,16 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 @Composable
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(onNavigationIconClick, modifier, versionName)
+    About(showNavigationIcon, onNavigationIconClick, modifier, versionName)
 }
 
 @Composable
 fun About(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
@@ -66,6 +68,7 @@ fun About(
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(

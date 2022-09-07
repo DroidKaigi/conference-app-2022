@@ -87,14 +87,22 @@ fun KaigiApp(
                     navController = kaigiAppScaffoldState.navController,
                     startDestination = SessionsNavGraph.sessionRoute,
                 ) {
+                    val showNavigationIcon = !usePersistentNavigationDrawer
                     sessionsNavGraph(
+                        showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
                         kaigiAppScaffoldState::onBackIconClick,
                         kaigiAppScaffoldState::onTimeTableClick,
                         kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
-                    contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                    aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                    contributorsNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
+                    aboutNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
                     mapGraph()
                 }
             }
