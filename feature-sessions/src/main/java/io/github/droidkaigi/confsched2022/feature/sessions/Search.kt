@@ -59,9 +59,7 @@ fun SearchScreen(
     uiModel: SessionsUiModel
 ) {
     KaigiScaffold(
-        topBar = {
-
-        },
+        topBar = {},
         content = {
             Column {
                 SearchTextField()
@@ -82,7 +80,9 @@ fun SearchScreen(
 @Composable
 private fun SearchTextField() {
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
         contentAlignment = Alignment.Center
     ) {
         OutlinedTextField(
@@ -114,6 +114,10 @@ private fun SearchedItemListField(schedule: DroidKaigiSchedule) {
     LazyColumn {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
             val sessions = timeTable.filtered(Filters(filterSession = true)).contents
+            if (sessions.isEmpty()) return@forEach
+            stickyHeader {
+                SearchedHeader(day = dayToTimeTable)
+            }
             items(sessions) {
                 SearchedItem(it)
             }
@@ -123,7 +127,17 @@ private fun SearchedItemListField(schedule: DroidKaigiSchedule) {
 
 @Composable
 private fun SearchedHeader(day: DroidKaigi2022Day) {
-    Text(text = day.name)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(MaterialTheme.colorScheme.onPrimary)
+    ) {
+        Text(
+            text = day.name,
+            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
