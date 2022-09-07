@@ -44,6 +44,10 @@ data class Timetable(
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
+    fun isEmpty(): Boolean {
+        return timetableItems.isEmpty()
+    }
+
     companion object
 }
 
