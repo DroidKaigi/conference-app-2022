@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.hiltGradlePlugin)
     implementation(libs.moleculeGradlePlugin)
     implementation(libs.kotlinSerializationPlugin)
+    implementation(libs.buildkonfigPlugin)
     implementation(libs.firebasePlugin)
 }
 
@@ -82,6 +83,10 @@ gradlePlugin {
         register("kotlinMppKotlinSerialization") {
             id = "droidkaigi.primitive.kmp.serialization"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KotlinSerializationPlugin"
+        }
+        register("kotlinMppBuildKonfig") {
+            id = "droidkaigi.primitive.kmp.buildkonfig"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpBuildKonfigPlugin"
         }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"

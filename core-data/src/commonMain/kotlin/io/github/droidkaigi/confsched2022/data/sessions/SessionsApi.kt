@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.sessions
 
+import io.github.droidkaigi.confsched2022.BuildKonfig
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.sessions.response.LocaledResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionAllResponse
@@ -26,7 +27,7 @@ class SessionsApi(
     suspend fun timetable(): Timetable {
         return networkService
             .get<SessionAllResponse>(
-                url = "https://ssot-api-staging.an.r.appspot.com/events/droidkaigi2022/timetable",
+                url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/timetable",
                 needAuth = true
             )
             .toTimetable()
