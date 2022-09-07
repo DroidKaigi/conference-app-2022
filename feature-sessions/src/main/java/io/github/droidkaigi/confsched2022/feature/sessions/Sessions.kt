@@ -41,6 +41,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
@@ -282,7 +283,7 @@ fun SessionsTopBar(
             title = {
                 Image(
                     modifier = Modifier.size(30.dp),
-                    imageVector = ImageVector.vectorResource(id = io.github.droidkaigi.confsched2022.core.designsystem.R.drawable.ic_app),
+                    imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
                     contentDescription = "logo in toolbar"
                 )
             },
