@@ -22,19 +22,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,12 +40,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.about.R.string
 
 @Composable
@@ -71,7 +65,9 @@ fun About(
 ) {
     KaigiScaffold(
         topBar = {
-            AboutTopAppBar(onNavigationIconClick = onNavigationIconClick)
+            // TODO: Replace with Slot API pattern
+            // see: https://github.com/DroidKaigi/conference-app-2022/issues/238
+            KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
         }
     ) {
         Column(
@@ -212,41 +208,6 @@ fun About(
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AboutTopAppBar(
-    onNavigationIconClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
-) {
-    SmallTopAppBar(
-        modifier = modifier,
-        title = {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    style = MaterialTheme.typography.titleLarge,
-                    text = stringResource(id = string.about_top_app_bar_title)
-                )
-            }
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = onNavigationIconClick
-            ) {
-                Icon(imageVector = Icons.Default.Menu, "menu")
-            }
-        },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme
-                .colorScheme
-                .surfaceColorAtElevation(elevation)
-        )
-    )
 }
 
 @Composable
