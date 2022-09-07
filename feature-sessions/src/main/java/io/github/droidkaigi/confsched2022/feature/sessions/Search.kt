@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -71,7 +72,7 @@ fun SearchScreen(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
-    val searchWord = remember { mutableStateOf("") }
+    val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
         topBar = {},
         content = {
