@@ -26,5 +26,25 @@ jobs:
       - name: Upload xcframework artifact
         uses: actions/upload-artifact@v3
         with:
-          name: appioscombined.xcframework
-          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework/
+          name: XCFrameworks
+          path: app-ios-combined/build/XCFrameworks/
+  build-ios:
+    needs: build-kmm-module
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download xcframeworks
+        uses: actions/download-artifact@v3
+        with:
+          name: XCFrameworks
+          path: app-ios-combined/build/XCFrameworks/
+      - name: Build Modules that includes plugin
+        run: |
+          scripts/build.sh build Assets
+          scripts/build.sh build Theme
+          scripts/build.sh build AboutFeature
+      - name: Build App
+        working-directory: app-ios
+        run: |
+          scripts/build.sh build 'DroidKaigi2022 (iOS)
+
