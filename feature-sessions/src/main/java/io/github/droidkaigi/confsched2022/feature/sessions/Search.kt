@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -227,7 +227,7 @@ private fun SearchedItem(
                     ) {
                         Text(timeTable.title.currentLangTitle)
 
-                        Text("From ${timeTable.startsTimeString}. At ${timeTable.room.name.currentLangTitle}")
+                        Text("${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
@@ -237,10 +237,16 @@ private fun SearchedItem(
                                 modifier = Modifier
                                     .weight(5f)
                                     .height(40.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Badge {
                                     Text(text = timeTable.category.title.currentLangTitle)
+                                }
+                                Badge(
+                                    modifier = Modifier.offset(x = 10.dp),
+                                    containerColor = MaterialTheme.colorScheme.onTertiary
+                                ) {
+                                    Text(text = timeTable.room.name.currentLangTitle)
                                 }
                             }
                             Icon(
