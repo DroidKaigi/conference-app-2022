@@ -65,9 +65,15 @@ fun About(
 ) {
     KaigiScaffold(
         topBar = {
-            // TODO: Replace with Slot API pattern
-            // see: https://github.com/DroidKaigi/conference-app-2022/issues/238
-            KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
+            KaigiTopAppBar(
+                onNavigationIconClick = onNavigationIconClick,
+                title = {
+                    Text(
+                        text = stringResource(id = string.about_top_app_bar_title),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+            )
         }
     ) {
         Column(
