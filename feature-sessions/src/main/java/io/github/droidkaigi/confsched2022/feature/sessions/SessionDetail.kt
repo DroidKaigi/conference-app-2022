@@ -202,7 +202,7 @@ fun SessionDetailScreen(
             SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
                 startsAt = item.startsAt,
-                endsAt = item.startsAt,
+                endsAt = item.endsAt,
                 room = item.room,
                 category = item.category,
                 language = item.language,
