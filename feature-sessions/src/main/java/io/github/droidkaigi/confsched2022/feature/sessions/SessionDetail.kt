@@ -372,7 +372,9 @@ fun SessionDetailSpeakers(
 
         speakers.forEach { speaker ->
             if (speaker.iconUrl.isNotEmpty()) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     AsyncImage(
                         model = speaker.iconUrl,
                         modifier = Modifier
@@ -392,6 +394,9 @@ fun SessionDetailSpeakers(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
+                Spacer(
+                    modifier = modifier.padding(vertical = 12.dp)
+                )
             }
         }
 
