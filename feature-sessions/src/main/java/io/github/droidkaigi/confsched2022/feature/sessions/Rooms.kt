@@ -70,11 +70,11 @@ fun Rooms(
     val visibleItemLayouts by remember(roomsScreen) { roomsScreen.visibleItemLayouts }
 
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
-    val linePxSize = with(timetableState.density) { timeTableLineStrokeSize.toPx() }
+    val linePxSize = with(timetableState.density) { TimetableSizes.lineStrokeSize.toPx() }
 
     LazyLayout(
         modifier = modifier
-            .height(height = roomHeaderHeight)
+            .height(height = RoomsSizes.headerHeight)
             .clipToBounds()
             .drawBehind {
                 roomsScreen.verticalLines.value.forEach {
@@ -153,8 +153,8 @@ private data class RoomItemLayout(
     val density: Density,
     val index: Int,
 ) {
-    val width = with(density) { roomHeaderWidth.roundToPx() }
-    val height = with(density) { roomHeaderHeight.roundToPx() }
+    val width = with(density) { TimetableSizes.columnWidth.roundToPx() }
+    val height = with(density) { RoomsSizes.headerHeight.roundToPx() }
     val left = index * width
     val top = 0
     val right = left + width
@@ -190,7 +190,7 @@ private class RoomScreen(
         }
 
     val verticalLines = derivedStateOf {
-        val width = with(density) { roomHeaderWidth.toPx() }
+        val width = with(density) { TimetableSizes.columnWidth.toPx() }
         val rooms = roomsLayout.rooms
         (0..rooms.lastIndex).map {
             scrollState.scrollX + width * it
@@ -227,6 +227,6 @@ private fun itemProvider(
     }
 }
 
-private val timeTableLineStrokeSize = 1.dp
-private val roomHeaderWidth = 192.dp
-private val roomHeaderHeight = 48.dp
+private object RoomsSizes {
+    val headerHeight = 48.dp
+}
