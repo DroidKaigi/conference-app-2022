@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.composeMaterial3)
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
+    implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxActivityCompose)
     implementation(libs.accompanistPager)
     implementation(libs.coilCompose)

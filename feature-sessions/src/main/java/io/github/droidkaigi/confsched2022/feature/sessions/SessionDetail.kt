@@ -3,11 +3,14 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -31,7 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,16 +45,24 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode.Expand
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
+import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -60,18 +73,32 @@ import kotlinx.datetime.toLocalDateTime
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
     timetableItemId: TimetableItemId,
-    onBackIconClick: () -> Unit = {}
+    onBackIconClick: () -> Unit = {},
+    onNavigateFloorMapClick: () -> Unit,
 ) {
 
     val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
+
+    val shareManager = LocalShareManager.current
+    val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
-        }
+        },
+        onShareClick = { shareManager.share(it.title.currentLangTitle) },
+        onNavigateFloorMapClick = onNavigateFloorMapClick,
+        onRegisterCalendarClick = {
+            calendarRegistration.register(
+                startsAtMilliSeconds = it.startsAt.toEpochMilliseconds(),
+                endsAtMilliSeconds = it.endsAt.toEpochMilliseconds(),
+                title = it.title.currentLangTitle,
+                location = it.room.name.currentLangTitle,
+            )
+        },
     )
 }
 
@@ -107,6 +134,9 @@ fun SessionDetailScreen(
     uiModel: SessionDetailUiModel,
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
+    onShareClick: (TimetableItem) -> Unit = {},
+    onNavigateFloorMapClick: () -> Unit = {},
+    onRegisterCalendarClick: (TimetableItem) -> Unit = {},
 ) {
     if (uiModel.sessionDetailState !is Loaded) {
         CircularProgressIndicator()
@@ -121,7 +151,31 @@ fun SessionDetailScreen(
         },
         bottomBar = {
             BottomAppBar {
-                Row {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        IconButton(onClick = { onShareClick(item) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_share),
+                                contentDescription = "share",
+                            )
+                        }
+                        IconButton(onClick = onNavigateFloorMapClick) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_02),
+                                contentDescription = "go to floor map",
+                            )
+                        }
+                        IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_today),
+                                contentDescription = "register calendar",
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.weight(1F))
                     FloatingActionButton(
                         onClick = {
@@ -152,7 +206,7 @@ fun SessionDetailScreen(
             SessionDetailSessionInfo(
                 title = item.title.currentLangTitle,
                 startsAt = item.startsAt,
-                endsAt = item.startsAt,
+                endsAt = item.endsAt,
                 room = item.room,
                 category = item.category,
                 language = item.language,
@@ -175,6 +229,45 @@ fun SessionDetailScreen(
             SessionDetailAssets(
                 asset = item.asset
             )
+        }
+    }
+}
+
+@Composable
+fun SessionTagsLine(
+    startsAt: Instant,
+    endsAt: Instant,
+    room: TimetableRoom,
+    category: TimetableCategory,
+    levels: PersistentList<String>,
+) {
+    val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    FlowRow(
+        mainAxisSize = Expand,
+        mainAxisSpacing = 8.dp,
+        crossAxisSpacing = 8.dp
+    ) {
+        KaigiTag(
+            backgroundColor = Color(AppBar.color)
+        ) {
+            Text(room.name.currentLangTitle)
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(sessionMinutes + "min")
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(category.title.currentLangTitle)
+        }
+        levels.forEach {
+            KaigiTag(
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                Text(text = it)
+            }
         }
     }
 }
@@ -230,20 +323,22 @@ fun SessionDetailSessionInfo(
             style = MaterialTheme.typography.headlineSmall,
         )
 
-        Spacer(modifier = modifier.padding(16.dp))
+        Spacer(modifier = modifier.padding(24.dp))
+
+        SessionTagsLine(
+            startsAt = startsAt,
+            endsAt = endsAt,
+            room = room,
+            category = category,
+            levels = levels
+        )
+
+        Spacer(modifier = modifier.padding(24.dp))
 
         SessionScheduleInfo(
             startTime = startsAt,
             endTime = endsAt
         )
-
-        Text(
-            modifier = modifier,
-            text = room.name.currentLangTitle,
-            style = MaterialTheme.typography.bodySmall,
-        )
-
-        // TODO TagLines
         // TODO favorite button
     }
 }
@@ -322,7 +417,9 @@ fun SessionDetailSpeakers(
 
         speakers.forEach { speaker ->
             if (speaker.iconUrl.isNotEmpty()) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     AsyncImage(
                         model = speaker.iconUrl,
                         modifier = Modifier
@@ -342,6 +439,9 @@ fun SessionDetailSpeakers(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
+                Spacer(
+                    modifier = modifier.padding(vertical = 12.dp)
+                )
             }
         }
 
@@ -360,6 +460,8 @@ fun SessionDetailAssets(
     modifier: Modifier = Modifier,
     asset: TimetableAsset,
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Column {
         Text(
             modifier = modifier,
@@ -369,28 +471,70 @@ fun SessionDetailAssets(
 
         Spacer(modifier = modifier.padding(16.dp))
 
-        Text(
+        SessionDetailAssetsItem(
             modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_video_cam),
             text = "MOVIE",
-            style = MaterialTheme.typography.bodyMedium,
+            onClick = {
+                val videoUrl = asset.videoUrl
+                if (videoUrl != null) {
+                    uriHandler.openUri(videoUrl)
+                }
+            },
         )
 
         Spacer(modifier = modifier.padding(8.dp))
 
+        SessionDetailAssetsItem(
+            modifier = modifier,
+            painter = painterResource(id = R.drawable.ic_photo_library),
+            text = "スライド",
+            onClick = {
+                val slideUrl = asset.slideUrl
+                if (slideUrl != null) {
+                    uriHandler.openUri(slideUrl)
+                }
+            },
+        )
+    }
+}
+
+@Composable
+private fun SessionDetailAssetsItem(
+    modifier: Modifier = Modifier,
+    painter: Painter,
+    text: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .height(36.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         Text(
             modifier = modifier,
-            text = "スライド",
+            text = text,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewSessionDetailScreen() {
-    SessionDetailScreen(
-        uiModel = SessionDetailUiModel(
-            Loaded(TimetableItemWithFavorite.fake())
+    KaigiTheme {
+        SessionDetailScreen(
+            uiModel = SessionDetailUiModel(
+                Loaded(TimetableItemWithFavorite.fake())
+            )
         )
-    )
+    }
 }

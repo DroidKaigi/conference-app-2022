@@ -1,0 +1,50 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build-kmm-module:
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build KMM Module
+        run: ./gradlew appioscombined:assembleAppioscombinedReleaseXCFramework
+      - name: Upload xcframework artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: XCFrameworks
+          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework/
+  build-ios:
+    needs: build-kmm-module
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download xcframeworks
+        uses: actions/download-artifact@v3
+        with:
+          name: XCFrameworks
+          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework
+      - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
+        working-directory: app-ios
+        run: |
+          scripts/build.sh build Assets Debug
+          scripts/build.sh build Theme Debug
+          scripts/build.sh build AboutFeature Debug
+      - name: Build App
+        working-directory: app-ios
+        run: |
+          scripts/build.sh build 'DroidKaigi2022 (iOS)' Debug
+

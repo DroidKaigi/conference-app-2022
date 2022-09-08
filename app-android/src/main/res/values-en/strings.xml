@@ -2,7 +2,7 @@
     <!-- Navigation Drawer -->
     <string name="title_sessions">Sessions</string>
     <string name="title_about">About DroidKaigi</string>
-    <string name="title_information">Announcement</string>
+    <string name="title_announcement">Announcement</string>
     <string name="title_map">Floor Map</string>
     <string name="title_sponsors">Sponsors</string>
     <string name="title_contributors">Contributors</string>

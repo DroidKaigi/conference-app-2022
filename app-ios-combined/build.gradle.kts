@@ -16,7 +16,8 @@ kotlin {
         )
         val xcFrameworkName = "appioscombined"
         val xcf = XCFramework(xcFrameworkName)
-        val sourceSets = listOf(iosX64(), iosArm64(), iosSimulatorArm64())
+        val isCI = System.getenv()["CI"]?.toBoolean() ?: false
+        val sourceSets = if (isCI) listOf(iosX64()) else listOf(iosX64(), iosArm64(), iosSimulatorArm64())
         sourceSets.forEach {
             it.binaries.framework {
                 baseName = xcFrameworkName

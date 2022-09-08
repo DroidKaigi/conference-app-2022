@@ -26,6 +26,10 @@ data class Timetable(
         }
     }
 
+    val rooms by lazy {
+        timetableItems.map { it.room }.toSet().sortedBy { it.sort }
+    }
+
     fun dayTimetable(droidKaigi2022Day: DroidKaigi2022Day): Timetable {
         var timetableItems = timetableItems.toList()
         timetableItems = timetableItems.filter { timetableItem ->
@@ -42,6 +46,10 @@ data class Timetable(
             }
         }
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
+    }
+
+    fun isEmpty(): Boolean {
+        return timetableItems.isEmpty()
     }
 
     companion object

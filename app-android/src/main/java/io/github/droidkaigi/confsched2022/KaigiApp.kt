@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
@@ -19,16 +20,21 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,48 +44,85 @@ import androidx.navigation.compose.rememberNavController
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
+import io.github.droidkaigi.confsched2022.feature.announcement.AnnouncementNavGraph
+import io.github.droidkaigi.confsched2022.feature.announcement.announcementGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
+import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
+import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
+import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
+import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaigiApp(
-    calculateWindowSizeClass: WindowSizeClass,
+    windowSizeClass: WindowSizeClass,
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
 ) {
     KaigiTheme {
-        KaigiAppDrawer(
-            kaigiAppScaffoldState = kaigiAppScaffoldState,
-            drawerSheet = {
-                DrawerSheet(
-                    selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
-                    onClickDrawerItem = { drawerItem ->
-                        kaigiAppScaffoldState.navigate(drawerItem)
-                    }
-                )
-            }
+        CompositionLocalProvider(
+            LocalShareManager provides AndroidShareManager(LocalContext.current),
+            LocalCalendarRegistration provides AndroidCalendarRegistration(LocalContext.current),
         ) {
-            NavHost(
-                modifier = Modifier,
-                navController = kaigiAppScaffoldState.navController,
-                startDestination = SessionsNavGraph.sessionRoute,
+            val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
+            KaigiAppDrawer(
+                kaigiAppScaffoldState = kaigiAppScaffoldState,
+                showPermanently = usePersistentNavigationDrawer,
+                drawerSheetContent = {
+                    DrawerSheetContent(
+                        selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
+                        onClickDrawerItem = { drawerItem ->
+                            kaigiAppScaffoldState.navigate(drawerItem)
+                        }
+                    )
+                }
             ) {
-                sessionsNavGraph(
-                    kaigiAppScaffoldState::onNavigationClick,
-                    kaigiAppScaffoldState::onBackIconClick,
-                    kaigiAppScaffoldState::onTimeTableClick,
-                )
-                contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                NavHost(
+                    modifier = Modifier,
+                    navController = kaigiAppScaffoldState.navController,
+                    startDestination = SessionsNavGraph.sessionRoute,
+                ) {
+                    val showNavigationIcon = !usePersistentNavigationDrawer
+                    sessionsNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                        kaigiAppScaffoldState::onBackIconClick,
+                        kaigiAppScaffoldState::onTimeTableClick,
+                        kaigiAppScaffoldState::onNavigateFloorMapClick,
+                    )
+                    contributorsNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
+                    aboutNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
+                    mapGraph()
+                    announcementGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
+                }
             }
         }
     }
 }
+
+private val WindowSizeClass.usePersistentNavigationDrawer: Boolean
+    get() = when (widthSizeClass) {
+        WindowWidthSizeClass.Compact -> false
+        WindowWidthSizeClass.Medium -> false
+        WindowWidthSizeClass.Expanded -> true
+        else -> false
+    }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,18 +144,23 @@ fun rememberKaigiAppScaffoldState(
 @Composable
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
-    drawerSheet: @Composable () -> Unit,
+    showPermanently: Boolean,
+    drawerSheetContent: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
-    ModalNavigationDrawer(
-        drawerState = kaigiAppScaffoldState.drawerState,
-        drawerContent = {
-            drawerSheet()
+    if (showPermanently) {
+        PermanentNavigationDrawer(
+            drawerContent = { PermanentDrawerSheet { drawerSheetContent() } },
+        ) {
+            content()
         }
-    ) {
-        content()
+    } else {
+        ModalNavigationDrawer(
+            drawerState = kaigiAppScaffoldState.drawerState,
+            drawerContent = { ModalDrawerSheet { drawerSheetContent() } },
+        ) {
+            content()
+        }
     }
 }
 
@@ -133,6 +181,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         navController.navigate(
             route = SessionsNavGraph.sessionDetailRoute(timetableId.value)
         )
+    }
+
+    fun onNavigateFloorMapClick() {
+        TODO("Floor map is not yet implemented.")
     }
 
     fun onNavigationClick() {
@@ -160,8 +212,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
     About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
-    Information(R.string.title_information, Icons.Default.Announcement, ""),
-    Map(R.string.title_map, Icons.Default.Map, ""),
+    Announcement(
+        R.string.title_announcement,
+        Icons.Default.Announcement,
+        AnnouncementNavGraph.announcementRoute
+    ),
+    Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
     Contributors(
         R.string.title_contributors,
@@ -179,36 +235,34 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerSheet(
+fun ColumnScope.DrawerSheetContent(
     selectedDrawerItem: DrawerItem?,
     onClickDrawerItem: (DrawerItem) -> Unit
 ) {
-    ModalDrawerSheet {
-        Image(
-            painter = painterResource(id = R.drawable.img_navigation_drawer_lookup),
-            contentDescription = null,
-            modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
+    Image(
+        painter = painterResource(id = R.drawable.img_navigation_drawer_lookup),
+        contentDescription = null,
+        modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
+    )
+    DrawerItem.values().forEach { drawerItem ->
+        NavigationDrawerItem(
+            icon = {
+                Icon(imageVector = drawerItem.icon, contentDescription = null)
+            },
+            label = {
+                Text(stringResource(drawerItem.titleResId))
+            },
+            selected = drawerItem == selectedDrawerItem,
+            onClick = {
+                onClickDrawerItem(drawerItem)
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
-        DrawerItem.values().forEach { drawerItem ->
-            NavigationDrawerItem(
-                icon = {
-                    Icon(imageVector = drawerItem.icon, contentDescription = null)
-                },
-                label = {
-                    Text(stringResource(drawerItem.titleResId))
-                },
-                selected = drawerItem == selectedDrawerItem,
-                onClick = {
-                    onClickDrawerItem(drawerItem)
-                },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+            Divider(
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
             )
-            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
-                Divider(
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
-                )
-            }
         }
     }
 }

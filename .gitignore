@@ -38,6 +38,8 @@ local.properties
 !/.idea/dictionaries
 /.idea/dictionaries/*
 !/.idea/dictionaries/kaigiDictionary.xml
+# Keep the project icon.
+!/.idea/icon.png
 
 # Gradle cache
 .gradle

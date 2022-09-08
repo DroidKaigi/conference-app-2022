@@ -2,17 +2,18 @@
 androidGradlePlugin = "7.4.0-alpha10"
 kotlin = "1.7.10"
 molecule = "0.4.0"
+buildkonfig = "0.13.3"
 
-androidxCore = "1.8.0"
+androidxCore = "1.9.0"
 androidDesugarJdkLibs = "1.2.2"
-compose = "1.3.0-beta01"
-composeCompiler = "1.3.0"
-composeMaterial3WindowSizeClass = "1.0.0-beta01"
-composeMaterial3 = "1.0.0-beta01"
+compose = "1.3.0-beta02"
+composeCompiler = "1.3.1"
+composeMaterial3WindowSizeClass = "1.0.0-beta02"
+composeMaterial3 = "1.0.0-beta02"
 androidxFragment = "1.5.2"
 androidxLifecycle = "2.5.1"
-androidxActivity = "1.6.0-rc01"
-androidxNavigationCompose = "2.5.1"
+androidxActivity = "1.6.0-rc02"
+androidxNavigationCompose = "2.5.2"
 androidxDatastore = "1.0.0"
 hiltNavigationCompose = "1.0.0"
 junit = "4.13.2"
@@ -22,7 +23,7 @@ dagger = "2.43.2"
 spotless = "6.7.0"
 ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
-ktor = "2.1.0"
+ktor = "2.1.1"
 kotlinxCoroutines = "1.6.4"
 zipline = "0.9.1"
 ziplineSnapshot = "1.0.0-SNAPSHOT"
@@ -33,7 +34,7 @@ multiplatformSettings = "0.9"
 robolectric = "4.8.2"
 kermit = "1.1.3"
 kotlinxDatetime = "0.4.0"
-accompanistPager = "0.26.1-alpha"
+accompanist = "0.26.2-beta"
 firebasePlugin = "4.3.13"
 multiplatformFirebaseAuth = "1.6.2"
 firebaseCommon = "20.1.2"
@@ -56,6 +57,7 @@ hiltGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-pl
 moleculeGradlePlugin = { module = "app.cash.molecule:molecule-gradle-plugin", version.ref = "molecule" }
 composeCompiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 kotlinSerializationPlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+buildkonfigPlugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
 ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
 ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 firebasePlugin = { module = "com.google.gms:google-services", version.ref = "firebasePlugin" }
@@ -73,7 +75,8 @@ composeMaterial3WindowSizeClass = { module = "androidx.compose.material3:materia
 daggerHiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 
-accompanistPager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+accompanistPager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
+accompanistFlowlayout = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist"}
 
 kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 

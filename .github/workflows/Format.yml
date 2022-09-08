@@ -1,5 +1,10 @@
 name: Format
-on: [pull_request]
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'app-ios/**'
+
 concurrency:
   group: format-${{ github.ref }}
   cancel-in-progress: true
