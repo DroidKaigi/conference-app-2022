@@ -36,7 +36,9 @@ import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
+import io.github.droidkaigi.confsched2022.ui.LoadState
+import io.github.droidkaigi.confsched2022.ui.LoadState.Error
+import io.github.droidkaigi.confsched2022.ui.LoadState.Success
 
 @Composable
 fun ContributorsScreenRoot(
@@ -70,58 +72,61 @@ fun Contributors(
             )
         }
     ) {
-        if (uiModel.contributorsState !is Loaded) {
-            CircularProgressIndicator()
-            return@KaigiScaffold
-        }
-        val contributors = uiModel.contributorsState.contributors
-        val context = LocalContext.current
 
-        LazyColumn(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            items(items = contributors, key = { it.id }) { contributor ->
-                val userNameAcronym = contributor.username[0]
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(top = 16.dp)
-                        .clickable {
-                            contributor.profileUrl?.let { url ->
-                                try {
-                                    Intent(Intent.ACTION_VIEW).also {
-                                        it.setPackage("com.github.android")
-                                        it.data = Uri.parse(url)
-                                        context.startActivity(it)
-                                    }
-                                } catch (e: ActivityNotFoundException) {
-                                    navigateToCustomTab(
-                                        url = url,
-                                        context = context,
-                                    )
-                                }
-                            }
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
+        when (uiModel.contributorsState) {
+            is Error -> TODO()
+            LoadState.Loading -> CircularProgressIndicator()
+            is Success -> {
+                val contributors = uiModel.contributorsState.value
+                val context = LocalContext.current
+
+                LazyColumn(
+                    modifier = modifier.fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AsyncImage(
-                        model = contributor.iconUrl,
-                        contentDescription = contributor.username,
-                        alignment = Alignment.Center,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                    )
-                    Text(
-                        text = contributor.username,
-                        style = TextStyle(
-                            fontWeight = FontWeight(500),
-                            fontSize = 14.sp
-                        ),
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
+                    items(items = contributors, key = { it.id }) { contributor ->
+                        val userNameAcronym = contributor.username[0]
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(60.dp)
+                                .padding(top = 16.dp)
+                                .clickable {
+                                    contributor.profileUrl?.let { url ->
+                                        try {
+                                            Intent(Intent.ACTION_VIEW).also {
+                                                it.setPackage("com.github.android")
+                                                it.data = Uri.parse(url)
+                                                context.startActivity(it)
+                                            }
+                                        } catch (e: ActivityNotFoundException) {
+                                            navigateToCustomTab(
+                                                url = url,
+                                                context = context,
+                                            )
+                                        }
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(modifier = Modifier.width(16.dp))
+                            AsyncImage(
+                                model = contributor.iconUrl,
+                                contentDescription = contributor.username,
+                                alignment = Alignment.Center,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                            )
+                            Text(
+                                text = contributor.username,
+                                style = TextStyle(
+                                    fontWeight = FontWeight(500),
+                                    fontSize = 14.sp
+                                ),
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
