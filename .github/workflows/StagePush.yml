@@ -23,29 +23,7 @@ jobs:
           ref: gh-actions
           path: gh-actions
       - uses: actions/github-script@v3
-        id: get-pr
-        with:
-          script: |
-            const { data: resp } = await github.actions.listJobsForWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }}
-            })
-            const job = resp.jobs.find((j) => j.name === "get-pr-number")
-
-            if (job) {
-              const { data: pull } = await github.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: job.steps[1].name
-              })
-              return pull
-            } else {
-              return '[halt]'
-            }
-      - uses: actions/github-script@v3
         id: get-artifact-id
-        if: steps.get-pr.outputs.result != '[halt]'
         with:
           result-encoding: string
           script: |
