@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.kotlinSerializationPlugin)
     implementation(libs.buildkonfigPlugin)
     implementation(libs.firebasePlugin)
+    implementation(libs.sqldelightGradlePlugin)
 }
 
 gradlePlugin {
@@ -91,6 +92,10 @@ gradlePlugin {
         register("molecule") {
             id = "droidkaigi.primitive.molecule"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.MoleculePlugin"
+        }
+        register("sqldelight") {
+            id = "droidkaigi.primitive.sqldelight"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.SqldelightPlugin"
         }
 
         // Conventions

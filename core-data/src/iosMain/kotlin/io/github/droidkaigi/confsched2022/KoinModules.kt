@@ -3,6 +3,8 @@ package io.github.droidkaigi.confsched2022
 import com.russhwolf.settings.AppleSettings
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
+import io.github.droidkaigi.confsched2022.data.DatabaseService
+import io.github.droidkaigi.confsched2022.data.DriverFactory
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
@@ -10,6 +12,7 @@ import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
 import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.DataSessionsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsApi
+import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
@@ -35,6 +38,9 @@ val dataModule = module {
     singleOf(::AuthApi)
     singleOf(::SessionsApi)
     singleOf(::ContributorsApi)
+    singleOf(::DriverFactory)
+    singleOf(::DatabaseService)
+    singleOf(::SessionsDao)
     singleOf(::DataContributorsRepository) bind ContributorsRepository::class
     singleOf(::DataSessionsRepository) bind SessionsRepository::class
 }

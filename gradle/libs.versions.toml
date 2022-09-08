@@ -104,7 +104,10 @@ ziplineSnapshot = { module = "app.cash.zipline:zipline", version.ref = "ziplineS
 ziplineLoader = { module = "app.cash.zipline:zipline-loader", version.ref = "zipline" }
 okHttpCore = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttp" }
 okHttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
+sqldelightGradlePlugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 sqldelightDriverAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelightDriverNative = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelightExtensionsCoroutines = { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 kotlinxCollectionsImmutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref = "multiplatformFirebaseAuth" }
@@ -129,3 +132,4 @@ androidGradlePlugin = { id = "com.android.application", version.ref = "androidGr
 androidGradleLibraryPlugin = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hiltGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+sqldelightGradlePlugin = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
