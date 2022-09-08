@@ -116,10 +116,7 @@ fun Contributors(
                     )
                     Text(
                         text = contributor.username,
-                        style = TextStyle(
-                            fontWeight = FontWeight(500),
-                            fontSize = 14.sp
-                        ),
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
