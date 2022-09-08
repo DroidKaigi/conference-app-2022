@@ -11,6 +11,8 @@
 		8C541EE328B1313B00354E7B /* DroidKaigi2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C541ED328B1313800354E7B /* DroidKaigi2022App.swift */; };
 		8C541EE728B1313B00354E7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C541ED528B1313A00354E7B /* Assets.xcassets */; };
 		8CDF83C928B558CF00D4C570 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF83C828B558CF00D4C570 /* AppFeature */; };
+		E831922728C9DACE009FC9F6 /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */; };
+		E831922928C9DDA5009FC9F6 /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		8C541ED528B1313A00354E7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C541EDA28B1313B00354E7B /* DroidKaigi2022.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DroidKaigi2022.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C541EF228B1315C00354E7B /* app-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "app-ios"; path = ..; sourceTree = "<group>"; };
+		E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
+		E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +40,7 @@
 		8C541ECD28B1313800354E7B = {
 			isa = PBXGroup;
 			children = (
+				E831922528C9DABD009FC9F6 /* ci_scripts */,
 				8C541ED228B1313800354E7B /* Shared */,
 				8C541EF228B1315C00354E7B /* app-ios */,
 				8C541EDB28B1313B00354E7B /* Products */,
@@ -66,6 +71,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E831922528C9DABD009FC9F6 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */,
+				E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +144,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C541EE728B1313B00354E7B /* Assets.xcassets in Resources */,
+				E831922728C9DACE009FC9F6 /* ci_pre_xcodebuild.sh in Resources */,
+				E831922928C9DDA5009FC9F6 /* ci_post_clone.sh in Resources */,
 				8C1F600928C6500100B56B92 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
