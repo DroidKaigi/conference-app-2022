@@ -1,7 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.contributors
 
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
@@ -18,16 +17,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContributorsViewModel @Inject constructor(
-    private val contributorsRepository: ContributorsRepository,
+    contributorsRepository: ContributorsRepository,
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val contributorsResult by remember {
-            contributorsRepository.contributors().asLoadState()
-        }.collectAsState(initial = LoadState.Loading)
+    private val loadState = contributorsRepository.contributors().asLoadState()
 
-        ContributorsUiModel(contributorsResult)
+    val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
+        val state by loadState.collectAsState(initial = LoadState.Loading)
+        ContributorsUiModel(state)
     }
 }
