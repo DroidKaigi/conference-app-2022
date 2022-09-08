@@ -38,10 +38,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
@@ -49,6 +51,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
+import io.github.droidkaigi.confsched2022.model.fake
 
 @Composable
 fun SearchRoot(
@@ -65,7 +68,7 @@ fun SearchRoot(
 }
 
 @Composable
-fun SearchScreen(
+private fun SearchScreen(
     uiModel: SessionsUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
@@ -279,4 +282,17 @@ private fun FullScreenLoading() {
     ) {
         CircularProgressIndicator()
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun SearchScreenPreview() {
+    val schedule = DroidKaigiSchedule.fake()
+    val scheduleState = Loaded(schedule)
+    val sessionUiModel = SessionsUiModel(scheduleState,true)
+    SearchScreen(
+        uiModel = sessionUiModel,
+        onItemClick = { /*TODO*/ },
+        onBookMarkClick = { /*TODO*/ },
+    )
 }
