@@ -295,5 +295,6 @@ private fun SearchedItemPreview() {
 @Preview
 @Composable
 private fun SearchTextFieldPreview() {
-    SearchTextField("searchWord") {}
+    val searchWord = "searchWord"
+    SearchTextField(searchWord) {}
 }
