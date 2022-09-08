@@ -51,4 +51,3 @@ fun <T> Flow<T>.asLoadState(): Flow<LoadState<T>> {
         .onStart { emit(LoadState.Loading) }
         .catch { emit(LoadState.Error(it)) }
 }
-
