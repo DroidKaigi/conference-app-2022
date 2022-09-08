@@ -444,6 +444,7 @@ fun SessionsLoadingPreview() {
             onSearchClick = {},
             onToggleTimetableClick = {},
             isTimetable = false,
+            showNavigationIcon = true
         )
     }
 }
