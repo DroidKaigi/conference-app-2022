@@ -7,6 +7,7 @@ import androidx.navigation.navArgument
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 
 fun NavGraphBuilder.sessionsNavGraph(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onBackIconClick: () -> Unit,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -14,6 +15,7 @@ fun NavGraphBuilder.sessionsNavGraph(
 ) {
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
+            showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
             onSearchClicked = { /*TODO: Implement later*/ },
             onTimetableClick = onTimetableClick,

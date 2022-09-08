@@ -41,22 +41,25 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiMod
 @Composable
 fun ContributorsScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
     val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, onNavigationIconClick, modifier)
+    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
 }
 
 @Composable
 fun Contributors(
     uiModel: ContributorsUiModel,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(

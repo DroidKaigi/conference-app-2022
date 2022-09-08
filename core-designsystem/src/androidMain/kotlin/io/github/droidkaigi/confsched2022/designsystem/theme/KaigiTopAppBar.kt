@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaigiTopAppBar(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
@@ -41,10 +42,12 @@ fun KaigiTopAppBar(
             }
         },
         navigationIcon = {
-            IconButton(
-                onClick = onNavigationIconClick
-            ) {
-                Icon(imageVector = Icons.Default.Menu, "menu")
+            if (showNavigationIcon) {
+                IconButton(
+                    onClick = onNavigationIconClick
+                ) {
+                    Icon(imageVector = Icons.Default.Menu, "menu")
+                }
             }
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(
