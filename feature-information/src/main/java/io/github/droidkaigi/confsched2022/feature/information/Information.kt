@@ -14,15 +14,22 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.information.R.string
 
 @Composable
-fun InformationScreenRoot(onNavigationIconClick: () -> Unit) {
-    Information(onNavigationIconClick)
+fun InformationScreenRoot(
+    showNavigationIcon: Boolean = true,
+    onNavigationIconClick: () -> Unit,
+) {
+    Information(showNavigationIcon, onNavigationIconClick)
 }
 
 @Composable
-fun Information(onNavigationIconClick: () -> Unit) {
+fun Information(
+    showNavigationIcon: Boolean,
+    onNavigationIconClick: () -> Unit,
+) {
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
@@ -34,7 +41,9 @@ fun Information(onNavigationIconClick: () -> Unit) {
         }
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             Text(

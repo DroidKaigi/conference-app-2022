@@ -106,7 +106,10 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onNavigationClick,
                     )
                     mapGraph()
-                    informationGraph(kaigiAppScaffoldState::onNavigationClick)
+                    informationGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick,
+                    )
                 }
             }
         }
