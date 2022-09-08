@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.feature.information
+package io.github.droidkaigi.confsched2022.feature.announcement
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,18 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.information.R.string
+import io.github.droidkaigi.confsched2022.feature.announcement.R.string
 
 @Composable
-fun InformationScreenRoot(
+fun AnnouncementScreenRoot(
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit,
 ) {
-    Information(showNavigationIcon, onNavigationIconClick)
+    Announcement(showNavigationIcon, onNavigationIconClick)
 }
 
 @Composable
-fun Information(
+fun Announcement(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
 ) {
@@ -33,7 +33,7 @@ fun Information(
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = string.information_top_app_bar_title),
+                        text = stringResource(id = string.announcement_top_app_bar_title),
                         style = MaterialTheme.typography.titleLarge,
                     )
                 },
@@ -47,7 +47,7 @@ fun Information(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Information's screen is unavailable.",
+                text = "Announcement's screen is unavailable.",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }

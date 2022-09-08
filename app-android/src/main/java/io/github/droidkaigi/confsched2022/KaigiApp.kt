@@ -44,10 +44,10 @@ import androidx.navigation.compose.rememberNavController
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
+import io.github.droidkaigi.confsched2022.feature.announcement.AnnouncementNavGraph
+import io.github.droidkaigi.confsched2022.feature.announcement.announcementGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
-import io.github.droidkaigi.confsched2022.feature.information.InformationNavGraph
-import io.github.droidkaigi.confsched2022.feature.information.informationGraph
 import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
@@ -106,7 +106,7 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onNavigationClick,
                     )
                     mapGraph()
-                    informationGraph(
+                    announcementGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
                     )
@@ -212,10 +212,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
     About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
-    Information(
-        R.string.title_information,
+    Announcement(
+        R.string.title_announcement,
         Icons.Default.Announcement,
-        InformationNavGraph.informationRoute
+        AnnouncementNavGraph.announcementRoute
     ),
     Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
