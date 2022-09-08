@@ -11,8 +11,8 @@ class AnnouncementScreenRobot @Inject constructor() {
     context(RobotTestRule)
     fun checkAnnouncementVisible() {
         // TODO: Language-specific testing
-        val test = composeTestRule.activity.getString(string.announcement_top_app_bar_title)
-        composeTestRule.onNodeWithText(test).assertIsDisplayed()
+        val appBarTitleText = composeTestRule.activity.getString(string.announcement_top_app_bar_title)
+        composeTestRule.onNodeWithText(appBarTitleText).assertIsDisplayed()
     }
 
     operator fun invoke(
