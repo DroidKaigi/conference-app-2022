@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
@@ -101,7 +100,7 @@ private fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun SearchTextField(searchWord: String, updateSearchWord: (String) -> Unit) {
+private fun SearchTextField(searchWord: String, onSearchWordChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier = Modifier
@@ -128,12 +127,12 @@ private fun SearchTextField(searchWord: String, updateSearchWord: (String) -> Un
                     painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = "search_word_delete_icon",
                     modifier = Modifier.clickable {
-                        updateSearchWord("")
+                        onSearchWordChange("")
                     }
                 )
             },
             onValueChange = {
-                updateSearchWord(it)
+                onSearchWordChange(it)
             },
         )
     }
