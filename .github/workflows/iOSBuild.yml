@@ -40,9 +40,9 @@ jobs:
       - name: Build Modules that includes plugin
         working-directory: app-ios
         run: |
-          scripts/build.sh build Assets
-          scripts/build.sh build Theme
-          scripts/build.sh build AboutFeature
+          scripts/build.sh build Assets Debug
+          scripts/build.sh build Theme Debug
+          scripts/build.sh build AboutFeature Debug
       - name: Build App
         working-directory: app-ios
         run: |
