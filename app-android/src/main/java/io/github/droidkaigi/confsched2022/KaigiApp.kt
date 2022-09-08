@@ -42,10 +42,10 @@ import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.contributors.contributorsNavGraph
-import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
-import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.information.InformationNavGraph
 import io.github.droidkaigi.confsched2022.feature.information.informationGraph
+import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
+import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
