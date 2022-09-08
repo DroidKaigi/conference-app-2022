@@ -288,10 +288,10 @@ private fun FullScreenLoading() {
 private fun SearchScreenPreview() {
     val schedule = DroidKaigiSchedule.fake()
     val scheduleState = Loaded(schedule)
-    val sessionUiModel = SessionsUiModel(scheduleState,true)
+    val sessionUiModel = SessionsUiModel(scheduleState, true)
     SearchScreen(
         uiModel = sessionUiModel,
-        onItemClick = { /*TODO*/ },
-        onBookMarkClick = { /*TODO*/ },
+        onItemClick = {},
+        onBookMarkClick = {},
     )
 }
