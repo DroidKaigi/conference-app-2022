@@ -187,11 +187,12 @@ private fun SearchedItem(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
+    var contentHeight = 100.dp
     Box(
         modifier = Modifier
             .wrapContentHeight()
+            .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
-            .heightIn(min = 120.dp, max = 140.dp)
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
             Row {
@@ -225,7 +226,17 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(timeTable.title.currentLangTitle)
+                        Text(
+                            text = timeTable.title.currentLangTitle,
+                            onTextLayout = {
+                                if (it.lineCount > 2) {
+                                    contentHeight = 140.dp
+                                }
+//                                if (it.isLineEllipsized(it.lineCount.minus(1))) {
+//                                    contentHeight = 120.dp
+//                                }
+                            }
+                        )
 
                         Text("${timeTable.startsTimeString} 〜")
                         Row(
