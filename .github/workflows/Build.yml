@@ -20,6 +20,14 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.konan
+          key: ${{ runner.os }}-kotlin-native-${{ hashFiles('gradle/libs.versions.toml', '**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-kotlin-native-
+
       - name: Checkout
         uses: actions/checkout@v3
 
