@@ -182,7 +182,11 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
     Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
     About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
-    Information(R.string.title_information, Icons.Default.Announcement, InformationNavGraph.informationRoute),
+    Information(
+        R.string.title_information,
+        Icons.Default.Announcement,
+        InformationNavGraph.informationRoute
+    ),
     Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
     Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
     Contributors(
