@@ -32,6 +32,7 @@ include(
     ":feature-sessions",
     ":feature-contributors",
     ":feature-about",
+    ":feature-map",
     ":core-ui",
     ":core-designsystem",
     ":core-data",

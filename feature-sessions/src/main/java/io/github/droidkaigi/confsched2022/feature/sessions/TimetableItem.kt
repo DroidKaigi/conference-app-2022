@@ -24,8 +24,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 fun TimetableItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
-    modifier: Modifier = Modifier,
-    maxTitleLines: Int = 4
+    modifier: Modifier = Modifier
 ) {
     val roomName = timetableItem.room.name
     val roomColor = TimetableItemColor.colorOfRoomName(enName = roomName.enTitle)
@@ -47,9 +46,9 @@ fun TimetableItem(
             color = Color.White,
             modifier = Modifier
                 .padding(bottom = 8.dp)
+                .weight(weight = 1f, fill = false)
                 .fillMaxWidth(),
             overflow = TextOverflow.Ellipsis,
-            maxLines = maxTitleLines,
             style = MaterialTheme.typography.titleMedium.copy(
                 letterSpacing = 0.1.sp
             )
