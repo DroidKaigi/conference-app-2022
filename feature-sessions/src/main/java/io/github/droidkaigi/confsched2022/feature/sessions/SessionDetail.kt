@@ -283,7 +283,7 @@ fun SessionScheduleInfo(
     val sessionEndDateTime = endTime
         .toLocalDateTime(TimeZone.currentSystemDefault())
 
-    fun LocalDateTime.toTime() = "$hour:$minute"
+    fun LocalDateTime.toTime() = "$hour:${minute.toString().padStart(2, '0')}"
 
     val sessionSchedule =
         "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
