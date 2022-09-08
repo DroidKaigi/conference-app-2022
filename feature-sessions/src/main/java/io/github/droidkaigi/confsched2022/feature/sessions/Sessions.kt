@@ -379,6 +379,7 @@ private fun TabIndicator(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
+            .padding(end = 8.dp)
     ) {}
 }
 
