@@ -150,7 +150,8 @@ fun ContributorsPreview() {
                     contributors = Contributor.fakes()
                 )
             ),
-            onNavigationIconClick = {}
+            onNavigationIconClick = {},
+            showNavigationIcon = true
         )
     }
 }
