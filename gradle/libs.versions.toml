@@ -6,7 +6,7 @@ buildkonfig = "0.13.3"
 
 androidxCore = "1.8.0"
 androidDesugarJdkLibs = "1.2.2"
-compose = "1.3.0-beta01"
+compose = "1.3.0-beta02"
 composeCompiler = "1.3.0"
 composeMaterial3WindowSizeClass = "1.0.0-beta01"
 composeMaterial3 = "1.0.0-beta01"
