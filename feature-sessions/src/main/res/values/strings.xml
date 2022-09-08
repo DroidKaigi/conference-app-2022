@@ -2,4 +2,9 @@
 <resources>
     <!-- Session Detail Screen -->
     <string name="session_description_read_more_text">続きを見る</string>
+    <string name="session_target_audience">対象者</string>
+    <string name="session_speaker">スピーカー</string>
+    <string name="session_material">資料</string>
+    <string name="session_movie">MOVIE</string>
+    <string name="session_slide">スライド</string>
 </resources>
