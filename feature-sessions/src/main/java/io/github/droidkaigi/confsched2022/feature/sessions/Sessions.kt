@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -116,7 +117,12 @@ fun Sessions(
                 .padding(top = 4.dp)
         ) {
             if (scheduleState !is Loaded) {
-                CircularProgressIndicator()
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
                 val days = scheduleState.schedule.days
                 if (isTimetable) {
@@ -402,6 +408,25 @@ fun SessionsSessionListPreview() {
         Sessions(
             uiModel = SessionsUiModel(
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
+                isFilterOn = false
+            ),
+            onNavigationIconClick = {},
+            onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
+            onSearchClick = {},
+            onToggleTimetableClick = {},
+            isTimetable = false,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SessionsLoadingPreview() {
+    KaigiTheme {
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = ScheduleState.Loading,
                 isFilterOn = false
             ),
             onNavigationIconClick = {},
