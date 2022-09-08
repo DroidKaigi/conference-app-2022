@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.contributors
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
@@ -21,10 +22,14 @@ class ContributorsViewModel @Inject constructor(
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    private val loadState = contributorsRepository.contributors().asLoadState()
+    val uiModel: State<ContributorsUiModel>
 
-    val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-        val state by loadState.collectAsState(initial = LoadState.Loading)
-        ContributorsUiModel(state)
+    init {
+        val dataFlow = contributorsRepository.contributors().asLoadState()
+
+        uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
+            val data by dataFlow.collectAsState(initial = LoadState.Loading)
+            ContributorsUiModel(data)
+        }
     }
 }
