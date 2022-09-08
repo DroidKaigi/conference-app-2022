@@ -84,7 +84,7 @@ fun Timetable(
     }
     val visibleItemLayouts by remember(timetableScreen) { timetableScreen.visibleItemLayouts }
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
-    val linePxSize = with(timetableState.density) { timeTableLineStrokeSize.toPx() }
+    val linePxSize = with(timetableState.density) { TimetableSizes.lineStrokeSize.toPx() }
 
     LazyLayout(
         modifier = modifier
@@ -230,12 +230,10 @@ private data class TimetableItemLayout(
         else -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     }
-    val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
+    val topOffset = with(density) { TimetableSizes.horizontalLineTopOffset.roundToPx() }
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
-    val width = with(density) {
-        timeTableColumnWidth.roundToPx()
-    }
+    val width = with(density) { TimetableSizes.columnWidth.roundToPx() }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStart)
         .inWholeMinutes.toInt() * minutePx + topOffset
@@ -420,7 +418,7 @@ private class TimetableScreen(
         }
     }
     val roomVerticalLines = derivedStateOf {
-        val width = with(density) { timeTableColumnWidth.toPx() }
+        val width = with(density) { TimetableSizes.columnWidth.toPx() }
         val rooms = timetableLayout.rooms
         (0..rooms.lastIndex).map {
             scrollState.scrollX + width * it
@@ -530,6 +528,8 @@ private suspend fun PointerInputScope.detectDragGestures(
     }
 }
 
-private val timeTableLineStrokeSize = 1.dp
-private val timeTableColumnWidth = 192.dp
-private val horizontalLineTopOffset = 16.dp
+object TimetableSizes {
+    val columnWidth = 192.dp
+    val lineStrokeSize = 1.dp
+    val horizontalLineTopOffset = 16.dp
+}
