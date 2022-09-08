@@ -137,6 +137,13 @@ class SessionsDao(
             val speakers = timetableItemSpeakers.filter { it.timetableItemId == session.id }
                 .map { it.toSpeaker() }
                 .toPersistentList()
+            val messageJa = session.messageJa
+            val messageEn = session.messageEn
+            val message = if (messageJa != null && messageEn != null) {
+                MultiLangText(jaTitle = messageJa, enTitle = messageEn)
+            } else {
+                null
+            }
             TimetableItem.Session(
                 id = TimetableItemId(session.id),
                 title = MultiLangText(
@@ -169,14 +176,7 @@ class SessionsDao(
                 levels = levelsAdapter.decode(session.levels),
                 description = session.description,
                 speakers = speakers,
-                message = if (session.messageJa != null && session.messageEn != null) {
-                    MultiLangText(
-                        jaTitle = session.messageJa,
-                        enTitle = session.messageEn,
-                    )
-                } else {
-                    null
-                },
+                message = message,
             )
         }
     }
