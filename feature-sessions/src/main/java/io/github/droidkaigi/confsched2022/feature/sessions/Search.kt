@@ -38,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -50,7 +49,6 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
-import io.github.droidkaigi.confsched2022.model.fake
 
 @Composable
 fun SearchRoot(
@@ -281,20 +279,4 @@ private fun FullScreenLoading() {
     ) {
         CircularProgressIndicator()
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SearchedItemPreview() {
-    val fakeSession = Session.fake()
-    val favorite = true
-    val timeTableWithFavorite = TimetableItemWithFavorite(fakeSession, favorite)
-    SearchedItem(timetableItemWithFavorite = timeTableWithFavorite, {}, {})
-}
-
-@Preview
-@Composable
-private fun SearchTextFieldPreview() {
-    val searchWord = "searchWord"
-    SearchTextField(searchWord) {}
 }
