@@ -37,7 +37,7 @@ jobs:
         with:
           name: XCFrameworks
           path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework
-      - name: Build Modules that includes plugin
+      - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
         working-directory: app-ios
         run: |
           scripts/build.sh build Assets Debug
