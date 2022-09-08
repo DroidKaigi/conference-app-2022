@@ -75,36 +75,7 @@ jobs:
           name: build-reports
           path: app-android/build/reports
           retention-days: 30
-  # stage default package only on push events (see stage-app.yml for pull_requests)
-  stage-default:
-    if: github.event_name == 'push'
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-actions
-          path: gh-actions
-      - uses: actions/download-artifact@v3
-        with:
-          name: assemble-output
-          path: ~/assemble-output
-      - uses: ./gh-actions/actions/find-files
-        id: find-dev-debug-apk
-        with:
-          pattern: "~/assemble-output/**/app-android-dev-debug.apk"
-      - uses: jmatsu/dg-upload-app-action@v0.2
-        id: upload
-        with:
-          app_owner_name: droidkaigi
-          api_token: ${{ secrets.DEPLOYGATE_API_TOKEN }}
-          app_file_path: ${{ fromJSON(steps.find-dev-debug-apk.outputs.paths)[0] }}
-          message: GitHub Actions have staged an artifact of ${{ github.ref }} / ${{ github.sha }}
-          distribution_find_by: name
-          distribution_id: ${{ format('staging/{0}', github.ref) }}
-          release_note: ${{ format('[main] Workflow {0}/{1} based on {2}', github.run_id , github.run_number , github.sha) }}
-          pin: false
+ 
 
 #  save computation resource for now
 #  androidTest:

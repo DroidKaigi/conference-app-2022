@@ -1,4 +1,4 @@
-name: stage-app
+name: stage-app-pull-request
 
 on:
   workflow_run:
@@ -19,6 +19,7 @@ jobs:
           ref: main
       - uses: actions/checkout@v3
         with:
+          repository: droidkaigi/conference-app-2021
           ref: gh-actions
           path: gh-actions
       - uses: actions/github-script@v3
