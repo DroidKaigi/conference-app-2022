@@ -232,9 +232,6 @@ private fun SearchedItem(
                                 if (it.lineCount > 2) {
                                     contentHeight = 140.dp
                                 }
-//                                if (it.isLineEllipsized(it.lineCount.minus(1))) {
-//                                    contentHeight = 120.dp
-//                                }
                             }
                         )
 
