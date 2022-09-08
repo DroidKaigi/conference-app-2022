@@ -5,6 +5,7 @@ import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.DriverFactory
+import io.github.droidkaigi.confsched2022.data.NativeDriverFactory
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
@@ -38,7 +39,7 @@ val dataModule = module {
     singleOf(::AuthApi)
     singleOf(::SessionsApi)
     singleOf(::ContributorsApi)
-    singleOf(::DriverFactory)
+    singleOf<DriverFactory>(::NativeDriverFactory)
     singleOf(::DatabaseService)
     singleOf(::SessionsDao)
     singleOf(::DataContributorsRepository) bind ContributorsRepository::class
