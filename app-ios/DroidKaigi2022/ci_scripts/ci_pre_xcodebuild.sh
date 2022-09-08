@@ -1,4 +1,4 @@
 #!/bin/zsh
 
-cd ../
+cd $CI_WORKSPACE
 ./gradlew appioscombined:assembleXCFramework
