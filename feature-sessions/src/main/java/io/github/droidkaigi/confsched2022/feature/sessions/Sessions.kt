@@ -62,6 +62,7 @@ import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
@@ -78,6 +79,7 @@ fun SessionsScreenRoot(
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
+        showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
         onSearchClick = onSearchClicked,
         onToggleTimetableClick = { isTimetable = !isTimetable },
@@ -90,6 +92,7 @@ fun Sessions(
     uiModel: SessionsUiModel,
     isTimetable: Boolean,
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -106,6 +109,7 @@ fun Sessions(
                 pagerState,
                 if (isTimetable) null else sessionsListListStates,
                 scheduleState,
+                showNavigationIcon,
                 onNavigationIconClick,
                 onSearchClick,
                 onToggleTimetableClick
@@ -284,6 +288,7 @@ fun SessionsTopBar(
     pagerState: PagerState,
     sessionsListListStates: List<LazyListState>?,
     scheduleState: ScheduleState,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: () -> Unit,
@@ -293,6 +298,7 @@ fun SessionsTopBar(
         modifier = modifier
     ) {
         KaigiTopAppBar(
+            showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
             elevation = 2.dp,
             title = {
@@ -392,6 +398,7 @@ fun SessionsTimetablePreview() {
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
                 isFilterOn = false
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
@@ -411,6 +418,7 @@ fun SessionsSessionListPreview() {
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
                 isFilterOn = false
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
