@@ -1,0 +1,43 @@
+name: drop-staging
+
+on:
+  workflow_run:
+    workflows:
+      - pull-request-closed-hook
+    branches-ignore:
+      - main
+      - release*
+    types:
+      - completed
+
+jobs:
+  drop-stage:
+    name: "Drop from staging"
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/github-script@v3
+        id: get-pr-number
+        with:
+          result-encoding: string
+          script: |
+            const { data: resp } = await github.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.event.workflow_run.id }}
+            })
+            return resp.jobs[0].steps[1].name
+      - uses: actions/checkout@v3
+        with:
+          repository: droidkaigi/conference-app-2021
+          ref: gh-actions
+          path: gh-actions
+      - uses: ./gh-actions/actions/destroy-distribution-by-name
+        with:
+          api-token: ${{ secrets.DEPLOYGATE_API_TOKEN }}
+          app-owner-name: droidkaigi
+          platform: android
+          app-id: io.github.droidkaigi.confsched2022.dev
+          distribution-name: ${{ format('debug/refs/pull/{0}/head', steps.get-pr-number.outputs.result) }}
