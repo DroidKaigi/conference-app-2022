@@ -15,6 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get-pr-number:
+    if: github.event_name == 'pull_request'
+    name: "get-pr-number"
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.pull_request.number }}
+        run: echo ok
+
   build:
     runs-on: macos-12
     timeout-minutes: 60
@@ -64,7 +72,7 @@ jobs:
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v3
         with:
-          name: develop-debug-apk
+          name: assemble-output
           path: app-android/build/outputs/apk/dev/debug/app-android-dev-debug.apk
           retention-days: 14
 
@@ -75,6 +83,8 @@ jobs:
           name: build-reports
           path: app-android/build/reports
           retention-days: 30
+ 
+
 #  save computation resource for now
 #  androidTest:
 #    needs: build
