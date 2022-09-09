@@ -61,3 +61,9 @@ For building this App with Xcode 13.4.1, we need to run following before build w
 Some targets that depends on SwiftGenPlugin needs to build individualy.
 
 For example, a target "Theme" depends on "SwiftGenPlugin", it needs to build individualy.
+
+### Xcode Previews
+
+Before preview resume, specifying "Target" that a preview target view is belonged is needed.
+
+For example, when preview "AboutView", specify "AboutFeature".
