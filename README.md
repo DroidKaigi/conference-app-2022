@@ -17,7 +17,7 @@
 
 ## Try it out
 
-Try it outThe builds being distributed through mobile app distribution services.
+The builds being distributed through mobile app distribution services.
 
 - Try the latest staging through [<img src="https://dply.me/rdembt/button/small" alt="Download to device">](https://dply.me/rdembt#install)
 
