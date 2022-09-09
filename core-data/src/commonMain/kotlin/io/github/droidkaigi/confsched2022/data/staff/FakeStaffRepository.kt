@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeStaffRepository : StaffRepository {
+    val staff: PersistentList<Staff> = Staff.fakes()
     override fun staff(): Flow<PersistentList<Staff>> {
-        return flowOf(Staff.fakes())
+        return flowOf(staff)
     }
 }
