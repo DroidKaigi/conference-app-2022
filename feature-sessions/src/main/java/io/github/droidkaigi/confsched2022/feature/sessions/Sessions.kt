@@ -162,6 +162,7 @@ fun Timetable(
 ) {
     HorizontalPager(
         count = days.size,
+        modifier = modifier,
         state = pagerState
     ) { dayIndex ->
         val day = days[dayIndex]
@@ -169,10 +170,9 @@ fun Timetable(
         val timetableState = rememberTimetableState()
         val coroutineScope = rememberCoroutineScope()
 
-        Row(modifier = modifier) {
+        Row {
             Hours(
                 timetableState = timetableState,
-                modifier = modifier,
             ) { modifier, hour ->
                 HoursItem(hour = hour, modifier = modifier)
             }
