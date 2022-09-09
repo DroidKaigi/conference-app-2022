@@ -161,6 +161,7 @@ fun Timetable(
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
+    val screenScaleState = rememberScreenScaleState()
     HorizontalPager(
         count = days.size,
         modifier = modifier,
@@ -168,7 +169,7 @@ fun Timetable(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        val timetableState = rememberTimetableState()
+        val timetableState = rememberTimetableState(screenScaleState = screenScaleState)
         val coroutineScope = rememberCoroutineScope()
 
         Row {
