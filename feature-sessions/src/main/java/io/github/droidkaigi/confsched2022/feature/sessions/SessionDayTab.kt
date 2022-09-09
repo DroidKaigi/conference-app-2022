@@ -35,10 +35,10 @@ internal fun SessionDayTab(
     index: Int,
     day: DroidKaigi2022Day,
     selected: Boolean,
-    scrolled: Boolean,
+    expanded: Boolean,
     onTabClicked: (index: Int) -> Unit
 ) {
-    val height by animateDpAsState(targetValue = if (scrolled) 28.dp else 56.dp)
+    val height by animateDpAsState(targetValue = if (expanded) 56.dp else 28.dp)
     Tab(
         selected = selected,
         onClick = { onTabClicked(index) },
@@ -60,7 +60,7 @@ internal fun SessionDayTab(
                 modifier = Modifier.fillMaxWidth()
             )
             AnimatedVisibility(
-                visible = !scrolled,
+                visible = expanded,
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut()
             ) {
