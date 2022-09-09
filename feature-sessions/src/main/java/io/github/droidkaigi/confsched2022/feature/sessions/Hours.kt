@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 @Composable
 fun HoursItem(
@@ -117,7 +118,7 @@ private data class HoursLayout(
 ) {
     var hoursHeight = 0
     var hoursWidth = 0
-    val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).roundToPx() }
+    val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).toPx() }
     val hoursLayouts = hours.mapIndexed { index, it ->
         val hoursItemLayout = HoursItemLayout(
             index = index,
@@ -143,12 +144,12 @@ private data class HoursLayout(
 
 private data class HoursItemLayout(
     val density: Density,
-    val minutePx: Int,
+    val minutePx: Float,
     val index: Int
 ) {
     val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
     val itemOffset = with(density) { hoursItemTopOffset.roundToPx() }
-    val height = minutePx * 60
+    val height = (minutePx * 60).roundToInt()
     val width = with(density) { hoursWidth.roundToPx() }
     val left = 0
     val top = index * height + topOffset - itemOffset

@@ -59,6 +59,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -225,7 +226,7 @@ private data class TimetableItemLayout(
     val rooms: List<TimetableRoom>,
     val dayStartTime: Instant,
     val density: Density,
-    val minutePx: Int
+    val minutePx: Float
 ) {
     val dayStart = when (timetableItem.day) {
         Day1 -> LocalDateTime.parse("2022-10-05T10:00:00")
@@ -237,12 +238,11 @@ private data class TimetableItemLayout(
         else -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     }
-    val height = (timetableItem.endsAt - timetableItem.startsAt)
-        .inWholeMinutes.toInt() * minutePx
+    val height =
+        ((timetableItem.endsAt - timetableItem.startsAt).inWholeMinutes * minutePx).roundToInt()
     val width = with(density) { TimetableSizes.columnWidth.roundToPx() }
     val left = rooms.indexOf(timetableItem.room) * width
-    val top = (timetableItem.startsAt - dayStart)
-        .inWholeMinutes.toInt() * minutePx
+    val top = ((timetableItem.startsAt - dayStart).inWholeMinutes * minutePx).toInt()
     val right = left + width
     val bottom = top + height
 
@@ -273,9 +273,7 @@ private data class TimetableLayout(
     val dayStartTime = timetable.timetableItems.minOfOrNull { it.startsAt }
     var timetableHeight = 0
     var timetableWidth = 0
-    val minutePx = with(density) {
-        TimetableSizes.minuteHeight.times(verticalScale).roundToPx()
-    }
+    val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).toPx() }
     val timetableLayouts = timetable.timetableItems.map {
         val timetableItemLayout = TimetableItemLayout(
             timetableItem = it,
