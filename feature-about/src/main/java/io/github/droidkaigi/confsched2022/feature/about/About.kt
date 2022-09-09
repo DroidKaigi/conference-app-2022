@@ -51,15 +51,21 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 @Composable
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
+<<<<<<< HEAD
     About(onNavigationIconClick, onStaffListClick, modifier, versionName)
+=======
+    About(showNavigationIcon, onNavigationIconClick, modifier, versionName)
+>>>>>>> upstream/main
 }
 
 @Composable
 fun About(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,6 +74,7 @@ fun About(
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
@@ -107,7 +114,7 @@ fun About(
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
-                        bottom = 32.dp,
+                        bottom = 14.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
@@ -121,25 +128,22 @@ fun About(
                     ),
                     text = stringResource(id = string.about_description)
                 )
+            }
+            val context = LocalContext.current
 
-                val context = LocalContext.current
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Twitter
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Youtube
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Medium
-                    )
-                }
+            Row(modifier = Modifier.padding(start = 4.dp, bottom = 22.dp)) {
+                ExternalServiceImage(
+                    context = context,
+                    serviceType = ExternalServices.Twitter
+                )
+                ExternalServiceImage(
+                    context = context,
+                    serviceType = ExternalServices.Youtube
+                )
+                ExternalServiceImage(
+                    context = context,
+                    serviceType = ExternalServices.Medium
+                )
             }
             Divider(
                 modifier = Modifier
@@ -252,13 +256,14 @@ private fun ExternalServiceImage(
 ) {
     Image(
         modifier = Modifier
-            .size(24.dp)
             .clickable {
                 navigateToExternalServices(
                     context = context,
                     serviceType = serviceType
                 )
-            },
+            }
+            .padding(12.dp)
+            .size(24.dp),
         imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
         contentDescription = serviceType.contentDescription,
     )

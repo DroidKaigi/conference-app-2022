@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -30,7 +31,7 @@ internal fun SessionDayTab(
     Tab(
         selected = selected,
         onClick = { onTabClicked(index) },
-        modifier = Modifier.height(56.dp).clip(CircleShape)
+        modifier = Modifier.height(56.dp).padding(end = 8.dp).clip(CircleShape)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

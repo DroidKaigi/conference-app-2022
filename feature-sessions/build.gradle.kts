@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)
     implementation(libs.composeUi)
+    implementation(libs.accompanistFlowlayout)
     implementation(libs.composeMaterial3)
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
