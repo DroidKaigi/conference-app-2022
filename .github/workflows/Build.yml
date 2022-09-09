@@ -23,6 +23,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.konan
+          key: ${{ runner.os }}-kotlin-native-${{ hashFiles('gradle/libs.versions.toml', '**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-kotlin-native-
+
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
