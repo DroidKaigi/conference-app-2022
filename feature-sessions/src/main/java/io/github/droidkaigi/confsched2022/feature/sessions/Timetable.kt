@@ -230,13 +230,12 @@ private data class TimetableItemLayout(
         else -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     }
-    val topOffset = with(density) { TimetableSizes.horizontalLineTopOffset.roundToPx() }
     val height = (timetableItem.endsAt - timetableItem.startsAt)
         .inWholeMinutes.toInt() * minutePx
     val width = with(density) { TimetableSizes.columnWidth.roundToPx() }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = (timetableItem.startsAt - dayStart)
-        .inWholeMinutes.toInt() * minutePx + topOffset
+        .inWholeMinutes.toInt() * minutePx
     val right = left + width
     val bottom = top + height
 
@@ -531,5 +530,4 @@ private suspend fun PointerInputScope.detectDragGestures(
 object TimetableSizes {
     val columnWidth = 192.dp
     val lineStrokeSize = 1.dp
-    val horizontalLineTopOffset = 16.dp
 }
