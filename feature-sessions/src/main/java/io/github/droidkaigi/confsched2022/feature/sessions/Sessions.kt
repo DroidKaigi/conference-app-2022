@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -61,6 +62,7 @@ import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
@@ -77,6 +79,7 @@ fun SessionsScreenRoot(
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
+        showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
         onSearchClick = onSearchClicked,
         onToggleTimetableClick = { isTimetable = !isTimetable },
@@ -89,6 +92,7 @@ fun Sessions(
     uiModel: SessionsUiModel,
     isTimetable: Boolean,
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -105,6 +109,7 @@ fun Sessions(
                 pagerState,
                 if (isTimetable) null else sessionsListListStates,
                 scheduleState,
+                showNavigationIcon,
                 onNavigationIconClick,
                 onSearchClick,
                 onToggleTimetableClick
@@ -116,7 +121,12 @@ fun Sessions(
                 .padding(top = 4.dp)
         ) {
             if (scheduleState !is Loaded) {
-                CircularProgressIndicator()
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
                 val days = scheduleState.schedule.days
                 if (isTimetable) {
@@ -278,6 +288,7 @@ fun SessionsTopBar(
     pagerState: PagerState,
     sessionsListListStates: List<LazyListState>?,
     scheduleState: ScheduleState,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: () -> Unit,
@@ -287,6 +298,7 @@ fun SessionsTopBar(
         modifier = modifier
     ) {
         KaigiTopAppBar(
+            showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
             elevation = 2.dp,
             title = {
@@ -373,6 +385,7 @@ private fun TabIndicator(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
+            .padding(end = 8.dp)
     ) {}
 }
 
@@ -385,6 +398,7 @@ fun SessionsTimetablePreview() {
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
                 isFilterOn = false
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
@@ -404,12 +418,33 @@ fun SessionsSessionListPreview() {
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
                 isFilterOn = false
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
             isTimetable = false,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SessionsLoadingPreview() {
+    KaigiTheme {
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = ScheduleState.Loading,
+                isFilterOn = false
+            ),
+            onNavigationIconClick = {},
+            onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
+            onSearchClick = {},
+            onToggleTimetableClick = {},
+            isTimetable = false,
+            showNavigationIcon = true
         )
     }
 }

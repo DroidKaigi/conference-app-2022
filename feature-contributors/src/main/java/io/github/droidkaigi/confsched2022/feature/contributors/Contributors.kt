@@ -26,11 +26,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
@@ -41,22 +38,25 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiMod
 @Composable
 fun ContributorsScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
     val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, onNavigationIconClick, modifier)
+    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
 }
 
 @Composable
 fun Contributors(
     uiModel: ContributorsUiModel,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
@@ -113,10 +113,7 @@ fun Contributors(
                     )
                     Text(
                         text = contributor.username,
-                        style = TextStyle(
-                            fontWeight = FontWeight(500),
-                            fontSize = 14.sp
-                        ),
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }
