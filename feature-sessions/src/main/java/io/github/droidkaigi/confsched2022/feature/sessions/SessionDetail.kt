@@ -21,8 +21,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -109,7 +109,7 @@ fun SessionDetailTopAppBar(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
 ) {
-    SmallTopAppBar(
+    TopAppBar(
         modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBackIconClick) {
