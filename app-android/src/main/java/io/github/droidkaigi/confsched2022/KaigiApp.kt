@@ -94,6 +94,7 @@ fun KaigiApp(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
                         kaigiAppScaffoldState::onBackIconClick,
+                        kaigiAppScaffoldState::onSearchClick,
                         kaigiAppScaffoldState::onTimeTableClick,
                         kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
@@ -180,6 +181,12 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     fun onTimeTableClick(timetableId: TimetableItemId) {
         navController.navigate(
             route = SessionsNavGraph.sessionDetailRoute(timetableId.value)
+        )
+    }
+
+    fun onSearchClick() {
+        navController.navigate(
+            route = SessionsNavGraph.sessionSearchRoute()
         )
     }
 
