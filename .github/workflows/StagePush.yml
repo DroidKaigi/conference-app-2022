@@ -22,7 +22,7 @@ jobs:
           repository: droidkaigi/conference-app-2021
           ref: gh-actions
           path: gh-actions
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v3
         id: get-artifact-id
         with:
           result-encoding: string
