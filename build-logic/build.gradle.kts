@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.buildkonfigPlugin)
     implementation(libs.firebasePlugin)
     implementation(libs.sqldelightGradlePlugin)
+    implementation(libs.detektGradlePlugin)
 }
 
 gradlePlugin {
@@ -96,6 +97,10 @@ gradlePlugin {
         register("sqldelight") {
             id = "droidkaigi.primitive.sqldelight"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.SqldelightPlugin"
+        }
+        register("detekt") {
+            id = "droidkaigi.primitive.detekt"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.DetektPlugin"
         }
 
         // Conventions
