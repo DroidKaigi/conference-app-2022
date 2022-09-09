@@ -166,7 +166,17 @@ fun Timetable(
     ) { constraint ->
 
         data class ItemData(val placeable: Placeable, val timetableItem: TimetableItemLayout)
-        timetableScreen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
+        if (timetableScreen.width != constraint.maxWidth ||
+            timetableScreen.height != constraint.maxHeight
+        ) {
+            timetableScreen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
+            val originalContentHeight = timetableScreen.timetableLayout.timetableHeight *
+                timetableState.screenScaleState.verticalScale
+            val layoutHeight = constraint.maxHeight
+            timetableState.screenScaleState.updateVerticalScaleLowerBound(
+                layoutHeight.toFloat() / originalContentHeight
+            )
+        }
 
         val items = visibleItemLayouts.map { (index, timetableLayout) ->
             ItemData(
@@ -418,15 +428,28 @@ fun rememberTransformableStateForScreenScale(screenScaleState: ScreenScaleState)
 
 @Stable
 class ScreenScaleState(
-    initialVerticalScale: Float = 1f
+    initialVerticalScale: Float = 1f,
+    initialVerticalScaleLowerBound: Float = 1f,
 ) {
-    private val verticalScaleState = mutableStateOf(initialVerticalScale)
+    private var verticalScaleLowerBound = initialVerticalScaleLowerBound
+    private val verticalScaleUpperBound = 1f
+    private val verticalScaleState = mutableStateOf(
+        initialVerticalScale.coerceIn(verticalScaleLowerBound, verticalScaleUpperBound),
+    )
 
     val verticalScale: Float
         get() = verticalScaleState.value
 
     fun updateVerticalScale(newScale: Float) {
-        verticalScaleState.value = newScale
+        verticalScaleState.value =
+            newScale.coerceIn(verticalScaleLowerBound, verticalScaleUpperBound)
+    }
+
+    fun updateVerticalScaleLowerBound(newLowerBound: Float) {
+        if (newLowerBound < verticalScaleLowerBound) {
+            verticalScaleLowerBound = newLowerBound
+            updateVerticalScale(verticalScale)
+        }
     }
 
     companion object {
@@ -434,11 +457,13 @@ class ScreenScaleState(
             save = {
                 listOf(
                     it.verticalScale,
+                    it.verticalScaleLowerBound,
                 )
             },
             restore = {
                 ScreenScaleState(
                     initialVerticalScale = it[0],
+                    initialVerticalScaleLowerBound = it[1],
                 )
             }
         )
