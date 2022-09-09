@@ -63,7 +63,15 @@ class SessionsViewModel @Inject constructor(
                 scheduleState.filter(filters.value)
             }
         }
-        SessionsUiModel(scheduleState = scheduleState, isFilterOn = filters.value.filterFavorite)
+
+        val isTimetableMode
+            by sessionsRepository.isTimetableModeFlow().collectAsState(initial = true)
+
+        SessionsUiModel(
+            scheduleState = scheduleState,
+            isFilterOn = filters.value.filterFavorite,
+            isTimetable = isTimetableMode,
+        )
     }
 
     fun onToggleFilter() {
@@ -75,6 +83,12 @@ class SessionsViewModel @Inject constructor(
             sessionsRepository.setFavorite(
                 sessionId, !currentIsFavorite
             )
+        }
+    }
+
+    fun onTimetableModeToggle(currentIsTimetableMode: Boolean) {
+        viewModelScope.launch {
+            sessionsRepository.setIsTimetableMode(!currentIsTimetableMode)
         }
     }
 }

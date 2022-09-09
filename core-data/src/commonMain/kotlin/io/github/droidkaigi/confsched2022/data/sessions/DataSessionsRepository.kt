@@ -43,4 +43,11 @@ class DataSessionsRepository(
             favoriteSessionsDataStore.removeFavorite(sessionId.value)
         }
     }
+
+    override fun isTimetableModeFlow(): Flow<Boolean> {
+        return favoriteSessionsDataStore.isTimetableMode()
+    }
+    override suspend fun setIsTimetableMode(isTimetableMode: Boolean) {
+        favoriteSessionsDataStore.setIsTimetableMode(isTimetableMode)
+    }
 }
