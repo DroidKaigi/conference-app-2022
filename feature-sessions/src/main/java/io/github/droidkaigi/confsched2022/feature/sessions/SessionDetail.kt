@@ -89,7 +89,11 @@ fun SessionDetailScreenRoot(
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         },
-        onShareClick = { shareManager.share("${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}") },
+        onShareClick = {
+            shareManager.share(
+                "${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}"
+            )
+        },
         onNavigateFloorMapClick = onNavigateFloorMapClick,
         onRegisterCalendarClick = {
             calendarRegistration.register(
