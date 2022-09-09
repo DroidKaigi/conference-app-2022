@@ -3,25 +3,22 @@ package io.github.droidkaigi.confsched2022.data.sessions
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
+    private val sessionsDao: SessionsDao,
     private val favoriteSessionsDataStore: SettingsDatastore
 ) : SessionsRepository {
-    private val timetableFlow = MutableStateFlow(Timetable())
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-        if (timetableFlow.value.isEmpty()) {
-            refresh()
-        }
+        launch { refresh() }
         combine(
-            timetableFlow,
+            sessionsDao.selectAll(),
             favoriteSessionsDataStore.favoriteSessionIds(),
             ::Pair
         )
@@ -34,7 +31,9 @@ class DataSessionsRepository(
     }
 
     override suspend fun refresh() {
-        timetableFlow.value = sessionsApi.timetable()
+        val timetable = sessionsApi.timetable()
+        sessionsDao.deleteAll()
+        sessionsDao.insert(timetable)
     }
 
     override suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean) {
