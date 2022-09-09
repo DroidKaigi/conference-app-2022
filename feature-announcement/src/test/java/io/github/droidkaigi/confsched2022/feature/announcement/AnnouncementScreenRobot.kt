@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AnnouncementScreenRobot @Inject constructor() {
 
     context(RobotTestRule)
-    fun checkAnnouncementVisible() {
+    fun checkAnnouncementTitleVisible() {
         // TODO: Language-specific testing
         val appBarTitleText = composeTestRule.activity
             .getString(string.announcement_top_app_bar_title)

@@ -17,7 +17,7 @@ class AnnouncementScreenTest {
     @Test
     fun checkAnnouncementVisible() {
         announcementScreenRobot(robotTestRule) {
-            checkAnnouncementVisible()
+            checkAnnouncementTitleVisible()
         }
     }
 }
