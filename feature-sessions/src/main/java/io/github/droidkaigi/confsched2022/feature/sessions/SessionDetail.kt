@@ -308,7 +308,11 @@ fun SessionDetailDescription(
     Column {
         Spacer(modifier = modifier.padding(16.dp))
         Text(
-            modifier = modifier.animateContentSize(),
+            modifier = modifier
+                .animateContentSize()
+                .clickable {
+                    isReadMore = true
+                },
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
