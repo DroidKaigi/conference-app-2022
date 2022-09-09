@@ -18,15 +18,12 @@ data class StaffUiModel(
             fun of(staffResult: Result<PersistentList<Staff>>): StaffState {
                 return when (staffResult) {
                     is Result.Loading -> {
-                        Log.d("nono", "loading")
                         Loading
                     }
                     is Result.Success -> {
-                        Log.d("nono", "success : ${staffResult.data}")
                         Loaded(staffResult.data)
                     }
                     is Result.Error -> {
-                        Log.d("nono", "error:${staffResult.exception}")
                         staffResult.exception?.printStackTrace()
                         Loading
                     }
