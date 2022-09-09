@@ -46,6 +46,8 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -88,7 +90,11 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
                     contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                    aboutNavGraph(kaigiAppScaffoldState::onNavigationClick)
+                    aboutNavGraph(
+                        kaigiAppScaffoldState::onNavigationClick,
+                        kaigiAppScaffoldState::onStaffListClick
+                    )
+                    staffNavGraph(kaigiAppScaffoldState::onNavigationClick)
                     mapGraph()
                 }
             }
@@ -162,6 +168,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     fun onBackIconClick() {
         navController.popBackStack()
+    }
+
+    fun onStaffListClick() {
+        navController.navigate(StaffNavGraph.staffRoute)
     }
 
     private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)

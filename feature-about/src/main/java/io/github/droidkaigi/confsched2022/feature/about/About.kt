@@ -52,14 +52,16 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit = {},
+    onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(onNavigationIconClick, modifier, versionName)
+    About(onNavigationIconClick, onStaffListClick, modifier, versionName)
 }
 
 @Composable
 fun About(
     onNavigationIconClick: () -> Unit,
+    onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
@@ -172,9 +174,7 @@ fun About(
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Person,
                     textResId = string.about_staff,
-                    onClick = {
-                        // TODO: Implement show staff screen
-                    }
+                    onClick = onStaffListClick
                 )
 
                 AuxiliaryInformationRow(

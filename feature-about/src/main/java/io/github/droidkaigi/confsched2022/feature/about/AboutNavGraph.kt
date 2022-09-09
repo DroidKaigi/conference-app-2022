@@ -3,9 +3,15 @@ package io.github.droidkaigi.confsched2022.feature.about
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
-fun NavGraphBuilder.aboutNavGraph(onNavigationIconClick: () -> Unit) {
+fun NavGraphBuilder.aboutNavGraph(
+    onNavigationIconClick: () -> Unit,
+    onStaffListClick: () -> Unit
+) {
     composable(route = AboutNavGraph.aboutRoute) {
-        AboutScreenRoot(onNavigationIconClick = onNavigationIconClick)
+        AboutScreenRoot(
+            onNavigationIconClick = onNavigationIconClick,
+            onStaffListClick = onStaffListClick
+        )
     }
 }
 
