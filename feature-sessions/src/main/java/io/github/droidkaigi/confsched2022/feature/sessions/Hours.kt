@@ -114,7 +114,7 @@ private data class HoursLayout(
 ) {
     var hoursHeight = 0
     var hoursWidth = 0
-    val minutePx = with(density) { (4.23).dp.roundToPx() }
+    val minutePx = with(density) { TimetableSizes.minuteHeight.roundToPx() }
     val hoursLayouts = hours.mapIndexed { index, it ->
         val hoursItemLayout = HoursItemLayout(
             index = index,

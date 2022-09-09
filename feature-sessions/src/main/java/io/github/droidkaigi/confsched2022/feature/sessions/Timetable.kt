@@ -263,7 +263,7 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
     var timetableHeight = 0
     var timetableWidth = 0
     val minutePx = with(density) {
-        (4.23).dp.roundToPx()
+        TimetableSizes.minuteHeight.roundToPx()
     }
     val timetableLayouts = timetable.timetableItems.map {
         val timetableItemLayout = TimetableItemLayout(
@@ -530,4 +530,5 @@ private suspend fun PointerInputScope.detectDragGestures(
 object TimetableSizes {
     val columnWidth = 192.dp
     val lineStrokeSize = 1.dp
+    val minuteHeight = (4.23).dp
 }
