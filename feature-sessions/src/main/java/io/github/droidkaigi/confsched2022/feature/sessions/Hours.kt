@@ -46,11 +46,13 @@ fun Hours(
         content(modifier, hoursList[index])
     }
     val density = timetableState.density
+    val verticalScale = timetableState.screenScaleState.verticalScale
     val scrollState = timetableState.screenScrollState
-    val hoursLayout = remember(hoursList) {
+    val hoursLayout = remember(hoursList, verticalScale) {
         HoursLayout(
             hours = hoursList,
             density = density,
+            verticalScale = verticalScale,
         )
     }
     val hoursScreen = remember(hoursLayout, density) {
@@ -111,10 +113,11 @@ fun Hours(
 private data class HoursLayout(
     val hours: List<String>,
     val density: Density,
+    val verticalScale: Float,
 ) {
     var hoursHeight = 0
     var hoursWidth = 0
-    val minutePx = with(density) { TimetableSizes.minuteHeight.roundToPx() }
+    val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).roundToPx() }
     val hoursLayouts = hours.mapIndexed { index, it ->
         val hoursItemLayout = HoursItemLayout(
             index = index,

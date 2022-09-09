@@ -8,6 +8,8 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.forEachGesture
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
@@ -71,8 +74,9 @@ fun Timetable(
         content(timetableItemWithFavorite.timetableItem, timetableItemWithFavorite.isFavorited)
     }
     val density = timetableState.density
-    val timetableLayout = remember(timetable) {
-        TimetableLayout(timetable = timetable, density = density)
+    val verticalScale = timetableState.screenScaleState.verticalScale
+    val timetableLayout = remember(timetable, verticalScale) {
+        TimetableLayout(timetable = timetable, density = density, verticalScale = verticalScale)
     }
     val scrollState = timetableState.screenScrollState
     val timetableScreen = remember(timetableLayout, density) {
@@ -132,6 +136,9 @@ fun Timetable(
                     }
                 )
             }
+            .transformable(
+                rememberTransformableStateForScreenScale(timetableState.screenScaleState),
+            )
             .semantics {
                 horizontalScrollAxisRange = ScrollAxisRange(
                     value = { -scrollState.scrollX },
@@ -194,7 +201,7 @@ fun TimetablePreview() {
         timetableState = timetableState,
         coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
-        TimetableItem(timetableItem, isFavorite)
+        TimetableItem(timetableItem, isFavorite, 1f)
     }
 }
 
@@ -257,13 +264,17 @@ private data class TimetableItemLayout(
     }
 }
 
-private data class TimetableLayout(val timetable: Timetable, val density: Density) {
+private data class TimetableLayout(
+    val timetable: Timetable,
+    val density: Density,
+    val verticalScale: Float,
+) {
     val rooms = timetable.rooms
     val dayStartTime = timetable.timetableItems.minOfOrNull { it.startsAt }
     var timetableHeight = 0
     var timetableWidth = 0
     val minutePx = with(density) {
-        TimetableSizes.minuteHeight.roundToPx()
+        TimetableSizes.minuteHeight.times(verticalScale).roundToPx()
     }
     val timetableLayouts = timetable.timetableItems.map {
         val timetableItemLayout = TimetableItemLayout(
@@ -295,16 +306,19 @@ private data class TimetableLayout(val timetable: Timetable, val density: Densit
 @Composable
 fun rememberTimetableState(
     screenScrollState: ScreenScrollState = rememberScreenScrollState(),
+    screenScaleState: ScreenScaleState = rememberScreenScaleState(),
     density: Density = LocalDensity.current,
 ): TimetableState = remember {
     TimetableState(
         screenScrollState,
-        density
+        screenScaleState,
+        density,
     )
 }
 
 data class TimetableState(
     val screenScrollState: ScreenScrollState,
+    val screenScaleState: ScreenScaleState,
     val density: Density,
 )
 
@@ -385,6 +399,48 @@ class ScreenScrollState(
                 ScreenScrollState(
                     initialScrollX = it[0],
                     initialScrollY = it[1],
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun rememberScreenScaleState(): ScreenScaleState = rememberSaveable(
+    saver = ScreenScaleState.Saver
+) {
+    ScreenScaleState()
+}
+
+@Composable
+fun rememberTransformableStateForScreenScale(screenScaleState: ScreenScaleState) =
+    rememberTransformableState { zoomChange, _, _ ->
+        screenScaleState.updateVerticalScale(screenScaleState.verticalScale * zoomChange)
+    }
+
+@Stable
+class ScreenScaleState(
+    initialVerticalScale: Float = 1f
+) {
+    private val verticalScaleState = mutableStateOf(initialVerticalScale)
+
+    val verticalScale: Float
+        get() = verticalScaleState.value
+
+    fun updateVerticalScale(newScale: Float) {
+        verticalScaleState.value = newScale
+    }
+
+    companion object {
+        val Saver: Saver<ScreenScaleState, *> = listSaver(
+            save = {
+                listOf(
+                    it.verticalScale,
+                )
+            },
+            restore = {
+                ScreenScaleState(
+                    initialVerticalScale = it[0],
                 )
             }
         )

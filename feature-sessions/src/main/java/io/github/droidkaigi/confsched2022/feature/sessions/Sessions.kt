@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -172,6 +173,9 @@ fun Timetable(
 
         Row {
             Hours(
+                modifier = modifier.transformable(
+                    rememberTransformableStateForScreenScale(timetableState.screenScaleState),
+                ),
                 timetableState = timetableState,
             ) { modifier, hour ->
                 HoursItem(hour = hour, modifier = modifier)
@@ -193,6 +197,7 @@ fun Timetable(
                     TimetableItem(
                         timetableItem = timetableItem,
                         isFavorited = isFavorited,
+                        verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
