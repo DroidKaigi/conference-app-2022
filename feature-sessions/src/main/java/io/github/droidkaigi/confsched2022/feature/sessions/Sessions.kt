@@ -1,6 +1,8 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
 import android.util.Log
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -298,9 +300,10 @@ fun SessionsTopBar(
     }
     LaunchedEffect(key1 = sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState) {
         snapshotFlow {
-            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState
+            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.scrollY
         }.collect {
-            sessionPagerListScrollState.changedCurrentPage(sessionPagerListScrollState.pagerState.currentPage)
+            Log.i("screenScrollState", "${it}")
+            sessionPagerListScrollState.changedScrollY(it)
         }
     }
     Column(
@@ -359,7 +362,7 @@ fun SessionsTopBar(
                         index = index,
                         day = day,
                         selected = selected,
-                        scrolled = if(isTimetable) sessionPagerListScrollState.oldPageTimeTableScrolled else sessionPagerListScrollState.oldPageSessionsListScrolled,
+                        scrolled = if(isTimetable) sessionPagerListScrollState.timetableScrolled else sessionPagerListScrollState.oldPageSessionsListScrolled,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
@@ -467,30 +470,38 @@ class SessionPagerListScrollState (
     val timetableStates: List<TimetableState>,
     val sessionsListListStates: List<LazyListState>
 ){
-    private var _oldPage = pagerState.currentPage
+    private val isScrollStart = mutableStateOf(false)
+    private val cachedScrollY = timetableStates.map { 0f }.toMutableList()
+    private var _prevPage = pagerState.currentPage
     private var _currentPage = pagerState.currentPage
 
+    private val _currentTimetableScrollY
+        get() = timetableStates[pagerState.currentPage].screenScrollState.scrollY
+
     private val _currentTimetableScrolled
-        get() = timetableStates[pagerState.currentPage].screenScrollState.scrollY < 0
+        get() = _currentTimetableScrollY < 0
 
-    val currentTimetableScrolled get() = _currentTimetableScrolled
+    private val _prevPageTimeTableScrollY
+        get() = timetableStates[_prevPage].screenScrollState.scrollY
 
-    private val _oldPageTimeTableScrolled
-        get() = timetableStates[_oldPage].screenScrollState.scrollY < 0
+    private val _prevPageTimeTableScrolled
+        get() = _prevPageTimeTableScrollY < 0
 
-    val oldPageTimeTableScrolled get() = _oldPageTimeTableScrolled
-
-//    val timetableScrolled get() =
+    val timetableScrolled: Boolean
+        get() {
+            Log.i("timetableScrolled", "isScrollStart = ${isScrollStart.value} , _currentTimetableScrollY = ${_currentTimetableScrollY}, _prevPageTimeTableScrollY = ${_prevPageTimeTableScrollY}")
+            return if(isScrollStart.value) _currentTimetableScrolled else _prevPageTimeTableScrolled
+        }
 
     private val _currentSessionsListScrolled
         get() = sessionsListListStates[pagerState.currentPage].layoutInfo.beforeContentPadding > 0
 
     val currentSessionsListScrolled get() = _currentSessionsListScrolled
 
-    private val _oldPageSessionsListScrolled
-        get() = sessionsListListStates[_oldPage].layoutInfo.beforeContentPadding < 0
+    private val _prevPageSessionsListScrolled
+        get() = sessionsListListStates[_prevPage].layoutInfo.beforeContentPadding < 0
 
-    val oldPageSessionsListScrolled get() = _oldPageSessionsListScrolled
+    val oldPageSessionsListScrolled get() = _prevPageSessionsListScrolled
 
     suspend fun scrollToSessionsListItem(index: Int) = coroutineScope {
         launch {
@@ -500,8 +511,16 @@ class SessionPagerListScrollState (
 
     suspend fun changedCurrentPage(page: Int) = coroutineScope {
         launch {
-            _oldPage = _currentPage
+            isScrollStart.value = false
+            cachedScrollY[_prevPage] = _prevPageTimeTableScrollY
+            _prevPage = _currentPage
             _currentPage = page
+        }
+    }
+
+    suspend fun changedScrollY(scrollY: Float) =  coroutineScope {
+        launch {
+            if(!isScrollStart.value) isScrollStart.value = cachedScrollY[pagerState.currentPage] != scrollY
         }
     }
 
