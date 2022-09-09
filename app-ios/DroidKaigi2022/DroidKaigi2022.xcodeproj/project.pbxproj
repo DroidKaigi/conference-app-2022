@@ -23,6 +23,7 @@
 		8C541EF228B1315C00354E7B /* app-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "app-ios"; path = ..; sourceTree = "<group>"; };
 		E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		E831922A28CADE5F009FC9F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +41,7 @@
 		8C541ECD28B1313800354E7B = {
 			isa = PBXGroup;
 			children = (
+				E831922C28CADEDB009FC9F6 /* iOS */,
 				E831922528C9DABD009FC9F6 /* ci_scripts */,
 				8C541ED228B1313800354E7B /* Shared */,
 				8C541EF228B1315C00354E7B /* app-ios */,
@@ -80,6 +82,14 @@
 				E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */,
 			);
 			path = ci_scripts;
+			sourceTree = "<group>";
+		};
+		E831922C28CADEDB009FC9F6 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				E831922A28CADE5F009FC9F6 /* Info.plist */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +293,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -313,6 +324,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
