@@ -4,23 +4,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
 fun NavGraphBuilder.aboutNavGraph(
-<<<<<<< HEAD
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onStaffListClick: () -> Unit
 ) {
     composable(route = AboutNavGraph.aboutRoute) {
         AboutScreenRoot(
-            onNavigationIconClick = onNavigationIconClick,
-            onStaffListClick = onStaffListClick
-=======
-    showNavigationIcon: Boolean,
-    onNavigationIconClick: () -> Unit,
-) {
-    composable(route = AboutNavGraph.aboutRoute) {
-        AboutScreenRoot(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
->>>>>>> upstream/main
+            onStaffListClick = onStaffListClick
         )
     }
 }

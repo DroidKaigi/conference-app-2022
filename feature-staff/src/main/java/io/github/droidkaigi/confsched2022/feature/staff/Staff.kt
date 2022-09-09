@@ -32,22 +32,25 @@ import io.github.droidkaigi.confsched2022.feature.staff.StaffUiModel.StaffState.
 @Composable
 fun StaffScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
     val viewModel = hiltViewModel<StaffViewModel>()
     val uiModel by viewModel.uiModel
-    Staff(uiModel, onNavigationIconClick, modifier)
+    Staff(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
 }
 
 @Composable
 fun Staff(
     uiModel: StaffUiModel,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(

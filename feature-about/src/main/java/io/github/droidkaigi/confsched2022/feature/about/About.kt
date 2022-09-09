@@ -56,11 +56,7 @@ fun AboutScreenRoot(
     onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-<<<<<<< HEAD
-    About(onNavigationIconClick, onStaffListClick, modifier, versionName)
-=======
-    About(showNavigationIcon, onNavigationIconClick, modifier, versionName)
->>>>>>> upstream/main
+    About(showNavigationIcon, onNavigationIconClick, onStaffListClick, modifier, versionName)
 }
 
 @Composable

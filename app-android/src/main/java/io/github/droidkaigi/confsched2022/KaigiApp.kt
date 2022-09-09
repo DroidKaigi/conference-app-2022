@@ -100,14 +100,6 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onTimeTableClick,
                         kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
-<<<<<<< HEAD
-                    contributorsNavGraph(kaigiAppScaffoldState::onNavigationClick)
-                    aboutNavGraph(
-                        kaigiAppScaffoldState::onNavigationClick,
-                        kaigiAppScaffoldState::onStaffListClick
-                    )
-                    staffNavGraph(kaigiAppScaffoldState::onNavigationClick)
-=======
                     contributorsNavGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
@@ -115,8 +107,12 @@ fun KaigiApp(
                     aboutNavGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
+                        kaigiAppScaffoldState::onStaffListClick
                     )
->>>>>>> upstream/main
+                    staffNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick
+                    )
                     mapGraph()
                     announcementGraph(
                         showNavigationIcon,

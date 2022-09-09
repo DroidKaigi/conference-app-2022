@@ -33,11 +33,8 @@ include(
     ":feature-contributors",
     ":feature-about",
     ":feature-map",
-<<<<<<< HEAD
-    ":feature-staff",
-=======
     ":feature-announcement",
->>>>>>> upstream/main
+    ":feature-staff",
     ":core-ui",
     ":core-designsystem",
     ":core-data",
