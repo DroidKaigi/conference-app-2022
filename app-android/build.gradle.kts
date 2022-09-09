@@ -69,6 +69,7 @@ dependencies {
     implementation(projects.featureContributors)
     implementation(projects.featureMap)
     implementation(projects.featureAbout)
+    implementation(projects.featureStaff)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
