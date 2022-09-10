@@ -36,9 +36,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -68,6 +70,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.util.Locale
 
 @Composable
 fun SessionDetailScreenRoot(
@@ -289,9 +292,19 @@ fun SessionScheduleInfo(
 
     fun LocalDateTime.toTime() = "$hour:${minute.toString().padStart(2, '0')}"
 
-    val sessionSchedule =
-        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
-            "${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+    val japanese = "ja"
+
+    val month = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.monthNumber}月"
+    } else {
+        sessionStartDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+    }
+
+    val day = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.dayOfMonth}日"
+    } else {
+        "${sessionStartDateTime.dayOfMonth}th"
+    }
 
     Row(
         modifier = modifier,
@@ -303,7 +316,7 @@ fun SessionScheduleInfo(
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = sessionSchedule,
+            text = LocalContext.current.getString(R.string.session_schedule, month, day, sessionStartDateTime.toTime(), sessionEndDateTime.toTime()),
             style = MaterialTheme.typography.labelMedium,
         )
     }
