@@ -202,7 +202,7 @@ fun About(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "アプリバージョン",
+                    text = stringResource(id = R.string.version),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 if (versionName != null) {

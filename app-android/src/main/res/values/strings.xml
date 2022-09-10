@@ -7,4 +7,6 @@
     <string name="title_sponsors">Sponsors</string>
     <string name="title_contributors">Contributors</string>
     <string name="title_setting">Setting</string>
+
+    <string name="cant_start_shortcut">The shortcut is unavailable.</string>
 </resources>
