@@ -55,9 +55,12 @@ import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DateTimeUnit.Companion
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlin.math.roundToInt
 
@@ -248,8 +251,9 @@ private data class TimetableItemLayout(
         else -> LocalDateTime.parse("2022-10-05T10:00:00")
             .toInstant(TimeZone.of("UTC+9"))
     }
+    private val displayEndsAt = timetableItem.endsAt.minus(1, DateTimeUnit.MINUTE)
     val height =
-        ((timetableItem.endsAt - timetableItem.startsAt).inWholeMinutes * minutePx).roundToInt()
+        ((displayEndsAt - timetableItem.startsAt).inWholeMinutes * minutePx).roundToInt()
     val width = with(density) { TimetableSizes.columnWidth.roundToPx() }
     val left = rooms.indexOf(timetableItem.room) * width
     val top = ((timetableItem.startsAt - dayStart).inWholeMinutes * minutePx).toInt()
