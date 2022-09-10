@@ -9,7 +9,7 @@ import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
-import io.github.droidkaigi.confsched2022.ui.LoadState
+import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ class ContributorsViewModel @Inject constructor(
         val dataFlow = contributorsRepository.contributors().asLoadState()
 
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            val data by dataFlow.collectAsState(initial = LoadState.Loading)
+            val data by dataFlow.collectAsState(initial = UiLoadState.Loading)
             ContributorsUiModel(data)
         }
     }

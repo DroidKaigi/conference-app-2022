@@ -18,10 +18,10 @@ fun <T> Flow<T>.asResult(): Flow<Result<T>> {
     }.onStart { emit(Result.Loading) }.catch { emit(Result.Error(it)) }
 }
 
-sealed interface LoadState<out T> {
-    object Loading : LoadState<Nothing>
-    data class Success<T>(val value: T) : LoadState<T>
-    class Error(val value: Throwable? = null) : LoadState<Nothing>
+sealed interface UiLoadState<out T> {
+    object Loading : UiLoadState<Nothing>
+    data class Success<T>(val value: T) : UiLoadState<T>
+    class Error(val value: Throwable? = null) : UiLoadState<Nothing>
 
     fun getOrNull() = if (this is Success) {
         value
@@ -29,13 +29,13 @@ sealed interface LoadState<out T> {
         null
     }
 
-    fun <R> mapSuccess(transform: (value: T) -> R): LoadState<R> = when (this) {
+    fun <R> mapSuccess(transform: (value: T) -> R): UiLoadState<R> = when (this) {
         is Success -> Success(transform(this.value))
         is Loading -> this
         is Error -> this
     }
 
-    fun <OtherT> combine(other: LoadState<OtherT>): LoadState<Pair<T, OtherT>> = when (this) {
+    fun <OtherT> combine(other: UiLoadState<OtherT>): UiLoadState<Pair<T, OtherT>> = when (this) {
         is Loading -> Loading
         is Error -> Error(value)
         is Success -> when (other) {
@@ -46,8 +46,8 @@ sealed interface LoadState<out T> {
     }
 }
 
-fun <T> Flow<T>.asLoadState(): Flow<LoadState<T>> {
-    return map<T, LoadState<T>> { LoadState.Success(it) }
-        .onStart { emit(LoadState.Loading) }
-        .catch { emit(LoadState.Error(it)) }
+fun <T> Flow<T>.asLoadState(): Flow<UiLoadState<T>> {
+    return map<T, UiLoadState<T>> { UiLoadState.Success(it) }
+        .onStart { emit(UiLoadState.Loading) }
+        .catch { emit(UiLoadState.Error(it)) }
 }

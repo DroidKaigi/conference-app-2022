@@ -6,11 +6,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,19 +28,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.ui.LoadState
-import io.github.droidkaigi.confsched2022.ui.LoadState.Error
-import io.github.droidkaigi.confsched2022.ui.LoadState.Success
+import io.github.droidkaigi.confsched2022.model.Contributor
+import io.github.droidkaigi.confsched2022.model.fakes
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun ContributorsScreenRoot(
@@ -75,7 +76,12 @@ fun Contributors(
 
         when (uiModel.contributorsState) {
             is Error -> TODO()
-            LoadState.Loading -> CircularProgressIndicator()
+            Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
             is Success -> {
                 val contributors = uiModel.contributorsState.value
                 val context = LocalContext.current
@@ -84,12 +90,9 @@ fun Contributors(
                     modifier = modifier.fillMaxWidth()
                 ) {
                     items(items = contributors, key = { it.id }) { contributor ->
-                        val userNameAcronym = contributor.username[0]
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(60.dp)
-                                .padding(top = 16.dp)
                                 .clickable {
                                     contributor.profileUrl?.let { url ->
                                         try {
@@ -109,6 +112,7 @@ fun Contributors(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Spacer(modifier = Modifier.width(16.dp))
+
                             AsyncImage(
                                 model = contributor.iconUrl,
                                 contentDescription = contributor.username,
@@ -116,13 +120,12 @@ fun Contributors(
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .clip(CircleShape)
+                                    .size(60.dp)
                             )
+
                             Text(
                                 text = contributor.username,
-                                style = TextStyle(
-                                    fontWeight = FontWeight(500),
-                                    fontSize = 14.sp
-                                ),
+                                style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(start = 16.dp)
                             )
                         }
@@ -147,6 +150,14 @@ private fun navigateToCustomTab(url: String, context: Context) {
 @Composable
 fun ContributorsPreview() {
     KaigiTheme {
-        ContributorsScreenRoot()
+        Contributors(
+            uiModel = ContributorsUiModel(
+                contributorsState = Success(
+                    Contributor.fakes()
+                )
+            ),
+            showNavigationIcon = true,
+            onNavigationIconClick = {}
+        )
     }
 }

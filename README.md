@@ -17,7 +17,9 @@
 
 ## Try it out
 
-TBD
+Try it outThe builds being distributed through mobile app distribution services.
+
+- Try the latest staging through [<img src="https://dply.me/rdembt/button/small" alt="Download to device">](https://dply.me/rdembt#install)
 
 You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
