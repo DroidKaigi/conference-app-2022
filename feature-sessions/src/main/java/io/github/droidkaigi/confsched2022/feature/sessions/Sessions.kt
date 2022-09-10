@@ -140,25 +140,6 @@ fun Sessions(
                 ) {
                     CircularProgressIndicator()
                 }
-            } else {
-                val days = scheduleState.schedule.days
-                if (isTimetable) {
-                    Timetable(
-                        pagerState = pagerState,
-                        scheduleState = scheduleState,
-                        timetableListStates = pagerContentsScrollState.timetableStates,
-                        days = days,
-                        onTimetableClick = onTimetableClick
-                    )
-                } else {
-                    SessionsList(
-                        pagerState = pagerState,
-                        sessionsListListStates = pagerContentsScrollState.sessionsListListStates,
-                        scheduleState = scheduleState,
-                        days = days,
-                        onTimetableClick = onTimetableClick,
-                        onFavoriteClick = onFavoriteClick
-                    )
                 is Success -> {
                     val schedule = scheduleState.value
                     val days = schedule.days
@@ -166,13 +147,14 @@ fun Sessions(
                         Timetable(
                             pagerState = pagerState,
                             schedule = schedule,
+                            timetableListStates = pagerContentsScrollState.timetableStates,
                             days = days,
                             onTimetableClick = onTimetableClick
                         )
                     } else {
                         SessionsList(
                             pagerState = pagerState,
-                            sessionsListListStates = sessionsListListStates,
+                            sessionsListListStates = pagerContentsScrollState.sessionsListListStates,
                             schedule = schedule,
                             days = days,
                             onTimetableClick = onTimetableClick,
@@ -191,7 +173,6 @@ fun Timetable(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
-    scheduleState: Loaded,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -203,8 +184,6 @@ fun Timetable(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = schedule.dayToTimetable[day].orEmptyContents()
-        val timetableState = rememberTimetableState(screenScaleState = screenScaleState)
-        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
 
@@ -329,9 +308,7 @@ data class DurationTime(val startAt: String, val endAt: String)
 fun SessionsTopBar(
     pagerContentsScrollState: PagerContentsScrollState,
     isTimetable: Boolean,
-    sessionsListListStates: List<LazyListState>?,
     scheduleState: UiLoadState<DroidKaigiSchedule>,
-    scheduleState: ScheduleState,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
