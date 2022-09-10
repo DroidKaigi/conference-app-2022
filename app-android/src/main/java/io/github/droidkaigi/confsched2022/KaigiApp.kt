@@ -70,7 +70,8 @@ import kotlinx.coroutines.launch
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
-    kaigiExternalNavigationController: KaigiExternalNavigationController = rememberKaigiExternalNavigationController(),
+    kaigiExternalNavigationController: KaigiExternalNavigationController =
+        rememberKaigiExternalNavigationController(),
 ) {
     KaigiTheme {
         CompositionLocalProvider(
