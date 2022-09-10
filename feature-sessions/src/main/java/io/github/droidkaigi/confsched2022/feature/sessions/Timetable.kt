@@ -387,7 +387,7 @@ class ScreenScrollState(
     }
 
     suspend fun onScrollStart() = coroutineScope {
-        launch{
+        launch {
             _isScrollYProgress.value = true
         }
         launch {
@@ -396,7 +396,7 @@ class ScreenScrollState(
     }
 
     suspend fun onScrollEnd() = coroutineScope {
-        launch{
+        launch {
             _isScrollYProgress.value = false
         }
         launch {

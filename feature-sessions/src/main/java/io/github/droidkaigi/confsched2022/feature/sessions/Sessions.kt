@@ -1,8 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
-import android.util.Log
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,15 +24,10 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -61,11 +53,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -111,7 +99,11 @@ fun Sessions(
     val pagerState = rememberPagerState()
     val timetableListStates = DroidKaigi2022Day.values().map { rememberTimetableState() }.toList()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
-    val pagerContentsScrollState = rememberPagerContentsScrollState(pagerState, timetableListStates, sessionsListListStates)
+    val pagerContentsScrollState = rememberPagerContentsScrollState(
+        pagerState,
+        timetableListStates,
+        sessionsListListStates
+    )
     KaigiScaffold(
         modifier = modifier,
         topBar = {
@@ -291,18 +283,31 @@ fun SessionsTopBar(
     modifier: Modifier = Modifier
 ) {
     val pagerState = pagerContentsScrollState.pagerState
-    LaunchedEffect(pagerContentsScrollState.timetableStates[pagerState.currentPage].screenScrollState.scrollY) {
+    LaunchedEffect(
+        key1 = pagerContentsScrollState
+            .timetableStates[pagerState.currentPage]
+            .screenScrollState.scrollY
+    ) {
         snapshotFlow {
-            pagerContentsScrollState.timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress
+            pagerContentsScrollState
+                .timetableStates[pagerState.currentPage]
+                .screenScrollState
+                .isScrollYProgress
         }.collect {
-            if(isTimetable) pagerContentsScrollState.scrollTimetable()
+            if (isTimetable) pagerContentsScrollState.scrollTimetable()
         }
     }
-    LaunchedEffect(pagerContentsScrollState.sessionsListListStates[pagerState.currentPage].isScrollInProgress) {
+    LaunchedEffect(
+        key1 = pagerContentsScrollState
+            .sessionsListListStates[pagerState.currentPage]
+            .isScrollInProgress
+    ) {
         snapshotFlow {
-            pagerContentsScrollState.sessionsListListStates[pagerState.currentPage].isScrollInProgress
+            pagerContentsScrollState
+                .sessionsListListStates[pagerState.currentPage]
+                .isScrollInProgress
         }.collect {
-            if(!isTimetable) pagerContentsScrollState.scrollSessionsList()
+            if (!isTimetable) pagerContentsScrollState.scrollSessionsList()
         }
     }
     Column(
@@ -440,24 +445,26 @@ fun rememberPagerContentsScrollState(
 
 @OptIn(ExperimentalPagerApi::class)
 @Stable
-class PagerContentsScrollState (
+class PagerContentsScrollState(
     val pagerState: PagerState,
     val timetableStates: List<TimetableState>,
     val sessionsListListStates: List<LazyListState>
-){
+) {
     private var _scrollingPage = pagerState.currentPage
 
     private val _isScrollTop = mutableStateOf(true)
     val isScrollTop get() = _isScrollTop.value
 
     suspend fun scrollTimetable() {
-        if (timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress) _scrollingPage = pagerState.currentPage
+        if (timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress)
+            _scrollingPage = pagerState.currentPage
 
         _isScrollTop.value = timetableStates[_scrollingPage].screenScrollState.scrollY > -1f
     }
 
     suspend fun scrollSessionsList() {
-        if(sessionsListListStates[pagerState.currentPage].isScrollInProgress) _scrollingPage = pagerState.currentPage
+        if (sessionsListListStates[pagerState.currentPage].isScrollInProgress)
+            _scrollingPage = pagerState.currentPage
 
         _isScrollTop.value = sessionsListListStates[_scrollingPage].let {
             it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
