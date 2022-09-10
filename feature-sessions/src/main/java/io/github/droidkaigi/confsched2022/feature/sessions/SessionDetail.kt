@@ -196,7 +196,7 @@ fun SessionDetailScreen(
                             if (isFavorite) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_bookmark_filled),
-                                    contentDescription = "favorited"
+                                    contentDescription = "favorite"
                                 )
                             } else {
                                 Icon(
