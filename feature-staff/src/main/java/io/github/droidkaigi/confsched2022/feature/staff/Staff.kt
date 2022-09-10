@@ -1,10 +1,12 @@
 package io.github.droidkaigi.confsched2022.feature.staff
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,15 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.staff.StaffUiModel.StaffState.Loaded
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun StaffScreenRoot(
@@ -61,40 +62,44 @@ fun Staff(
             )
         }
     ) {
-        if (uiModel.staffState !is Loaded) {
-            CircularProgressIndicator()
-            return@KaigiScaffold
-        }
-        val staff = uiModel.staffState.staff
+        when (uiModel.state) {
+            is Error -> TODO()
+            is Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+            is Success -> {
+                val staff = uiModel.state.value
 
-        LazyColumn(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            items(items = staff, key = { it.id }) { staff ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                LazyColumn(
+                    modifier = modifier.fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AsyncImage(
-                        model = staff.iconUrl,
-                        contentDescription = staff.username,
-                        alignment = Alignment.Center,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                    )
-                    Text(
-                        text = staff.username,
-                        style = TextStyle(
-                            fontWeight = FontWeight(500),
-                            fontSize = 14.sp
-                        ),
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
+                    items(items = staff, key = { it.id }) { staff ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            AsyncImage(
+                                model = staff.iconUrl,
+                                contentDescription = staff.username,
+                                alignment = Alignment.Center,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(60.dp)
+                            )
+
+                            Text(
+                                text = staff.username,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
