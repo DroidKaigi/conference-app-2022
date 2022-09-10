@@ -45,7 +45,6 @@ fun TimetableItem(
     ) {
         Column(
             modifier
-                .padding(end = 4.dp)
                 .background(color, MaterialTheme.shapes.medium)
                 .border(2.dp, Color(roomColor), MaterialTheme.shapes.medium)
                 .padding(8.dp)
