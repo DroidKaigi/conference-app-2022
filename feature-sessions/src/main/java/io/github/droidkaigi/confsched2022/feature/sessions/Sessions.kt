@@ -154,7 +154,7 @@ fun Sessions(
                     } else {
                         SessionsList(
                             pagerState = pagerState,
-                            sessionsListListStates = pagerContentsScrollState.sessionsListListStates,
+                            sessionsListListStates = pagerContentsScrollState.sessionsListStates,
                             schedule = schedule,
                             days = days,
                             onTimetableClick = onTimetableClick,
@@ -332,12 +332,12 @@ fun SessionsTopBar(
     }
     LaunchedEffect(
         key1 = pagerContentsScrollState
-            .sessionsListListStates[pagerState.currentPage]
+            .sessionsListStates[pagerState.currentPage]
             .isScrollInProgress
     ) {
         snapshotFlow {
             pagerContentsScrollState
-                .sessionsListListStates[pagerState.currentPage]
+                .sessionsListStates[pagerState.currentPage]
                 .isScrollInProgress
         }.collect {
             if (!isTimetable) pagerContentsScrollState.scrollSessionsList()
@@ -514,7 +514,7 @@ fun rememberPagerContentsScrollState(
 class PagerContentsScrollState(
     val pagerState: PagerState,
     val timetableStates: List<TimetableState>,
-    val sessionsListListStates: List<LazyListState>
+    val sessionsListStates: List<LazyListState>
 ) {
     private var _scrollingPage = pagerState.currentPage
 
@@ -529,17 +529,17 @@ class PagerContentsScrollState(
     }
 
     suspend fun scrollSessionsList() {
-        if (sessionsListListStates[pagerState.currentPage].isScrollInProgress)
+        if (sessionsListStates[pagerState.currentPage].isScrollInProgress)
             _scrollingPage = pagerState.currentPage
 
-        _isScrollTop.value = sessionsListListStates[_scrollingPage].let {
+        _isScrollTop.value = sessionsListStates[_scrollingPage].let {
             it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
         }
     }
 
     suspend fun scrollToSessionsListItem(index: Int) = coroutineScope {
         launch {
-            sessionsListListStates[pagerState.currentPage].scrollToItem(index)
+            sessionsListStates[pagerState.currentPage].scrollToItem(index)
         }
     }
 }
