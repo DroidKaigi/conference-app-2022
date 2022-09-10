@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.auth
 
+import io.github.droidkaigi.confsched2022.BuildKonfig
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ResponseException
@@ -40,7 +41,7 @@ class AuthApi(
         runCatching {
             // Use httpClient for bypass auth process
             httpClient
-                .post("https://ssot-api-staging.an.r.appspot.com/accounts") {
+                .post("${BuildKonfig.apiUrl}/accounts") {
                     header(HttpHeaders.Authorization, "Bearer $createdIdToken")
                     contentType(ContentType.Application.Json)
                     setBody("{}")

@@ -1,10 +1,13 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,14 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -57,29 +61,32 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
-    var isTimetable by remember { mutableStateOf(true) }
 
     Sessions(
         uiModel = state,
         modifier = modifier,
-        isTimetable = isTimetable,
         onTimetableClick = { onTimetableClick(it) },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
         },
+        showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
         onSearchClick = onSearchClicked,
-        onToggleTimetableClick = { isTimetable = !isTimetable },
+        onToggleTimetableClick = { isTimetable ->
+            viewModel.onTimetableModeToggle(isTimetable)
+        },
     )
 }
 
@@ -87,15 +94,16 @@ fun SessionsScreenRoot(
 @Composable
 fun Sessions(
     uiModel: SessionsUiModel,
-    isTimetable: Boolean,
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
-    onToggleTimetableClick: () -> Unit,
+    onToggleTimetableClick: (Boolean) -> Unit,
 ) {
     val scheduleState = uiModel.scheduleState
+    val isTimetable = uiModel.isTimetable
     val pagerState = rememberPagerState()
     val timetableListStates = DroidKaigi2022Day.values().map { rememberTimetableState() }.toList()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
@@ -108,9 +116,13 @@ fun Sessions(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
+                pagerState,
+                isTimetable,
+                if (isTimetable) null else sessionsListListStates,
                 pagerContentsScrollState,
                 isTimetable,
                 scheduleState,
+                showNavigationIcon,
                 onNavigationIconClick,
                 onSearchClick,
                 onToggleTimetableClick
@@ -122,7 +134,12 @@ fun Sessions(
                 .padding(top = 4.dp)
         ) {
             if (scheduleState !is Loaded) {
-                CircularProgressIndicator()
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
                 val days = scheduleState.schedule.days
                 if (isTimetable) {
@@ -158,36 +175,51 @@ fun Timetable(
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
+    val screenScaleState = rememberScreenScaleState()
     HorizontalPager(
         count = days.size,
+        modifier = modifier,
         state = pagerState
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+        val timetableState = rememberTimetableState(screenScaleState = screenScaleState)
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
 
-        Row(modifier = modifier) {
+        Row {
             Hours(
+                modifier = modifier.transformable(
+                    rememberTransformableStateForScreenScale(timetableState.screenScaleState),
+                ),
                 timetableState = timetableState,
-                modifier = modifier,
             ) { modifier, hour ->
                 HoursItem(hour = hour, modifier = modifier)
             }
 
-            Timetable(
-                timetable = timetable,
-                timetableState = timetableState,
-                coroutineScope,
-            ) { timetableItem, isFavorited ->
-                TimetableItem(
-                    timetableItem = timetableItem,
-                    isFavorited = isFavorited,
-                    modifier = Modifier
-                        .clickable(
-                            onClick = { onTimetableClick(timetableItem.id) }
-                        ),
-                )
+            Column(modifier = Modifier.weight(1f)) {
+                Rooms(
+                    rooms = timetable.rooms,
+                    timetableState = timetableState
+                ) { modifier, room ->
+                    RoomItem(modifier = modifier, room = room)
+                }
+
+                Timetable(
+                    timetable = timetable,
+                    timetableState = timetableState,
+                    coroutineScope,
+                ) { timetableItem, isFavorited ->
+                    TimetableItem(
+                        timetableItem = timetableItem,
+                        isFavorited = isFavorited,
+                        verticalScale = timetableState.screenScaleState.verticalScale,
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { onTimetableClick(timetableItem.id) }
+                            ),
+                    )
+                }
             }
         }
     }
@@ -274,12 +306,16 @@ data class DurationTime(val startAt: String, val endAt: String)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SessionsTopBar(
+    pagerState: PagerState,
+    isTimetable: Boolean,
+    sessionsListListStates: List<LazyListState>?,
     pagerContentsScrollState: PagerContentsScrollState,
     isTimetable: Boolean,
     scheduleState: ScheduleState,
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onToggleTimetableClick: () -> Unit,
+    onToggleTimetableClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = pagerContentsScrollState.pagerState
@@ -314,8 +350,16 @@ fun SessionsTopBar(
         modifier = modifier
     ) {
         KaigiTopAppBar(
+            showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
             elevation = 2.dp,
+            title = {
+                Image(
+                    modifier = Modifier.size(30.dp),
+                    imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
+                    contentDescription = "logo in toolbar"
+                )
+            },
             trailingIcons = {
                 IconButton(
                     onClick = onSearchClick,
@@ -328,7 +372,7 @@ fun SessionsTopBar(
                     )
                 }
                 IconButton(
-                    onClick = onToggleTimetableClick
+                    onClick = { onToggleTimetableClick(isTimetable) }
                 ) {
                     Icon(
                         painter = painterResource(
@@ -392,6 +436,7 @@ private fun TabIndicator(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
+            .padding(end = 8.dp)
     ) {}
 }
 
@@ -402,14 +447,15 @@ fun SessionsTimetablePreview() {
         Sessions(
             uiModel = SessionsUiModel(
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
-                isFilterOn = false
+                isFilterOn = false,
+                isTimetable = true
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
-            isTimetable = true,
         )
     }
 }
@@ -421,14 +467,35 @@ fun SessionsSessionListPreview() {
         Sessions(
             uiModel = SessionsUiModel(
                 scheduleState = Loaded(DroidKaigiSchedule.fake()),
-                isFilterOn = false
+                isFilterOn = false,
+                isTimetable = false
+            ),
+            showNavigationIcon = true,
+            onNavigationIconClick = {},
+            onTimetableClick = {},
+            onFavoriteClick = { _, _ -> },
+            onSearchClick = {},
+            onToggleTimetableClick = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SessionsLoadingPreview() {
+    KaigiTheme {
+        Sessions(
+            uiModel = SessionsUiModel(
+                scheduleState = ScheduleState.Loading,
+                isFilterOn = false,
+                isTimetable = true
             ),
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
-            isTimetable = false,
+            showNavigationIcon = true
         )
     }
 }

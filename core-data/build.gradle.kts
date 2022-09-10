@@ -1,7 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     id("droidkaigi.convention.kmp")
     id("droidkaigi.primitive.kmp.android.hilt")
     id("droidkaigi.primitive.kmp.serialization")
+    id("droidkaigi.primitive.kmp.buildkonfig")
+    id("droidkaigi.primitive.sqldelight")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.core.data"
@@ -18,6 +22,7 @@ kotlin {
                 implementation(libs.kotlinxDatetime)
                 implementation(libs.multiplatformFirebaseAuth)
                 implementation(libs.kermit)
+                implementation(libs.sqldelightExtensionsCoroutines)
             }
         }
         val androidMain by getting {
@@ -28,13 +33,32 @@ kotlin {
                 implementation(libs.androidxDatastorePreferences)
                 implementation(libs.multiplatformSettingsDatastore)
                 implementation(libs.okHttpLoggingInterceptor)
+                implementation(libs.sqldelightDriverAndroid)
             }
         }
         val iosMain by getting {
             dependencies {
                 implementation(libs.ktorClientDarwin)
                 implementation(libs.koin)
+                implementation(libs.sqldelightDriverNative)
             }
         }
+    }
+}
+
+buildkonfig {
+    packageName = "io.github.droidkaigi.confsched2022"
+
+    defaultConfigs {
+        buildConfigField(STRING, "apiUrl", "https://ssot-api-staging.an.r.appspot.com")
+    }
+    defaultConfigs("prod") {
+        buildConfigField(STRING, "apiUrl", "https://ssot-api.droidkaigi.jp")
+    }
+}
+
+sqldelight {
+    database("Database") {
+        packageName = "io.github.droidkaigi.confsched2022.data"
     }
 }

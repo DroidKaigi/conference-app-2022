@@ -7,15 +7,18 @@ import androidx.navigation.navArgument
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 
 fun NavGraphBuilder.sessionsNavGraph(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onBackIconClick: () -> Unit,
+    onSearchIconClick: () -> Unit,
     onTimetableClick: (TimetableItemId) -> Unit,
     onNavigateFloorMapClick: () -> Unit,
 ) {
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
+            showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
-            onSearchClicked = { /*TODO: Implement later*/ },
+            onSearchClicked = onSearchIconClick,
             onTimetableClick = onTimetableClick,
         )
     }
@@ -36,10 +39,19 @@ fun NavGraphBuilder.sessionsNavGraph(
             onNavigateFloorMapClick = onNavigateFloorMapClick,
         )
     }
+
+    composable(
+        route = SessionsNavGraph.sessionSearchRoute(),
+    ) {
+        SearchRoot()
+    }
 }
 
 object SessionsNavGraph {
     const val sessionRoute = "sessions"
     fun sessionDetailRoute(sessionId: String) =
         "session/detail/$sessionId"
+
+    fun sessionSearchRoute() =
+        "session/search"
 }

@@ -1,8 +1,8 @@
 package io.github.droidkaigi.confsched2022.zipline
 
-import android.app.Application
 import app.cash.zipline.EventListener
 import app.cash.zipline.Zipline
+import app.cash.zipline.loader.ManifestVerifier
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
@@ -20,7 +20,6 @@ import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
 class SessionsZipline @Inject constructor(
-    context: Application,
     okHttpClient: OkHttpClient
 ) {
     private val executorService = Executors.newSingleThreadExecutor { Thread(it, "Zipline") }
@@ -30,8 +29,8 @@ class SessionsZipline @Inject constructor(
         "manifest.zipline.json"
 
     private val ziplineLoader = ZiplineLoader(
-        context = context,
         dispatcher = dispatcher,
+        manifestVerifier = ManifestVerifier.NO_SIGNATURE_CHECKS,
         httpClient = okHttpClient,
         eventListener = object : EventListener() {
             override fun manifestParseFailed(
@@ -45,7 +44,8 @@ class SessionsZipline @Inject constructor(
             override fun applicationLoadFailed(
                 applicationName: String,
                 manifestUrl: String?,
-                exception: Exception
+                exception: Exception,
+                startValue: Any?,
             ) {
                 Logger.d(exception) { "Zipline applicationLoadFailed" }
             }
@@ -53,12 +53,13 @@ class SessionsZipline @Inject constructor(
             override fun downloadFailed(
                 applicationName: String,
                 url: String,
-                exception: Exception
+                exception: Exception,
+                startValue: Any?,
             ) {
                 Logger.d(exception) { "Zipline downloadFailed" }
             }
         },
-        nowEpochMs = { System.currentTimeMillis() }
+        nowEpochMs = { System.currentTimeMillis() },
     )
 
     fun timetableModifier(
@@ -72,10 +73,14 @@ class SessionsZipline @Inject constructor(
 
         coroutineScope.launch(dispatcher) {
             var zipline: Zipline? = null
-//            val modifier =
+
             // If the server works, we will comment in
             val modifier = try {
-                val loadedZiplineFlow = ziplineLoader.load("timeline", flowOf(manifestUrl), { })
+                val loadedZiplineFlow = ziplineLoader.load(
+                    applicationName = "timeline",
+                    manifestUrlFlow = flowOf(manifestUrl),
+                    initializer = { },
+                )
                 loadedZiplineFlow.catch { throwable -> throwable.printStackTrace() }
                 val loadedZipline = loadedZiplineFlow.firstOrNull()
                 if (loadedZipline == null) {

@@ -1,0 +1,25 @@
+CREATE TABLE timetableItemSpeaker (
+    timetableItemId TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    iconUrl TEXT NOT NULL,
+    bio TEXT NOT NULL,
+    tagLine TEXT NOT NULL
+);
+
+CREATE INDEX timetableItemSpeaker_id ON timetableItemSpeaker(timetableItemId);
+
+selectAll:
+SELECT *
+FROM timetableItemSpeaker;
+
+insert:
+INSERT INTO timetableItemSpeaker (
+    timetableItemId,
+    name,
+    iconUrl,
+    bio,
+    tagLine
+) VALUES ?;
+
+deleteAll:
+DELETE FROM timetableItemSpeaker;

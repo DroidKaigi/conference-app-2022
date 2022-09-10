@@ -1,11 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,23 +47,34 @@ import io.github.droidkaigi.confsched2022.feature.about.R.string
 @Composable
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(onNavigationIconClick, modifier, versionName)
+    About(showNavigationIcon, onNavigationIconClick, onLinkClick, modifier, versionName)
 }
 
 @Composable
 fun About(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
     KaigiScaffold(
         topBar = {
-            // TODO: Replace with Slot API pattern
-            // see: https://github.com/DroidKaigi/conference-app-2022/issues/238
-            KaigiTopAppBar(onNavigationIconClick = onNavigationIconClick)
+            KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
+                onNavigationIconClick = onNavigationIconClick,
+                title = {
+                    Text(
+                        text = stringResource(id = string.about_top_app_bar_title),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+            )
         }
     ) {
         Column(
@@ -99,7 +106,7 @@ fun About(
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
-                        bottom = 32.dp,
+                        bottom = 14.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
@@ -113,24 +120,15 @@ fun About(
                     ),
                     text = stringResource(id = string.about_description)
                 )
+            }
 
-                val context = LocalContext.current
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
+            Row(modifier = Modifier.padding(start = 4.dp, bottom = 22.dp)) {
+                ExternalServices.values().forEach { serviceType ->
                     ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Twitter
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Youtube
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Medium
-                    )
+                        serviceType = serviceType
+                    ) {
+                        onLinkClick(serviceType.url, serviceType.packageName)
+                    }
                 }
             }
             Divider(
@@ -148,18 +146,7 @@ fun About(
                     imageVector = Icons.Outlined.Train,
                     textResId = string.about_access,
                     onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(googleMapUrl)
-                        )
-                        try {
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            navigateToCustomTab(
-                                url = googleMapUrl,
-                                context = context,
-                            )
-                        }
+                        onLinkClick(googleMapUrl, null)
                     }
                 )
 
@@ -241,49 +228,17 @@ private fun AuxiliaryInformationRow(
 
 @Composable
 private fun ExternalServiceImage(
-    context: Context,
     serviceType: ExternalServices,
+    onClick: () -> Unit,
 ) {
     Image(
         modifier = Modifier
-            .size(24.dp)
-            .clickable {
-                navigateToExternalServices(
-                    context = context,
-                    serviceType = serviceType
-                )
-            },
+            .clickable(onClick = onClick)
+            .padding(12.dp)
+            .size(24.dp),
         imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
         contentDescription = serviceType.contentDescription,
     )
-}
-
-private fun navigateToExternalServices(
-    context: Context,
-    serviceType: ExternalServices,
-) {
-    try {
-        Intent(Intent.ACTION_VIEW).also {
-            it.setPackage(serviceType.packageName)
-            it.data = Uri.parse(serviceType.url)
-            context.startActivity(it)
-        }
-    } catch (e: ActivityNotFoundException) {
-        navigateToCustomTab(
-            url = serviceType.url,
-            context = context,
-        )
-    }
-}
-
-private fun navigateToCustomTab(url: String, context: Context) {
-    val uri = Uri.parse(url)
-    CustomTabsIntent.Builder().also { builder ->
-        builder.setShowTitle(true)
-        builder.build().also {
-            it.launchUrl(context, uri)
-        }
-    }
 }
 
 private fun versionName(context: Context) = runCatching {

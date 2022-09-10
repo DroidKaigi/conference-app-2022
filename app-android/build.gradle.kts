@@ -67,6 +67,8 @@ androidComponents {
 dependencies {
     implementation(projects.featureSessions)
     implementation(projects.featureContributors)
+    implementation(projects.featureMap)
+    implementation(projects.featureAnnouncement)
     implementation(projects.featureAbout)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
@@ -75,6 +77,7 @@ dependencies {
 
     implementation(libs.composeMaterialIcons)
     implementation(libs.composeMaterial3WindowSizeClass)
+    implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.androidxStartup)
     implementation(libs.hiltNavigationCompose)

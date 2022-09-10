@@ -21,7 +21,10 @@ dependencies {
     implementation(libs.hiltGradlePlugin)
     implementation(libs.moleculeGradlePlugin)
     implementation(libs.kotlinSerializationPlugin)
+    implementation(libs.buildkonfigPlugin)
     implementation(libs.firebasePlugin)
+    implementation(libs.sqldelightGradlePlugin)
+    implementation(libs.detektGradlePlugin)
 }
 
 gradlePlugin {
@@ -83,9 +86,21 @@ gradlePlugin {
             id = "droidkaigi.primitive.kmp.serialization"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.KotlinSerializationPlugin"
         }
+        register("kotlinMppBuildKonfig") {
+            id = "droidkaigi.primitive.kmp.buildkonfig"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.KmpBuildKonfigPlugin"
+        }
         register("molecule") {
             id = "droidkaigi.primitive.molecule"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.MoleculePlugin"
+        }
+        register("sqldelight") {
+            id = "droidkaigi.primitive.sqldelight"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.SqldelightPlugin"
+        }
+        register("detekt") {
+            id = "droidkaigi.primitive.detekt"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.DetektPlugin"
         }
 
         // Conventions

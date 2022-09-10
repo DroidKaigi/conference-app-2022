@@ -1,0 +1,10 @@
+<resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">动态消息</string>
+    <string name="title_about">关于DroidKaigi</string>
+    <string name="title_announcement">通知</string>
+    <string name="title_map">楼面导轨</string>
+    <string name="title_sponsors">赞助者</string>
+    <string name="title_contributors">Contributor</string>
+    <string name="title_setting">设置</string>
+</resources>
