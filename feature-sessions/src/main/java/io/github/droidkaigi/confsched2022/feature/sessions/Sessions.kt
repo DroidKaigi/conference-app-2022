@@ -292,18 +292,18 @@ fun SessionsTopBar(
     onToggleTimetableClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(key1 = sessionPagerListScrollState.pagerState) {
+    LaunchedEffect(sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.scrollY) {
         snapshotFlow {
-            sessionPagerListScrollState.pagerState.currentPage
-        }.collect{
-            sessionPagerListScrollState.changedCurrentPage(it)
+            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.isScrollYProgress
+        }.collect {
+            if(isTimetable) sessionPagerListScrollState.scrollTimetable()
         }
     }
-    LaunchedEffect(key1 = sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.scrollY) {
+    LaunchedEffect(sessionPagerListScrollState.sessionsListListStates[sessionPagerListScrollState.pagerState.currentPage].isScrollInProgress) {
         snapshotFlow {
-            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.scrollY
+            sessionPagerListScrollState.sessionsListListStates[sessionPagerListScrollState.pagerState.currentPage].isScrollInProgress
         }.collect {
-            sessionPagerListScrollState.changedScrollY(it)
+            if(!isTimetable) sessionPagerListScrollState.scrollSessionsList()
         }
     }
     Column(
@@ -470,23 +470,22 @@ class SessionPagerListScrollState (
     val timetableStates: List<TimetableState>,
     val sessionsListListStates: List<LazyListState>
 ){
-    private var cachedScrollY = 0f
-    private var _prevPage = pagerState.currentPage
-    private var _page = pagerState.currentPage
+    private var _scrollingPage = pagerState.currentPage
 
     private val _tabExpanded = mutableStateOf(true)
     val tabExpanded get() = _tabExpanded.value
 
-    suspend fun changedCurrentPage(page: Int) {
-        cachedScrollY = timetableStates[_prevPage].screenScrollState.scrollY
-        _prevPage = _page
-        _page = page
+    suspend fun scrollTimetable() {
+        if (timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress) _scrollingPage = pagerState.currentPage
+
+        _tabExpanded.value = timetableStates[_scrollingPage].screenScrollState.scrollY > -1f
     }
 
-    suspend fun changedScrollY(scrollY: Float) {
-        if(timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress) {
-            cachedScrollY = scrollY
-            _tabExpanded.value = cachedScrollY > -1f
+    suspend fun scrollSessionsList() {
+        if(sessionsListListStates[pagerState.currentPage].isScrollInProgress) _scrollingPage = pagerState.currentPage
+
+        _tabExpanded.value = sessionsListListStates[_scrollingPage].let {
+            it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
         }
     }
 
