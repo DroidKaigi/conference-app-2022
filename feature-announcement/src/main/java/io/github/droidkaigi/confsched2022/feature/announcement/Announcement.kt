@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.announcement.R.string
 
 @Composable
