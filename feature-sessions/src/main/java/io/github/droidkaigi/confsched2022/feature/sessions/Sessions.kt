@@ -49,14 +49,16 @@ import com.google.accompanist.pager.rememberPagerState
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
+import io.github.droidkaigi.confsched2022.ui.UiLoadState
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -103,7 +105,7 @@ fun Sessions(
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
 ) {
-    val scheduleState = uiModel.scheduleState
+    val scheduleState = uiModel.state
     val isTimetable = uiModel.isTimetable
     val pagerState = rememberPagerState()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
@@ -129,12 +131,10 @@ fun Sessions(
             )
         }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(top = 4.dp)
-        ) {
-            if (scheduleState !is Loaded) {
-                Box(
+        Column(modifier = Modifier.padding(top = 4.dp)) {
+            when (scheduleState) {
+                is Error -> TODO()
+                Loading -> Box(
                     modifier = modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -159,6 +159,26 @@ fun Sessions(
                         onTimetableClick = onTimetableClick,
                         onFavoriteClick = onFavoriteClick
                     )
+                is Success -> {
+                    val schedule = scheduleState.value
+                    val days = schedule.days
+                    if (isTimetable) {
+                        Timetable(
+                            pagerState = pagerState,
+                            schedule = schedule,
+                            days = days,
+                            onTimetableClick = onTimetableClick
+                        )
+                    } else {
+                        SessionsList(
+                            pagerState = pagerState,
+                            sessionsListListStates = sessionsListListStates,
+                            schedule = schedule,
+                            days = days,
+                            onTimetableClick = onTimetableClick,
+                            onFavoriteClick = onFavoriteClick
+                        )
+                    }
                 }
             }
         }
@@ -172,6 +192,7 @@ fun Timetable(
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
     scheduleState: Loaded,
+    schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
@@ -181,6 +202,8 @@ fun Timetable(
         state = pagerState
     ) { dayIndex ->
         val day = days[dayIndex]
+        val timetable = schedule.dayToTimetable[day].orEmptyContents()
+        val timetableState = rememberTimetableState(screenScaleState = screenScaleState)
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
@@ -228,7 +251,7 @@ fun Timetable(
 fun SessionsList(
     pagerState: PagerState,
     sessionsListListStates: List<LazyListState>,
-    scheduleState: Loaded,
+    schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -238,7 +261,7 @@ fun SessionsList(
         state = pagerState
     ) { dayIndex ->
         val day = days[dayIndex]
-        val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
+        val timetable = schedule.dayToTimetable[day].orEmptyContents()
         val timeHeaderAndTimetableItems = remember(timetable) {
             var currentStartTime = ""
             val list = mutableListOf<Pair<DurationTime?, TimetableItemWithFavorite>>()
@@ -306,6 +329,8 @@ data class DurationTime(val startAt: String, val endAt: String)
 fun SessionsTopBar(
     pagerContentsScrollState: PagerContentsScrollState,
     isTimetable: Boolean,
+    sessionsListListStates: List<LazyListState>?,
+    scheduleState: UiLoadState<DroidKaigiSchedule>,
     scheduleState: ScheduleState,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
@@ -378,7 +403,9 @@ fun SessionsTopBar(
                 }
             }
         )
-        (scheduleState as? Loaded)?.schedule?.days?.let { days ->
+
+        if (scheduleState is Success) {
+            val days = scheduleState.value.days
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 modifier = Modifier
@@ -441,7 +468,7 @@ fun SessionsTimetablePreview() {
     KaigiTheme {
         Sessions(
             uiModel = SessionsUiModel(
-                scheduleState = Loaded(DroidKaigiSchedule.fake()),
+                state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = true
             ),
@@ -461,7 +488,7 @@ fun SessionsSessionListPreview() {
     KaigiTheme {
         Sessions(
             uiModel = SessionsUiModel(
-                scheduleState = Loaded(DroidKaigiSchedule.fake()),
+                state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = false
             ),
@@ -481,7 +508,7 @@ fun SessionsLoadingPreview() {
     KaigiTheme {
         Sessions(
             uiModel = SessionsUiModel(
-                scheduleState = ScheduleState.Loading,
+                state = Loading,
                 isFilterOn = false,
                 isTimetable = true
             ),
