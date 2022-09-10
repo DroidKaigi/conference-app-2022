@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +29,11 @@ import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiModel.ContributorsState.Loaded
+import io.github.droidkaigi.confsched2022.model.Contributor
+import io.github.droidkaigi.confsched2022.model.fakes
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun ContributorsScreenRoot(
@@ -66,49 +69,50 @@ fun Contributors(
             )
         }
     ) {
-        if (uiModel.contributorsState !is Loaded) {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+        when (uiModel.state) {
+            is Error -> TODO()
+            Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator()
             }
-            return@KaigiScaffold
-        }
-        val contributors = uiModel.contributorsState.contributors
-        val context = LocalContext.current
+            is Success -> {
+                val contributors = uiModel.state.value
 
-        LazyColumn(
-            modifier = modifier.fillMaxWidth()
-        ) {
-            items(items = contributors, key = { it.id }) { contributor ->
-                val userNameAcronym = contributor.username[0]
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(top = 16.dp)
-                        .clickable {
-                            contributor.profileUrl?.let { url ->
-                                onLinkClick(url, "com.github.android")
-                            }
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
+                LazyColumn(
+                    modifier = modifier.fillMaxWidth()
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    AsyncImage(
-                        model = contributor.iconUrl,
-                        contentDescription = contributor.username,
-                        alignment = Alignment.Center,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                    )
-                    Text(
-                        text = contributor.username,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
+                    items(items = contributors, key = { it.id }) { contributor ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    contributor.profileUrl?.let { url ->
+                                        onLinkClick(url, "com.github.android")
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            AsyncImage(
+                                model = contributor.iconUrl,
+                                contentDescription = contributor.username,
+                                alignment = Alignment.Center,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(60.dp)
+                            )
+
+                            Text(
+                                text = contributor.username,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -119,6 +123,15 @@ fun Contributors(
 @Composable
 fun ContributorsPreview() {
     KaigiTheme {
-        ContributorsScreenRoot()
+        Contributors(
+            uiModel = ContributorsUiModel(
+                state = Success(
+                    Contributor.fakes()
+                )
+            ),
+            showNavigationIcon = true,
+            onNavigationIconClick = {},
+            onLinkClick = { _, _ -> },
+        )
     }
 }
