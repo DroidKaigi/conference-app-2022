@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.staff
 
-import android.util.Log
 import io.github.droidkaigi.confsched2022.model.Staff
 import io.github.droidkaigi.confsched2022.ui.Result
 import kotlinx.collections.immutable.PersistentList

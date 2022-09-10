@@ -19,7 +19,7 @@ class DataStaffRepository(
                     .filter { !it.username.contains("[bot]") }
                     .toPersistentList()
             )
-            awaitClose {  }
+            awaitClose { }
         }
     }
 }
