@@ -60,6 +60,8 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -122,6 +124,10 @@ fun KaigiApp(
                     announcementGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
+                    )
+                    settingNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick
                     )
                 }
             }
@@ -243,7 +249,7 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(R.string.title_setting, Icons.Default.Settings, "");
+    Setting(R.string.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
