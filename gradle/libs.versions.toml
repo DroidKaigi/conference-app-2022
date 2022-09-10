@@ -41,9 +41,10 @@ firebaseCommon = "20.1.2"
 firebaseAuth = "21.0.8"
 androidxStartup = "1.1.1"
 kluent = "1.68"
-coilCompose="2.2.1"
+coilCompose = "2.2.1"
 koin = "3.2.0"
 androidXChromeCustomTabs = "1.4.0"
+mokoResources = "0.20.1"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -57,11 +58,12 @@ buildkonfigPlugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-
 ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", version.ref = "zipline" }
 ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 firebasePlugin = { module = "com.google.gms:google-services", version.ref = "firebasePlugin" }
+mokoResourcesPlugin = { module = "dev.icerock.moko:resources-generator", version.ref = "mokoResources" }
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose"}
+composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
@@ -72,7 +74,7 @@ daggerHiltAndroid = { module = "com.google.dagger:hilt-android", version.ref = "
 daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 
 accompanistPager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
-accompanistFlowlayout = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist"}
+accompanistFlowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
 
 kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
@@ -82,7 +84,7 @@ androidxLifecycleLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-
 androidxActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidxFragment = { module = "androidx.fragment:fragment", version.ref = "androidxFragment" }
 androidxDatastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
-androidxStartup =  { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
+androidxStartup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
 androidXChromeCustomTabs = { module = "androidx.browser:browser", version.ref = "androidXChromeCustomTabs" }
 
 multiplatformSettingsCoroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
@@ -114,6 +116,8 @@ multiplatformFirebaseAuth = { module = "dev.gitlive:firebase-auth", version.ref 
 firebaseCommon = { module = "com.google.firebase:firebase-common", version.ref = "firebaseCommon" }
 firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
+mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
 
 # iOS
 koin = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -125,11 +129,10 @@ androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "andr
 androidxTestEspressoEspressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
 hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-kluentAndroid = {module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
+kluentAndroid = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
 
 [plugins]
 androidGradlePlugin = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 androidGradleLibraryPlugin = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hiltGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-sqldelightGradlePlugin = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }

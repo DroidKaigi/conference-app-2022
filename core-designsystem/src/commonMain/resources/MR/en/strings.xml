@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="about_top_app_bar_title">What is DroidKaigi?</string>
+    <string name="about_top_app_bar_title">About DroidKaigi</string>
     <string name="about_title">What is DroidKaigi?</string>
     <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
     <string name="about_access">Access</string>
     <string name="about_staff">Staff List</string>
     <string name="about_privacy">Privacy Policy</string>
     <string name="about_license">License</string>
+    <string name="about_app_version">App Version</string>
 </resources>

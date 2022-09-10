@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
@@ -7,4 +7,5 @@
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
     <string name="about_license">ライセンス</string>
+    <string name="about_app_version">アプリバーション</string>
 </resources>

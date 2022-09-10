@@ -56,6 +56,8 @@ public struct AppState: Equatable {
         self.settingState = settingState
         self.sessionState = sessionState
         self.selectedTab = selectedTab
+        
+        print(MR.strings().about_top_app_bar_title)
     }
 }
 
