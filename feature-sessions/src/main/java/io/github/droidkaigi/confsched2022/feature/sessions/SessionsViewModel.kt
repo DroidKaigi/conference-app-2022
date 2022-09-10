@@ -29,28 +29,8 @@ class SessionsViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
+
     private val filters = mutableStateOf(Filters())
-
-    private val ziplineScheduleModifierFlow =
-        sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
-
-    private val scheduleFlow = combine(
-        ziplineScheduleModifierFlow,
-        sessionsRepository.droidKaigiScheduleFlow(),
-        ::Pair
-    )
-        .map { (modifier, schedule) ->
-            try {
-                withTimeout(100) {
-                    modifier(schedule)
-                }
-            } catch (e: Exception) {
-                Logger.d(throwable = e) { "Zipline modifier error" }
-                schedule
-            }
-        }
-        .asLoadState()
-
     private val isTimetableMode = mutableStateOf(true)
 
     private val moleculeScope =
@@ -59,6 +39,25 @@ class SessionsViewModel @Inject constructor(
     val uiModel: State<SessionsUiModel>
 
     init {
+        val ziplineScheduleModifierFlow =
+            sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
+        val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
+
+        val scheduleFlow = combine(
+            ziplineScheduleModifierFlow,
+            sessionScheduleFlow,
+            ::Pair
+        ).map { (modifier, schedule) ->
+            try {
+                withTimeout(100) {
+                    modifier(schedule)
+                }
+            } catch (e: Exception) {
+                Logger.d(throwable = e) { "Zipline modifier error" }
+                schedule
+            }
+        }.asLoadState()
+
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
             val schedule by scheduleFlow.collectAsState(initial = UiLoadState.Loading)
 
