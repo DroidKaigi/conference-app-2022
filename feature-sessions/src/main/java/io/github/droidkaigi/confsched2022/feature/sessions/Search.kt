@@ -62,6 +62,7 @@ fun SearchRoot(
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
     SearchScreen(
+        modifier = modifier,
         uiModel = state,
         onItemClick = onItemClick,
         onBookMarkClick = onBookMarkClick,
@@ -77,6 +78,7 @@ private fun SearchScreen(
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
+        modifier = modifier,
         topBar = {},
         content = {
             Column {
@@ -111,7 +113,7 @@ private fun SearchTextField(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         contentAlignment = Alignment.Center
@@ -155,7 +157,7 @@ private fun SearchedItemListField(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
             val sessions =
                 timeTable.filtered(Filters(filterSession = true, searchWord = searchWord)).contents
@@ -177,7 +179,7 @@ private fun SearchedItemListField(
 @Composable
 private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(MaterialTheme.colorScheme.onPrimary)
@@ -199,7 +201,7 @@ private fun SearchedItem(
 ) {
     var contentHeight = 100.dp
     Box(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentHeight()
             .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
@@ -286,7 +288,7 @@ private fun SearchedItem(
 @Composable
 private fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
