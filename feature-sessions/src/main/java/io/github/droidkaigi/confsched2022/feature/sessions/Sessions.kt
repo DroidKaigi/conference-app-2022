@@ -361,7 +361,7 @@ fun SessionsTopBar(
                         index = index,
                         day = day,
                         selected = selected,
-                        expanded = pagerContentsScrollState.tabExpanded,
+                        expanded = pagerContentsScrollState.isScrollTop,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
@@ -447,19 +447,19 @@ class PagerContentsScrollState (
 ){
     private var _scrollingPage = pagerState.currentPage
 
-    private val _tabExpanded = mutableStateOf(true)
-    val tabExpanded get() = _tabExpanded.value
+    private val _isScrollTop = mutableStateOf(true)
+    val isScrollTop get() = _isScrollTop.value
 
     suspend fun scrollTimetable() {
         if (timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress) _scrollingPage = pagerState.currentPage
 
-        _tabExpanded.value = timetableStates[_scrollingPage].screenScrollState.scrollY > -1f
+        _isScrollTop.value = timetableStates[_scrollingPage].screenScrollState.scrollY > -1f
     }
 
     suspend fun scrollSessionsList() {
         if(sessionsListListStates[pagerState.currentPage].isScrollInProgress) _scrollingPage = pagerState.currentPage
 
-        _tabExpanded.value = sessionsListListStates[_scrollingPage].let {
+        _isScrollTop.value = sessionsListListStates[_scrollingPage].let {
             it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
         }
     }
