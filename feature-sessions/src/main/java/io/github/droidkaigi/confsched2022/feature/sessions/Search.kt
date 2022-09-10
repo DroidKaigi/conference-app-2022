@@ -71,10 +71,10 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen(
-    modifier: Modifier = Modifier,
     uiModel: SessionsUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
@@ -151,11 +151,11 @@ private fun SearchTextField(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SearchedItemListField(
-    modifier: Modifier = Modifier,
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit
+    onBookMarkClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
