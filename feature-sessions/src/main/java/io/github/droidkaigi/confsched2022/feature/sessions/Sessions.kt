@@ -41,7 +41,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState

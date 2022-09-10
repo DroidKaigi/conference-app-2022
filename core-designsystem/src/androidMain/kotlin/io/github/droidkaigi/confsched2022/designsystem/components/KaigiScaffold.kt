@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.designsystem.theme
+package io.github.droidkaigi.confsched2022.designsystem.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
