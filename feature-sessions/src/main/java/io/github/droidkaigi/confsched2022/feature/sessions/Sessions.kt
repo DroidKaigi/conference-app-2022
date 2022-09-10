@@ -111,14 +111,13 @@ fun Sessions(
     val pagerState = rememberPagerState()
     val timetableListStates = DroidKaigi2022Day.values().map { rememberTimetableState() }.toList()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
-    val sessionPagerListScrollState = rememberSessionPagerListScrollState(pagerState, timetableListStates, sessionsListListStates)
+    val pagerContentsScrollState = rememberPagerContentsScrollState(pagerState, timetableListStates, sessionsListListStates)
     KaigiScaffold(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
-                pagerState,
+                pagerContentsScrollState,
                 isTimetable,
-                sessionPagerListScrollState,
                 scheduleState,
                 onNavigationIconClick,
                 onSearchClick,
@@ -138,14 +137,14 @@ fun Sessions(
                     Timetable(
                         pagerState = pagerState,
                         scheduleState = scheduleState,
-                        timetableListStates = sessionPagerListScrollState.timetableStates,
+                        timetableListStates = pagerContentsScrollState.timetableStates,
                         days = days,
                         onTimetableClick = onTimetableClick
                     )
                 } else {
                     SessionsList(
                         pagerState = pagerState,
-                        sessionsListListStates = sessionPagerListScrollState.sessionsListListStates,
+                        sessionsListListStates = pagerContentsScrollState.sessionsListListStates,
                         scheduleState = scheduleState,
                         days = days,
                         onTimetableClick = onTimetableClick,
@@ -283,27 +282,27 @@ data class DurationTime(val startAt: String, val endAt: String)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SessionsTopBar(
-    pagerState: PagerState,
+    pagerContentsScrollState: PagerContentsScrollState,
     isTimetable: Boolean,
-    sessionPagerListScrollState: SessionPagerListScrollState,
     scheduleState: ScheduleState,
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.scrollY) {
+    val pagerState = pagerContentsScrollState.pagerState
+    LaunchedEffect(pagerContentsScrollState.timetableStates[pagerState.currentPage].screenScrollState.scrollY) {
         snapshotFlow {
-            sessionPagerListScrollState.timetableStates[sessionPagerListScrollState.pagerState.currentPage].screenScrollState.isScrollYProgress
+            pagerContentsScrollState.timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress
         }.collect {
-            if(isTimetable) sessionPagerListScrollState.scrollTimetable()
+            if(isTimetable) pagerContentsScrollState.scrollTimetable()
         }
     }
-    LaunchedEffect(sessionPagerListScrollState.sessionsListListStates[sessionPagerListScrollState.pagerState.currentPage].isScrollInProgress) {
+    LaunchedEffect(pagerContentsScrollState.sessionsListListStates[pagerState.currentPage].isScrollInProgress) {
         snapshotFlow {
-            sessionPagerListScrollState.sessionsListListStates[sessionPagerListScrollState.pagerState.currentPage].isScrollInProgress
+            pagerContentsScrollState.sessionsListListStates[pagerState.currentPage].isScrollInProgress
         }.collect {
-            if(!isTimetable) sessionPagerListScrollState.scrollSessionsList()
+            if(!isTimetable) pagerContentsScrollState.scrollSessionsList()
         }
     }
     Column(
@@ -362,12 +361,12 @@ fun SessionsTopBar(
                         index = index,
                         day = day,
                         selected = selected,
-                        expanded = sessionPagerListScrollState.tabExpanded,
+                        expanded = pagerContentsScrollState.tabExpanded,
                         onTabClicked = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(it)
                                 if (selected) {
-                                    sessionPagerListScrollState.scrollToSessionsListItem(0)
+                                    pagerContentsScrollState.scrollToSessionsListItem(0)
                                 }
                             }
                         }
@@ -431,17 +430,17 @@ fun SessionsSessionListPreview() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun rememberSessionPagerListScrollState(
+fun rememberPagerContentsScrollState(
     pagerState: PagerState,
     timetableStates: List<TimetableState>,
     sessionsListListStates: List<LazyListState>
-): SessionPagerListScrollState = remember {
-    SessionPagerListScrollState(pagerState, timetableStates, sessionsListListStates)
+): PagerContentsScrollState = remember {
+    PagerContentsScrollState(pagerState, timetableStates, sessionsListListStates)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Stable
-class SessionPagerListScrollState (
+class PagerContentsScrollState (
     val pagerState: PagerState,
     val timetableStates: List<TimetableState>,
     val sessionsListListStates: List<LazyListState>
@@ -469,24 +468,5 @@ class SessionPagerListScrollState (
         launch {
             sessionsListListStates[pagerState.currentPage].scrollToItem(index)
         }
-    }
-
-    companion object {
-        val Saver: Saver<SessionPagerListScrollState, *> = listSaver(
-            save = {
-                listOf(
-                    it.pagerState,
-                    it.timetableStates,
-                    it.sessionsListListStates
-                )
-            },
-            restore = {
-                SessionPagerListScrollState(
-                    pagerState = it[0] as PagerState,
-                    timetableStates =  it[1] as List<TimetableState>,
-                    sessionsListListStates = it[2] as List<LazyListState>
-                )
-            }
-        )
     }
 }
