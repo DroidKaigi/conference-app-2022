@@ -10,13 +10,6 @@ import kotlinx.coroutines.flow.map
 
 class SettingsDatastore(private val flowSettings: FlowSettings) {
 
-    fun isTimetableMode(): Flow<Boolean> {
-        return flowSettings.getBooleanFlow(KEY_IS_TIMETABLE_MODE, true)
-    }
-    suspend fun setIsTimetableMode(isTimetableMode: Boolean) {
-        flowSettings.putBoolean(KEY_IS_TIMETABLE_MODE, isTimetableMode)
-    }
-
     suspend fun addFavorite(sessionId: String) {
         val favoriteSet = flowSettings.getString(KEY, "").toFavoriteSet().toMutableSet()
         favoriteSet.add(sessionId)
@@ -72,7 +65,6 @@ class SettingsDatastore(private val flowSettings: FlowSettings) {
         public const val NAME = "PREFERENCES_NAME"
         private const val KEY_AUTHENTICATED = "KEY_AUTHENTICATED"
         private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
-        private const val KEY_IS_TIMETABLE_MODE = "KEY_IS_TIMETABLE_MODE"
         private const val KEY = "favorites"
         private const val DELIMITER = ","
 

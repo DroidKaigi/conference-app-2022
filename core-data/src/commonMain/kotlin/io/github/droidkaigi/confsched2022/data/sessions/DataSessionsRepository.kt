@@ -6,6 +6,7 @@ import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -44,10 +45,11 @@ class DataSessionsRepository(
         }
     }
 
-    override fun isTimetableModeFlow(): Flow<Boolean> {
-        return settingsDatastore.isTimetableMode()
-    }
+    private val isTimetableModeFlow = MutableStateFlow(true)
+
+    override fun isTimetableModeFlow(): Flow<Boolean> = isTimetableModeFlow
+
     override suspend fun setIsTimetableMode(isTimetableMode: Boolean) {
-        settingsDatastore.setIsTimetableMode(isTimetableMode)
+        isTimetableModeFlow.emit(isTimetableMode)
     }
 }
