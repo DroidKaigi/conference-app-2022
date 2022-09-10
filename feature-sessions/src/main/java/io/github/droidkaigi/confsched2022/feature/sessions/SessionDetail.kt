@@ -4,9 +4,11 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,7 +53,6 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionDetailUiModel.SessionDetailState.Loaded
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
@@ -63,6 +64,9 @@ import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -89,7 +93,11 @@ fun SessionDetailScreenRoot(
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         },
-        onShareClick = { shareManager.share(it.title.currentLangTitle) },
+        onShareClick = {
+            shareManager.share(
+                "${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}"
+            )
+        },
         onNavigateFloorMapClick = onNavigateFloorMapClick,
         onRegisterCalendarClick = {
             calendarRegistration.register(
@@ -138,11 +146,9 @@ fun SessionDetailScreen(
     onNavigateFloorMapClick: () -> Unit = {},
     onRegisterCalendarClick: (TimetableItem) -> Unit = {},
 ) {
-    if (uiModel.sessionDetailState !is Loaded) {
-        CircularProgressIndicator()
-        return
-    }
-    val (item, isFavorited) = uiModel.sessionDetailState.timetableItemWithFavorite
+
+    val uiState = uiModel.state
+
     KaigiScaffold(
         topBar = {
             SessionDetailTopAppBar(
@@ -150,85 +156,102 @@ fun SessionDetailScreen(
             )
         },
         bottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
+            if (uiState is Success) {
+                val (item, isFavorite) = uiState.value
+
+                BottomAppBar {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
-                        IconButton(onClick = { onShareClick(item) }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_share),
-                                contentDescription = "share",
-                            )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            IconButton(onClick = { onShareClick(item) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_share),
+                                    contentDescription = "share",
+                                )
+                            }
+                            IconButton(onClick = onNavigateFloorMapClick) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_02),
+                                    contentDescription = "go to floor map",
+                                )
+                            }
+                            IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_today),
+                                    contentDescription = "register calendar",
+                                )
+                            }
                         }
-                        IconButton(onClick = onNavigateFloorMapClick) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_02),
-                                contentDescription = "go to floor map",
-                            )
-                        }
-                        IconButton(onClick = { onRegisterCalendarClick(item) }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_today),
-                                contentDescription = "register calendar",
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.weight(1F))
-                    FloatingActionButton(
-                        onClick = {
-                            onFavoriteClick(isFavorited)
-                        }
-                    ) {
-                        if (isFavorited) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_bookmark_filled),
-                                contentDescription = "favorited"
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_bookmark),
-                                contentDescription = "not favorited"
-                            )
+
+                        Spacer(modifier = Modifier.weight(1F))
+
+                        FloatingActionButton(
+                            onClick = {
+                                onFavoriteClick(isFavorite)
+                            }
+                        ) {
+                            if (isFavorite) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                                    contentDescription = "favorite"
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_bookmark),
+                                    contentDescription = "not favorite"
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     ) {
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        ) {
-            SessionDetailSessionInfo(
-                title = item.title.currentLangTitle,
-                startsAt = item.startsAt,
-                endsAt = item.endsAt,
-                room = item.room,
-                category = item.category,
-                language = item.language,
-                levels = item.levels,
-            )
+        when (uiState) {
+            is Error -> TODO()
+            Loading ->
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            is Success -> {
+                val (item, _) = uiState.value
 
-            if (item is Session)
-                SessionDetailDescription(
-                    description = item.description
-                )
+                Column(
+                    modifier = modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp)
+                ) {
+                    SessionDetailSessionInfo(
+                        title = item.title.currentLangTitle,
+                        startsAt = item.startsAt,
+                        endsAt = item.endsAt,
+                        room = item.room,
+                        category = item.category,
+                        language = item.language,
+                        levels = item.levels,
+                    )
 
-            SessionDetailTargetAudience(
-                targetAudience = item.targetAudience
-            )
+                    if (item is Session)
+                        SessionDetailDescription(
+                            description = item.description
+                        )
 
-            if (item is Session)
-                SessionDetailSpeakers(
-                    speakers = item.speakers,
-                )
-            SessionDetailAssets(
-                asset = item.asset
-            )
+                    SessionDetailTargetAudience(
+                        targetAudience = item.targetAudience
+                    )
+
+                    if (item is Session)
+                        SessionDetailSpeakers(
+                            speakers = item.speakers,
+                        )
+                    SessionDetailAssets(
+                        asset = item.asset
+                    )
+                }
+            }
         }
     }
 }
@@ -354,7 +377,11 @@ fun SessionDetailDescription(
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.padding(16.dp))
         Text(
-            modifier = Modifier.animateContentSize(),
+            modifier = modifier
+                .animateContentSize()
+                .clickable {
+                    isReadMore = true
+                },
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
@@ -534,7 +561,7 @@ fun PreviewSessionDetailScreen() {
     KaigiTheme {
         SessionDetailScreen(
             uiModel = SessionDetailUiModel(
-                Loaded(TimetableItemWithFavorite.fake())
+                Success(TimetableItemWithFavorite.fake())
             )
         )
     }

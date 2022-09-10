@@ -1,8 +1,16 @@
 package io.github.droidkaigi.confsched2022
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Announcement
@@ -64,7 +72,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
-    kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
+    kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
+    kaigiExternalNavigationController: KaigiExternalNavigationController =
+        rememberKaigiExternalNavigationController(),
 ) {
     KaigiTheme {
         CompositionLocalProvider(
@@ -101,10 +111,12 @@ fun KaigiApp(
                     contributorsNavGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     aboutNavGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     mapGraph()
                     announcementGraph(
@@ -251,25 +263,72 @@ fun ColumnScope.DrawerSheetContent(
         contentDescription = null,
         modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
     )
-    DrawerItem.values().forEach { drawerItem ->
-        NavigationDrawerItem(
-            icon = {
-                Icon(imageVector = drawerItem.icon, contentDescription = null)
-            },
-            label = {
-                Text(stringResource(drawerItem.titleResId))
-            },
-            selected = drawerItem == selectedDrawerItem,
-            onClick = {
-                onClickDrawerItem(drawerItem)
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
-            Divider(
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
+        DrawerItem.values().forEach { drawerItem ->
+            NavigationDrawerItem(
+                icon = {
+                    Icon(imageVector = drawerItem.icon, contentDescription = null)
+                },
+                label = {
+                    Text(stringResource(drawerItem.titleResId))
+                },
+                selected = drawerItem == selectedDrawerItem,
+                onClick = {
+                    onClickDrawerItem(drawerItem)
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
+            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun rememberKaigiExternalNavigationController(): KaigiExternalNavigationController {
+    val context = LocalContext.current
+    return remember(context) {
+        KaigiExternalNavigationController(
+            context,
+        )
+    }
+}
+
+class KaigiExternalNavigationController(
+    private val context: Context,
+) {
+
+    fun navigate(
+        url: String,
+        packageName: String? = null,
+    ) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            if (packageName != null) {
+                intent.setPackage(packageName)
+            }
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            navigateToCustomTab(
+                url = url,
+                context = context,
+            )
+        }
+    }
+
+    private fun navigateToCustomTab(url: String, context: Context) {
+        val uri = Uri.parse(url)
+        CustomTabsIntent.Builder().also { builder ->
+            builder.setShowTitle(true)
+            builder.build().also {
+                it.launchUrl(context, uri)
+            }
         }
     }
 }
