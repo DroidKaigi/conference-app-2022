@@ -57,7 +57,7 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 fun SearchRoot(
     modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
-    onBookMarkClick: () -> Unit = {}
+    onBookMarkClick: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
@@ -109,7 +109,7 @@ private fun SearchScreen(
 private fun SearchTextField(
     modifier: Modifier = Modifier,
     searchWord: String,
-    onSearchWordChange: (String) -> Unit
+    onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
