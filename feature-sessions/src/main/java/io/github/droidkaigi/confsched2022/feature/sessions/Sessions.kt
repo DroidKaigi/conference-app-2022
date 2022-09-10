@@ -391,25 +391,6 @@ private fun TabIndicator(
     ) {}
 }
 
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun rememberSessionPagerState(
-    pagerState: PagerState = rememberPagerState(),
-    timeTableStates: List<TimetableState>
-): SessionPagerState = remember {
-    SessionPagerState(
-        pagerState,
-        timeTableStates
-    )
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Stable
-data class SessionPagerState(
-    val pagerState: PagerState,
-    val timeTableStates: List<TimetableState>
-)
-
 @Preview(showBackground = true)
 @Composable
 fun SessionsTimetablePreview() {
@@ -457,11 +438,6 @@ fun rememberSessionPagerListScrollState(
 ): SessionPagerListScrollState = remember {
     SessionPagerListScrollState(pagerState, timetableStates, sessionsListListStates)
 }
-//    rememberSaveable(
-//    saver = SessionPagerListScrollState.Saver
-//) {
-//    SessionPagerListScrollState(pagerState, timetableStates, sessionsListListStates)
-//}
 
 @OptIn(ExperimentalPagerApi::class)
 @Stable
