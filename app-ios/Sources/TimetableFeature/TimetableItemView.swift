@@ -27,8 +27,12 @@ public struct TimetableItemView: View {
         }
         .padding(8)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(AssetColors.pink.swiftUIColor)
+        .background(item.room.roomColor.opacity(0.2))
         .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(item.room.roomColor, lineWidth: 2)
+        )
     }
 }
 
