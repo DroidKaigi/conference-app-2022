@@ -43,14 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loaded
-import io.github.droidkaigi.confsched2022.feature.sessions.SessionsUiModel.ScheduleState.Loading
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
+import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun SearchRoot(
@@ -77,19 +78,20 @@ private fun SearchScreen(
         topBar = {},
         content = {
             Column {
-                when (uiModel.scheduleState) {
-                    is Loaded -> {
+                when (uiModel.state) {
+                    is Error -> TODO()
+                    is Success -> {
                         SearchTextField(searchWord.value) {
                             searchWord.value = it
                         }
                         SearchedItemListField(
-                            schedule = uiModel.scheduleState.schedule,
+                            schedule = uiModel.state.value,
                             searchWord = searchWord.value,
                             onItemClick = onItemClick,
                             onBookMarkClick = onBookMarkClick,
                         )
                     }
-                    is Loading -> {
+                    Loading -> {
                         FullScreenLoading()
                     }
                 }
@@ -286,11 +288,12 @@ private fun FullScreenLoading() {
 @Preview(showSystemUi = true)
 @Composable
 private fun SearchScreenPreview() {
-    val schedule = DroidKaigiSchedule.fake()
-    val scheduleState = Loaded(schedule)
-    val sessionUiModel = SessionsUiModel(scheduleState, true, true)
     SearchScreen(
-        uiModel = sessionUiModel,
+        uiModel = SessionsUiModel(
+            state = Success(DroidKaigiSchedule.fake()),
+            isFilterOn = true,
+            isTimetable = true
+        ),
         onItemClick = {},
         onBookMarkClick = {},
     )
