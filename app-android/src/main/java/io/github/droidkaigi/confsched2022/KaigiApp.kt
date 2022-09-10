@@ -120,7 +120,8 @@ fun KaigiApp(
                     )
                     staffNavGraph(
                         showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     mapGraph()
                     announcementGraph(

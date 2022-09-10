@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.staff
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,11 +35,12 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 fun StaffScreenRoot(
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> }
 ) {
     val viewModel = hiltViewModel<StaffViewModel>()
     val uiModel by viewModel.uiModel
-    Staff(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
+    Staff(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
 }
 
 @Composable
@@ -46,6 +48,7 @@ fun Staff(
     uiModel: StaffUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
@@ -78,7 +81,13 @@ fun Staff(
                 ) {
                     items(items = staff, key = { it.id }) { staff ->
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    staff.profileUrl?.let { url ->
+                                        onLinkClick(url, "com.github.android")
+                                    }
+                                },
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Spacer(modifier = Modifier.width(16.dp))

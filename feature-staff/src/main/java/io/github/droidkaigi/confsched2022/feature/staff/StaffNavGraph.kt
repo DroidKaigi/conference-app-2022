@@ -5,12 +5,14 @@ import androidx.navigation.compose.composable
 
 fun NavGraphBuilder.staffNavGraph(
     showNavigationIcon: Boolean,
-    onNavigationIconClick: () -> Unit
+    onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
 ) {
     composable(route = StaffNavGraph.staffRoute) {
         StaffScreenRoot(
             showNavigationIcon = showNavigationIcon,
-            onNavigationIconClick = onNavigationIconClick
+            onNavigationIconClick = onNavigationIconClick,
+            onLinkClick = onLinkClick
         )
     }
 }
