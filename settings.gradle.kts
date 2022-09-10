@@ -34,6 +34,7 @@ include(
     ":feature-about",
     ":feature-map",
     ":feature-announcement",
+    ":feature-setting",
     ":core-ui",
     ":core-designsystem",
     ":core-data",
