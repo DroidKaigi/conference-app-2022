@@ -67,6 +67,5 @@ class SettingsDatastore(private val flowSettings: FlowSettings) {
         private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
         private const val KEY = "favorites"
         private const val DELIMITER = ","
-
     }
 }
