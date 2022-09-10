@@ -100,35 +100,32 @@ fun KaigiApp(
                 ) {
                     val showNavigationIcon = !usePersistentNavigationDrawer
                     sessionsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
-                        kaigiAppScaffoldState::onBackIconClick,
-                        kaigiAppScaffoldState::onSearchClick,
-                        kaigiAppScaffoldState::onTimeTableClick,
-                        kaigiAppScaffoldState::onNavigateFloorMapClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
+                        onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
+                        onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
+                        onNavigateFloorMapClick = kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
                     contributorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                         onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     aboutNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
-<<<<<<< HEAD
-                        kaigiAppScaffoldState::onStaffListClick
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
+                        onStaffListClick = kaigiAppScaffoldState::onStaffListClick
                     )
                     staffNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick
-=======
-                        onLinkClick = kaigiExternalNavigationController::navigate,
->>>>>>> main
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick
                     )
                     mapGraph()
                     announcementGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     )
                 }
             }

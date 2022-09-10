@@ -6,21 +6,15 @@ import androidx.navigation.compose.composable
 fun NavGraphBuilder.aboutNavGraph(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
-<<<<<<< HEAD
-    onStaffListClick: () -> Unit
-=======
     onLinkClick: (url: String, packageName: String?) -> Unit,
->>>>>>> main
+    onStaffListClick: () -> Unit
 ) {
     composable(route = AboutNavGraph.aboutRoute) {
         AboutScreenRoot(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
-<<<<<<< HEAD
-            onStaffListClick = onStaffListClick
-=======
             onLinkClick = onLinkClick,
->>>>>>> main
+            onStaffListClick = onStaffListClick
         )
     }
 }

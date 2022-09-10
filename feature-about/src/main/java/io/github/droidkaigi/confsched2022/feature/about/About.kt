@@ -49,28 +49,26 @@ fun AboutScreenRoot(
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
-<<<<<<< HEAD
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
     onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(showNavigationIcon, onNavigationIconClick, onStaffListClick, modifier, versionName)
-=======
-    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
-    versionName: String? = versionName(LocalContext.current)
-) {
-    About(showNavigationIcon, onNavigationIconClick, onLinkClick, modifier, versionName)
->>>>>>> main
+    About(
+        showNavigationIcon,
+        onNavigationIconClick,
+        onLinkClick,
+        onStaffListClick,
+        modifier,
+        versionName
+    )
 }
 
 @Composable
 fun About(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
-<<<<<<< HEAD
-    onStaffListClick: () -> Unit,
-=======
     onLinkClick: (url: String, packageName: String?) -> Unit,
->>>>>>> main
+    onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
