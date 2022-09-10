@@ -1,10 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.contributors
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,11 +39,12 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 fun ContributorsScreenRoot(
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
 ) {
     val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
+    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
 }
 
 @Composable
@@ -57,6 +52,7 @@ fun Contributors(
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
@@ -83,7 +79,6 @@ fun Contributors(
             }
             is Success -> {
                 val contributors = uiModel.state.value
-                val context = LocalContext.current
 
                 LazyColumn(
                     modifier = modifier.fillMaxWidth()
@@ -94,18 +89,7 @@ fun Contributors(
                                 .fillMaxWidth()
                                 .clickable {
                                     contributor.profileUrl?.let { url ->
-                                        try {
-                                            Intent(Intent.ACTION_VIEW).also {
-                                                it.setPackage("com.github.android")
-                                                it.data = Uri.parse(url)
-                                                context.startActivity(it)
-                                            }
-                                        } catch (e: ActivityNotFoundException) {
-                                            navigateToCustomTab(
-                                                url = url,
-                                                context = context,
-                                            )
-                                        }
+                                        onLinkClick(url, "com.github.android")
                                     }
                                 },
                             verticalAlignment = Alignment.CenterVertically,
@@ -135,16 +119,6 @@ fun Contributors(
     }
 }
 
-private fun navigateToCustomTab(url: String, context: Context) {
-    val uri = Uri.parse(url)
-    CustomTabsIntent.Builder().also { builder ->
-        builder.setShowTitle(true)
-        builder.build().also {
-            it.launchUrl(context, uri)
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun ContributorsPreview() {
@@ -156,7 +130,8 @@ fun ContributorsPreview() {
                 )
             ),
             showNavigationIcon = true,
-            onNavigationIconClick = {}
+            onNavigationIconClick = {},
+            onLinkClick = {_, _ -> },
         )
     }
 }
