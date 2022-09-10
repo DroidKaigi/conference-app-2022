@@ -91,7 +91,8 @@ fun Contributors(
                                     contributor.profileUrl?.let { url ->
                                         onLinkClick(url, "com.github.android")
                                     }
-                                },
+                                }
+                                .padding(vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Spacer(modifier = Modifier.width(16.dp))

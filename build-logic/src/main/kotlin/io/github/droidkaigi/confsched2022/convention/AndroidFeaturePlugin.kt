@@ -13,6 +13,7 @@ class AndroidFeaturePlugin : Plugin<Project> {
                 apply("droidkaigi.primitive.android.hilt")
                 apply("droidkaigi.primitive.spotless")
                 apply("droidkaigi.primitive.molecule")
+                apply("droidkaigi.primitive.detekt")
             }
         }
     }

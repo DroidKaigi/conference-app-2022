@@ -7,7 +7,8 @@ import io.github.droidkaigi.confsched2022.ui.Result
 
 data class SessionsUiModel(
     val scheduleState: ScheduleState,
-    val isFilterOn: Boolean
+    val isFilterOn: Boolean,
+    val isTimetable: Boolean
 ) {
     sealed interface ScheduleState {
         fun filter(filters: Filters): ScheduleState {

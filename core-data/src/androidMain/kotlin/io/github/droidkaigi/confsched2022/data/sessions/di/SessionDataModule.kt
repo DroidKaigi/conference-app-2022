@@ -27,7 +27,7 @@ class SessionDataModule {
         return DataSessionsRepository(
             sessionsApi = sessionsApi,
             sessionsDao = sessionsDao,
-            favoriteSessionsDataStore = settingsDatastore
+            settingsDatastore = settingsDatastore
         )
     }
 //    @Provides

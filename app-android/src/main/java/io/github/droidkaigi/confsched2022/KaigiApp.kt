@@ -6,8 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Announcement
@@ -272,25 +275,29 @@ fun ColumnScope.DrawerSheetContent(
         contentDescription = null,
         modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
     )
-    DrawerItem.values().forEach { drawerItem ->
-        NavigationDrawerItem(
-            icon = {
-                Icon(imageVector = drawerItem.icon, contentDescription = null)
-            },
-            label = {
-                Text(stringResource(drawerItem.titleResId))
-            },
-            selected = drawerItem == selectedDrawerItem,
-            onClick = {
-                onClickDrawerItem(drawerItem)
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
-            Divider(
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
+        DrawerItem.values().forEach { drawerItem ->
+            NavigationDrawerItem(
+                icon = {
+                    Icon(imageVector = drawerItem.icon, contentDescription = null)
+                },
+                label = {
+                    Text(stringResource(drawerItem.titleResId))
+                },
+                selected = drawerItem == selectedDrawerItem,
+                onClick = {
+                    onClickDrawerItem(drawerItem)
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
+            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+                )
+            }
         }
     }
 }
