@@ -80,7 +80,7 @@ fun SessionsScreenRoot(
         onSearchClick = onSearchClicked,
         onToggleTimetableClick = { isTimetable ->
             viewModel.onTimetableModeToggle(isTimetable)
-         },
+        },
     )
 }
 
