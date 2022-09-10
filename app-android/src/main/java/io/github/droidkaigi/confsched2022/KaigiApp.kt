@@ -284,8 +284,7 @@ fun ColumnScope.DrawerSheetContent(
 }
 
 @Composable
-fun rememberKaigiExternalNavigationController(
-): KaigiExternalNavigationController {
+fun rememberKaigiExternalNavigationController(): KaigiExternalNavigationController {
     val context = LocalContext.current
     return remember(context) {
         KaigiExternalNavigationController(
