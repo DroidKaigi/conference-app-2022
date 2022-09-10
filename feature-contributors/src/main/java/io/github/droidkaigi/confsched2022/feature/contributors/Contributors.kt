@@ -1,10 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.contributors
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -41,11 +36,12 @@ import io.github.droidkaigi.confsched2022.feature.contributors.ContributorsUiMod
 fun ContributorsScreenRoot(
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
-    onNavigationIconClick: () -> Unit = {}
+    onNavigationIconClick: () -> Unit = {},
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
 ) {
     val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, modifier)
+    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
 }
 
 @Composable
@@ -53,6 +49,7 @@ fun Contributors(
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     KaigiScaffold(
@@ -93,18 +90,7 @@ fun Contributors(
                         .padding(top = 16.dp)
                         .clickable {
                             contributor.profileUrl?.let { url ->
-                                try {
-                                    Intent(Intent.ACTION_VIEW).also {
-                                        it.setPackage("com.github.android")
-                                        it.data = Uri.parse(url)
-                                        context.startActivity(it)
-                                    }
-                                } catch (e: ActivityNotFoundException) {
-                                    navigateToCustomTab(
-                                        url = url,
-                                        context = context,
-                                    )
-                                }
+                                onLinkClick(url, "com.github.android")
                             }
                         },
                     verticalAlignment = Alignment.CenterVertically,
@@ -125,16 +111,6 @@ fun Contributors(
                     )
                 }
             }
-        }
-    }
-}
-
-private fun navigateToCustomTab(url: String, context: Context) {
-    val uri = Uri.parse(url)
-    CustomTabsIntent.Builder().also { builder ->
-        builder.setShowTitle(true)
-        builder.build().also {
-            it.launchUrl(context, uri)
         }
     }
 }
