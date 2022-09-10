@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -105,8 +106,10 @@ fun Sessions(
     val scheduleState = uiModel.scheduleState
     val isTimetable = uiModel.isTimetable
     val pagerState = rememberPagerState()
-    val timetableListStates = DroidKaigi2022Day.values().map { rememberTimetableState() }.toList()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
+    val timetableListStates = DroidKaigi2022Day.values().map {
+        rememberTimetableState(screenScaleState = rememberScreenScaleState())
+    }.toList()
     val pagerContentsScrollState = rememberPagerContentsScrollState(
         pagerState,
         timetableListStates,
@@ -116,9 +119,6 @@ fun Sessions(
         modifier = modifier,
         topBar = {
             SessionsTopBar(
-                pagerState,
-                isTimetable,
-                if (isTimetable) null else sessionsListListStates,
                 pagerContentsScrollState,
                 isTimetable,
                 scheduleState,
@@ -175,7 +175,6 @@ fun Timetable(
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
 ) {
-    val screenScaleState = rememberScreenScaleState()
     HorizontalPager(
         count = days.size,
         modifier = modifier,
@@ -183,7 +182,6 @@ fun Timetable(
     ) { dayIndex ->
         val day = days[dayIndex]
         val timetable = scheduleState.schedule.dayToTimetable[day].orEmptyContents()
-        val timetableState = rememberTimetableState(screenScaleState = screenScaleState)
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
 
@@ -306,9 +304,6 @@ data class DurationTime(val startAt: String, val endAt: String)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SessionsTopBar(
-    pagerState: PagerState,
-    isTimetable: Boolean,
-    sessionsListListStates: List<LazyListState>?,
     pagerContentsScrollState: PagerContentsScrollState,
     isTimetable: Boolean,
     scheduleState: ScheduleState,

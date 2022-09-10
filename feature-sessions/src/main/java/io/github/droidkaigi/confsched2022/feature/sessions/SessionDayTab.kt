@@ -40,8 +40,7 @@ internal fun SessionDayTab(
     Tab(
         selected = selected,
         onClick = { onTabClicked(index) },
-        modifier = Modifier.height(56.dp).padding(end = 8.dp).clip(CircleShape)
-        modifier = Modifier.height(height).clip(CircleShape)
+        modifier = Modifier.height(height).padding(end = 8.dp).clip(CircleShape)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
