@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.map
 
 class FakeSessionsRepository : SessionsRepository {
     private val favorites = MutableStateFlow(persistentSetOf<TimetableItemId>())
-    private val isTimetableModeFlow = MutableStateFlow(true)
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> {
         val timetable = Timetable.fake()
         return favorites.map {
@@ -33,14 +32,6 @@ class FakeSessionsRepository : SessionsRepository {
         } else {
             favorites.value = favorites.value.remove(sessionId)
         }
-    }
-
-    override fun isTimetableModeFlow(): Flow<Boolean> {
-        return isTimetableModeFlow
-    }
-
-    override suspend fun setIsTimetableMode(isTimetableMode: Boolean) {
-        isTimetableModeFlow.emit(isTimetableMode)
     }
 
     // for test

@@ -52,6 +52,8 @@ class SessionsViewModel @Inject constructor(
         }
         .asResult()
 
+    private val isTimetableMode = mutableStateOf(true)
+
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
     val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
@@ -64,13 +66,10 @@ class SessionsViewModel @Inject constructor(
             }
         }
 
-        val isTimetableMode
-            by sessionsRepository.isTimetableModeFlow().collectAsState(initial = true)
-
         SessionsUiModel(
             scheduleState = scheduleState,
             isFilterOn = filters.value.filterFavorite,
-            isTimetable = isTimetableMode,
+            isTimetable = isTimetableMode.value,
         )
     }
 
@@ -88,7 +87,7 @@ class SessionsViewModel @Inject constructor(
 
     fun onTimetableModeToggle(currentIsTimetableMode: Boolean) {
         viewModelScope.launch {
-            sessionsRepository.setIsTimetableMode(!currentIsTimetableMode)
+            isTimetableMode.value = !currentIsTimetableMode
         }
     }
 }

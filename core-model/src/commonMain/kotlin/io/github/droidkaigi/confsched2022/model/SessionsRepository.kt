@@ -13,7 +13,4 @@ interface SessionsRepository {
 
     suspend fun refresh()
     suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean)
-
-    fun isTimetableModeFlow(): Flow<Boolean>
-    suspend fun setIsTimetableMode(isTimetableMode: Boolean)
 }
