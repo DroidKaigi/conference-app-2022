@@ -89,7 +89,11 @@ fun SessionDetailScreenRoot(
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         },
-        onShareClick = { shareManager.share(it.title.currentLangTitle) },
+        onShareClick = {
+            shareManager.share(
+                "${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}"
+            )
+        },
         onNavigateFloorMapClick = onNavigateFloorMapClick,
         onRegisterCalendarClick = {
             calendarRegistration.register(
@@ -354,7 +358,11 @@ fun SessionDetailDescription(
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.padding(16.dp))
         Text(
-            modifier = Modifier.animateContentSize(),
+            modifier = modifier
+                .animateContentSize()
+                .clickable {
+                    isReadMore = true
+                },
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
