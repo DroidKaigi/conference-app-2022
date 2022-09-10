@@ -55,6 +55,7 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun SearchRoot(
+    modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
     onBookMarkClick: () -> Unit = {}
 ) {
@@ -69,6 +70,7 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen(
+    modifier: Modifier = Modifier,
     uiModel: SessionsUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
@@ -81,7 +83,7 @@ private fun SearchScreen(
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
-                        SearchTextField(searchWord.value) {
+                        SearchTextField(searchWord = searchWord.value) {
                             searchWord.value = it
                         }
                         SearchedItemListField(
@@ -102,7 +104,11 @@ private fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun SearchTextField(searchWord: String, onSearchWordChange: (String) -> Unit) {
+private fun SearchTextField(
+    modifier: Modifier = Modifier,
+    searchWord: String,
+    onSearchWordChange: (String) -> Unit
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier = Modifier
@@ -143,6 +149,7 @@ private fun SearchTextField(searchWord: String, onSearchWordChange: (String) -> 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SearchedItemListField(
+    modifier: Modifier = Modifier,
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: () -> Unit,
@@ -168,7 +175,7 @@ private fun SearchedItemListField(
 }
 
 @Composable
-private fun SearchedHeader(day: DroidKaigi2022Day) {
+private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,6 +192,7 @@ private fun SearchedHeader(day: DroidKaigi2022Day) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchedItem(
+    modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
@@ -276,7 +284,7 @@ private fun SearchedItem(
 }
 
 @Composable
-private fun FullScreenLoading() {
+private fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
