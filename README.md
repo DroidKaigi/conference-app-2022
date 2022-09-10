@@ -17,7 +17,7 @@
 
 ## Try it out
 
-Try it outThe builds being distributed through mobile app distribution services.
+The builds being distributed through mobile app distribution services.
 
 - Try the latest staging through [<img src="https://dply.me/rdembt/button/small" alt="Download to device">](https://dply.me/rdembt#install)
 
@@ -163,7 +163,7 @@ class SessionScreenRobot @Inject constructor() {
 ### Create a test with high fidelity without making it flaky
 
 In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
-We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.　　
+We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.  
 The test basically uses the actual dependencies and Fake the Repository, which is the point of contact with the outside world.
 
 <img width="666" alt="image" src="https://user-images.githubusercontent.com/1386930/188339262-25092e16-3a19-435f-a241-3e63ba828e15.png">
@@ -254,7 +254,7 @@ class JsScheduleModifier() : ScheduleModifier {
 }
 ```
 
-You can check the manifest file to see how it works.　　
+You can check the manifest file to see how it works.  
 https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 
 

@@ -73,8 +73,7 @@ fun Contributors(
             )
         }
     ) {
-
-        when (uiModel.contributorsState) {
+        when (uiModel.state) {
             is Error -> TODO()
             Loading -> Box(
                 modifier = Modifier.fillMaxSize(),
@@ -83,7 +82,7 @@ fun Contributors(
                 CircularProgressIndicator()
             }
             is Success -> {
-                val contributors = uiModel.contributorsState.value
+                val contributors = uiModel.state.value
                 val context = LocalContext.current
 
                 LazyColumn(
@@ -152,7 +151,7 @@ fun ContributorsPreview() {
     KaigiTheme {
         Contributors(
             uiModel = ContributorsUiModel(
-                contributorsState = Success(
+                state = Success(
                     Contributor.fakes()
                 )
             ),
