@@ -131,7 +131,7 @@ fun ContributorsPreview() {
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
-            onLinkClick = {_, _ -> },
+            onLinkClick = { _, _ -> },
         )
     }
 }
