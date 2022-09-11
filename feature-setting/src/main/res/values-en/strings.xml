@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setting_title">Setting</string>
+    <string name="setting_item_dark_mode">Dark Mode</string>
+    <string name="setting_item_language">Language</string>
+</resources>

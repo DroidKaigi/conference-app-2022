@@ -2,7 +2,7 @@
 <resources>
     <string name="about_top_app_bar_title">What is DroidKaigi?</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
+    <string name="about_description">DroidKaigi is a conference tailored for Android developers. It\'s scheduled to take place on the 5 to 7 of October 2022.</string>
     <string name="about_access">Access</string>
     <string name="about_staff">Staff List</string>
     <string name="about_privacy">Privacy Policy</string>

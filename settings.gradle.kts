@@ -1,5 +1,5 @@
 pluginManagement {
-    includeBuild("build-logic")
+    includeBuild("gradle/plugins")
     repositories {
         gradlePluginPortal()
         google()
@@ -34,7 +34,11 @@ include(
     ":feature-about",
     ":feature-map",
     ":feature-announcement",
+<<<<<<< HEAD
     ":feature-staff",
+=======
+    ":feature-setting",
+>>>>>>> main
     ":core-ui",
     ":core-designsystem",
     ":core-data",

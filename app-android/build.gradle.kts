@@ -70,7 +70,11 @@ dependencies {
     implementation(projects.featureMap)
     implementation(projects.featureAnnouncement)
     implementation(projects.featureAbout)
+<<<<<<< HEAD
     implementation(projects.featureStaff)
+=======
+    implementation(projects.featureSetting)
+>>>>>>> main
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
