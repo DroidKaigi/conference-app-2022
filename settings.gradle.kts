@@ -36,6 +36,7 @@ include(
     ":feature-announcement",
     ":feature-setting",
     ":feature-staff",
+    ":feature-sponsors",
     ":core-ui",
     ":core-designsystem",
     ":core-data",
