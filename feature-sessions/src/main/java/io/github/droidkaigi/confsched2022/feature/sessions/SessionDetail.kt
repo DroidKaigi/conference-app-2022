@@ -137,65 +137,6 @@ fun SessionDetailTopAppBar(
 }
 
 @Composable
-fun SessionDetailBottomAppBar(
-    item: TimetableItem,
-    isFavorite: Boolean,
-    onFavoriteClick: (Boolean) -> Unit,
-    onShareClick: (TimetableItem) -> Unit,
-    onNavigateFloorMapClick: () -> Unit,
-    onRegisterCalendarClick: (TimetableItem) -> Unit,
-){
-    BottomAppBar {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                IconButton(onClick = { onShareClick(item) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_share),
-                        contentDescription = "share",
-                    )
-                }
-                IconButton(onClick = onNavigateFloorMapClick) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_02),
-                        contentDescription = "go to floor map",
-                    )
-                }
-                IconButton(onClick = { onRegisterCalendarClick(item) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_today),
-                        contentDescription = "register calendar",
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1F))
-
-            FloatingActionButton(
-                onClick = {
-                    onFavoriteClick(isFavorite)
-                }
-            ) {
-                if (isFavorite) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_bookmark_filled),
-                        contentDescription = "favorite"
-                    )
-                } else {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_bookmark),
-                        contentDescription = "not favorite"
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun SessionDetailScreen(
     modifier: Modifier = Modifier,
     uiModel: SessionDetailUiModel,
@@ -268,6 +209,65 @@ fun SessionDetailScreen(
                         )
                     SessionDetailAssets(
                         asset = item.asset
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SessionDetailBottomAppBar(
+    item: TimetableItem,
+    isFavorite: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
+    onShareClick: (TimetableItem) -> Unit,
+    onNavigateFloorMapClick: () -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit,
+){
+    BottomAppBar {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(onClick = { onShareClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_share),
+                        contentDescription = "share",
+                    )
+                }
+                IconButton(onClick = onNavigateFloorMapClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_02),
+                        contentDescription = "go to floor map",
+                    )
+                }
+                IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_today),
+                        contentDescription = "register calendar",
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1F))
+
+            FloatingActionButton(
+                onClick = {
+                    onFavoriteClick(isFavorite)
+                }
+            ) {
+                if (isFavorite) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                        contentDescription = "favorite"
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark),
+                        contentDescription = "not favorite"
                     )
                 }
             }
