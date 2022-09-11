@@ -33,6 +33,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,9 +55,17 @@ fun AboutScreenRoot(
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
+    onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(showNavigationIcon, onNavigationIconClick, onLinkClick, modifier, versionName)
+    About(
+        showNavigationIcon,
+        onNavigationIconClick,
+        onLinkClick,
+        onStaffListClick,
+        modifier,
+        versionName
+    )
 }
 
 @Composable
@@ -60,6 +73,7 @@ fun About(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
+    onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
@@ -86,7 +100,11 @@ fun About(
                     .padding(
                         top = 67.dp,
                         bottom = 75.dp,
-                    ),
+                    )
+                    .clearAndSetSemantics {
+                        contentDescription = "Logo"
+                        role = Role.Image
+                    },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(40.dp)
             ) {
@@ -153,9 +171,7 @@ fun About(
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Person,
                     textResId = string.about_staff,
-                    onClick = {
-                        // TODO: Implement show staff screen
-                    }
+                    onClick = onStaffListClick
                 )
 
                 AuxiliaryInformationRow(
@@ -181,6 +197,7 @@ fun About(
                 modifier = Modifier
                     .padding(vertical = 18.dp, horizontal = 32.dp)
                     .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {}
             ) {
                 Text(
                     text = "アプリバージョン",
