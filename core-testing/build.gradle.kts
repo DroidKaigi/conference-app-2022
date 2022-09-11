@@ -9,6 +9,10 @@ plugins {
 
 android.namespace = "io.github.droidkaigi.confsched2022.template.core.testing"
 
+kotlin {
+    explicitApiWarning()
+}
+
 dependencies {
     api(projects.coreModel)
     api(projects.coreData)
