@@ -131,21 +131,10 @@ fun Timetable(
                     },
                     onDragCancel = {
                         scrollState.resetTracking()
-                        coroutineScope.launch {
-                            scrollState.onScrollEnd()
-                        }
                     },
                     onDragEnd = {
                         coroutineScope.launch {
-                            scrollState.onScrollEnd()
-                        }
-                        coroutineScope.launch {
                             scrollState.flingIfPossible()
-                        }
-                    },
-                    onDragStart = {
-                        coroutineScope.launch {
-                            scrollState.onScrollStart()
                         }
                     }
                 )
@@ -359,8 +348,6 @@ class ScreenScrollState(
     private val velocityTracker = VelocityTracker()
     private val _scrollX = Animatable(initialScrollX)
     private val _scrollY = Animatable(initialScrollY)
-    private val _isScrollYProgress = mutableStateOf(false)
-    private val _isScrollXProgress = mutableStateOf(false)
 
     val scrollX: Float
         get() = _scrollX.value
@@ -371,11 +358,6 @@ class ScreenScrollState(
         get() = _scrollX.lowerBound ?: 0f
     val maxY: Float
         get() = _scrollY.lowerBound ?: 0f
-
-    val isScrollYProgress
-        get() = _isScrollYProgress.value || _scrollY.isRunning
-    val isScrollXProgress
-        get() = _isScrollXProgress.value || _scrollX.isRunning
 
     suspend fun scroll(
         amount: Offset,
@@ -404,24 +386,6 @@ class ScreenScrollState(
                 velocity.y / 2f,
                 exponentialDecay()
             )
-        }
-    }
-
-    suspend fun onScrollStart() = coroutineScope {
-        launch {
-            _isScrollYProgress.value = true
-        }
-        launch {
-            _isScrollXProgress.value = true
-        }
-    }
-
-    suspend fun onScrollEnd() = coroutineScope {
-        launch {
-            _isScrollYProgress.value = false
-        }
-        launch {
-            _isScrollXProgress.value = false
         }
     }
 

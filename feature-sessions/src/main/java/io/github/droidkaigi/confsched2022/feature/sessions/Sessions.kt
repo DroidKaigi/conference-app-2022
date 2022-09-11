@@ -25,14 +25,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -113,6 +110,7 @@ fun Sessions(
         rememberTimetableState(screenScaleState = rememberScreenScaleState())
     }.toList()
     val pagerContentsScrollState = rememberPagerContentsScrollState(
+        isTimetable,
         pagerState,
         timetableListStates,
         sessionsListListStates
@@ -133,7 +131,10 @@ fun Sessions(
     ) {
         Column(modifier = Modifier.padding(top = 4.dp)) {
             when (scheduleState) {
-                is Error -> TODO()
+                is Error -> {
+                    scheduleState.value?.printStackTrace()
+                    TODO()
+                }
                 Loading -> Box(
                     modifier = modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
@@ -316,33 +317,6 @@ fun SessionsTopBar(
     modifier: Modifier = Modifier
 ) {
     val pagerState = pagerContentsScrollState.pagerState
-    LaunchedEffect(
-        key1 = pagerContentsScrollState
-            .timetableStates[pagerState.currentPage]
-            .screenScrollState.scrollY
-    ) {
-        snapshotFlow {
-            pagerContentsScrollState
-                .timetableStates[pagerState.currentPage]
-                .screenScrollState
-                .isScrollYProgress
-        }.collect {
-            if (isTimetable) pagerContentsScrollState.scrollTimetable()
-        }
-    }
-    LaunchedEffect(
-        key1 = pagerContentsScrollState
-            .sessionsListStates[pagerState.currentPage]
-            .isScrollInProgress
-    ) {
-        snapshotFlow {
-            pagerContentsScrollState
-                .sessionsListStates[pagerState.currentPage]
-                .isScrollInProgress
-        }.collect {
-            if (!isTimetable) pagerContentsScrollState.scrollSessionsList()
-        }
-    }
     Column(
         modifier = modifier
     ) {
@@ -502,38 +476,30 @@ fun SessionsLoadingPreview() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun rememberPagerContentsScrollState(
+    isTimetable: Boolean,
     pagerState: PagerState,
     timetableStates: List<TimetableState>,
     sessionsListListStates: List<LazyListState>
-): PagerContentsScrollState = remember {
-    PagerContentsScrollState(pagerState, timetableStates, sessionsListListStates)
-}
+): PagerContentsScrollState =
+    remember(isTimetable, pagerState, timetableStates, sessionsListListStates) {
+        PagerContentsScrollState(isTimetable, pagerState, timetableStates, sessionsListListStates)
+    }
 
 @OptIn(ExperimentalPagerApi::class)
 @Stable
 class PagerContentsScrollState(
+    private val isTimetable: Boolean,
     val pagerState: PagerState,
     val timetableStates: List<TimetableState>,
     val sessionsListStates: List<LazyListState>
 ) {
-    private var _scrollingPage = pagerState.currentPage
-
-    private val _isScrollTop = mutableStateOf(true)
-    val isScrollTop get() = _isScrollTop.value
-
-    suspend fun scrollTimetable() {
-        if (timetableStates[pagerState.currentPage].screenScrollState.isScrollYProgress)
-            _scrollingPage = pagerState.currentPage
-
-        _isScrollTop.value = timetableStates[_scrollingPage].screenScrollState.scrollY > -1f
-    }
-
-    suspend fun scrollSessionsList() {
-        if (sessionsListStates[pagerState.currentPage].isScrollInProgress)
-            _scrollingPage = pagerState.currentPage
-
-        _isScrollTop.value = sessionsListStates[_scrollingPage].let {
-            it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
+    val isScrollTop by derivedStateOf {
+        if (isTimetable) {
+            timetableStates[pagerState.currentPage].screenScrollState.scrollY > -1F
+        } else {
+            sessionsListStates[pagerState.currentPage].let {
+                it.firstVisibleItemIndex == 0 && it.firstVisibleItemScrollOffset == 0
+            }
         }
     }
 
