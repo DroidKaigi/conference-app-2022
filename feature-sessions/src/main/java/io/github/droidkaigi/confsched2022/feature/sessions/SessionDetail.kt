@@ -224,7 +224,7 @@ fun SessionDetailBottomAppBar(
     onShareClick: (TimetableItem) -> Unit,
     onNavigateFloorMapClick: () -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
-){
+) {
     BottomAppBar {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
