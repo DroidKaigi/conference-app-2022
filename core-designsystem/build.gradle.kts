@@ -16,4 +16,5 @@ kotlin {
 
 dependencies {
     kotlinCompilerPluginClasspath(libs.composeCompiler)
+    implementation(libs.coilCompose)
 }

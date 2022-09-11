@@ -55,9 +55,17 @@ fun AboutScreenRoot(
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
+    onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(showNavigationIcon, onNavigationIconClick, onLinkClick, modifier, versionName)
+    About(
+        showNavigationIcon,
+        onNavigationIconClick,
+        onLinkClick,
+        onStaffListClick,
+        modifier,
+        versionName
+    )
 }
 
 @Composable
@@ -65,6 +73,7 @@ fun About(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
+    onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
@@ -162,9 +171,7 @@ fun About(
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Person,
                     textResId = string.about_staff,
-                    onClick = {
-                        // TODO: Implement show staff screen
-                    }
+                    onClick = onStaffListClick
                 )
 
                 AuxiliaryInformationRow(

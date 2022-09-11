@@ -62,6 +62,8 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -103,27 +105,33 @@ fun KaigiApp(
                 ) {
                     val showNavigationIcon = !usePersistentNavigationDrawer
                     sessionsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
-                        kaigiAppScaffoldState::onBackIconClick,
-                        kaigiAppScaffoldState::onSearchClick,
-                        kaigiAppScaffoldState::onTimeTableClick,
-                        kaigiAppScaffoldState::onNavigateFloorMapClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
+                        onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
+                        onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
+                        onNavigateFloorMapClick = kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
                     contributorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                         onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     aboutNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
+                        onStaffListClick = kaigiAppScaffoldState::onStaffListClick
+                    )
+                    staffNavGraph(
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                         onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     mapGraph()
                     announcementGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     )
                     settingNavGraph(
                         showNavigationIcon,
@@ -220,6 +228,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     fun onBackIconClick() {
         navController.popBackStack()
+    }
+
+    fun onStaffListClick() {
+        navController.navigate(StaffNavGraph.staffRoute)
     }
 
     private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)

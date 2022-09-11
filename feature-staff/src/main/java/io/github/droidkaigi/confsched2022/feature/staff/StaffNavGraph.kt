@@ -1,24 +1,22 @@
-package io.github.droidkaigi.confsched2022.feature.about
+package io.github.droidkaigi.confsched2022.feature.staff
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
-fun NavGraphBuilder.aboutNavGraph(
+fun NavGraphBuilder.staffNavGraph(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
-    onStaffListClick: () -> Unit
 ) {
-    composable(route = AboutNavGraph.aboutRoute) {
-        AboutScreenRoot(
+    composable(route = StaffNavGraph.staffRoute) {
+        StaffScreenRoot(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
-            onLinkClick = onLinkClick,
-            onStaffListClick = onStaffListClick
+            onLinkClick = onLinkClick
         )
     }
 }
 
-object AboutNavGraph {
-    const val aboutRoute = "about"
+object StaffNavGraph {
+    const val staffRoute = "staff"
 }

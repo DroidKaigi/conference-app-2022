@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.feature.contributors
+package io.github.droidkaigi.confsched2022.feature.staff
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,27 +19,27 @@ import io.github.droidkaigi.confsched2022.designsystem.components.UsernameRow
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.model.Contributor
+import io.github.droidkaigi.confsched2022.model.Staff
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
-fun ContributorsScreenRoot(
+fun StaffScreenRoot(
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
-    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> }
 ) {
-    val viewModel = hiltViewModel<ContributorsViewModel>()
+    val viewModel = hiltViewModel<StaffViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
+    Staff(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
 }
 
 @Composable
-fun Contributors(
-    uiModel: ContributorsUiModel,
+fun Staff(
+    uiModel: StaffUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
@@ -52,8 +52,8 @@ fun Contributors(
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = R.string.contributors_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(id = R.string.staff_top_app_bar_title),
+                        style = MaterialTheme.typography.titleLarge
                     )
                 },
             )
@@ -61,23 +61,23 @@ fun Contributors(
     ) {
         when (uiModel.state) {
             is Error -> TODO()
-            Loading -> Box(
+            is Loading -> Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator()
             }
             is Success -> {
-                val contributors = uiModel.state.value
+                val staff = uiModel.state.value
 
                 LazyColumn(
                     modifier = modifier.fillMaxWidth()
                 ) {
-                    items(items = contributors, key = { it.id }) { contributor ->
+                    items(items = staff, key = { it.id }) { staff ->
                         UsernameRow(
-                            username = contributor.username,
-                            profileUrl = contributor.profileUrl,
-                            iconUrl = contributor.iconUrl,
+                            username = staff.username,
+                            profileUrl = staff.profileUrl,
+                            iconUrl = staff.iconUrl,
                             onLinkClick = onLinkClick
                         )
                     }
@@ -89,12 +89,12 @@ fun Contributors(
 
 @Preview(showBackground = true)
 @Composable
-fun ContributorsPreview() {
+fun StaffPreview() {
     KaigiTheme {
-        Contributors(
-            uiModel = ContributorsUiModel(
+        Staff(
+            uiModel = StaffUiModel(
                 state = Success(
-                    Contributor.fakes()
+                    Staff.fakes()
                 )
             ),
             showNavigationIcon = true,

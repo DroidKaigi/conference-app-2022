@@ -71,6 +71,7 @@ dependencies {
     implementation(projects.featureAnnouncement)
     implementation(projects.featureAbout)
     implementation(projects.featureSetting)
+    implementation(projects.featureStaff)
     implementation(projects.coreData)
     implementation(projects.coreDesignsystem)
     implementation(projects.coreUi)
