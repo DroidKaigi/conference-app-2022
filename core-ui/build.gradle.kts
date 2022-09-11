@@ -8,10 +8,9 @@ plugins {
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.template.core.ui"
-
-kotlin {
-    explicitApiWarning()
-}
+android.kotlinOptions.freeCompilerArgs = listOf(
+    "-Xexplicit-api=warning",
+)
 
 dependencies {
     implementation(libs.accompanistPager)

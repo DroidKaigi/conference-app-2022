@@ -8,10 +8,9 @@ plugins {
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.template.core.testing"
-
-kotlin {
-    explicitApiWarning()
-}
+android.kotlinOptions.freeCompilerArgs = listOf(
+    "-Xexplicit-api=warning",
+)
 
 dependencies {
     api(projects.coreModel)
