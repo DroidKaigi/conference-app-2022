@@ -17,6 +17,7 @@ kotlin {
 
 dependencies {
     kotlinCompilerPluginClasspath(libs.composeCompiler)
+    implementation(libs.coilCompose)
 
     commonMainApi(libs.mokoResources)
     androidMainApi(libs.mokoResourcesCompose)
