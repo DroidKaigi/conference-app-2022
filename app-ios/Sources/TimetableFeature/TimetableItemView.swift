@@ -3,21 +3,21 @@ import SwiftUI
 import Theme
 
 public struct TimetableItemView: View {
-    let item: TimetableItem
+    let item: TimetableItemWithFavorite
 
-    public init(item: TimetableItem) {
+    public init(item: TimetableItemWithFavorite) {
         self.item = item
     }
 
     public var body: some View {
         VStack(alignment: .leading) {
-            Text(item.title.jaTitle)
+            Text(item.timetableItem.title.jaTitle)
                 .frame(maxWidth: CGFloat.infinity, alignment: .topLeading)
                 .font(Font.system(size: 16, weight: .bold, design: .default))
                 .foregroundColor(AssetColors.white.swiftUIColor)
             Spacer()
                 .frame(height: 8)
-            Text("\((item.endsAt.epochSeconds - item.startsAt.epochSeconds) / 60)min")
+            Text("\((item.timetableItem.endsAt.epochSeconds - item.timetableItem.startsAt.epochSeconds) / 60)min")
                 .font(Font.system(size: 12, weight: .semibold, design: .default))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -27,11 +27,11 @@ public struct TimetableItemView: View {
         }
         .padding(8)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(item.room.roomColor.opacity(0.2))
+        .background(item.isFavorited ? item.timetableItem.room.roomColor : item.timetableItem.room.roomColor.opacity(0.2))
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(item.room.roomColor, lineWidth: 2)
+                .strokeBorder(item.timetableItem.room.roomColor, lineWidth: 2)
         )
     }
 }
@@ -40,7 +40,7 @@ public struct TimetableItemView: View {
 struct TimetableItemView_Previews: PreviewProvider {
     static var previews: some View {
         TimetableItemView(
-            item: Timetable.companion.fake().timetableItems.first!
+            item: TimetableItemWithFavorite.companion.fake()
         )
         .previewLayout(.fixed(width: 200, height: 160))
     }
