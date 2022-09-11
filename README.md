@@ -269,6 +269,7 @@ https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79
 
 ## Special Thanks
 * [Contributors](https://github.com/DroidKaigi/conference-app-2022/graphs/contributors)
+* iOS App Leader [ry-itto / Ryoya Ito](https://github.com/ry-itto)
 * Designer [Chihokotaro / Chihoko Watanabe](https://twitter.com/chihokotaro)
 * Oversight of Material Design3 [Nabe](https://twitter.com/NabeCott)
 * API Server [RyuNen344](https://twitter.com/RyuNen344)
