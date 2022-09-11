@@ -60,13 +60,10 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
-<<<<<<< HEAD
-import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
-import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
-=======
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
->>>>>>> main
+import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId

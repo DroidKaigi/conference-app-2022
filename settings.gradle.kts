@@ -34,11 +34,8 @@ include(
     ":feature-about",
     ":feature-map",
     ":feature-announcement",
-<<<<<<< HEAD
-    ":feature-staff",
-=======
     ":feature-setting",
->>>>>>> main
+    ":feature-staff",
     ":core-ui",
     ":core-designsystem",
     ":core-data",
