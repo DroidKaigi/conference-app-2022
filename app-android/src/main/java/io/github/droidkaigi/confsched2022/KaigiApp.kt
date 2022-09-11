@@ -62,6 +62,8 @@ import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
+import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
+import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
@@ -134,6 +136,10 @@ fun KaigiApp(
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     )
                     settingNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick
+                    )
+                    sponsorsNavGraph(
                         showNavigationIcon,
                         kaigiAppScaffoldState::onNavigationClick
                     )
@@ -255,7 +261,7 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
         AnnouncementNavGraph.announcementRoute
     ),
     Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
+    Sponsors(R.string.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
     Contributors(
         R.string.title_contributors,
         Icons.Default.People,
