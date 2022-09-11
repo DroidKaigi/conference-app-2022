@@ -55,12 +55,14 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun SearchRoot(
+    modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
-    onBookMarkClick: () -> Unit = {}
+    onBookMarkClick: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
     SearchScreen(
+        modifier = modifier,
         uiModel = state,
         onItemClick = onItemClick,
         onBookMarkClick = onBookMarkClick,
@@ -72,16 +74,18 @@ private fun SearchScreen(
     uiModel: SessionsUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
+        modifier = modifier,
         topBar = {},
         content = {
             Column {
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
-                        SearchTextField(searchWord.value) {
+                        SearchTextField(searchWord = searchWord.value) {
                             searchWord.value = it
                         }
                         SearchedItemListField(
@@ -102,10 +106,14 @@ private fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun SearchTextField(searchWord: String, onSearchWordChange: (String) -> Unit) {
+private fun SearchTextField(
+    modifier: Modifier = Modifier,
+    searchWord: String,
+    onSearchWordChange: (String) -> Unit,
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         contentAlignment = Alignment.Center
@@ -146,9 +154,10 @@ private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit
+    onBookMarkClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         schedule.dayToTimetable.forEach { (dayToTimeTable, timeTable) ->
             val sessions =
                 timeTable.filtered(Filters(filterSession = true, searchWord = searchWord)).contents
@@ -168,9 +177,9 @@ private fun SearchedItemListField(
 }
 
 @Composable
-private fun SearchedHeader(day: DroidKaigi2022Day) {
+private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(MaterialTheme.colorScheme.onPrimary)
@@ -185,13 +194,14 @@ private fun SearchedHeader(day: DroidKaigi2022Day) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchedItem(
+    modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
     var contentHeight = 100.dp
     Box(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentHeight()
             .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
@@ -276,9 +286,9 @@ private fun SearchedItem(
 }
 
 @Composable
-private fun FullScreenLoading() {
+private fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
