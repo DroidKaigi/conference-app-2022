@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,9 +37,7 @@ fun SessionListItem(
     val roomName = timetableItem.room.name
     val roomColor = Color(TimetableItemColor.colorOfRoomName(enName = roomName.enTitle))
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .semantics { contentDescription = "isFavorited$isFavorited" },
+        modifier = modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1F)) {
