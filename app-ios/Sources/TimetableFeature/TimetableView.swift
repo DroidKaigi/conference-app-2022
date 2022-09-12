@@ -72,7 +72,7 @@ public struct TimetableView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack {
+                VStack(spacing: 0) {
                     HStack(spacing: 8) {
                         ForEach(
                             [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
