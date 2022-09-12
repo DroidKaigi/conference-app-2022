@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
@@ -60,7 +61,11 @@ fun SessionListItem(
             }
         }
         IconButton(
-            modifier = Modifier.testTag("favorite"),
+            modifier = Modifier
+                .testTag("favorite")
+                .semantics {
+                    stateDescription = if (isFavorited) "ON" else "OFF"
+                },
             onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
         ) {
             Icon(
@@ -71,7 +76,7 @@ fun SessionListItem(
                         drawable.ic_bookmark
                     }
                 ),
-                contentDescription = "bookmark icon",
+                contentDescription = "favorite",
             )
         }
     }
