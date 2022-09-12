@@ -72,6 +72,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.util.Locale
 
 @Composable
 fun SessionDetailScreenRoot(
@@ -308,9 +309,19 @@ fun SessionScheduleInfo(
 
     fun LocalDateTime.toTime() = "$hour:${minute.toString().padStart(2, '0')}"
 
-    val sessionSchedule =
-        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
-            "${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+    val japanese = "ja"
+
+    val month = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.monthNumber}月"
+    } else {
+        sessionStartDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+    }
+
+    val day = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.dayOfMonth}日"
+    } else {
+        "${sessionStartDateTime.dayOfMonth}th"
+    }
 
     Row(
         modifier = modifier,
@@ -322,7 +333,7 @@ fun SessionScheduleInfo(
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = sessionSchedule,
+            text = "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}",
             style = MaterialTheme.typography.labelMedium,
         )
     }
