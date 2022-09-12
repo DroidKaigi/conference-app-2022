@@ -16,19 +16,19 @@ class FlowCollector<T>: Kotlinx_coroutines_coreFlowCollector {
 }
 
 public extension Kotlinx_coroutines_coreFlow {
+    // Note: Calling Kotlin suspend functions from Swift/Objective-C is currently supported only on main thread
+    @MainActor
     func stream<T>() -> AsyncThrowingStream<T, Error> {
         return AsyncThrowingStream { [weak self] continuation in
-            DispatchQueue.main.async {
-                self?.collect(collector: FlowCollector<T>(callback: { value in
-                    continuation.yield(value)
-                }), completionHandler: { error in
-                    if let error = error {
-                        continuation.finish(throwing: error)
-                    } else {
-                        continuation.finish()
-                    }
-                })
-            }
+            self?.collect(collector: FlowCollector<T>(callback: { value in
+                continuation.yield(value)
+            }), completionHandler: { error in
+                if let error = error {
+                    continuation.finish(throwing: error)
+                } else {
+                    continuation.finish()
+                }
+            })
         }
     }
 }
