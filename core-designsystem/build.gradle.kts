@@ -6,6 +6,8 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022.core.designsystem"
 
 kotlin {
+    explicitApiWarning()
+
     sourceSets {
         val commonMain by getting {
         }
@@ -16,4 +18,5 @@ kotlin {
 
 dependencies {
     kotlinCompilerPluginClasspath(libs.composeCompiler)
+    implementation(libs.coilCompose)
 }

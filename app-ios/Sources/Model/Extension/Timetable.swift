@@ -10,6 +10,9 @@ extension Timetable {
         .map(Date.init(timeIntervalSince1970:))
         .map { Calendar.current.component(.hour, from: $0) }
 
-        return Set(hours).sorted()
+        let maxHour = hours.max() ?? 0
+        let minHour = hours.min() ?? 0
+
+        return Array(minHour...maxHour)
     }
 }

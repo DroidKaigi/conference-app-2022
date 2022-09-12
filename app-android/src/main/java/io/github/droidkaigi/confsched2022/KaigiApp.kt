@@ -1,8 +1,16 @@
 package io.github.droidkaigi.confsched2022
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Announcement
@@ -52,6 +60,12 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
+import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
+import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
+import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -64,7 +78,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
-    kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState()
+    kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
+    kaigiExternalNavigationController: KaigiExternalNavigationController =
+        rememberKaigiExternalNavigationController(),
 ) {
     KaigiTheme {
         CompositionLocalProvider(
@@ -91,25 +107,41 @@ fun KaigiApp(
                 ) {
                     val showNavigationIcon = !usePersistentNavigationDrawer
                     sessionsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
-                        kaigiAppScaffoldState::onBackIconClick,
-                        kaigiAppScaffoldState::onSearchClick,
-                        kaigiAppScaffoldState::onTimeTableClick,
-                        kaigiAppScaffoldState::onNavigateFloorMapClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
+                        onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
+                        onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
+                        onNavigateFloorMapClick = kaigiAppScaffoldState::onNavigateFloorMapClick,
                     )
                     contributorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     aboutNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
+                        onStaffListClick = kaigiAppScaffoldState::onStaffListClick
+                    )
+                    staffNavGraph(
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                     )
                     mapGraph()
                     announcementGraph(
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    )
+                    settingNavGraph(
                         showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick,
+                        kaigiAppScaffoldState::onNavigationClick
+                    )
+                    sponsorsNavGraph(
+                        showNavigationIcon,
+                        kaigiAppScaffoldState::onNavigationClick
                     )
                 }
             }
@@ -204,6 +236,10 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         navController.popBackStack()
     }
 
+    fun onStaffListClick() {
+        navController.navigate(StaffNavGraph.staffRoute)
+    }
+
     private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)
     val selectedDrawerItem get() = _selectedDrawerItem.value
 
@@ -225,13 +261,13 @@ enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: 
         AnnouncementNavGraph.announcementRoute
     ),
     Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(R.string.title_sponsors, Icons.Default.Business, ""),
+    Sponsors(R.string.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
     Contributors(
         R.string.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(R.string.title_setting, Icons.Default.Settings, "");
+    Setting(R.string.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
@@ -251,25 +287,72 @@ fun ColumnScope.DrawerSheetContent(
         contentDescription = null,
         modifier = Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp)
     )
-    DrawerItem.values().forEach { drawerItem ->
-        NavigationDrawerItem(
-            icon = {
-                Icon(imageVector = drawerItem.icon, contentDescription = null)
-            },
-            label = {
-                Text(stringResource(drawerItem.titleResId))
-            },
-            selected = drawerItem == selectedDrawerItem,
-            onClick = {
-                onClickDrawerItem(drawerItem)
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
-            Divider(
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
+        DrawerItem.values().forEach { drawerItem ->
+            NavigationDrawerItem(
+                icon = {
+                    Icon(imageVector = drawerItem.icon, contentDescription = null)
+                },
+                label = {
+                    Text(stringResource(drawerItem.titleResId))
+                },
+                selected = drawerItem == selectedDrawerItem,
+                onClick = {
+                    onClickDrawerItem(drawerItem)
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
+            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun rememberKaigiExternalNavigationController(): KaigiExternalNavigationController {
+    val context = LocalContext.current
+    return remember(context) {
+        KaigiExternalNavigationController(
+            context,
+        )
+    }
+}
+
+class KaigiExternalNavigationController(
+    private val context: Context,
+) {
+
+    fun navigate(
+        url: String,
+        packageName: String? = null,
+    ) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            if (packageName != null) {
+                intent.setPackage(packageName)
+            }
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            navigateToCustomTab(
+                url = url,
+                context = context,
+            )
+        }
+    }
+
+    private fun navigateToCustomTab(url: String, context: Context) {
+        val uri = Uri.parse(url)
+        CustomTabsIntent.Builder().also { builder ->
+            builder.setShowTitle(true)
+            builder.build().also {
+                it.launchUrl(context, uri)
+            }
         }
     }
 }

@@ -11,7 +11,6 @@ dependencies {
     testImplementation(projects.coreTesting)
 
     implementation(libs.accompanistPager)
-    implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxActivityCompose)
     implementation(libs.androidxCoreKtx)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)

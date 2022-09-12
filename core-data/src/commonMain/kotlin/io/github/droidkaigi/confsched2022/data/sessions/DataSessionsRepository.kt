@@ -13,13 +13,13 @@ import kotlinx.coroutines.launch
 class DataSessionsRepository(
     val sessionsApi: SessionsApi,
     private val sessionsDao: SessionsDao,
-    private val favoriteSessionsDataStore: SettingsDatastore
+    private val settingsDatastore: SettingsDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
         launch { refresh() }
         combine(
             sessionsDao.selectAll(),
-            favoriteSessionsDataStore.favoriteSessionIds(),
+            settingsDatastore.favoriteSessionIds(),
             ::Pair
         )
             .collect { (timetable, favoriteSessionIds) ->
@@ -38,9 +38,9 @@ class DataSessionsRepository(
 
     override suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean) {
         if (favorite) {
-            favoriteSessionsDataStore.addFavorite(sessionId.value)
+            settingsDatastore.addFavorite(sessionId.value)
         } else {
-            favoriteSessionsDataStore.removeFavorite(sessionId.value)
+            settingsDatastore.removeFavorite(sessionId.value)
         }
     }
 }

@@ -1,0 +1,5 @@
+<resources>
+    <string name="setting_title">設定</string>
+    <string name="setting_item_dark_mode">ダークモード</string>
+    <string name="setting_item_language">言語設定</string>
+</resources>

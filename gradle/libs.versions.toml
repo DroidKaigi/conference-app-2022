@@ -25,7 +25,7 @@ ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
 ktor = "2.1.1"
 kotlinxCoroutines = "1.6.4"
-zipline = "0.9.1"
+zipline = "0.9.4"
 ziplineSnapshot = "1.0.0-SNAPSHOT"
 okHttp = "4.10.0"
 sqldelight = "1.5.3"
@@ -44,6 +44,7 @@ kluent = "1.68"
 coilCompose="2.2.1"
 koin = "3.2.0"
 androidXChromeCustomTabs = "1.4.0"
+detekt = '1.21.0'
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -58,6 +59,7 @@ ziplineKotlinPlugin = { module = "app.cash.zipline:zipline-kotlin-plugin", versi
 ziplineGradlePlugin = { module = "app.cash.zipline:zipline-gradle-plugin", version.ref = "zipline" }
 firebasePlugin = { module = "com.google.gms:google-services", version.ref = "firebasePlugin" }
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -133,3 +135,4 @@ androidGradleLibraryPlugin = { id = "com.android.library", version.ref = "androi
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hiltGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 sqldelightGradlePlugin = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
+detektPlugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
