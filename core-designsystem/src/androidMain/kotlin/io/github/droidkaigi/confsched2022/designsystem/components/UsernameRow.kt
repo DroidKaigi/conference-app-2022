@@ -40,7 +40,7 @@ fun UsernameRow(
 
         AsyncImage(
             model = iconUrl,
-            contentDescription = username,
+            contentDescription = null,
             alignment = Alignment.Center,
             contentScale = ContentScale.Fit,
             modifier = Modifier
