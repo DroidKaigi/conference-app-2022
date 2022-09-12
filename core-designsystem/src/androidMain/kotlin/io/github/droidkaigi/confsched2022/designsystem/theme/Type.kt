@@ -53,7 +53,7 @@ val Typography = Typography(
     ),
     headlineLarge = TextStyle(
         fontSize = 32.sp,
-        fontFamily = robotoFonts,
+        fontFamily = montserratFonts,
         fontWeight = FontWeight.W500,
         fontStyle = FontStyle.Normal,
         lineHeight = 40.sp,
@@ -74,14 +74,14 @@ val Typography = Typography(
     ),
     titleLarge = TextStyle(
         fontSize = 22.sp,
-        fontFamily = robotoMediumFonts,
+        fontFamily = montserratFonts,
         fontWeight = FontWeight.W500,
         fontStyle = FontStyle.Normal,
         lineHeight = 28.sp,
     ),
     titleMedium = TextStyle(
         fontSize = 16.sp,
-        fontFamily = robotoMediumFonts,
+        fontFamily = montserratFonts,
         fontWeight = FontWeight.W600,
         fontStyle = FontStyle.Normal,
         lineHeight = 24.sp,

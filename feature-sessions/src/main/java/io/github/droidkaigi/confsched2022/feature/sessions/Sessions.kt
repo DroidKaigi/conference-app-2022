@@ -216,6 +216,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
+                            .padding(start = 1.dp, end = 1.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),
