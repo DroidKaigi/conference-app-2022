@@ -34,7 +34,6 @@ fun Announcement(
                 title = {
                     Text(
                         text = stringResource(id = string.announcement_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
             )

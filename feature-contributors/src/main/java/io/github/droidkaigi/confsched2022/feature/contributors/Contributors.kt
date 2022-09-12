@@ -53,7 +53,6 @@ fun Contributors(
                 title = {
                     Text(
                         text = stringResource(id = R.string.contributors_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
             )
