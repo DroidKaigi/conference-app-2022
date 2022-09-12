@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.designsystem.theme
+package io.github.droidkaigi.confsched2022.designsystem.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
