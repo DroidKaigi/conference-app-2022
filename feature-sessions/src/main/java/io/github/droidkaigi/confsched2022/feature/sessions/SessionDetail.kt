@@ -315,13 +315,7 @@ fun SessionScheduleInfo(
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = LocalContext.current.getString(
-                R.string.session_schedule,
-                month,
-                day,
-                sessionStartDateTime.toTime(),
-                sessionEndDateTime.toTime()
-            ),
+            text = "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}",
             style = MaterialTheme.typography.labelMedium,
         )
     }
