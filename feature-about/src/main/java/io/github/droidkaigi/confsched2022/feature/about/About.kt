@@ -85,7 +85,6 @@ fun About(
                 title = {
                     Text(
                         text = stringResource(id = string.about_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
             )
