@@ -36,7 +36,7 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
-        return .run { subscriber in
+        return .run { @MainActor subscriber in
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
                     .refreshResponse(
