@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 
@@ -59,7 +60,7 @@ fun TimetableItem(
                     .weight(weight = 1f, fill = false)
                     .fillMaxWidth(),
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleMedium.copy(
+                style = KaigiTheme.typography.titleMedium.copy(
                     letterSpacing = 0.1.sp
                 )
             )

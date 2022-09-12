@@ -1,8 +1,12 @@
 package io.github.droidkaigi.confsched2022.designsystem.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColorScheme(
@@ -35,12 +39,26 @@ private val DarkColorPalette = darkColorScheme(
 fun KaigiTheme(
     // Currently, we are not supporting light theme
 //    darkTheme: Boolean = isSystemInDarkTheme(),
+    typography: KaigiTypography = getNormalKaigiTypography(),
     content: @Composable () -> Unit
 ) {
-    MaterialTheme(
-        colorScheme = DarkColorPalette,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalKaigiTypography provides typography,
+    ) {
+        MaterialTheme(
+            colorScheme = DarkColorPalette,
+            typography = typography.typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 }
+
+object KaigiTheme {
+    val typography: Typography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalKaigiTypography.current.typography
+}
+
+internal val LocalKaigiTypography = staticCompositionLocalOf { getNormalKaigiTypography() }

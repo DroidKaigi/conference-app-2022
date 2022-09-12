@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,7 +52,7 @@ fun Contributors(
                 title = {
                     Text(
                         text = stringResource(id = R.string.contributors_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = KaigiTheme.typography.titleLarge,
                     )
                 },
             )

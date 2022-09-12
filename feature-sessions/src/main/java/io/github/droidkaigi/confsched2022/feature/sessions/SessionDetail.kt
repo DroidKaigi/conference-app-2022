@@ -353,7 +353,7 @@ fun SessionScheduleInfo(
         Spacer(modifier = Modifier.size(8.dp))
         Text(
             text = "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}",
-            style = MaterialTheme.typography.labelMedium,
+            style = KaigiTheme.typography.labelMedium,
         )
     }
 }
@@ -373,7 +373,7 @@ fun SessionDetailSessionInfo(
         Text(
             modifier = Modifier,
             text = title,
-            style = MaterialTheme.typography.headlineSmall,
+            style = KaigiTheme.typography.headlineSmall,
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
@@ -413,7 +413,7 @@ fun SessionDetailDescription(
                     isReadMore = true
                 },
             text = description,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KaigiTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
             overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
             onTextLayout = { result ->
@@ -427,7 +427,7 @@ fun SessionDetailDescription(
                     isReadMore = true
                 },
                 text = stringResource(id = R.string.session_description_read_more_text),
-                style = MaterialTheme.typography.bodyMedium,
+                style = KaigiTheme.typography.bodyMedium,
                 color = Color(0xFF6EFD9E),
             )
         }
@@ -444,7 +444,7 @@ fun SessionDetailTargetAudience(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.session_target_audience),
-            style = MaterialTheme.typography.bodyLarge,
+            style = KaigiTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.padding(16.dp))
@@ -452,7 +452,7 @@ fun SessionDetailTargetAudience(
         Text(
             modifier = Modifier,
             text = targetAudience,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KaigiTheme.typography.bodyMedium,
         )
 
         Spacer(modifier = Modifier.padding(16.dp))
@@ -468,7 +468,7 @@ fun SessionDetailSpeakers(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.session_speaker),
-            style = MaterialTheme.typography.bodyLarge,
+            style = KaigiTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.padding(16.dp))
@@ -494,7 +494,7 @@ fun SessionDetailSpeakers(
                     Text(
                         modifier = Modifier,
                         text = speaker.name,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KaigiTheme.typography.bodyLarge,
                     )
                 }
                 Spacer(
@@ -524,7 +524,7 @@ fun SessionDetailAssets(
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.session_material),
-            style = MaterialTheme.typography.bodyLarge,
+            style = KaigiTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.padding(16.dp))
@@ -580,7 +580,7 @@ private fun SessionDetailAssetsItem(
         Text(
             modifier = Modifier,
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KaigiTheme.typography.bodyMedium,
         )
     }
 }

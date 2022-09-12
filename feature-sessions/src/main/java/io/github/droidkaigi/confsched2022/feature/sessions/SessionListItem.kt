@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
@@ -50,7 +51,7 @@ fun SessionListItem(
                 modifier = Modifier,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = maxTitleLines,
-                style = MaterialTheme.typography.titleLarge
+                style = KaigiTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(10.dp))
             Row {

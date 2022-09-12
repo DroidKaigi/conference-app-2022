@@ -82,7 +82,10 @@ fun KaigiApp(
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
 ) {
-    KaigiTheme {
+    KaigiTheme(
+        // NOTE: If you want to switch typography, set it here
+        // typography = getNormalKaigi2Typography()
+    ) {
         CompositionLocalProvider(
             LocalShareManager provides AndroidShareManager(LocalContext.current),
             LocalCalendarRegistration provides AndroidCalendarRegistration(LocalContext.current),

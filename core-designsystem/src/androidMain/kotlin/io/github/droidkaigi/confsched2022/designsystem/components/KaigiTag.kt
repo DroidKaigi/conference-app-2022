@@ -17,12 +17,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @Composable
 fun KaigiTag(
     modifier: Modifier = Modifier,
     labelColor: Color = Color.White,
-    labelTextStyle: TextStyle = MaterialTheme.typography.labelMedium,
+    labelTextStyle: TextStyle = KaigiTheme.typography.labelMedium,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.16f),
     label: @Composable RowScope.() -> Unit,
 ) {

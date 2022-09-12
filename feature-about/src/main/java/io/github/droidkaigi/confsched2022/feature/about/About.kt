@@ -85,7 +85,7 @@ fun About(
                 title = {
                     Text(
                         text = stringResource(id = string.about_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = KaigiTheme.typography.titleLarge,
                     )
                 },
             )
@@ -129,7 +129,7 @@ fun About(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = KaigiTheme.typography.headlineLarge,
                     text = stringResource(id = string.about_title)
                 )
                 Text(
@@ -201,12 +201,12 @@ fun About(
             ) {
                 Text(
                     text = "アプリバージョン",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = KaigiTheme.typography.bodyMedium
                 )
                 if (versionName != null) {
                     Text(
                         text = versionName,
-                        style = MaterialTheme.typography.labelLarge
+                        style = KaigiTheme.typography.labelLarge
                     )
                 }
             }
@@ -237,7 +237,7 @@ private fun AuxiliaryInformationRow(
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            style = KaigiTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
             text = stringResource(id = textResId)
         )
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @Composable
 fun SettingScreenRoot(
@@ -46,7 +47,7 @@ fun Setting(
                 title = {
                     Text(
                         text = stringResource(id = R.string.setting_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = KaigiTheme.typography.titleLarge,
                     )
                 },
             )
