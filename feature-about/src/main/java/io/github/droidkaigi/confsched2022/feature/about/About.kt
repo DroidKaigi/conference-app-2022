@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +21,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -248,14 +248,13 @@ private fun ExternalServiceImage(
     serviceType: ExternalServices,
     onClick: () -> Unit,
 ) {
-    Image(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(12.dp)
-            .size(24.dp),
-        imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
-        contentDescription = serviceType.contentDescription,
-    )
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
+            contentDescription = serviceType.contentDescription,
+            tint = Color.Unspecified,
+        )
+    }
 }
 
 private fun versionName(context: Context) = runCatching {
