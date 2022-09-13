@@ -144,8 +144,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     contributorReducer.pullback(
         state: \.contributorState,
         action: /AppAction.contributor,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
         }
     ),
     settingReducer.pullback(
