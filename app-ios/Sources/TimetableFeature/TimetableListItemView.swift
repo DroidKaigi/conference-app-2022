@@ -1,3 +1,4 @@
+import appioscombined
 import SwiftUI
 import Assets
 import Theme
@@ -16,25 +17,27 @@ struct TimetableListItemView: View {
                     .font(Font.system(size: 22, weight: .medium, design: .default))
                     .foregroundColor(AssetColors.onBackground.swiftUIColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                // FIXME: get speakers' info correctly
+//                if let session = item as? TimetableItem.Session,
+//                   session.speakers.isEmpty == false {
+//                    HStack {
+//                        ForEach(session.speakers, id: \.self) { speaker in
+//                            PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
+//                        }
+//                    }
+//                }
                 HStack {
-                    Text(item.room.name.jaTitle)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
-                        .foregroundColor(AssetColors.white.swiftUIColor)
-                        .background(
-                            Capsule(style: .circular)
-                                .foregroundColor(item.room.roomColor)
-                        )
-                    Text("\(minute)min")
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
-                        .foregroundColor(AssetColors.onSurface.swiftUIColor)
-                        .background(
-                            Capsule(style: .circular)
-                                .foregroundColor(AssetColors.secondaryContainer.swiftUIColor)
-                        )
+                    CapsuleText(
+                        text: item.room.name.jaTitle,
+                        foregroundColor: AssetColors.white.swiftUIColor,
+                        backgroundColor: item.room.roomColor
+                    )
+                    CapsuleText(
+                        text: "\(minute)min",
+                        foregroundColor: AssetColors.onSurface.swiftUIColor,
+                        backgroundColor: AssetColors.secondaryContainer.swiftUIColor
+                    )
                 }
-                .font(Font.system(size: 12, weight: .medium, design: .default))
             }
             Button {
                 // TODO: setFavorite
