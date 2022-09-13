@@ -1,7 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -43,11 +41,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.feature.about.R.string
+import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun AboutScreenRoot(
@@ -84,7 +84,7 @@ fun About(
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = string.about_top_app_bar_title),
+                        text = stringResource(Strings.about_top_app_bar_title),
                     )
                 },
             )
@@ -131,13 +131,13 @@ fun About(
             ) {
                 Text(
                     style = MaterialTheme.typography.headlineLarge,
-                    text = stringResource(id = string.about_title)
+                    text = stringResource(Strings.about_title)
                 )
                 Text(
                     style = TextStyle(
                         fontSize = 16.sp
                     ),
-                    text = stringResource(id = string.about_description)
+                    text = stringResource(Strings.about_description)
                 )
             }
 
@@ -159,11 +159,10 @@ fun About(
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                val context = LocalContext.current
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
-                    textResId = string.about_access,
+                    textRes = Strings.about_access,
                     onClick = {
                         onLinkClick(googleMapUrl, null)
                     }
@@ -171,13 +170,13 @@ fun About(
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Person,
-                    textResId = string.about_staff,
+                    textRes = Strings.about_staff,
                     onClick = onStaffListClick
                 )
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.PrivacyTip,
-                    textResId = string.about_privacy,
+                    textRes = Strings.about_privacy,
                     onClick = {
                         // TODO: Implement privacy policy
                     }
@@ -185,7 +184,7 @@ fun About(
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
-                    textResId = string.about_license,
+                    textRes = Strings.about_license,
                     onClick = {
                         // TODO: Implement license
                     }
@@ -201,7 +200,7 @@ fun About(
                     .semantics(mergeDescendants = true) {}
             ) {
                 Text(
-                    text = "アプリバージョン",
+                    text = stringResource(Strings.about_app_version),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 if (versionName != null) {
@@ -219,7 +218,7 @@ fun About(
 private fun AuxiliaryInformationRow(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
-    @StringRes textResId: Int,
+    textRes: StringResource,
     onClick: () -> Unit
 ) {
     Row(
@@ -239,7 +238,7 @@ private fun AuxiliaryInformationRow(
 
         Text(
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            text = stringResource(id = textResId)
+            text = stringResource(textRes)
         )
     }
 }
