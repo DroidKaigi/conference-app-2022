@@ -6,7 +6,7 @@ struct PersonLabel: View {
     let iconUrl: String
 
     var body: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 8) {
             AsyncImage(
                 url: URL(string: iconUrl),
                 content: { image in

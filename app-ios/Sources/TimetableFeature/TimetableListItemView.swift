@@ -12,7 +12,7 @@ struct TimetableListItemView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(item.title.jaTitle)
                     .multilineTextAlignment(.leading)
                     .font(Font.system(size: 22, weight: .medium, design: .default))
@@ -20,13 +20,13 @@ struct TimetableListItemView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if let session = item as? TimetableItem.Session,
                    session.speakers.isEmpty == false {
-                    HStack {
+                    HStack(spacing: 8) {
                         ForEach(session.speakers, id: \.self) { speaker in
                             PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
                         }
                     }
                 }
-                HStack {
+                HStack(spacing: 8) {
                     CapsuleText(
                         text: item.room.name.jaTitle,
                         foregroundColor: AssetColors.white.swiftUIColor,
