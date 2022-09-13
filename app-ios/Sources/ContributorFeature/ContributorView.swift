@@ -41,7 +41,6 @@ public let contributorReducer = Reducer<ContributorState, ContributorAction, Con
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case .refreshResponse(.success(let contributors)):
-        print("\(contributors.count) contributors")
         state.contributors = contributors
         return .none
     case .refreshResponse(.failure):
