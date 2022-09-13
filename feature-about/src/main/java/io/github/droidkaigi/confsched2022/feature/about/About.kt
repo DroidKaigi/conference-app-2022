@@ -47,9 +47,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.strings.Strings
-import io.github.droidkaigi.confsched2022.feature.about.R.string
 
 @Composable
 fun AboutScreenRoot(
