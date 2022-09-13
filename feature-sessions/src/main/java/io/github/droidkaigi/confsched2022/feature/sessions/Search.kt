@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -201,11 +200,9 @@ private fun SearchedItem(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
-    var contentHeight = 100.dp
     Box(
         modifier = modifier
             .wrapContentHeight()
-            .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
@@ -240,16 +237,8 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = timeTable.title.currentLangTitle,
-                            onTextLayout = {
-                                if (it.lineCount > 2) {
-                                    contentHeight = 140.dp
-                                }
-                            }
-                        )
-
-                        Text("${timeTable.startsTimeString} 〜")
+                        Text(text = timeTable.title.currentLangTitle)
+                        Text(text = "${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
