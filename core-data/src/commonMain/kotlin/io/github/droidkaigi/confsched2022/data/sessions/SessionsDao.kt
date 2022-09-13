@@ -6,8 +6,8 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.droidkaigi.confsched2022.data.Database
 import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.TimetableItemSession
-import io.github.droidkaigi.confsched2022.data.TimetableItemSpeakerCrossRef
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpeaker
+import io.github.droidkaigi.confsched2022.data.TimetableItemSpeakerCrossRef
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpecial
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.Timetable
