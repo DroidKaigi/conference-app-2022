@@ -80,8 +80,10 @@ private fun SearchScreen(
     KaigiScaffold(
         modifier = modifier,
         topBar = {},
-        content = {
-            Column {
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {

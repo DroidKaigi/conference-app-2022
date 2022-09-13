@@ -170,47 +170,49 @@ fun SessionDetailScreen(
                 )
             }
         },
-    ) {
-        when (uiState) {
-            is Error -> TODO()
-            Loading ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            is Success -> {
-                val (item, _) = uiState.value
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiState) {
+                is Error -> TODO()
+                Loading ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                is Success -> {
+                    val (item, _) = uiState.value
 
-                Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp)
-                ) {
-                    SessionDetailSessionInfo(
-                        title = item.title.currentLangTitle,
-                        startsAt = item.startsAt,
-                        endsAt = item.endsAt,
-                        room = item.room,
-                        category = item.category,
-                        language = item.language,
-                        levels = item.levels,
-                    )
-
-                    if (item is Session)
-                        SessionDetailDescription(
-                            description = item.description
+                    Column(
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        SessionDetailSessionInfo(
+                            title = item.title.currentLangTitle,
+                            startsAt = item.startsAt,
+                            endsAt = item.endsAt,
+                            room = item.room,
+                            category = item.category,
+                            language = item.language,
+                            levels = item.levels,
                         )
 
-                    SessionDetailTargetAudience(
-                        targetAudience = item.targetAudience
-                    )
+                        if (item is Session)
+                            SessionDetailDescription(
+                                description = item.description
+                            )
 
-                    if (item is Session)
-                        SessionDetailSpeakers(
-                            speakers = item.speakers,
+                        SessionDetailTargetAudience(
+                            targetAudience = item.targetAudience
                         )
-                    SessionDetailAssets(
-                        asset = item.asset
-                    )
+
+                        if (item is Session)
+                            SessionDetailSpeakers(
+                                speakers = item.speakers,
+                            )
+                        SessionDetailAssets(
+                            asset = item.asset
+                        )
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.feature.sponsors
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,8 +42,13 @@ fun Sponsors(
                 }
             )
         }
-    ) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    ) { innerPadding ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
+        ) {
             Text(text = "Coming Soon...")
         }
     }

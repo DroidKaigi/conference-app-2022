@@ -89,9 +89,11 @@ fun About(
                 },
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
