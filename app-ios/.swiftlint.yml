@@ -3,8 +3,15 @@ disabled_rules:
   - type_name
   - trailing_comma
 
+opt_in_rules:
+  - file_header
+
 excluded:
   - .build
 
 identifier_name:
   min_length: 2
+
+file_header:
+  severity: error
+  forbidden_pattern: ^(?!// Workaround:)

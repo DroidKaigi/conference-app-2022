@@ -1,13 +1,13 @@
 import appioscombined
 
 public enum TimetableItemType: Identifiable, Equatable {
-    case general(TimetableItem, Int)
+    case general(TimetableItemWithFavorite, Int)
     case spacing(Int)
 
     public var id: String {
         switch self {
         case let .general(item, _):
-            return item.id.value
+            return item.timetableItem.id.value
         case .spacing:
             return UUID().uuidString
         }

@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.feature.announcement.R.string
 
 @Composable
@@ -34,7 +34,6 @@ fun Announcement(
                 title = {
                     Text(
                         text = stringResource(id = string.announcement_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
             )

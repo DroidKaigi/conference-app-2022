@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.components.UsernameRow
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.model.Staff
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -53,7 +52,6 @@ fun Staff(
                 title = {
                     Text(
                         text = stringResource(id = R.string.staff_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge
                     )
                 },
             )

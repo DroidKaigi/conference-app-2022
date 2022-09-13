@@ -49,8 +49,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode.Expand
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
@@ -72,6 +72,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.util.Locale
 
 @Composable
 fun SessionDetailScreenRoot(
@@ -159,56 +160,16 @@ fun SessionDetailScreen(
             if (uiState is Success) {
                 val (item, isFavorite) = uiState.value
 
-                BottomAppBar {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            IconButton(onClick = { onShareClick(item) }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_share),
-                                    contentDescription = "share",
-                                )
-                            }
-                            IconButton(onClick = onNavigateFloorMapClick) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_02),
-                                    contentDescription = "go to floor map",
-                                )
-                            }
-                            IconButton(onClick = { onRegisterCalendarClick(item) }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_today),
-                                    contentDescription = "register calendar",
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.weight(1F))
-
-                        FloatingActionButton(
-                            onClick = {
-                                onFavoriteClick(isFavorite)
-                            }
-                        ) {
-                            if (isFavorite) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_bookmark_filled),
-                                    contentDescription = "favorite"
-                                )
-                            } else {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_bookmark),
-                                    contentDescription = "not favorite"
-                                )
-                            }
-                        }
-                    }
-                }
+                SessionDetailBottomAppBar(
+                    item = item,
+                    isFavorite = isFavorite,
+                    onFavoriteClick = onFavoriteClick,
+                    onShareClick = onShareClick,
+                    onNavigateFloorMapClick = onNavigateFloorMapClick,
+                    onRegisterCalendarClick = onRegisterCalendarClick,
+                )
             }
-        }
+        },
     ) {
         when (uiState) {
             is Error -> TODO()
@@ -249,6 +210,65 @@ fun SessionDetailScreen(
                         )
                     SessionDetailAssets(
                         asset = item.asset
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SessionDetailBottomAppBar(
+    item: TimetableItem,
+    isFavorite: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
+    onShareClick: (TimetableItem) -> Unit,
+    onNavigateFloorMapClick: () -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit,
+) {
+    BottomAppBar {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(onClick = { onShareClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_share),
+                        contentDescription = "share",
+                    )
+                }
+                IconButton(onClick = onNavigateFloorMapClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_02),
+                        contentDescription = "go to floor map",
+                    )
+                }
+                IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_today),
+                        contentDescription = "register calendar",
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1F))
+
+            FloatingActionButton(
+                onClick = {
+                    onFavoriteClick(isFavorite)
+                }
+            ) {
+                if (isFavorite) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                        contentDescription = "favorite"
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark),
+                        contentDescription = "not favorite"
                     )
                 }
             }
@@ -308,9 +328,19 @@ fun SessionScheduleInfo(
 
     fun LocalDateTime.toTime() = "$hour:${minute.toString().padStart(2, '0')}"
 
-    val sessionSchedule =
-        "${sessionStartDateTime.monthNumber}月 ${sessionStartDateTime.dayOfMonth}日 " +
-            "${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+    val japanese = "ja"
+
+    val month = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.monthNumber}月"
+    } else {
+        sessionStartDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+    }
+
+    val day = if (Locale.getDefault().language == japanese) {
+        "${sessionStartDateTime.dayOfMonth}日"
+    } else {
+        "${sessionStartDateTime.dayOfMonth}th"
+    }
 
     Row(
         modifier = modifier,
@@ -322,7 +352,7 @@ fun SessionScheduleInfo(
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-            text = sessionSchedule,
+            text = "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}",
             style = MaterialTheme.typography.labelMedium,
         )
     }
