@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 Color.TRANSPARENT
             } else {
+                // Make it easy to see navigation buttons for older OS versions
                 Color.argb((255 * 0.5).toInt(), 0, 0, 0)
             }
 
