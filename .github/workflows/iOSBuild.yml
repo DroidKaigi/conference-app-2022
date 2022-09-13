@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework/
+          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework/
   build-ios:
     needs: build-kmm-module
     runs-on: macos-12
