@@ -162,6 +162,7 @@ fun About(
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 val context = LocalContext.current
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
+                val codeConductUrl = "https://portal.droidkaigi.jp/about/code-of-conduct"
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textResId = string.about_access,
@@ -199,7 +200,7 @@ fun About(
                         CustomTabsIntent.Builder().also { builder ->
                             builder.setShowTitle(true)
                             builder.build().also {
-                                it.launchUrl(context, Uri.parse("https://portal.droidkaigi.jp/about/code-of-conduct"))
+                                it.launchUrl(context, Uri.parse(codeConductUrl))
                             }
                         }
                     }
