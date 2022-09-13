@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework/
+          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework/
   build-ios:
     needs: build-kmm-module
     runs-on: macos-12
@@ -36,7 +36,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework
+          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework
       - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
         working-directory: app-ios
         run: |

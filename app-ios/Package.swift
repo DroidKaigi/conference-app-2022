@@ -167,7 +167,7 @@ var package = Package(
         ),
         .binaryTarget(
             name: "appioscombined",
-            path: "../app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework"
+            path: "../app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework"
         ),
         .plugin(
             name: "SwiftLintPlugin",
