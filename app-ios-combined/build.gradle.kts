@@ -36,6 +36,7 @@ kotlin {
                 }
             }
         }
+
         val commonMain by getting {
             dependencies {
                 projects.forEach {

@@ -49,8 +49,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode.Expand
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
@@ -160,96 +160,117 @@ fun SessionDetailScreen(
             if (uiState is Success) {
                 val (item, isFavorite) = uiState.value
 
-                BottomAppBar {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                SessionDetailBottomAppBar(
+                    item = item,
+                    isFavorite = isFavorite,
+                    onFavoriteClick = onFavoriteClick,
+                    onShareClick = onShareClick,
+                    onNavigateFloorMapClick = onNavigateFloorMapClick,
+                    onRegisterCalendarClick = onRegisterCalendarClick,
+                )
+            }
+        },
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiState) {
+                is Error -> TODO()
+                Loading ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                is Success -> {
+                    val (item, _) = uiState.value
+
+                    Column(
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            IconButton(onClick = { onShareClick(item) }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_share),
-                                    contentDescription = "share",
-                                )
-                            }
-                            IconButton(onClick = onNavigateFloorMapClick) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_02),
-                                    contentDescription = "go to floor map",
-                                )
-                            }
-                            IconButton(onClick = { onRegisterCalendarClick(item) }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_today),
-                                    contentDescription = "register calendar",
-                                )
-                            }
-                        }
+                        SessionDetailSessionInfo(
+                            title = item.title.currentLangTitle,
+                            startsAt = item.startsAt,
+                            endsAt = item.endsAt,
+                            room = item.room,
+                            category = item.category,
+                            language = item.language,
+                            levels = item.levels,
+                        )
 
-                        Spacer(modifier = Modifier.weight(1F))
+                        if (item is Session)
+                            SessionDetailDescription(
+                                description = item.description
+                            )
 
-                        FloatingActionButton(
-                            onClick = {
-                                onFavoriteClick(isFavorite)
-                            }
-                        ) {
-                            if (isFavorite) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_bookmark_filled),
-                                    contentDescription = "favorite"
-                                )
-                            } else {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_bookmark),
-                                    contentDescription = "not favorite"
-                                )
-                            }
-                        }
+                        SessionDetailTargetAudience(
+                            targetAudience = item.targetAudience
+                        )
+
+                        if (item is Session)
+                            SessionDetailSpeakers(
+                                speakers = item.speakers,
+                            )
+                        SessionDetailAssets(
+                            asset = item.asset
+                        )
                     }
                 }
             }
         }
-    ) {
-        when (uiState) {
-            is Error -> TODO()
-            Loading ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun SessionDetailBottomAppBar(
+    item: TimetableItem,
+    isFavorite: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
+    onShareClick: (TimetableItem) -> Unit,
+    onNavigateFloorMapClick: () -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit,
+) {
+    BottomAppBar {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(onClick = { onShareClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_share),
+                        contentDescription = "share",
+                    )
                 }
-            is Success -> {
-                val (item, _) = uiState.value
-
-                Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp)
-                ) {
-                    SessionDetailSessionInfo(
-                        title = item.title.currentLangTitle,
-                        startsAt = item.startsAt,
-                        endsAt = item.endsAt,
-                        room = item.room,
-                        category = item.category,
-                        language = item.language,
-                        levels = item.levels,
+                IconButton(onClick = onNavigateFloorMapClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_02),
+                        contentDescription = "go to floor map",
                     )
-
-                    if (item is Session)
-                        SessionDetailDescription(
-                            description = item.description
-                        )
-
-                    SessionDetailTargetAudience(
-                        targetAudience = item.targetAudience
+                }
+                IconButton(onClick = { onRegisterCalendarClick(item) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_today),
+                        contentDescription = "register calendar",
                     )
+                }
+            }
 
-                    if (item is Session)
-                        SessionDetailSpeakers(
-                            speakers = item.speakers,
-                        )
-                    SessionDetailAssets(
-                        asset = item.asset
+            Spacer(modifier = Modifier.weight(1F))
+
+            FloatingActionButton(
+                onClick = {
+                    onFavoriteClick(isFavorite)
+                }
+            ) {
+                if (isFavorite) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                        contentDescription = "favorite"
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bookmark),
+                        contentDescription = "not favorite"
                     )
                 }
             }

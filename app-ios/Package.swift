@@ -26,8 +26,8 @@ var package = Package(
         .library(name: "Theme", targets: ["Theme"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.5.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.1"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
     ],
     targets: [
         .target(
