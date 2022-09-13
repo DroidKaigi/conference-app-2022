@@ -43,6 +43,7 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
 
 public struct SessionView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.openURL) var openURL
 
     private let store: Store<SessionState, SessionAction>
 
@@ -112,7 +113,7 @@ public struct SessionView: View {
                                 Image(systemName: "video")
                                     .padding(.trailing, 16)
                                 Button {
-                                    
+                                    self.openURL(URL(string: videoUrl)!)
                                 } label: {
                                     Text(L10n.Session.movie)
                                         .font(Font.system(size: 14, weight: .regular, design: .default))
@@ -126,7 +127,7 @@ public struct SessionView: View {
                                 Image(systemName: "photo.on.rectangle")
                                     .padding(.trailing, 16)
                                 Button {
-                                    
+                                    self.openURL(URL(string: slidesUrl)!)
                                 } label: {
                                     Text(L10n.Session.slides)
                                         .font(Font.system(size: 14, weight: .regular, design: .default))
