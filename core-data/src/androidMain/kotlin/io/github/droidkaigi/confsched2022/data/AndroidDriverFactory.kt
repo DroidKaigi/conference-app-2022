@@ -6,6 +6,6 @@ import com.squareup.sqldelight.db.SqlDriver
 
 class AndroidDriverFactory(private val context: Context) : DriverFactory {
     override fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(Database.Schema, context, "droidkaigi.db")
+        return AndroidSqliteDriver(DestructiveMigrationSchema, context, "droidkaigi.db")
     }
 }
