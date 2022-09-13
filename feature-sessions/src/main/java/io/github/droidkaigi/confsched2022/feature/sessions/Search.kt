@@ -62,8 +62,8 @@ fun SearchRoot(
     onItemClick: () -> Unit = {},
     onBookMarkClick: () -> Unit = {},
 ) {
-    val viewModel = hiltViewModel<SessionsViewModel>()
-    val state: SessionsUiModel by viewModel.uiModel
+    val viewModel = hiltViewModel<SearchViewModel>()
+    val state: SearchUiModel by viewModel.uiModel
     SearchScreen(
         modifier = modifier,
         uiModel = state,
@@ -74,7 +74,7 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen(
-    uiModel: SessionsUiModel,
+    uiModel: SearchUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -299,10 +299,8 @@ private fun FullScreenLoading(modifier: Modifier = Modifier) {
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        uiModel = SessionsUiModel(
-            state = Success(DroidKaigiSchedule.fake()),
-            isFilterOn = true,
-            isTimetable = true
+        uiModel = SearchUiModel(
+            state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
         onBookMarkClick = {},
