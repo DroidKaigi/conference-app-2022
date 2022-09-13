@@ -8,6 +8,7 @@ struct TimetableListItemView: View {
     let item: TimetableItem
     let isFavorite: Bool
     let minute: Int
+    let onFavoriteToggle: @Sendable (TimetableItemId, Bool) -> Void
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -40,7 +41,7 @@ struct TimetableListItemView: View {
                 }
             }
             Button {
-                // TODO: setFavorite
+                onFavoriteToggle(item.id, isFavorite)
             } label: {
                 (isFavorite ? Assets.bookmark.swiftUIImage : Assets.bookmarkBorder.swiftUIImage)
                     .frame(width: 24, height: 24)
@@ -59,7 +60,8 @@ struct TimetableListItemView_Previews: PreviewProvider {
             minute: calculateMinute(
                 startSeconds: Int(item.timetableItem.startsAt.epochSeconds),
                 endSeconds: Int(item.timetableItem.endsAt.epochSeconds)
-            )
+            ),
+            onFavoriteToggle: { _, _ in }
         )
     }
 }

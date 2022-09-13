@@ -74,7 +74,14 @@ struct TimetableListView: View {
                                 ForEach(timetableTimeGroupItems.items, id: \.timetableItem.id.value) { timetableItemWithFavorite in
                                     let item = timetableItemWithFavorite.timetableItem
                                     let isFavorite = timetableItemWithFavorite.isFavorited
-                                    TimetableListItemView(item: item, isFavorite: isFavorite, minute: timetableTimeGroupItems.minute)
+                                    TimetableListItemView(
+                                        item: item,
+                                        isFavorite: isFavorite,
+                                        minute: timetableTimeGroupItems.minute,
+                                        onFavoriteToggle: { id, currentIsFavorite in
+                                            viewStore.send(.setFavorite(id, currentIsFavorite))
+                                        }
+                                    )
                                 }
                             }
                         }
