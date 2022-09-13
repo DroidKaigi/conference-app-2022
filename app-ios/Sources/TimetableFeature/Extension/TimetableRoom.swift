@@ -9,6 +9,7 @@ extension TimetableRoom {
         case "Backdrop": return AssetColors.orange.swiftUIColor
         case "Cards": return AssetColors.blue.swiftUIColor
         case "Dialogs": return AssetColors.purple.swiftUIColor
+        case "Online": return AssetColors.purple.swiftUIColor
         default: return AssetColors.pink.swiftUIColor
         }
     }
