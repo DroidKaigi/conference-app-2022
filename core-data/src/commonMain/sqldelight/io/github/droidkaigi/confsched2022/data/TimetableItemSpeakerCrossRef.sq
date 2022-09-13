@@ -1,4 +1,4 @@
-CREATE TABLE timetableItemSessionSpeakers (
+CREATE TABLE timetableItemSpeakerCrossRef (
     id INTEGER PRIMARY KEY,
     sessionId TEXT NOT NULL,
     speakerId TEXT NOT NULL,
@@ -6,19 +6,19 @@ CREATE TABLE timetableItemSessionSpeakers (
     FOREIGN KEY(speakerId) REFERENCES timetableItemSpeaker(id)
 );
 
-CREATE INDEX timetableItemSessionSpeakers_id ON timetableItemSessionSpeakers(id);
+CREATE INDEX timetableItemSpeakerCrossRef_id ON timetableItemSpeakerCrossRef(id);
 
 selectSpeakers:
 SELECT C.id, C.name, C.iconUrl, C.bio, C.tagLine
-FROM timetableItemSession A INNER JOIN timetableItemSessionSpeakers B ON A.id = B.sessionId
+FROM timetableItemSession A INNER JOIN timetableItemSpeakerCrossRef B ON A.id = B.sessionId
 INNER JOIN timetableItemSpeaker C ON B.speakerId = C.id
 WHERE A.id = ?;
 
 insert:
-INSERT OR IGNORE INTO timetableItemSessionSpeakers (
+INSERT OR IGNORE INTO timetableItemSpeakerCrossRef (
     sessionId,
     speakerId
 ) VALUES ?;
 
 deleteAll:
-DELETE FROM timetableItemSessionSpeakers;
+DELETE FROM timetableItemSpeakerCrossRef;

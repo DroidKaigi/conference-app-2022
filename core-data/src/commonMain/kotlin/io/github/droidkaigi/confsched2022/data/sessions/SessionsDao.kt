@@ -6,7 +6,7 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.droidkaigi.confsched2022.data.Database
 import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.TimetableItemSession
-import io.github.droidkaigi.confsched2022.data.TimetableItemSessionSpeakers
+import io.github.droidkaigi.confsched2022.data.TimetableItemSpeakerCrossRef
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpeaker
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpecial
 import io.github.droidkaigi.confsched2022.model.MultiLangText
@@ -32,7 +32,7 @@ class SessionsDao(
     private val timetableItemSpeakerQueries = database.timetableItemSpeakerQueries
     private val timetableItemSpecialQueries = database.timetableItemSpecialQueries
     private val timetableItemSessionQueries = database.timetableItemSessionQueries
-    private val timetableItemSessionSpeakersQueries = database.timetableItemSessionSpeakersQueries
+    private val timetableItemSessionSpeakersQueries = database.timetableItemSpeakerCrossRefQueries
 
     fun selectAll(): Flow<Timetable> {
         val timetableItemSpeakers = timetableItemSpeakerQueries.selectAll().asFlow().mapToList()
@@ -69,7 +69,7 @@ class SessionsDao(
                             bio = speaker.bio,
                             tagLine = speaker.tagLine,
                         )
-                        val timetableItemSessionSpeakers = TimetableItemSessionSpeakers(
+                        val timetableItemSessionSpeakers = TimetableItemSpeakerCrossRef(
                             id = index.toLong(),
                             sessionId = timetableItem.id.value,
                             speakerId = speaker.id
