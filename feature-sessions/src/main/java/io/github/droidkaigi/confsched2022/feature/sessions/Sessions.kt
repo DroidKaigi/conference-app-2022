@@ -128,8 +128,12 @@ fun Sessions(
                 onToggleTimetableClick
             )
         }
-    ) {
-        Column(modifier = Modifier.padding(top = 4.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .padding(innerPadding)
+        ) {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
