@@ -235,8 +235,7 @@ public struct AppView: View {
                     )
                 )
                 .tabItem {
-                    Assets.droid.swiftUIImage
-                        .renderingMode(.template)
+                    Image(systemName: "questionmark.circle")
                     Text(L10n.About.title)
                 }
                 .tag(AppTab.about)
