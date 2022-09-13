@@ -18,15 +18,14 @@ struct TimetableListItemView: View {
                     .font(Font.system(size: 22, weight: .medium, design: .default))
                     .foregroundColor(AssetColors.onBackground.swiftUIColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                // FIXME: get speakers' info correctly
-//                if let session = item as? TimetableItem.Session,
-//                   session.speakers.isEmpty == false {
-//                    HStack {
-//                        ForEach(session.speakers, id: \.self) { speaker in
-//                            PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
-//                        }
-//                    }
-//                }
+                if let session = item as? TimetableItem.Session,
+                   session.speakers.isEmpty == false {
+                    HStack {
+                        ForEach(session.speakers, id: \.self) { speaker in
+                            PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
+                        }
+                    }
+                }
                 HStack {
                     CapsuleText(
                         text: item.room.name.jaTitle,
