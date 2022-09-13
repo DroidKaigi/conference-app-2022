@@ -1,5 +1,13 @@
 "Timetable.Title" = "Timetable";
 
+// Session
+"Session.ReadMore" = "続きを見る";
+"Session.TargetAudience" = "対象者";
+"Session.Speaker" = "スピーカー";
+"Session.Material" = "資料";
+"Session.Slides" = "スライド";
+"Session.Movie" = "MOVIE";
+
 // About
 "About.Title" = "DroidKaigiとは";
 "About.WhatIsDroidKaigi" = "What is DroidKaigi?";

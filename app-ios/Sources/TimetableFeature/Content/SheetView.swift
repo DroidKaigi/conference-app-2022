@@ -104,10 +104,14 @@ struct TimetableSheetView: View {
                                     Divider()
                                         .foregroundColor(AssetColors.surfaceVariant.swiftUIColor)
                                     ForEach(timetableItems) { item in
-                                        if case let .general(item, minutes) = item {
-                                            TimetableItemView(item: item)
+                                        switch item {
+                                        case .general(let itemWithFavorite, let minutes):
+                                            TimetableItemView(item: itemWithFavorite)
                                                 .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight)
-                                        } else if case let .spacing(minutes) = item {
+                                                .onTapGesture {
+                                                    viewStore.send(.selectItem(itemWithFavorite))
+                                                }
+                                        case .spacing(let minutes):
                                             Spacer()
                                                 .frame(maxHeight: CGFloat(minutes) * TimetableSheetView.minuteHeight)
                                         }

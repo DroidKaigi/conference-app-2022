@@ -158,15 +158,15 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     sessionReducer.optional().pullback(
         state: \.sessionState,
         action: /AppAction.session,
-        environment: {_ in
-            .init()
+        environment: {
+            .init(sessionsRepository: $0.sessionsRepository)
         }
     ),
     .init { state, action, _ in
         switch action {
         case let .timetable(.selectItem(item)):
             state.sessionState = .init(
-                timetableItem: item
+                timetableItemWithFavorite: item
             )
             return .none
         case .timetable:

@@ -8,6 +8,7 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
+    public var selectedItem: TimetableItemWithFavorite?
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
@@ -22,7 +23,7 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
-    case selectItem(TimetableItem)
+    case selectItem(TimetableItemWithFavorite)
 }
 
 public struct TimetableEnvironment {
@@ -57,7 +58,8 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .selectDay(day):
         state.selectedDay = day
         return .init(value: .refresh)
-    case .selectItem:
+    case .selectItem(let item):
+        state.selectedItem = item
         return .none
     }
 }
