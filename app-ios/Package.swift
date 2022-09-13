@@ -28,6 +28,7 @@ var package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
+        .package(url: "https://github.com/kean/Nuke", from: "11.2.1"),
     ],
     targets: [
         .target(
@@ -96,6 +97,7 @@ var package = Package(
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "NukeUI", package: "Nuke"),
             ]
         ),
         .target(
