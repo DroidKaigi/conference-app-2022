@@ -1,7 +1,9 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
+import android.net.Uri
 import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Person
@@ -186,6 +189,19 @@ fun About(
                     textResId = string.about_license,
                     onClick = {
                         // TODO: Implement license
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.DirectionsWalk,
+                    textResId = string.about_code_conduct,
+                    onClick = {
+                        CustomTabsIntent.Builder().also { builder ->
+                            builder.setShowTitle(true)
+                            builder.build().also {
+                                it.launchUrl(context, Uri.parse("https://portal.droidkaigi.jp/about/code-of-conduct"))
+                            }
+                        }
                     }
                 )
             }
