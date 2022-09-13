@@ -6,9 +6,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.github.droidkaigi.confsched2022.data.AndroidDriverFactory
-import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.DriverFactory
+import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import javax.inject.Singleton
 
@@ -37,6 +36,6 @@ class DaoModule {
     fun provideDriverFactory(
         @ApplicationContext context: Context
     ): DriverFactory {
-        return AndroidDriverFactory(context)
+        return DriverFactory(context)
     }
 }

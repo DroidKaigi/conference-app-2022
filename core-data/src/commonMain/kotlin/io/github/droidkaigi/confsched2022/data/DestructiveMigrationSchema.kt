@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022.data
 
 import com.squareup.sqldelight.db.SqlDriver
+import com.squareup.sqldelight.db.use
 
 object DestructiveMigrationSchema : SqlDriver.Schema by Database.Schema {
     override fun migrate(driver: SqlDriver, oldVersion: Int, newVersion: Int) {
