@@ -485,6 +485,7 @@ fun SessionDetailSpeakers(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape),
+                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
                         contentDescription = "Speaker Icon",
