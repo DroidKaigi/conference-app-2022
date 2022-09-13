@@ -43,9 +43,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -128,8 +128,12 @@ fun Sessions(
                 onToggleTimetableClick
             )
         }
-    ) {
-        Column(modifier = Modifier.padding(top = 4.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .padding(innerPadding)
+        ) {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
@@ -216,6 +220,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
+                            .padding(horizontal = 0.5.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
@@ -80,8 +79,10 @@ private fun SearchScreen(
     KaigiScaffold(
         modifier = modifier,
         topBar = {},
-        content = {
-            Column {
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
@@ -199,11 +200,9 @@ private fun SearchedItem(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
-    var contentHeight = 100.dp
     Box(
         modifier = modifier
             .wrapContentHeight()
-            .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
@@ -238,16 +237,8 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = timeTable.title.currentLangTitle,
-                            onTextLayout = {
-                                if (it.lineCount > 2) {
-                                    contentHeight = 140.dp
-                                }
-                            }
-                        )
-
-                        Text("${timeTable.startsTimeString} 〜")
+                        Text(text = timeTable.title.currentLangTitle)
+                        Text(text = "${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)

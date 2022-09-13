@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DroidKaigi"
         android:usesCleartextTraffic="true"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="33">
         <activity
             android:name="io.github.droidkaigi.confsched2022.MainActivity"

@@ -1,13 +1,12 @@
-package io.github.droidkaigi.confsched2022.designsystem.theme
+package io.github.droidkaigi.confsched2022.designsystem.components
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -15,7 +14,7 @@ fun KaigiScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit,
     bottomBar: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -26,13 +25,7 @@ fun KaigiScaffold(
             bottomBar()
         }
     ) { insetPadding ->
-        Row(
-            Modifier
-                .fillMaxSize()
-                .padding(insetPadding)
-        ) {
-            content()
-        }
+        content(insetPadding)
     }
 }
 

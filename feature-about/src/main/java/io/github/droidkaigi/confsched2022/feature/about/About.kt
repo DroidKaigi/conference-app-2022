@@ -43,11 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.strings.Strings
+import io.github.droidkaigi.confsched2022.feature.about.R.string
 
 @Composable
 fun AboutScreenRoot(
@@ -85,14 +87,15 @@ fun About(
                 title = {
                     Text(
                         text = stringResource(Strings.about_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
