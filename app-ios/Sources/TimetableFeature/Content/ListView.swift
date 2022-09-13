@@ -63,12 +63,13 @@ struct TimetableListView: View {
                         HStack(alignment: .top, spacing: 28) {
                             VStack(alignment: .center, spacing: 0) {
                                 Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.startsAt))!)
+                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
                                 Rectangle()
                                     .frame(width: 1, height: 4)
                                 Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.endsAt))!)
+                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
                             }
                             .foregroundColor(AssetColors.onBackground.swiftUIColor)
-                            .font(Font.system(size: 16, weight: .bold, design: .default))
                             VStack(spacing: 32) {
                                 ForEach(timetableTimeGroupItems.items, id: \.timetableItem.id.value) { timetableItemWithFavorite in
                                     let item = timetableItemWithFavorite.timetableItem
@@ -80,10 +81,12 @@ struct TimetableListView: View {
                         .padding(.horizontal, 16)
                     }
                 }
+                .padding(.vertical, 16)
             }
         }
     }
 
+    /// convert `Date` to `DateComponents` with hour and minute
     private func convertToDateComponents(_ date: Date) -> DateComponents {
         Calendar.current.dateComponents([.hour, .minute], from: date)
     }
