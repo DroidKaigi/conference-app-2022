@@ -350,7 +350,7 @@ fun SessionScheduleInfo(
     ) {
         Image(
             painterResource(id = R.drawable.ic_schedule),
-            contentDescription = "Schedule-Icon",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
