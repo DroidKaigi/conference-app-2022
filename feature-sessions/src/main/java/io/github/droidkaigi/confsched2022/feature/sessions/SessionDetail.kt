@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -49,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode.Expand
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
@@ -62,6 +62,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -428,7 +429,7 @@ fun SessionDetailDescription(
                 modifier = Modifier.clickable {
                     isReadMore = true
                 },
-                text = stringResource(id = R.string.session_description_read_more_text),
+                text = stringResource(Strings.session_description_read_more_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color(0xFF6EFD9E),
             )
@@ -445,7 +446,7 @@ fun SessionDetailTargetAudience(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_target_audience),
+            text = stringResource(Strings.session_target_audience),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -469,7 +470,7 @@ fun SessionDetailSpeakers(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_speaker),
+            text = stringResource(Strings.session_speaker),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -525,7 +526,7 @@ fun SessionDetailAssets(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_material),
+            text = stringResource(Strings.session_material),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -534,7 +535,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_video_cam),
-            text = stringResource(id = R.string.session_movie),
+            text = stringResource(Strings.session_movie),
             onClick = {
                 val videoUrl = asset.videoUrl
                 if (videoUrl != null) {
@@ -548,7 +549,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_photo_library),
-            text = stringResource(id = R.string.session_slide),
+            text = stringResource(Strings.session_slide),
             onClick = {
                 val slideUrl = asset.slideUrl
                 if (slideUrl != null) {
