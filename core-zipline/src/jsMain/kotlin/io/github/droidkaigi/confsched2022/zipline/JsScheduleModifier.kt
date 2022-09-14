@@ -18,7 +18,8 @@ class JsScheduleModifier() : ScheduleModifier {
             dayToTimetable = schedule.dayToTimetable.mapValues { timetable ->
                 val modifiedSessions = timetable.value.timetableItems.map { timetableItem ->
                     if (timetableItem is Session &&
-                        timetableItem.id == TimetableItemId("1")
+                        // Day 1 lunch
+                        timetableItem.id == TimetableItemId("b8528bb4-284c-424e-8be5-a4c1721e4ba8")
                     ) {
                         timetableItem.copy(
                             message = MultiLangText(
