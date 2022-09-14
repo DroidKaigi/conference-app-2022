@@ -41,6 +41,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -52,7 +57,7 @@ import com.google.accompanist.flowlayout.SizeMode.Expand
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
@@ -89,6 +94,7 @@ fun SessionDetailScreenRoot(
     val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
+        modifier = modifier,
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
@@ -170,47 +176,49 @@ fun SessionDetailScreen(
                 )
             }
         },
-    ) {
-        when (uiState) {
-            is Error -> TODO()
-            Loading ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            is Success -> {
-                val (item, _) = uiState.value
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiState) {
+                is Error -> TODO()
+                Loading ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                is Success -> {
+                    val (item, _) = uiState.value
 
-                Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp)
-                ) {
-                    SessionDetailSessionInfo(
-                        title = item.title.currentLangTitle,
-                        startsAt = item.startsAt,
-                        endsAt = item.endsAt,
-                        room = item.room,
-                        category = item.category,
-                        language = item.language,
-                        levels = item.levels,
-                    )
-
-                    if (item is Session)
-                        SessionDetailDescription(
-                            description = item.description
+                    Column(
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        SessionDetailSessionInfo(
+                            title = item.title.currentLangTitle,
+                            startsAt = item.startsAt,
+                            endsAt = item.endsAt,
+                            room = item.room,
+                            category = item.category,
+                            // language = item.language, // TODO unused parameter
+                            levels = item.levels,
                         )
 
-                    SessionDetailTargetAudience(
-                        targetAudience = item.targetAudience
-                    )
+                        if (item is Session)
+                            SessionDetailDescription(
+                                description = item.description
+                            )
 
-                    if (item is Session)
-                        SessionDetailSpeakers(
-                            speakers = item.speakers,
+                        SessionDetailTargetAudience(
+                            targetAudience = item.targetAudience
                         )
-                    SessionDetailAssets(
-                        asset = item.asset
-                    )
+
+                        if (item is Session)
+                            SessionDetailSpeakers(
+                                speakers = item.speakers,
+                            )
+                        SessionDetailAssets(
+                            asset = item.asset
+                        )
+                    }
                 }
             }
         }
@@ -285,13 +293,15 @@ fun SessionTagsLine(
     levels: PersistentList<String>,
 ) {
     val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    val roomColor = TimetableItemColor.colorOfRoomName(enName = room.name.enTitle)
+
     FlowRow(
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
         KaigiTag(
-            backgroundColor = Color(AppBar.color)
+            backgroundColor = Color(roomColor)
         ) {
             Text(room.name.currentLangTitle)
         }
@@ -348,7 +358,7 @@ fun SessionScheduleInfo(
     ) {
         Image(
             painterResource(id = R.drawable.ic_schedule),
-            contentDescription = "Schedule-Icon",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
@@ -366,7 +376,7 @@ fun SessionDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    language: String,
+    // language: String, // TODO unused parameter
     levels: PersistentList<String>,
 ) {
     Column(modifier = modifier) {
@@ -476,6 +486,10 @@ fun SessionDetailSpeakers(
         speakers.forEach { speaker ->
             if (speaker.iconUrl.isNotEmpty()) {
                 Row(
+                    modifier = Modifier
+                        .clearAndSetSemantics {
+                            contentDescription = speaker.name
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AsyncImage(
@@ -483,6 +497,7 @@ fun SessionDetailSpeakers(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape),
+                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
                         contentDescription = "Speaker Icon",
@@ -567,7 +582,8 @@ private fun SessionDetailAssetsItem(
     Row(
         modifier = modifier
             .height(36.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(

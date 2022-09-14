@@ -49,9 +49,11 @@ fun Setting(
                 },
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(start = 28.dp, top = 40.dp, end = 28.dp),
+            modifier = Modifier
+                .padding(start = 28.dp, top = 40.dp, end = 28.dp)
+                .padding(innerPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {

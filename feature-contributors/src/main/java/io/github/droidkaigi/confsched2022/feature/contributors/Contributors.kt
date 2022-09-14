@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.contributors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,15 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.components.UsernameRow
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.Contributor
 import io.github.droidkaigi.confsched2022.model.fakes
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
@@ -51,33 +53,35 @@ fun Contributors(
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = R.string.contributors_top_app_bar_title),
+                        text = stringResource(Strings.contributors_top_app_bar_title),
                     )
                 },
             )
         }
-    ) {
-        when (uiModel.state) {
-            is Error -> TODO()
-            Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-            is Success -> {
-                val contributors = uiModel.state.value
-
-                LazyColumn(
-                    modifier = modifier.fillMaxWidth()
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiModel.state) {
+                is Error -> TODO()
+                Loading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    items(items = contributors, key = { it.id }) { contributor ->
-                        UsernameRow(
-                            username = contributor.username,
-                            profileUrl = contributor.profileUrl,
-                            iconUrl = contributor.iconUrl,
-                            onLinkClick = onLinkClick
-                        )
+                    CircularProgressIndicator()
+                }
+                is Success -> {
+                    val contributors = uiModel.state.value
+
+                    LazyColumn(
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        items(items = contributors, key = { it.id }) { contributor ->
+                            UsernameRow(
+                                username = contributor.username,
+                                profileUrl = contributor.profileUrl,
+                                iconUrl = contributor.iconUrl,
+                                onLinkClick = onLinkClick
+                            )
+                        }
                     }
                 }
             }
