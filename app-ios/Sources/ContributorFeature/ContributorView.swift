@@ -1,16 +1,49 @@
 import ComposableArchitecture
 import SwiftUI
+import Model
 
 public struct ContributorState: Equatable {
-    public init() {}
+    public var contributors: [Contributor]
+
+    public init(contributors: [Contributor] = []) {
+        self.contributors = contributors
+    }
 }
 
-public enum ContributorAction {}
-public struct ContributorEnvironment {
-    public init() {}
+public enum ContributorAction {
+    case refresh
+    case refreshResponse(TaskResult<[Contributor]>)
 }
-public let contributorReducer = Reducer<ContributorState, ContributorAction, ContributorEnvironment> { _, _, _ in
-    return .none
+public struct ContributorEnvironment {
+    public let contributorsRepository: ContributorsRepository
+
+    public init(contributorsRepository: ContributorsRepository) {
+        self.contributorsRepository = contributorsRepository
+    }
+}
+public let contributorReducer = Reducer<ContributorState, ContributorAction, ContributorEnvironment> { state, action, environment in
+    switch action {
+    case .refresh:
+        return .run { @MainActor subscriber in
+            for try await result: [Contributor] in environment.contributorsRepository.contributors().stream() {
+                await subscriber.send(
+                    .refreshResponse(
+                        TaskResult {
+                            result
+                        }
+                    )
+                )
+            }
+        }
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
+    case .refreshResponse(.success(let contributors)):
+        print("\(contributors.count) contributors")
+        state.contributors = contributors
+        return .none
+    case .refreshResponse(.failure):
+        return .none
+    }
 }
 
 public struct ContributorView: View {
@@ -21,7 +54,12 @@ public struct ContributorView: View {
     }
 
     public var body: some View {
-        Text("TODO: Contributor")
+        WithViewStore(store) { viewStore in
+            Text("\(viewStore.contributors.count) Contributors")
+                .task {
+                    await viewStore.send(.refresh).finish()
+                }
+        }
     }
 }
 
@@ -30,12 +68,15 @@ struct ContributorView_Previews: PreviewProvider {
     static var previews: some View {
         ContributorView(
             store: .init(
-                initialState: .init(),
+                initialState: .init(
+                    contributors: Contributor.companion.fakes()
+                ),
                 reducer: .empty,
-                environment: ContributorEnvironment()
+                environment: ContributorEnvironment(
+                    contributorsRepository: FakeContributorsRepository()
+                )
             )
         )
     }
 }
 #endif
-
