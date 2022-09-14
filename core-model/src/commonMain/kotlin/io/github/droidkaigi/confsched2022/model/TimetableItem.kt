@@ -25,7 +25,7 @@ sealed class TimetableItem {
     abstract val category: TimetableCategory
     abstract val room: TimetableRoom
     abstract val targetAudience: String
-    abstract val language: String
+    abstract val language: TimetableLanguage
     abstract val asset: TimetableAsset
     abstract val levels: PersistentList<String>
     val day: DroidKaigi2022Day? get() = DroidKaigi2022Day.ofOrNull(startsAt)
@@ -39,7 +39,7 @@ sealed class TimetableItem {
         override val category: TimetableCategory,
         override val room: TimetableRoom,
         override val targetAudience: String,
-        override val language: String,
+        override val language: TimetableLanguage,
         override val asset: TimetableAsset,
         override val levels: PersistentList<String>,
         val description: String,
@@ -58,7 +58,7 @@ sealed class TimetableItem {
         override val category: TimetableCategory,
         override val room: TimetableRoom,
         override val targetAudience: String,
-        override val language: String,
+        override val language: TimetableLanguage,
         override val asset: TimetableAsset,
         override val levels: PersistentList<String>,
         val speakers: PersistentList<TimetableSpeaker> = persistentListOf(),
@@ -97,7 +97,10 @@ fun TimetableItem.Session.Companion.fake(): Session {
             sort = 1
         ),
         targetAudience = "For App developer アプリ開発者向け",
-        language = "JAPANESE",
+        language = TimetableLanguage(
+            langOfSpeaker = "JAPANESE",
+            isInterpretationTarget = true,
+        ),
         asset = TimetableAsset(
             videoUrl = "https://www.youtube.com/watch?v=hFdKCyJ-Z9A",
             slideUrl = "https://droidkaigi.jp/2021/",

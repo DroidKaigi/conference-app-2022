@@ -53,15 +53,19 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
+import io.github.droidkaigi.confsched2022.feature.sessions.R.string
+import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
+import io.github.droidkaigi.confsched2022.model.TimetableLanguage
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.model.secondLang
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -193,7 +197,7 @@ fun SessionDetailScreen(
                             endsAt = item.endsAt,
                             room = item.room,
                             category = item.category,
-                            // language = item.language, // TODO unused parameter
+                            language = item.language,
                             levels = item.levels,
                         )
 
@@ -285,6 +289,7 @@ fun SessionTagsLine(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
+    language: TimetableLanguage,
     levels: PersistentList<String>,
 ) {
     val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
@@ -293,6 +298,25 @@ fun SessionTagsLine(
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
+        val lang = Lang.valueOf(language.langOfSpeaker)
+        val secondLang = lang.secondLang()
+        KaigiTag(
+            backgroundColor = Color(lang.backgroundColor)
+        ) {
+            Text(lang.tagName)
+        }
+        if (language.isInterpretationTarget &&
+            secondLang != null
+        ) {
+            KaigiTag(
+                backgroundColor = Color(secondLang.backgroundColor)
+            ) {
+                Text(
+                    "${secondLang.tagName}" +
+                        stringResource(id = string.session_language_interpretation)
+                )
+            }
+        }
         KaigiTag(
             backgroundColor = Color(AppBar.color)
         ) {
@@ -369,7 +393,7 @@ fun SessionDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    // language: String, // TODO unused parameter
+    language: TimetableLanguage,
     levels: PersistentList<String>,
 ) {
     Column(modifier = modifier) {
@@ -386,6 +410,7 @@ fun SessionDetailSessionInfo(
             endsAt = endsAt,
             room = room,
             category = category,
+            language = language,
             levels = levels
         )
 
