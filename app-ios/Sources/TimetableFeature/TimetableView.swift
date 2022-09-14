@@ -82,7 +82,13 @@ public struct TimetableView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+
+                    TimetableSheetView(store: store)
+                        .onScroll {
+                            onScroll(position: $0)
+                        }
+
                     HStack(spacing: 8) {
                         ForEach(
                             [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
@@ -116,11 +122,6 @@ public struct TimetableView: View {
                     .padding(.vertical, 16)
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
-
-                    TimetableSheetView(store: store)
-                        .onScroll {
-                            onScroll(position: $0)
-                        }
                 }
                 .task {
                     await viewStore.send(.refresh).finish()

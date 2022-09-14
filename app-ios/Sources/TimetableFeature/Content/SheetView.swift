@@ -78,6 +78,7 @@ struct TimetableSheetView: View, ScrollDetectable {
 
                 ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
                     .onDetect(onScroll)
+                    .frame(height: 96)
 
                 HStack(alignment: .top, spacing: 0) {
                     Spacer()
