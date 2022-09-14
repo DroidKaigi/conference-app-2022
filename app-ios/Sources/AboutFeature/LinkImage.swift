@@ -1,3 +1,4 @@
+import SafariView
 import SwiftUI
 
 public struct LinkImage: View {
