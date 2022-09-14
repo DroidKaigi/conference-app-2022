@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.contributors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,28 +57,30 @@ fun Contributors(
                 },
             )
         }
-    ) {
-        when (uiModel.state) {
-            is Error -> TODO()
-            Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-            is Success -> {
-                val contributors = uiModel.state.value
-
-                LazyColumn(
-                    modifier = modifier.fillMaxWidth()
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiModel.state) {
+                is Error -> TODO()
+                Loading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    items(items = contributors, key = { it.id }) { contributor ->
-                        UsernameRow(
-                            username = contributor.username,
-                            profileUrl = contributor.profileUrl,
-                            iconUrl = contributor.iconUrl,
-                            onLinkClick = onLinkClick
-                        )
+                    CircularProgressIndicator()
+                }
+                is Success -> {
+                    val contributors = uiModel.state.value
+
+                    LazyColumn(
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        items(items = contributors, key = { it.id }) { contributor ->
+                            UsernameRow(
+                                username = contributor.username,
+                                profileUrl = contributor.profileUrl,
+                                iconUrl = contributor.iconUrl,
+                                onLinkClick = onLinkClick
+                            )
+                        }
                     }
                 }
             }

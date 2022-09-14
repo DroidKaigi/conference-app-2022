@@ -46,6 +46,7 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
         .mapValues { (_, apiSpeakers) ->
             apiSpeakers.map { apiSpeaker ->
                 TimetableSpeaker(
+                    id = apiSpeaker.id,
                     name = apiSpeaker.fullName,
                     bio = apiSpeaker.bio,
                     iconUrl = apiSpeaker.profilePicture.orEmpty(),

@@ -7,6 +7,7 @@ group = "droidkaigi.confsched2022.buildlogic"
 repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
 }
 
 java {
@@ -25,6 +26,7 @@ dependencies {
     implementation(libs.firebasePlugin)
     implementation(libs.sqldelightGradlePlugin)
     implementation(libs.detektGradlePlugin)
+    implementation(libs.mokoResourcesPlugin)
 }
 
 gradlePlugin {
@@ -97,6 +99,10 @@ gradlePlugin {
         register("sqldelight") {
             id = "droidkaigi.primitive.sqldelight"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.SqldelightPlugin"
+        }
+        register("mokoResources") {
+            id = "droidkaigi.primitive.mokoresources"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.MokoResourcesPlugin"
         }
         register("detekt") {
             id = "droidkaigi.primitive.detekt"

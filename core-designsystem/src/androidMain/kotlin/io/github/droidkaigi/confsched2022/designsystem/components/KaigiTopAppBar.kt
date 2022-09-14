@@ -26,7 +26,7 @@ fun KaigiTopAppBar(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
+    elevation: Dp = 2.dp,
     title: (@Composable RowScope.() -> Unit),
     trailingIcons: (@Composable RowScope.() -> Unit)? = null,
 ) {

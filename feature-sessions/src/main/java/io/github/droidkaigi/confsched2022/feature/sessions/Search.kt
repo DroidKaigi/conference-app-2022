@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,13 +28,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,8 +62,8 @@ fun SearchRoot(
     onItemClick: () -> Unit = {},
     onBookMarkClick: () -> Unit = {},
 ) {
-    val viewModel = hiltViewModel<SessionsViewModel>()
-    val state: SessionsUiModel by viewModel.uiModel
+    val viewModel = hiltViewModel<SearchViewModel>()
+    val state: SearchUiModel by viewModel.uiModel
     SearchScreen(
         modifier = modifier,
         uiModel = state,
@@ -71,7 +74,7 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen(
-    uiModel: SessionsUiModel,
+    uiModel: SearchUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -80,8 +83,10 @@ private fun SearchScreen(
     KaigiScaffold(
         modifier = modifier,
         topBar = {},
-        content = {
-            Column {
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
@@ -112,6 +117,10 @@ private fun SearchTextField(
     onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -122,7 +131,8 @@ private fun SearchTextField(
             value = searchWord,
             modifier = Modifier
                 .fillMaxWidth(fraction = 0.9F)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                .background(color = MaterialTheme.colorScheme.surfaceVariant)
+                .focusRequester(focusRequester),
             placeholder = { Text("Search Session") },
             singleLine = true,
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
@@ -199,11 +209,9 @@ private fun SearchedItem(
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
-    var contentHeight = 100.dp
     Box(
         modifier = modifier
             .wrapContentHeight()
-            .heightIn(min = contentHeight)
             .clickable { onItemClick.invoke() }
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
@@ -238,16 +246,8 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = timeTable.title.currentLangTitle,
-                            onTextLayout = {
-                                if (it.lineCount > 2) {
-                                    contentHeight = 140.dp
-                                }
-                            }
-                        )
-
-                        Text("${timeTable.startsTimeString} 〜")
+                        Text(text = timeTable.title.currentLangTitle)
+                        Text(text = "${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
@@ -299,10 +299,8 @@ private fun FullScreenLoading(modifier: Modifier = Modifier) {
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        uiModel = SessionsUiModel(
-            state = Success(DroidKaigiSchedule.fake()),
-            isFilterOn = true,
-            isTimetable = true
+        uiModel = SearchUiModel(
+            state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
         onBookMarkClick = {},

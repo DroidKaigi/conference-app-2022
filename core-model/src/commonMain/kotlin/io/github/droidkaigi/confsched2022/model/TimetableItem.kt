@@ -104,12 +104,14 @@ fun TimetableItem.Session.Companion.fake(): Session {
         ),
         speakers = listOf(
             TimetableSpeaker(
+                id = "1",
                 name = "taka",
                 iconUrl = "https://github.com/takahirom.png",
                 bio = "Likes Android",
                 tagLine = "Android Engineer"
             ),
             TimetableSpeaker(
+                id = "2",
                 name = "ry",
                 iconUrl = "https://github.com/ry-itto.png",
                 bio = "Likes iOS",

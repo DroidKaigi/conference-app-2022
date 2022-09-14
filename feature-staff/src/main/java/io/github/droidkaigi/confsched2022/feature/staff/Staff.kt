@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.staff
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,28 +57,30 @@ fun Staff(
                 },
             )
         }
-    ) {
-        when (uiModel.state) {
-            is Error -> TODO()
-            is Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-            is Success -> {
-                val staff = uiModel.state.value
-
-                LazyColumn(
-                    modifier = modifier.fillMaxWidth()
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiModel.state) {
+                is Error -> TODO()
+                is Loading -> Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    items(items = staff, key = { it.id }) { staff ->
-                        UsernameRow(
-                            username = staff.username,
-                            profileUrl = staff.profileUrl,
-                            iconUrl = staff.iconUrl,
-                            onLinkClick = onLinkClick
-                        )
+                    CircularProgressIndicator()
+                }
+                is Success -> {
+                    val staff = uiModel.state.value
+
+                    LazyColumn(
+                        modifier = modifier.fillMaxWidth()
+                    ) {
+                        items(items = staff, key = { it.id }) { staff ->
+                            UsernameRow(
+                                username = staff.username,
+                                profileUrl = staff.profileUrl,
+                                iconUrl = staff.iconUrl,
+                                onLinkClick = onLinkClick
+                            )
+                        }
                     }
                 }
             }

@@ -128,8 +128,12 @@ fun Sessions(
                 onToggleTimetableClick
             )
         }
-    ) {
-        Column(modifier = Modifier.padding(top = 4.dp)) {
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .padding(innerPadding)
+        ) {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
@@ -216,7 +220,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
-                            .padding(start = 1.dp, end = 1.dp)
+                            .padding(horizontal = 0.5.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),
@@ -324,7 +328,6 @@ fun SessionsTopBar(
         KaigiTopAppBar(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
-            elevation = 2.dp,
             title = {
                 Image(
                     modifier = Modifier.size(30.dp),
