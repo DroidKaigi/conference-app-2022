@@ -226,10 +226,7 @@ private fun itemProvider(
 private val lineStrokeSize = 1.dp
 private val horizontalLineTopOffset = 48.dp
 private val hoursWidth = 75.dp
-private val hoursItemWidth = 43.dp
-private val hoursItemHeight = 24.dp
 private val hoursItemTopOffset = 11.dp
-private val hoursItemEndOffset = 16.dp
 private val hoursList = listOf(
     "10:00",
     "11:00",

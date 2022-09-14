@@ -143,6 +143,7 @@ public struct TimetableView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
             }
+            .navigationViewStyle(.stack)
         }
     }
 }

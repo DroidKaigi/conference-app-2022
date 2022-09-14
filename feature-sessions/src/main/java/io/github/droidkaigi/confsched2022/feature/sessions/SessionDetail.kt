@@ -89,6 +89,7 @@ fun SessionDetailScreenRoot(
     val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
+        modifier = modifier,
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
@@ -170,47 +171,49 @@ fun SessionDetailScreen(
                 )
             }
         },
-    ) {
-        when (uiState) {
-            is Error -> TODO()
-            Loading ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            is Success -> {
-                val (item, _) = uiState.value
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiState) {
+                is Error -> TODO()
+                Loading ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                is Success -> {
+                    val (item, _) = uiState.value
 
-                Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp)
-                ) {
-                    SessionDetailSessionInfo(
-                        title = item.title.currentLangTitle,
-                        startsAt = item.startsAt,
-                        endsAt = item.endsAt,
-                        room = item.room,
-                        category = item.category,
-                        language = item.language,
-                        levels = item.levels,
-                    )
-
-                    if (item is Session)
-                        SessionDetailDescription(
-                            description = item.description
+                    Column(
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        SessionDetailSessionInfo(
+                            title = item.title.currentLangTitle,
+                            startsAt = item.startsAt,
+                            endsAt = item.endsAt,
+                            room = item.room,
+                            category = item.category,
+                            // language = item.language, // TODO unused parameter
+                            levels = item.levels,
                         )
 
-                    SessionDetailTargetAudience(
-                        targetAudience = item.targetAudience
-                    )
+                        if (item is Session)
+                            SessionDetailDescription(
+                                description = item.description
+                            )
 
-                    if (item is Session)
-                        SessionDetailSpeakers(
-                            speakers = item.speakers,
+                        SessionDetailTargetAudience(
+                            targetAudience = item.targetAudience
                         )
-                    SessionDetailAssets(
-                        asset = item.asset
-                    )
+
+                        if (item is Session)
+                            SessionDetailSpeakers(
+                                speakers = item.speakers,
+                            )
+                        SessionDetailAssets(
+                            asset = item.asset
+                        )
+                    }
                 }
             }
         }
@@ -366,7 +369,7 @@ fun SessionDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    language: String,
+    // language: String, // TODO unused parameter
     levels: PersistentList<String>,
 ) {
     Column(modifier = modifier) {
@@ -483,6 +486,7 @@ fun SessionDetailSpeakers(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape),
+                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
                         contentDescription = "Speaker Icon",
