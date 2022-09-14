@@ -180,14 +180,6 @@ fun About(
                 )
 
                 AuxiliaryInformationRow(
-                    imageVector = Icons.Filled.PrivacyTip,
-                    textRes = Strings.about_privacy,
-                    onClick = {
-                        // TODO: Implement privacy policy
-                    }
-                )
-
-                AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
                     textRes = Strings.about_license,
                     onClick = {
@@ -205,6 +197,14 @@ fun About(
                                 it.launchUrl(context, Uri.parse(codeConductUrl))
                             }
                         }
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.PrivacyTip,
+                    textRes = Strings.about_privacy,
+                    onClick = {
+                        // TODO: Implement privacy policy
                     }
                 )
             }
