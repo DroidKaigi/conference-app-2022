@@ -15,10 +15,16 @@ struct SessionSpeakersView: View {
 
             ForEach(self.speakers, id: \.self) { speaker in
                 HStack {
-                    AsyncImage(url: URL(string: speaker.iconUrl))
-                        .clipShape(Circle())
-                        .frame(width: 48, height: 48)
-                        .padding(.trailing)
+                    AsyncImage(
+                        url: URL(string: speaker.iconUrl),
+                        content: {
+                            $0.image?.resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 48, height: 48)
+                                .clipShape(Circle())
+                        }
+                    )
+                    .padding(.trailing)
                     
                     Text(speaker.name)
                         .font(Font.system(size: 14, weight: .regular, design: .default))
