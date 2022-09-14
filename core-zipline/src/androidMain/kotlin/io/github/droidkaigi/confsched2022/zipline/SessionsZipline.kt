@@ -8,6 +8,7 @@ import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
@@ -64,7 +65,7 @@ class SessionsZipline @Inject constructor(
 
     fun timetableModifier(
         coroutineScope: CoroutineScope,
-    ): MutableStateFlow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+    ): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
         val androidScheduleModifier = AndroidScheduleModifier()
         val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
             androidScheduleModifier.modify(timetable)
