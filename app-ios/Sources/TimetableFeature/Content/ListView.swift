@@ -1,4 +1,3 @@
-import appioscombined
 import Assets
 import SwiftUI
 import Theme
@@ -14,25 +13,17 @@ struct TimetableListView: View {
                 self.timeGroupTimetableItems = []
                 return
             }
-            self.timeGroupTimetableItems = Set(timetable.timetableItems.map { Duration(startsAt: $0.startsAt, endsAt: $0.endsAt) })
+            self.timeGroupTimetableItems = Set(timetable.timetableItems.map { TimetableTimeGroupItems.Duration(startsAt: $0.startsAt, endsAt: $0.endsAt) })
                 .map { duration in
-                    let startsAt = duration.startsAt
-                    let endsAt = duration.endsAt
                     let items = timetable.contents
                         .filter { itemWithFavorite in
-                            itemWithFavorite.timetableItem.startsAt == startsAt && itemWithFavorite.timetableItem.endsAt == endsAt
+                            itemWithFavorite.timetableItem.startsAt == duration.startsAt && itemWithFavorite.timetableItem.endsAt == duration.endsAt
                         }
                         .sorted {
                             $0.timetableItem.room.sort < $1.timetableItem.room.sort
                         }
-                    let minute = calculateMinute(
-                        startSeconds: Int(startsAt.epochSeconds),
-                        endSeconds: Int(endsAt.epochSeconds)
-                    )
                     return TimetableTimeGroupItems(
-                        startsAt: startsAt.toDate(),
-                        endsAt: endsAt.toDate(),
-                        minute: minute,
+                        duration: duration,
                         items: items
                     )
                 }
@@ -40,12 +31,6 @@ struct TimetableListView: View {
                     $0.startsAt == $1.startsAt ? $0.minute < $1.minute : $0.startsAt < $1.startsAt
                 }
         }
-    }
-
-    /// `startsAt` & `endsAt` pair struct conformed to `Hashable`
-    private struct Duration: Hashable {
-        let startsAt: Kotlinx_datetimeInstant
-        let endsAt: Kotlinx_datetimeInstant
     }
 
     private let dateComponentsFormatter: DateComponentsFormatter = {
