@@ -94,6 +94,7 @@ fun SessionDetailScreenRoot(
     val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
+        modifier = modifier,
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
@@ -197,7 +198,7 @@ fun SessionDetailScreen(
                             endsAt = item.endsAt,
                             room = item.room,
                             category = item.category,
-                            language = item.language,
+                            // language = item.language, // TODO unused parameter
                             levels = item.levels,
                         )
 
@@ -373,7 +374,7 @@ fun SessionDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    language: String,
+    // language: String, // TODO unused parameter
     levels: PersistentList<String>,
 ) {
     Column(modifier = modifier) {
@@ -494,6 +495,7 @@ fun SessionDetailSpeakers(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape),
+                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
                         contentDescription = "Speaker Icon",
