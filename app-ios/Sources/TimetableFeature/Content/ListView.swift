@@ -59,7 +59,7 @@ struct TimetableListView: View {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
                 LazyVStack(spacing: 32) {
-                    ForEach(viewStore.timeGroupTimetableItems, id: \.self) { timetableTimeGroupItems in
+                    ForEach(viewStore.timeGroupTimetableItems) { timetableTimeGroupItems in
                         HStack(alignment: .top, spacing: 28) {
                             VStack(alignment: .center, spacing: 0) {
                                 Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.startsAt))!)
