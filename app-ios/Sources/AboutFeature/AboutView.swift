@@ -38,9 +38,18 @@ public struct AboutView: View {
                         .font(Font.system(size: 32, weight: .medium))
                     Text(L10n.About.description)
                     HStack(spacing: 16) {
-                        AboutViewAssets.twitter.swiftUIImage
-                        AboutViewAssets.youtube.swiftUIImage
-                        AboutViewAssets.medium.swiftUIImage
+                        LinkImage(
+                            image: AboutViewAssets.twitter.swiftUIImage,
+                            url: URL(string: StaticURLs.twitter)!
+                        )
+                        LinkImage(
+                            image: AboutViewAssets.youtube.swiftUIImage,
+                            url: URL(string: StaticURLs.youtube)!
+                        )
+                        LinkImage(
+                            image: AboutViewAssets.medium.swiftUIImage,
+                            url: URL(string: StaticURLs.medium)!
+                        )
                         Spacer()
                     }
                 }
