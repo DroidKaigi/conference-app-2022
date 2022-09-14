@@ -1,6 +1,8 @@
 import ComposableArchitecture
 import SwiftUI
 import Model
+import Assets
+import Theme
 
 public struct ContributorState: Equatable {
     public var contributors: [Contributor]
@@ -55,11 +57,56 @@ public struct ContributorView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            Text("\(viewStore.contributors.count) Contributors")
-                .task {
-                    await viewStore.send(.refresh).finish()
+            NavigationView {
+                List(viewStore.contributors, id: \.id) { contributor in
+                    Button(action: {
+                        guard let profileUrl = contributor.profileUrl else { return }
+                        guard let url = URL(string: profileUrl) else { return }
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }, label: {
+                        ContributorItemView(contributor: contributor)
+                    })
+                    .hideListRowSeparator()
                 }
+                .listStyle(PlainListStyle())
+            }
+            .task {
+                await viewStore.send(.refresh).finish()
+            }
         }
+    }
+}
+
+struct ContributorItemView: View {
+
+    let contributor: Contributor
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Assets.colorfulLogo.swiftUIImage
+                .frame(width: 60, height: 60)
+            Text(contributor.username)
+                .font(Font.system(size: 16, weight: .bold, design: .default))
+                .foregroundColor(AssetColors.onBackground.swiftUIColor)
+        }
+    }
+}
+
+struct HideListRowSeparatorModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 15.0, *) {
+            content.listRowSeparator(.hidden)
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+    func hideListRowSeparator() -> some View {
+        self.modifier(HideListRowSeparatorModifier())
     }
 }
 
@@ -77,6 +124,16 @@ struct ContributorView_Previews: PreviewProvider {
                 )
             )
         )
+        .preferredColorScheme(.dark)
+    }
+}
+struct ContributorViewItem_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            ContributorItemView(contributor: Contributor.companion.fakes().first!)
+        }
+        .previewLayout(.fixed(width: 390, height: 60 + 8))
+        .preferredColorScheme(.dark)
     }
 }
 #endif
