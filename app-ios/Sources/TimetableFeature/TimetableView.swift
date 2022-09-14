@@ -112,6 +112,9 @@ public struct TimetableView: View {
                     .background(AssetColors.surface.swiftUIColor)
 
                     TimetableSheetView(store: store)
+                        .onScroll { position in
+                            print("onScroll: \(position)")
+                        }
                 }
                 .task {
                     await viewStore.send(.refresh).finish()
@@ -145,6 +148,52 @@ public struct TimetableView: View {
             }
             .navigationViewStyle(.stack)
         }
+    }
+}
+
+struct ScrollDetector: View {
+
+    private struct ScrollPreferenceKey: PreferenceKey {
+        static var defaultValue: CGRect = .zero
+        static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+            value = nextValue()
+        }
+    }
+
+    let coordinateSpace: CoordinateSpace
+    var onDetect: (CGPoint) -> Void
+
+    init(coordinateSpace: CoordinateSpace, onDetect: @escaping (CGPoint) -> Void = { _ in }) {
+        self.coordinateSpace = coordinateSpace
+        self.onDetect = onDetect
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            VStack {
+            }
+            .preference(key: ScrollPreferenceKey.self, value: proxy.frame(in: coordinateSpace))
+        }
+        .onPreferenceChange(ScrollPreferenceKey.self) {
+            onDetect($0.origin)
+        }
+    }
+    
+    func onDetect(_ action: @escaping (CGPoint) -> Void) -> some View {
+        var view = self
+        view.onDetect = action
+        return view
+    }
+}
+
+protocol ScrollDetectable {
+    var onScroll: (CGPoint) -> Void { get set }
+}
+extension ScrollDetectable where Self: View {
+    func onScroll(perform action: @escaping (CGPoint) -> Void) -> some View {
+        var view = self
+        view.onScroll = action
+        return view
     }
 }
 
