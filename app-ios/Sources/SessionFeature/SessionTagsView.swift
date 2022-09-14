@@ -2,27 +2,28 @@ import SwiftUI
 import appioscombined
 import Theme
 
-struct SessionTagsView: View {
-    let tags: [Tag]
+extension TimetableItem {
     
-    public var body: some View {
-        GeometryReader { geometry in
+    var tagsView: some View {
+        let tags = self.tags
+
+        return GeometryReader { geometry in
             var width = CGFloat.zero
             var height = CGFloat.zero
 
             ZStack(alignment: .topLeading) {
-                ForEach(self.tags, id: \.self) { tag in
-                    tag.view()
+                ForEach(tags, id: \.self) { tag in
+                    tag.view
                         .padding([.trailing, .bottom], 8)
                         .alignmentGuide(.leading, computeValue: { dimension in
-                            if (abs(width - dimension.width) > geometry.size.width) {
+                            if abs(width - dimension.width) > geometry.size.width {
                                 width = 0
                                 height -= dimension.height
                             }
 
                             let result = width
-                            if tag == self.tags.last! {
-                                width = 0 //last item
+                            if tag == tags.last! {
+                                width = 0
                             } else {
                                 width -= dimension.width
                             }
@@ -30,13 +31,24 @@ struct SessionTagsView: View {
                         })
                         .alignmentGuide(.top, computeValue: { _ in
                             let result = height
-                            if tag == self.tags.last! {
+                            if tag == tags.last! {
                                 height = 0 // last item
                             }
                             return result
                         })
                 }
             }
+            .background(Color.white)
+        }
+    }
+
+    private var tags: [Tag] {
+        return [
+            Tag(text: self.room.name.currentLangTitle, color: AssetColors.pink.swiftUIColor),
+            Tag(text: "\(self.durationInMinutes())min", color: AssetColors.secondaryContainer.swiftUIColor),
+            Tag(text: self.category.title.currentLangTitle, color: AssetColors.secondaryContainer.swiftUIColor)
+        ] + self.levels.map {
+            Tag(text: $0, color: AssetColors.secondaryContainer.swiftUIColor)
         }
     }
 }

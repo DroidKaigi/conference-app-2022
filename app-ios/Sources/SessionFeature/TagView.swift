@@ -6,7 +6,7 @@ struct Tag: Equatable, Hashable {
 }
 
 extension Tag {
-    func view() -> some View {
+    var view: some View {
         return Text(self.text)
             .font(Font.system(size: 14, weight: .regular, design: .default))
             .padding(.horizontal)

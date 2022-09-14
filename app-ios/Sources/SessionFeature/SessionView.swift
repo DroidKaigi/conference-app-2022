@@ -1,12 +1,13 @@
 import Assets
-import Theme
 import ComposableArchitecture
 import Model
-import SwiftUI
 import Strings
+import SwiftUI
+import Theme
 
 public struct SessionState: Equatable {
     public var timetableItemWithFavorite: TimetableItemWithFavorite
+    public var showShareSheet: Bool = false
 
     public init(timetableItemWithFavorite: TimetableItemWithFavorite) {
         self.timetableItemWithFavorite = timetableItemWithFavorite
@@ -14,8 +15,10 @@ public struct SessionState: Equatable {
 }
 
 public enum SessionAction {
+    case tapCalendar(TimetableItem)
     case tapFavorite(TimetableItemId, Bool)
-    case tapShare(TimetableItem)
+    case tapShare
+    case nothing
 }
 
 public struct SessionEnvironment {
@@ -29,12 +32,21 @@ public struct SessionEnvironment {
 public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironment> { state, action, environment in
 
     switch action {
+    case .tapCalendar(let item):
+        return .run { @MainActor _ in
+            // TODO: Add event using EventKit
+        }
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
     case .tapFavorite(let sessionId, let isFavorite):
-        Task {
+        state.timetableItemWithFavorite = TimetableItemWithFavorite(timetableItem: state.timetableItemWithFavorite.timetableItem, isFavorited: !isFavorite)
+        return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: sessionId, favorite: !isFavorite)
         }
-        return .none
-    case .tapShare(let item):
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
+    case .tapShare:
+        state.showShareSheet = true
         return .none
     default:
         return .none
@@ -43,7 +55,6 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
 
 public struct SessionView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.openURL) var openURL
 
     private let store: Store<SessionState, SessionAction>
 
@@ -62,79 +73,35 @@ public struct SessionView: View {
                 } label: {
                     Image(systemName: "xmark")
                 }
-                .padding()
+                .padding(.leading)
+                .padding([.top, .bottom], 16)
 
                 ScrollView {
                     VStack(alignment: .leading) {
                         Text(timeTableItem.title.currentLangTitle)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .font(Font.system(size: 36, weight: .medium, design: .default))
+                            .font(Font.system(size: 24, weight: .medium, design: .default))
                             .padding(.bottom)
 
-                        let tags = [
-                            Tag(text: timeTableItem.room.name.currentLangTitle, color: AssetColors.pink.swiftUIColor),
-                            Tag(text: "\(timeTableItem.durationInMinutes())min", color: AssetColors.secondaryContainer.swiftUIColor),
-                            Tag(text: timeTableItem.category.title.currentLangTitle, color: AssetColors.secondaryContainer.swiftUIColor)
-                        ] + timeTableItem.levels.map {
-                            Tag(text: $0, color: AssetColors.secondaryContainer.swiftUIColor)
-                        }
-
-                        SessionTagsView(tags: tags)
+                        timeTableItem.tagsView
                             .padding(.bottom, 72)
-                        HStack {
-                            Image(systemName: "clock")
-                                .padding(.trailing, 16)
-                            Text(timeTableItem.durationString(isJapanese: Locale.current.languageCode == "ja"))
-                                .font(Font.system(size: 14, weight: .regular, design: .default))
-                        }
-                        .padding(.bottom, 24)
+
+                        timeTableItem.durationView
+                            .padding(.bottom, 24)
 
                         if let session = timeTableItem.asSession() {
                             SessionDescriptionView(text: session.description_)
-                                .padding([.bottom], 24)
+                                .padding(.bottom, 24)
                         }
-                        Text(L10n.Session.targetAudience)
-                            .font(Font.system(size: 16, weight: .medium, design: .default))
-                            .padding(.bottom)
-                        Text(timeTableItem.targetAudience)
-                            .font(Font.system(size: 14, weight: .regular, design: .default))
-                            .lineSpacing(4)
+                        SessionAudienceView(targetAudience: timeTableItem.targetAudience)
                             .padding(.bottom, 24)
                         if let session = timeTableItem.asSession() {
                             SessionSpeakersView(speakers: session.speakers)
                                 .padding(.bottom, 24)
                         }
-                        Text(L10n.Session.material)
-                            .font(Font.system(size: 16, weight: .medium, design: .default))
-                            .padding(.bottom)
-                        
-                        if let videoUrl = timeTableItem.asset.videoUrl {
-                            HStack {
-                                Image(systemName: "video")
-                                    .padding(.trailing, 16)
-                                Button {
-                                    self.openURL(URL(string: videoUrl)!)
-                                } label: {
-                                    Text(L10n.Session.movie)
-                                        .font(Font.system(size: 14, weight: .regular, design: .default))
-                                }
-                            }
-                            .padding(.bottom)
-                        }
-                        
-                        if let slidesUrl = timeTableItem.asset.slideUrl {
-                            HStack {
-                                Image(systemName: "photo.on.rectangle")
-                                    .padding(.trailing, 16)
-                                Button {
-                                    self.openURL(URL(string: slidesUrl)!)
-                                } label: {
-                                    Text(L10n.Session.slides)
-                                        .font(Font.system(size: 14, weight: .regular, design: .default))
-                                }
-                            }
+
+                        SessionAssetsView(asset: timeTableItem.asset)
                             .padding(.bottom, 36)
-                        }
                     }
                     .padding(.horizontal)
                 }
@@ -142,7 +109,7 @@ public struct SessionView: View {
                 HStack {
                     HStack {
                         Button {
-                            viewStore.send(.tapShare(timeTableItem))
+                            viewStore.send(.tapShare)
                         } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
@@ -180,6 +147,10 @@ public struct SessionView: View {
             }
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
             .background(AssetColors.background.swiftUIColor)
+            .sheet(isPresented: viewStore.binding(get: { $0.showShareSheet }, send: .nothing)) {
+                let text = "\(timeTableItem.title.currentLangTitle)\nhttps://droidkaigi.jp/2022/timetable/\(timeTableItem.id.value)"
+                ShareTextView(text: text)
+            }
         }
     }
 }
