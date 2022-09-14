@@ -19,10 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
@@ -44,7 +46,7 @@ fun Setting(
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = R.string.setting_title),
+                        text = stringResource(Strings.setting_title),
                     )
                 },
             )
@@ -60,16 +62,16 @@ fun Setting(
             SettingItem.values().forEach { item ->
                 SettingItem(
                     icon = item.icon,
-                    title = stringResource(id = item.titleResId)
+                    title = stringResource(item.titleStringRes)
                 )
             }
         }
     }
 }
 
-enum class SettingItem(val titleResId: Int, val icon: ImageVector) {
-    DarkMode(R.string.setting_item_dark_mode, Icons.Default.DarkMode),
-    Language(R.string.setting_item_language, Icons.Default.Language)
+enum class SettingItem(val titleStringRes: StringResource, val icon: ImageVector) {
+    DarkMode(Strings.setting_item_dark_mode, Icons.Default.DarkMode),
+    Language(Strings.setting_item_language, Icons.Default.Language)
 }
 
 @Composable
