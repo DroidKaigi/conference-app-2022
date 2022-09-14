@@ -3,6 +3,7 @@ import SwiftUI
 import Model
 import Assets
 import Theme
+import NukeUI
 
 public struct ContributorState: Equatable {
     public var contributors: [Contributor]
@@ -57,24 +58,25 @@ public struct ContributorView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
-                List(viewStore.contributors, id: \.id) { contributor in
-                    Button(action: {
-                        guard let profileUrl = contributor.profileUrl else { return }
-                        guard let url = URL(string: profileUrl) else { return }
-                        if UIApplication.shared.canOpenURL(url) {
-                            UIApplication.shared.open(url)
-                        }
-                    }, label: {
-                        ContributorItemView(contributor: contributor)
-                    })
-                    .hideListRowSeparator()
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(viewStore.contributors, id: \.id) { contributor in
+                        Button(action: {
+                            guard let profileUrl = contributor.profileUrl else { return }
+                            guard let url = URL(string: profileUrl) else { return }
+                            if UIApplication.shared.canOpenURL(url) {
+                                UIApplication.shared.open(url)
+                            }
+                        }, label: {
+                            ContributorItemView(contributor: contributor)
+                        })
+                    }
                 }
-                .listStyle(PlainListStyle())
+                .task {
+                    await viewStore.send(.refresh).finish()
+                }
             }
-            .task {
-                await viewStore.send(.refresh).finish()
-            }
+            .background(AssetColors.background.swiftUIColor)
         }
     }
 }
@@ -84,13 +86,17 @@ struct ContributorItemView: View {
     let contributor: Contributor
 
     var body: some View {
-        HStack(spacing: 16) {
-            Assets.colorfulLogo.swiftUIImage
+        HStack(alignment: .center, spacing: 16) {
+            LazyImage(url: URL(string: contributor.iconUrl))
                 .frame(width: 60, height: 60)
+                .clipShape(Circle())
             Text(contributor.username)
                 .font(Font.system(size: 16, weight: .bold, design: .default))
                 .foregroundColor(AssetColors.onBackground.swiftUIColor)
+            Spacer()
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 }
 
@@ -124,15 +130,6 @@ struct ContributorView_Previews: PreviewProvider {
                 )
             )
         )
-        .preferredColorScheme(.dark)
-    }
-}
-struct ContributorViewItem_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ContributorItemView(contributor: Contributor.companion.fakes().first!)
-        }
-        .previewLayout(.fixed(width: 390, height: 60 + 8))
         .preferredColorScheme(.dark)
     }
 }
