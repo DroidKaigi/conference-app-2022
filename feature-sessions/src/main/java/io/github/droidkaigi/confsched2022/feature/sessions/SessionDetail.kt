@@ -52,6 +52,7 @@ import com.google.accompanist.flowlayout.SizeMode.Expand
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -288,13 +289,15 @@ fun SessionTagsLine(
     levels: PersistentList<String>,
 ) {
     val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    val roomColor = TimetableItemColor.colorOfRoomName(enName = room.name.enTitle)
+
     FlowRow(
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
         KaigiTag(
-            backgroundColor = Color(AppBar.color)
+            backgroundColor = Color(roomColor)
         ) {
             Text(room.name.currentLangTitle)
         }
