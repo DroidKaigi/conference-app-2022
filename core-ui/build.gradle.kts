@@ -7,7 +7,7 @@ plugins {
     id("droidkaigi.primitive.android.hilt")
     id("droidkaigi.primitive.molecule")
     id("droidkaigi.primitive.spotless")
-    alias(libs.plugins.ksp)
+    id("droidkaigi.primitive.android.compose.showkase")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.template.core.ui"
@@ -17,6 +17,4 @@ android.kotlinOptions.freeCompilerArgs = listOf(
 
 dependencies {
     implementation(libs.accompanistPager)
-    implementation(libs.showkase.runtime)
-    ksp(libs.showkase.processor)
 }

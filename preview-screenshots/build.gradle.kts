@@ -6,8 +6,8 @@ plugins {
     id("droidkaigi.primitive.android.compose")
     id("droidkaigi.primitive.molecule")
     id("droidkaigi.primitive.spotless")
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.paparazzi)
+    id("droidkaigi.primitive.android.compose.showkase")
+    id("droidkaigi.primitive.android.paparazzi")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.template.preview.screenshots"
@@ -30,8 +30,6 @@ dependencies {
     implementation(project(":feature-sessions"))
 
     implementation(libs.composeUi)
-    implementation(libs.showkase.runtime)
-    ksp(libs.showkase.processor)
 
     testImplementation(projects.coreTesting)
     testImplementation(libs.testParameterInjector)

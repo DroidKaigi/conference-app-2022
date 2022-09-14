@@ -2,7 +2,7 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("droidkaigi.convention.androidfeature")
-    alias(libs.plugins.ksp)
+    id("droidkaigi.primitive.android.compose.showkase")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.feature.sessions"
@@ -30,7 +30,4 @@ dependencies {
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)
     debugImplementation(libs.composeUiTestManifest)
-
-    implementation(libs.showkase.runtime)
-    ksp(libs.showkase.processor)
 }
