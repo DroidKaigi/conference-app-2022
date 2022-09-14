@@ -8,6 +8,7 @@
 "About.Staffs" = "スタッフリスト";
 "About.PrivacyPolicy" = "プライバシーポリシー";
 "About.License" = "ライセンス";
+"About.Version" = "アプリバージョン";
 
 "Notification.Title" = "Notification";
 "Map.Title" = "Floor Map";
