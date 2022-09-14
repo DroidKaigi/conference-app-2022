@@ -54,6 +54,8 @@ public struct ContributorView: View {
 
     public init(store: Store<ContributorState, ContributorAction>) {
         self.store = store
+
+        UITabBar.appearance().barTintColor = AssetColors.surface.color
     }
 
     public var body: some View {
