@@ -1,6 +1,6 @@
 import ComposableArchitecture
-import SwiftUI
 import Strings
+import SwiftUI
 import Theme
 
 public struct AboutState: Equatable {
