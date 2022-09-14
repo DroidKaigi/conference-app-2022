@@ -20,7 +20,8 @@ struct PersonLabel: View {
                 }
             )
             Text(name)
-                .singleLineFont(size: 12, weight: .medium, lineHeight: 16)
+                .font(Font.system(size: 12, weight: .medium))
+                .frame(height: 16)
         }
         .foregroundColor(AssetColors.onSurface.swiftUIColor)
     }
