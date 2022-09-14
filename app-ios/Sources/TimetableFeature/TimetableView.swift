@@ -8,13 +8,16 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
+    public var showTabDay: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
-        selectedDay: DroidKaigi2022Day = .day1
+        selectedDay: DroidKaigi2022Day = .day1,
+        showTabDay: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
+        self.showTabDay = showTabDay
     }
 }
 
@@ -24,6 +27,7 @@ public enum TimetableAction {
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
     case setFavorite(TimetableItemId, Bool)
+    case scroll(CGPoint)
 }
 
 public struct TimetableEnvironment {
@@ -66,6 +70,9 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
+    case let .scroll(position):
+        state.showTabDay = position.y >= 0
+        return .none
     }
 }
 
@@ -76,9 +83,6 @@ public struct TimetableView: View {
         self.store = store
     }
 
-    @State var showTabDay: Bool = true
-    @State var scrollY: CGFloat = 0.0
-
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
@@ -86,7 +90,7 @@ public struct TimetableView: View {
 
                     TimetableSheetView(store: store)
                         .onScroll {
-                            onScroll(position: $0)
+                            viewStore.send(.scroll($0))
                         }
 
                     HStack(spacing: 8) {
@@ -100,7 +104,7 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
-                                    if showTabDay {
+                                    if viewStore.showTabDay {
                                         Text("\(startDay)")
                                             .font(Font.system(size: 24, weight: .semibold))
                                             .frame(height: 32)
@@ -115,6 +119,7 @@ public struct TimetableView: View {
                                     : AssetColors.surface.swiftUIColor
                                 )
                                 .clipShape(Capsule())
+                                .animation(.linear(duration: 0.2), value: viewStore.showTabDay)
                             }
                         }
                     }
@@ -156,13 +161,6 @@ public struct TimetableView: View {
             .navigationViewStyle(.stack)
         }
     }
-
-    func onScroll(position: CGPoint) {
-        scrollY = position.y * (-1)
-        withAnimation {
-            showTabDay = scrollY <= 0
-        }
-    }
 }
 
 struct ScrollDetector: View {
@@ -192,7 +190,7 @@ struct ScrollDetector: View {
             onDetect($0.origin)
         }
     }
-    
+
     func onDetect(_ action: @escaping (CGPoint) -> Void) -> some View {
         var view = self
         view.onDetect = action
