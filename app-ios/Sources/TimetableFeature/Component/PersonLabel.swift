@@ -16,13 +16,13 @@ struct PersonLabel: View {
                         .clipShape(Circle())
                 }, placeholder: {
                     Circle()
-                        .foregroundColor(AssetColors.onSurface.swiftUIColor)
                         .frame(width: 24, height: 24)
                 }
             )
             Text(name)
                 .singleLineFont(size: 12, weight: .medium, lineHeight: 16)
         }
+        .foregroundColor(AssetColors.onSurface.swiftUIColor)
     }
 }
 
