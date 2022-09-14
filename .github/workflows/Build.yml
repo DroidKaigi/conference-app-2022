@@ -56,6 +56,9 @@ jobs:
       - name: Check spotless
         run: ./gradlew spotlessCheck --stacktrace
 
+      - name: Check ComposeLint
+        run: ./gradlew composeLint --stacktrace
+
       - name: Check lint
         run: ./gradlew lintDebug --stacktrace
 #        continue-on-error: true # https://issuetracker.google.com/issues/241787635

@@ -28,13 +28,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,8 +62,8 @@ fun SearchRoot(
     modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
 ) {
-    val viewModel = hiltViewModel<SessionsViewModel>()
-    val state: SessionsUiModel by viewModel.uiModel
+    val viewModel = hiltViewModel<SearchViewModel>()
+    val state: SearchUiModel by viewModel.uiModel
     SearchScreen(
         modifier = modifier,
         uiModel = state,
@@ -72,7 +76,7 @@ fun SearchRoot(
 
 @Composable
 private fun SearchScreen(
-    uiModel: SessionsUiModel,
+    uiModel: SearchUiModel,
     onItemClick: () -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -115,6 +119,10 @@ private fun SearchTextField(
     onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -125,7 +133,8 @@ private fun SearchTextField(
             value = searchWord,
             modifier = Modifier
                 .fillMaxWidth(fraction = 0.9F)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                .background(color = MaterialTheme.colorScheme.surfaceVariant)
+                .focusRequester(focusRequester),
             placeholder = { Text("Search Session") },
             singleLine = true,
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
@@ -297,10 +306,8 @@ private fun FullScreenLoading(modifier: Modifier = Modifier) {
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        uiModel = SessionsUiModel(
-            state = Success(DroidKaigiSchedule.fake()),
-            isFilterOn = true,
-            isTimetable = true
+        uiModel = SearchUiModel(
+            state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
         onBookMarkClick = { _, _ -> },

@@ -328,7 +328,6 @@ fun SessionsTopBar(
         KaigiTopAppBar(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
-            elevation = 2.dp,
             title = {
                 Image(
                     modifier = Modifier.size(30.dp),
