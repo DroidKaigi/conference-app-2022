@@ -312,7 +312,7 @@ fun SessionTagsLine(
                 backgroundColor = Color(secondLang.backgroundColor)
             ) {
                 Text(
-                    "${secondLang.tagName}" +
+                    secondLang.tagName +
                         stringResource(id = string.session_language_interpretation)
                 )
             }
