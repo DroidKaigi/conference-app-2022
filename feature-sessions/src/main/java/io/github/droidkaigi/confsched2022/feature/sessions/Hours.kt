@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 @Composable
 fun HoursItem(
@@ -46,11 +47,13 @@ fun Hours(
         content(modifier, hoursList[index])
     }
     val density = timetableState.density
+    val verticalScale = timetableState.screenScaleState.verticalScale
     val scrollState = timetableState.screenScrollState
-    val hoursLayout = remember(hoursList) {
+    val hoursLayout = remember(hoursList, verticalScale) {
         HoursLayout(
             hours = hoursList,
             density = density,
+            verticalScale = verticalScale,
         )
     }
     val hoursScreen = remember(hoursLayout, density) {
@@ -111,10 +114,11 @@ fun Hours(
 private data class HoursLayout(
     val hours: List<String>,
     val density: Density,
+    val verticalScale: Float,
 ) {
     var hoursHeight = 0
     var hoursWidth = 0
-    val minutePx = with(density) { (4.23).dp.roundToPx() }
+    val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).toPx() }
     val hoursLayouts = hours.mapIndexed { index, it ->
         val hoursItemLayout = HoursItemLayout(
             index = index,
@@ -140,12 +144,12 @@ private data class HoursLayout(
 
 private data class HoursItemLayout(
     val density: Density,
-    val minutePx: Int,
+    val minutePx: Float,
     val index: Int
 ) {
     val topOffset = with(density) { horizontalLineTopOffset.roundToPx() }
     val itemOffset = with(density) { hoursItemTopOffset.roundToPx() }
-    val height = minutePx * 60
+    val height = (minutePx * 60).roundToInt()
     val width = with(density) { hoursWidth.roundToPx() }
     val left = 0
     val top = index * height + topOffset - itemOffset
@@ -222,10 +226,7 @@ private fun itemProvider(
 private val lineStrokeSize = 1.dp
 private val horizontalLineTopOffset = 48.dp
 private val hoursWidth = 75.dp
-private val hoursItemWidth = 43.dp
-private val hoursItemHeight = 24.dp
 private val hoursItemTopOffset = 11.dp
-private val hoursItemEndOffset = 16.dp
 private val hoursList = listOf(
     "10:00",
     "11:00",

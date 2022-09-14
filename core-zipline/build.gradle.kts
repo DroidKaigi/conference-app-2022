@@ -9,6 +9,8 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022.core.zipline"
 
 kotlin {
+    explicitApiWarning()
+
     js {
         browser()
         binaries.executable()

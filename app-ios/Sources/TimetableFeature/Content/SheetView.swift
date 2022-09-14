@@ -17,23 +17,22 @@ struct TimetableSheetView: View {
             self.hours = timetable.hours
             self.roomTimetableItems = Set(timetable.timetableItems.map(\.room))
                 .map { room in
-
-                    var items = timetable.timetableItems
-                        .filter {
-                            $0.room == room
+                    var items = timetable.contents
+                        .filter { itemWithFavorite in
+                            itemWithFavorite.timetableItem.room == room
                         }
                         .reduce([TimetableItemType]()) { result, item in
                             var result = result
                             let lastItem = result.last
-                            if case .general(let lItem, _) = lastItem, lItem.endsAt != item.startsAt {
+                            if case .general(let lItem, _) = lastItem, lItem.timetableItem.endsAt != item.timetableItem.startsAt {
                                 result.append(.spacing(calculateMinute(
-                                    startSeconds: Int(lItem.endsAt.epochSeconds),
-                                    endSeconds: Int(item.startsAt.epochSeconds)
+                                    startSeconds: Int(lItem.timetableItem.endsAt.epochSeconds),
+                                    endSeconds: Int(item.timetableItem.startsAt.epochSeconds)
                                 )))
                             }
                             let minute = calculateMinute(
-                                startSeconds: Int(item.startsAt.epochSeconds),
-                                endSeconds: Int(item.endsAt.epochSeconds)
+                                startSeconds: Int(item.timetableItem.startsAt.epochSeconds),
+                                endSeconds: Int(item.timetableItem.endsAt.epochSeconds)
                             )
                             result.append(
                                 TimetableItemType.general(
@@ -45,8 +44,8 @@ struct TimetableSheetView: View {
                             return result
                         }
                     if case let .general(firstItem, _) = items.first {
-                        let hour = Calendar.current.component(.hour, from: firstItem.startsAt.toDate())
-                        let minute = Calendar.current.component(.minute, from: firstItem.startsAt.toDate())
+                        let hour = Calendar.current.component(.hour, from: firstItem.timetableItem.startsAt.toDate())
+                        let minute = Calendar.current.component(.minute, from: firstItem.timetableItem.startsAt.toDate())
                         let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - timetable.hours.first!, 0) * 60)
                         items.insert(firstSpacingItem, at: 0)
                     }
