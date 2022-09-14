@@ -15,4 +15,20 @@
 
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">Contributors</string>
+
+    <!-- Map -->
+
+    <!-- Sessions -->
+    <string name="session_description_read_more_text">Read more</string>
+    <string name="session_target_audience">Target Audience</string>
+    <string name="session_speaker">Speaker</string>
+    <string name="session_material">Material</string>
+    <string name="session_movie">MOVIE</string>
+    <string name="session_slide">SLIDE</string>
+
+    <!-- Setting -->
+    <string name="setting_title">Setting</string>
+    <string name="setting_item_dark_mode">Dark Mode</string>
+    <string name="setting_item_language">Language</string>
+
 </resources>
