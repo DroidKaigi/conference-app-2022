@@ -10,14 +10,6 @@ cd ../
  open DroidKaigi2022/DroidKaigi2022.xcodeproj
 ```
 
-## Try it out
-Beta version of this app is available on TestFlight.
-You can try and test this app with following public link.
-
-https://testflight.apple.com/join/YrBzLxIy
-
-In this project, distribute beta version with [Xcode Cloud](https://developer.apple.com/jp/xcode-cloud/).
-
 ## Requirements
 - Xcode 13.4.1 ([Workaround needed for build](#workaround))
 - Xcode 14.0 or Later (Recommended)
