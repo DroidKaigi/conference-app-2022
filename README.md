@@ -16,6 +16,7 @@
 * [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
 
 ## Try it out
+### Android
 
 The builds being distributed through mobile app distribution services.
 
@@ -23,6 +24,14 @@ The builds being distributed through mobile app distribution services.
 
 You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
+
+### iOS
+Beta version of this app is available on TestFlight.
+You can try and test this app with following public link.
+
+https://testflight.apple.com/join/YrBzLxIy
+
+In this project, distribute beta version with [Xcode Cloud](https://developer.apple.com/jp/xcode-cloud/).
 
 ## Contributing
 
