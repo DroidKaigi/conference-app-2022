@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.primitive
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.register
 
 @Suppress("unused")
@@ -11,6 +12,9 @@ class DetektPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("io.gitlab.arturbosch.detekt")
+            }
+            dependencies {
+                detektPlugins(libs.findLibrary("twitterComposeRulesDetekt"))
             }
             tasks.register<Detekt>("composeLint") {
                 config()
@@ -33,5 +37,4 @@ class DetektPlugin : Plugin<Project> {
             txt.required.set(true)
         }
     }
-
 }

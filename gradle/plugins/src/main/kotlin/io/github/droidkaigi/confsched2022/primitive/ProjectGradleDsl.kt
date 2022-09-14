@@ -38,4 +38,10 @@ private fun DependencyHandlerScope.api(
     add("api", artifact.get())
 }
 
+fun DependencyHandlerScope.detektPlugins(
+    artifact: Optional<Provider<MinimalExternalModuleDependency>>
+) {
+    add("detektPlugins", artifact.get())
+}
+
 val Project.libs get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
