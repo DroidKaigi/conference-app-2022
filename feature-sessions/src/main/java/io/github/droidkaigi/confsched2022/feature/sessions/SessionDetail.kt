@@ -40,6 +40,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -90,6 +95,7 @@ fun SessionDetailScreenRoot(
     val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
+        modifier = modifier,
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
@@ -193,7 +199,7 @@ fun SessionDetailScreen(
                             endsAt = item.endsAt,
                             room = item.room,
                             category = item.category,
-                            language = item.language,
+                            // language = item.language, // TODO unused parameter
                             levels = item.levels,
                         )
 
@@ -351,7 +357,7 @@ fun SessionScheduleInfo(
     ) {
         Image(
             painterResource(id = R.drawable.ic_schedule),
-            contentDescription = "Schedule-Icon",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
@@ -369,7 +375,7 @@ fun SessionDetailSessionInfo(
     endsAt: Instant,
     room: TimetableRoom,
     category: TimetableCategory,
-    language: String,
+    // language: String, // TODO unused parameter
     levels: PersistentList<String>,
 ) {
     Column(modifier = modifier) {
@@ -479,6 +485,10 @@ fun SessionDetailSpeakers(
         speakers.forEach { speaker ->
             if (speaker.iconUrl.isNotEmpty()) {
                 Row(
+                    modifier = Modifier
+                        .clearAndSetSemantics {
+                            contentDescription = speaker.name
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AsyncImage(
@@ -486,6 +496,7 @@ fun SessionDetailSpeakers(
                         modifier = Modifier
                             .size(60.dp)
                             .clip(CircleShape),
+                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
                         contentDescription = "Speaker Icon",
@@ -570,7 +581,8 @@ private fun SessionDetailAssetsItem(
     Row(
         modifier = modifier
             .height(36.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
