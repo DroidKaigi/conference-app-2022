@@ -8,7 +8,7 @@
 
 | top | drawer |
 |---|---|
-| <img src="https://user-images.githubusercontent.com/1386930/190038449-7cd3c794-ab36-453a-8fe2-5c4fe24e9dd9.gif" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
+| <img src="https://user-images.githubusercontent.com/1386930/190039106-3c3a8377-6a2f-4668-9b51-cbe73c47128d.gif" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
 
 ## Design
 
