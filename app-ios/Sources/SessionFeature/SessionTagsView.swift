@@ -44,10 +44,15 @@ extension TimetableItem {
     private var tags: [Tag] {
         return [
             Tag(text: self.room.name.currentLangTitle, color: AssetColors.pink.swiftUIColor),
-            Tag(text: "\(self.durationInMinutes())min", color: AssetColors.secondaryContainer.swiftUIColor),
+            Tag(text: "\(self.durationInMinutes)min", color: AssetColors.secondaryContainer.swiftUIColor),
             Tag(text: self.category.title.currentLangTitle, color: AssetColors.secondaryContainer.swiftUIColor)
         ] + self.levels.map {
             Tag(text: $0, color: AssetColors.secondaryContainer.swiftUIColor)
         }
+    }
+    
+    private var durationInMinutes: Int64 {
+        let durationInSeconds = self.endsAt.epochSeconds - self.startsAt.epochSeconds
+        return durationInSeconds/60
     }
 }

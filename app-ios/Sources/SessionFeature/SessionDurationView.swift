@@ -6,7 +6,7 @@ extension TimetableItem {
     var durationView: some View {
         HStack {
             Image(systemName: "clock")
-                .padding(.trailing, 16)
+                .padding(.trailing, 8)
             Text(self.durationString(languageCode: Locale.current.languageCode))
                 .font(Font.system(size: 14, weight: .regular, design: .default))
         }
