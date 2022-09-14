@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -141,7 +142,6 @@ fun Sessions(
         Column(
             modifier = Modifier
                 .padding(top = 4.dp)
-                .padding(innerPadding)
         ) {
             when (scheduleState) {
                 is Error -> {
@@ -149,7 +149,9 @@ fun Sessions(
                     TODO()
                 }
                 Loading -> Box(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
@@ -159,6 +161,7 @@ fun Sessions(
                     val days = schedule.days
                     if (isTimetable) {
                         Timetable(
+                            modifier = Modifier.padding(innerPadding),
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
@@ -172,7 +175,8 @@ fun Sessions(
                             schedule = schedule,
                             days = days,
                             onTimetableClick = onTimetableClick,
-                            onFavoriteClick = onFavoriteClick
+                            onFavoriteClick = onFavoriteClick,
+                            contentPadding = innerPadding,
                         )
                     }
                 }
@@ -258,8 +262,11 @@ fun SessionsList(
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     HorizontalPager(
+        modifier = modifier,
         count = days.size,
         state = pagerState
     ) { dayIndex ->
@@ -286,7 +293,8 @@ fun SessionsList(
         }
         SessionList(
             timetable = timeHeaderAndTimetableItems,
-            sessionsListListState = sessionsListListStates[dayIndex]
+            sessionsListListState = sessionsListListStates[dayIndex],
+            contentPadding = contentPadding
         ) { (timeHeader, timetableItemWithFavorite) ->
             Box(
                 modifier = Modifier
