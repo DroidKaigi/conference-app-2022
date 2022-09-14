@@ -164,6 +164,7 @@ fun About(
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
                 val codeConductUrl = "https://portal.droidkaigi.jp/about/code-of-conduct"
+                val context = LocalContext.current
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textRes = Strings.about_access,
@@ -196,7 +197,7 @@ fun About(
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.DirectionsWalk,
-                    textResId = string.about_code_conduct,
+                    textRes = Strings.about_code_conduct,
                     onClick = {
                         CustomTabsIntent.Builder().also { builder ->
                             builder.setShowTitle(true)
