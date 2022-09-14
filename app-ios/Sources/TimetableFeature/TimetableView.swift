@@ -76,6 +76,9 @@ public struct TimetableView: View {
         self.store = store
     }
 
+    @State var showTabDay: Bool = true
+    @State var scrollY: CGFloat = 0.0
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
@@ -91,9 +94,12 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
-                                    Text("\(startDay)")
-                                        .font(Font.system(size: 24, weight: .semibold))
-                                        .frame(height: 32)
+                                    if showTabDay {
+                                        Text("\(startDay)")
+                                            .font(Font.system(size: 24, weight: .semibold))
+                                            .frame(height: 32)
+                                            .transition(.move(edge: .top).combined(with: .opacity))
+                                    }
                                 }
                                 .padding(4)
                                 .frame(maxWidth: .infinity)
@@ -112,8 +118,8 @@ public struct TimetableView: View {
                     .background(AssetColors.surface.swiftUIColor)
 
                     TimetableSheetView(store: store)
-                        .onScroll { position in
-                            print("onScroll: \(position)")
+                        .onScroll {
+                            onScroll(position: $0)
                         }
                 }
                 .task {
@@ -147,6 +153,13 @@ public struct TimetableView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .navigationViewStyle(.stack)
+        }
+    }
+
+    func onScroll(position: CGPoint) {
+        scrollY = position.y * (-1)
+        withAnimation {
+            showTabDay = scrollY <= 0
         }
     }
 }
