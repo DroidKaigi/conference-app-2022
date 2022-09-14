@@ -22,4 +22,3 @@ public struct LinkImage: View {
         }
     }
 }
-
