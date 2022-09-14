@@ -8,7 +8,7 @@
 
 | top | drawer |
 |---|---|
-| <img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
+| <img src="https://user-images.githubusercontent.com/1386930/190039106-3c3a8377-6a2f-4668-9b51-cbe73c47128d.gif" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
 
 ## Design
 
@@ -16,6 +16,7 @@
 * [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
 
 ## Try it out
+### Android
 
 The builds being distributed through mobile app distribution services.
 
@@ -23,6 +24,14 @@ The builds being distributed through mobile app distribution services.
 
 You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
+
+### iOS
+Beta version of this app is available on TestFlight.
+You can try and test this app with following public link.
+
+https://testflight.apple.com/join/YrBzLxIy
+
+In this project, distribute beta version with [Xcode Cloud](https://developer.apple.com/jp/xcode-cloud/).
 
 ## Contributing
 

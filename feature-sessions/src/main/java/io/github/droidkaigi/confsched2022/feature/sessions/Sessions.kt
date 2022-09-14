@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -33,11 +35,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.view.doOnPreDraw
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -166,6 +170,15 @@ fun Sessions(
                             onFavoriteClick = onFavoriteClick
                         )
                     }
+                }
+            }
+            if (scheduleState !is Loading) {
+                // Workaround to call Activity.reportFullyDrawn from Jetpack Compose.
+                // ref. https://github.com/android/nowinandroid/blob/c67812563be5a710ea8a57b0580f6436599df8a5/feature-foryou/src/main/java/com/google/samples/apps/nowinandroid/feature/foryou/ForYouScreen.kt#L153
+                val localView = LocalView.current
+                LaunchedEffect(Unit) {
+                    val activity = localView.context as? Activity ?: return@LaunchedEffect
+                    localView.doOnPreDraw { activity.reportFullyDrawn() }
                 }
             }
         }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
     <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
@@ -8,4 +9,26 @@
     <string name="about_privacy">プライバシーポリシー</string>
     <string name="about_license">ライセンス</string>
     <string name="about_app_version">アプリバーション</string>
+
+    <!-- Announcement -->
+    <string name="announcement_top_app_bar_title">お知らせ</string>
+
+    <!-- Contributors -->
+    <string name="contributors_top_app_bar_title">コントリビューター</string>
+
+    <!-- Map -->
+
+    <!-- Sessions -->
+    <string name="session_description_read_more_text">続きを見る</string>
+    <string name="session_target_audience">対象者</string>
+    <string name="session_speaker">スピーカー</string>
+    <string name="session_material">資料</string>
+    <string name="session_movie">MOVIE</string>
+    <string name="session_slide">スライド</string>
+
+    <!-- Setting -->
+    <string name="setting_title">設定</string>
+    <string name="setting_item_dark_mode">ダークモード</string>
+    <string name="setting_item_language">言語設定</string>
+
 </resources>
