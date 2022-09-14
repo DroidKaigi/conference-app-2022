@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,6 +43,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -161,12 +164,12 @@ fun Sessions(
                     val days = schedule.days
                     if (isTimetable) {
                         Timetable(
-                            modifier = Modifier.padding(innerPadding),
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
                             days = days,
-                            onTimetableClick = onTimetableClick
+                            onTimetableClick = onTimetableClick,
+                            contentPadding = innerPadding,
                         )
                     } else {
                         SessionsList(
@@ -197,12 +200,13 @@ fun Sessions(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Timetable(
-    modifier: Modifier = Modifier,
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     HorizontalPager(
         count = days.size,
@@ -213,8 +217,15 @@ fun Timetable(
         val timetable = schedule.dayToTimetable[day].orEmptyContents()
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
+        val layoutDirection = LocalLayoutDirection.current
 
-        Row {
+        Row(
+            modifier = Modifier.padding(
+                top = contentPadding.calculateTopPadding(),
+                start = contentPadding.calculateStartPadding(layoutDirection),
+                end = contentPadding.calculateEndPadding(layoutDirection),
+            )
+        ) {
             Hours(
                 modifier = modifier.transformable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
@@ -235,7 +246,10 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    coroutineScope,
+                    coroutineScope = coroutineScope,
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    )
                 ) { timetableItem, isFavorited ->
                     TimetableItem(
                         timetableItem = timetableItem,
