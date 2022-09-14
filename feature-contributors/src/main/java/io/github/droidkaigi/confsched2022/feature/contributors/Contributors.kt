@@ -3,7 +3,6 @@ package io.github.droidkaigi.confsched2022.feature.contributors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -59,7 +58,7 @@ fun Contributors(
             )
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = modifier) {
             when (uiModel.state) {
                 is Error -> TODO()
                 Loading -> Box(
@@ -72,7 +71,8 @@ fun Contributors(
                     val contributors = uiModel.state.value
 
                     LazyColumn(
-                        modifier = modifier.fillMaxWidth()
+                        modifier = modifier.fillMaxWidth(),
+                        contentPadding = innerPadding
                     ) {
                         items(items = contributors, key = { it.id }) { contributor ->
                             UsernameRow(
