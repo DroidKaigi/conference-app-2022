@@ -10,6 +10,7 @@ cd ../
  open DroidKaigi2022/DroidKaigi2022.xcodeproj
 ```
 
+:warning: If you cloned for the first time, you need to run build `Assets` target, `AboutFeature` target, `Strings` target, and `Theme` target.
 ## Requirements
 - Xcode 13.4.1 ([Workaround needed for build](#workaround))
 - Xcode 14.0 or Later (Recommended)
