@@ -38,7 +38,6 @@ extension TimetableItem {
                         })
                 }
             }
-            .background(Color.white)
         }
     }
 
