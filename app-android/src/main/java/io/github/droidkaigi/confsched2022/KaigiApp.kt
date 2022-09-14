@@ -6,9 +6,16 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -173,7 +180,7 @@ fun rememberKaigiAppScaffoldState(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
@@ -185,7 +192,13 @@ fun KaigiAppDrawer(
         PermanentNavigationDrawer(
             drawerContent = { PermanentDrawerSheet { drawerSheetContent() } },
         ) {
-            content()
+            Box(
+                modifier = Modifier.consumedWindowInsets(
+                    WindowInsets.systemBars.only(WindowInsetsSides.Start)
+                )
+            ) {
+                content()
+            }
         }
     } else {
         ModalNavigationDrawer(
