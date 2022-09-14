@@ -66,6 +66,18 @@ public struct AboutView: View {
                     }
                 }
 
+                ForEach(AboutTextItem.items, id: \.title) { item in
+                    HStack {
+                        Text(item.title)
+                        Spacer()
+                        Text(item.content)
+                        Spacer()
+                            .frame(width: 14)
+                    }
+                    .padding(16)
+                    .frame(minHeight: 56)
+                }
+
                 Spacer()
                     .frame(height: 32)
             }
