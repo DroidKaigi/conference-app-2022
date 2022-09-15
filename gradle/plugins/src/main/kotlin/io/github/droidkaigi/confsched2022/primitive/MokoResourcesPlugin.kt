@@ -13,19 +13,10 @@ class MokoResourcesPlugin : Plugin<Project> {
 
             android {
                 sourceSets.getByName("main").apply {
-                    assets.srcDir(File(buildDir, "generated/moko/androidMain/assets"))
                     val os = DefaultNativePlatform.getCurrentOperatingSystem()
                     if (os.isMacOsX) {
+                        assets.srcDir(File(buildDir, "generated/moko/androidMain/assets"))
                         res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
-                    } else {
-                        File(buildDir, "generated/moko/androidMain/res").walkTopDown()
-                            .onEnter {
-                                if (it.isFile) {
-                                    println(it.path)
-                                    println(it.readText())
-                                }
-                                true
-                            }
                     }
                 }
             }
