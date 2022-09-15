@@ -3,7 +3,7 @@ on:
 
 jobs:
   screenshot-test:
-    runs-on: ubuntu-latest
+    runs-on: macos-12
     timeout-minutes: 60
 
     steps:
