@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -64,6 +65,28 @@ class SessionsZipline @Inject constructor(
         },
         nowEpochMs = { System.currentTimeMillis() },
     )
+
+    // Limit the write access only on the Zipline thread
+    private var cachedZipline: Zipline? = null
+    private suspend fun loadOrGetZipline(): Zipline = withContext(dispatcher) {
+        val cached = cachedZipline
+        if (cached != null) {
+            return@withContext cached
+        }
+        val loadedZipline = ziplineLoader.loadOnce(
+            applicationName = "timeline",
+            manifestUrl = manifestUrl,
+            initializer = { },
+        )
+        val loaded = loadedZipline.zipline
+        cachedZipline = loaded
+        loaded
+    }
+
+    private suspend fun takeScheduleModifier(): ScheduleModifier {
+        val zipline = loadOrGetZipline()
+        return zipline.take("sessionsModifier")
+    }
 
     fun timetableModifier(
         coroutineScope: CoroutineScope,
