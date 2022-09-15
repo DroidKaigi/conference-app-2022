@@ -90,7 +90,7 @@ public struct SessionView: View {
                             .font(Font.system(size: 24, weight: .medium, design: .default))
                             .padding(.bottom)
 
-                        timeTableItem.tagsView
+                        SessionTagsView(tags: timeTableItem.tags)
                             .padding(.bottom, 24)
 
                         timeTableItem.durationView

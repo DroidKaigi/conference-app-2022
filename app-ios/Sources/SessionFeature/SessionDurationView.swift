@@ -14,7 +14,7 @@ extension TimetableItem {
     private func durationString(languageCode: String?) -> String {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .short
-        formatter.timeStyle = .short
+        formatter.timeStyle = .long
 
         let startDate = Date(timeIntervalSince1970: TimeInterval(self.startsAt.epochSeconds))
         let endDate = Date(timeIntervalSince1970: TimeInterval(self.endsAt.epochSeconds))
