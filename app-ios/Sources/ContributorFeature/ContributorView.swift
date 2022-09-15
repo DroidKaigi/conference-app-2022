@@ -84,9 +84,7 @@ struct ContributorItemView: View {
     var action: () -> Void
 
     var body: some View {
-        Button {
-            action()
-        } label: {
+        ZStack {
             HStack(spacing: 16) {
                 AsyncImage(url: URL(string: contributor.iconUrl)) { image in
                     image.resizable()
@@ -102,6 +100,16 @@ struct ContributorItemView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+
+            Button {
+                action()
+            } label: {
+                ZStack {
+                    EmptyView()
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .frame(minHeight: 0, maxHeight: .infinity)
+            }
         }
     }
 }
