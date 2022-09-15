@@ -320,7 +320,7 @@ fun SessionTagsLine(
             ) {
                 Text(
                     secondLang.tagName +
-                        stringResource(id = Strings.session_language_interpretation)
+                        stringResource(Strings.session_language_interpretation)
                 )
             }
         }

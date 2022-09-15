@@ -26,6 +26,7 @@
     <string name="session_material">資料</string>
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">スライド</string>
+    <string name="session_language_interpretation">(同時通訳)</string>
 
     <!-- Setting -->
     <string name="setting_title">設定</string>

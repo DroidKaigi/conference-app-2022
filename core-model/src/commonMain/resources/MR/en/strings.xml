@@ -26,6 +26,7 @@
     <string name="session_material">Material</string>
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">SLIDE</string>
+    <string name="session_language_interpretation">(interpretation)</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
