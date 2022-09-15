@@ -40,7 +40,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -49,11 +53,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode.Expand
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
-import io.github.droidkaigi.confsched2022.feature.sessions.R.string
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -66,6 +70,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.secondLang
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -293,6 +298,8 @@ fun SessionTagsLine(
     levels: PersistentList<String>,
 ) {
     val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    val roomColor = TimetableItemColor.colorOfRoomName(enName = room.name.enTitle)
+
     FlowRow(
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
@@ -313,12 +320,12 @@ fun SessionTagsLine(
             ) {
                 Text(
                     secondLang.tagName +
-                        stringResource(id = string.session_language_interpretation)
+                        stringResource(id = Strings.session_language_interpretation)
                 )
             }
         }
         KaigiTag(
-            backgroundColor = Color(AppBar.color)
+            backgroundColor = Color(roomColor)
         ) {
             Text(room.name.currentLangTitle)
         }
@@ -375,7 +382,7 @@ fun SessionScheduleInfo(
     ) {
         Image(
             painterResource(id = R.drawable.ic_schedule),
-            contentDescription = "Schedule-Icon",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
@@ -454,7 +461,7 @@ fun SessionDetailDescription(
                 modifier = Modifier.clickable {
                     isReadMore = true
                 },
-                text = stringResource(id = R.string.session_description_read_more_text),
+                text = stringResource(Strings.session_description_read_more_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color(0xFF6EFD9E),
             )
@@ -471,7 +478,7 @@ fun SessionDetailTargetAudience(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_target_audience),
+            text = stringResource(Strings.session_target_audience),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -495,7 +502,7 @@ fun SessionDetailSpeakers(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_speaker),
+            text = stringResource(Strings.session_speaker),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -504,6 +511,10 @@ fun SessionDetailSpeakers(
         speakers.forEach { speaker ->
             if (speaker.iconUrl.isNotEmpty()) {
                 Row(
+                    modifier = Modifier
+                        .clearAndSetSemantics {
+                            contentDescription = speaker.name
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AsyncImage(
@@ -552,7 +563,7 @@ fun SessionDetailAssets(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_material),
+            text = stringResource(Strings.session_material),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -561,7 +572,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_video_cam),
-            text = stringResource(id = R.string.session_movie),
+            text = stringResource(Strings.session_movie),
             onClick = {
                 val videoUrl = asset.videoUrl
                 if (videoUrl != null) {
@@ -575,7 +586,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_photo_library),
-            text = stringResource(id = R.string.session_slide),
+            text = stringResource(Strings.session_slide),
             onClick = {
                 val slideUrl = asset.slideUrl
                 if (slideUrl != null) {
@@ -596,7 +607,8 @@ private fun SessionDetailAssetsItem(
     Row(
         modifier = modifier
             .height(36.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(

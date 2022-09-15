@@ -16,12 +16,9 @@ import kotlinx.coroutines.TimeoutCancellationException
 class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
 
     suspend inline fun <reified T : Any> get(
-        url: String,
-        needAuth: Boolean = false,
+        url: String
     ): T = try {
-        if (needAuth) {
-            authApi.authIfNeeded()
-        }
+        authApi.authIfNeeded()
         httpClient.get(url)
             .body<T>()
     } catch (e: Throwable) {
@@ -30,12 +27,9 @@ class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
 
     suspend inline fun <reified T> post(
         urlString: String,
-        needAuth: Boolean = false,
         block: HttpRequestBuilder.() -> Unit = {},
     ): T = try {
-        if (needAuth) {
-            authApi.authIfNeeded()
-        }
+        authApi.authIfNeeded()
         httpClient.post(urlString, block)
             .body<T>()
     } catch (e: Throwable) {
@@ -44,12 +38,9 @@ class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
 
     suspend inline fun <reified T> put(
         urlString: String,
-        needAuth: Boolean = false,
         block: HttpRequestBuilder.() -> Unit = {},
     ): T = try {
-        if (needAuth) {
-            authApi.authIfNeeded()
-        }
+        authApi.authIfNeeded()
         httpClient.put(urlString, block)
             .body<T>()
     } catch (e: Throwable) {
