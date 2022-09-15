@@ -32,4 +32,9 @@
     <string name="setting_item_dark_mode">ダークモード</string>
     <string name="setting_item_language">言語設定</string>
 
+    <!-- Sponsors -->
+    <string name="sponsors_top_app_bar_title">スポンサー</string>
+
+    <!-- Staff -->
+    <string name="staff_top_app_bar_title">スタッフリスト</string>
 </resources>
