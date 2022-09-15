@@ -39,8 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -178,6 +181,7 @@ private fun SearchedItemListField(
             items(sessions) {
                 SearchedItem(
                     timetableItemWithFavorite = it,
+                    searchWord = searchWord,
                     onItemClick = onItemClick,
                     onBookMarkClick = onBookMarkClick,
                 )
@@ -206,6 +210,7 @@ private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day
 private fun SearchedItem(
     modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
+    searchWord: String,
     onItemClick: () -> Unit,
     onBookMarkClick: () -> Unit,
 ) {
@@ -246,7 +251,10 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = timeTable.title.currentLangTitle)
+                        HighlightedText(
+                            text = timeTable.title.currentLangTitle,
+                            keyword = searchWord
+                        )
                         Text(text = "${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
@@ -293,6 +301,30 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
     ) {
         CircularProgressIndicator()
     }
+}
+
+@Composable
+private fun HighlightedText(
+    text: String,
+    keyword: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSecondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary
+) {
+    val highlightStyle = SpanStyle(color = color, background = backgroundColor)
+    val annotatedText = remember(text, keyword) {
+        buildAnnotatedString {
+            append(text)
+            if (keyword.isNotEmpty()) {
+                var index = text.indexOf(keyword)
+                while (index >= 0) {
+                    addStyle(highlightStyle, index, index + keyword.length)
+                    index = text.indexOf(keyword, index + 1)
+                }
+            }
+        }
+    }
+    Text(text = annotatedText, modifier = modifier)
 }
 
 @Preview(showSystemUi = true)
