@@ -5,9 +5,9 @@ import Strings
 
 struct SessionAssetsView: View {
     @Environment(\.openURL) var openURL
-    
+
     let asset: TimetableAsset
-    
+
     public var body: some View {
         VStack {
             Text(L10n.Session.material)

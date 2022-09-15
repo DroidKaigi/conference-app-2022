@@ -11,7 +11,7 @@ struct SessionTagsView: View {
             self.content(tags: self.tags)
         }
         .frame(height: self.totalHeight)
-    }    
+    }
     private func content(tags: [Tag]) -> some View {
         return GeometryReader { geometry in
             var width = CGFloat.zero
@@ -73,7 +73,7 @@ private struct HeightPreferenceKey: PreferenceKey {
 
 private struct HeightReaderView: View {
     @Binding var height: CGFloat
-    
+
     var body: some View {
         GeometryReader { geometry in
             Color.clear

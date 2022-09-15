@@ -87,7 +87,7 @@ public struct SessionView: View {
                     VStack(alignment: .leading) {
                         Text(timeTableItem.title.currentLangTitle)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .font(Font.system(size: 24, weight: .medium, design: .default))
+                            .font(Font.system(size: 32, weight: .medium, design: .default))
                             .padding(.bottom)
 
                         SessionTagsView(tags: timeTableItem.tags)

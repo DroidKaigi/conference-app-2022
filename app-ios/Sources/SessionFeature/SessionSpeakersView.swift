@@ -6,7 +6,7 @@ import Theme
 struct SessionSpeakersView: View {
 
     let speakers: [TimetableSpeaker]
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(L10n.Session.speaker)
@@ -20,14 +20,13 @@ struct SessionSpeakersView: View {
                         content: {
                             $0.image?.resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 48, height: 48)
+                                .frame(width: 60, height: 60)
                                 .clipShape(Circle())
                         }
                     )
                     .padding(.trailing)
-                    
                     Text(speaker.name)
-                        .font(Font.system(size: 14, weight: .regular, design: .default))
+                        .font(Font.system(size: 16, weight: .regular, design: .default))
                         .foregroundColor(AssetColors.onPrimaryContainer.swiftUIColor)
                 }
             }
