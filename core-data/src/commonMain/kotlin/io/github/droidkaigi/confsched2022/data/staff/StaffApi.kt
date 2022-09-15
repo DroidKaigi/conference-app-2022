@@ -12,8 +12,7 @@ class StaffApi(
 ) {
     suspend fun staff(): PersistentList<Staff> {
         return networkService.get<StaffResponse>(
-            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/staff",
-            needAuth = true
+            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/staff"
         ).toStaffList()
     }
 }

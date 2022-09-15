@@ -23,7 +23,8 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
-    case selectItem(TimetableItemWithFavorite)
+    case selectItem(TimetableItem)
+    case setFavorite(TimetableItemId, Bool)
 }
 
 public struct TimetableEnvironment {
@@ -61,6 +62,12 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case .selectItem(let item):
         state.selectedItem = item
         return .none
+    case let .setFavorite(id, currentIsFavorite):
+        return .run { @MainActor _ in
+            try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
+        }
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
     }
 }
 

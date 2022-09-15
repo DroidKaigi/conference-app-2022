@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -14,11 +15,13 @@ fun SessionList(
     timetable: List<Pair<DurationTime?, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (Pair<DurationTime?, TimetableItemWithFavorite>) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        state = sessionsListListState
+        state = sessionsListListState,
+        contentPadding = contentPadding,
     ) {
         itemsIndexed(timetable) { _, item ->
             key(item.second.timetableItem.id.value) {

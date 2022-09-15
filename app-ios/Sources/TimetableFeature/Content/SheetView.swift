@@ -1,7 +1,7 @@
+import ComposableArchitecture
+import Model
 import SwiftUI
 import Theme
-import Model
-import ComposableArchitecture
 
 struct TimetableSheetView: View {
     struct ViewState: Equatable {

@@ -19,6 +19,7 @@ var package = Package(
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
+        .library(name: "SafariView", targets: ["SafariView"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
@@ -35,6 +36,7 @@ var package = Package(
             dependencies: [
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SafariView"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             resources: [
@@ -112,6 +114,10 @@ var package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
+        ),
+        .target(
+            name: "SafariView",
+            dependencies: []
         ),
         .target(
             name: "SessionFeature",

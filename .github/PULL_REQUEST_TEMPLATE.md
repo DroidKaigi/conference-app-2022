@@ -2,10 +2,10 @@
 - close #ISSUE_NUMBER
 
 ## Overview (Required)
--
+- 
 
 ## Links
--
+- 
 
 ## Screenshot
 Before | After
