@@ -12,7 +12,8 @@ cd ../
 
 ## Requirements
 - Xcode 13.4.1
-⚠️ If you cloned for the first time, you need to try some workaround. Please check it. [Workaround needed for build](#workaround)
+  > **Warning**
+  > If you cloned for the first time, you need to try some workaround. Please check it. [Workaround needed for build](#workaround)
 - Xcode 14.0 or Later (Recommended)
 
 ## Source Code
