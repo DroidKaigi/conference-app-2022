@@ -71,7 +71,7 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case let .scroll(position):
-        state.showTabDay = position.y >= 0
+        state.showTabDay = position.y >= TimetableView.scrollThreshold
         return .none
     }
 }
@@ -83,12 +83,15 @@ public struct TimetableView: View {
         self.store = store
     }
 
+    static let scrollThreshold: CGFloat = 88
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 ZStack(alignment: .top) {
 
                     TimetableSheetView(store: store)
+                        .scrollThreshold(Self.scrollThreshold)
                         .onScroll {
                             viewStore.send(.scroll($0))
                         }
@@ -104,6 +107,8 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
+                                        .baselineOffset(0)
+                                        .baselineOffset(0)
                                     if viewStore.showTabDay {
                                         Text("\(startDay)")
                                             .font(Font.system(size: 24, weight: .semibold))
@@ -191,7 +196,7 @@ struct ScrollDetector: View {
         }
     }
 
-    func onDetect(_ action: @escaping (CGPoint) -> Void) -> some View {
+    func onDetect(perform action: @escaping (CGPoint) -> Void) -> some View {
         var view = self
         view.onDetect = action
         return view
@@ -199,10 +204,18 @@ struct ScrollDetector: View {
 }
 
 protocol ScrollDetectable {
+    var scrollThreshold: CGFloat { get set }
     var onScroll: (CGPoint) -> Void { get set }
 }
 extension ScrollDetectable where Self: View {
-    func onScroll(perform action: @escaping (CGPoint) -> Void) -> some View {
+
+    func scrollThreshold(_ value: CGFloat) -> Self {
+        var view = self
+        view.scrollThreshold = value
+        return view
+    }
+
+    func onScroll(perform action: @escaping (CGPoint) -> Void) -> Self {
         var view = self
         view.onScroll = action
         return view

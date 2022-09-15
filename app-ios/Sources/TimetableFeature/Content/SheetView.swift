@@ -5,6 +5,7 @@ import Theme
 
 struct TimetableSheetView: View, ScrollDetectable {
 
+    var scrollThreshold: CGFloat = 0
     var onScroll: (CGPoint) -> Void = { _ in }
 
     struct ViewState: Equatable {
@@ -76,9 +77,8 @@ struct TimetableSheetView: View, ScrollDetectable {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
 
-                ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
-                    .onDetect(onScroll)
-                    .frame(height: 96)
+                Spacer()
+                    .frame(height: scrollThreshold)
 
                 HStack(alignment: .top, spacing: 0) {
                     Spacer()
@@ -128,6 +128,12 @@ struct TimetableSheetView: View, ScrollDetectable {
                         }
                     }
                 }
+                .background(
+                    ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
+                        .onDetect { position in
+                            onScroll(position)
+                        }
+                )
             }
             .coordinateSpace(name: "TimetableSheetView")
         }
