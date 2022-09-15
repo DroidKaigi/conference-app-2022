@@ -68,7 +68,7 @@ public struct ContributorView: View {
                 })
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(AssetColors.background.swiftUIColor)
-                .hideListRowSeparator()
+                .listRowSeparator(.hidden)
             }
             .task {
                 await viewStore.send(.refresh).finish()
@@ -120,22 +120,6 @@ struct ListItemButtonStyle: ButtonStyle {
         configuration.label
             .contentShape(Rectangle())
             .background(configuration.isPressed ? Color(.systemGray).opacity(0.4) : Color.clear)
-    }
-}
-
-struct HideListRowSeparatorModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(iOS 15.0, *) {
-            content.listRowSeparator(.hidden)
-        } else {
-            content
-        }
-    }
-}
-
-extension View {
-    func hideListRowSeparator() -> some View {
-        self.modifier(HideListRowSeparatorModifier())
     }
 }
 
