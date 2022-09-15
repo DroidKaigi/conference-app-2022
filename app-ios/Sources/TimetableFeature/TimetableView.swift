@@ -23,7 +23,7 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
-    case selectItem(TimetableItem)
+    case selectItem(TimetableItemWithFavorite)
     case setFavorite(TimetableItemId, Bool)
 }
 
