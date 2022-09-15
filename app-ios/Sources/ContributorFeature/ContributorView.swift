@@ -50,6 +50,9 @@ public let contributorReducer = Reducer<ContributorState, ContributorAction, Con
 }
 
 public struct ContributorView: View {
+
+    @Environment(\.openURL) var openURL
+
     private let store: Store<ContributorState, ContributorAction>
 
     public init(store: Store<ContributorState, ContributorAction>) {
@@ -63,9 +66,8 @@ public struct ContributorView: View {
             List(viewStore.contributors, id: \.id) { contributor in
                 ContributorItemView(contributor: contributor, action: {
                     guard let profileUrl = contributor.profileUrl else { return }
-                    guard let url = URL(string: profileUrl) else { return }
-                    if UIApplication.shared.canOpenURL(url) {
-                        UIApplication.shared.open(url)
+                    if let url = URL(string: profileUrl) {
+                        openURL(url)
                     }
                 })
                 .listRowInsets(EdgeInsets())
