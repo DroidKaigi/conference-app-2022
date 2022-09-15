@@ -58,24 +58,22 @@ public struct ContributorView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
-                List(viewStore.contributors, id: \.id) { contributor in
-                    Button(action: {
-                        guard let profileUrl = contributor.profileUrl else { return }
-                        guard let url = URL(string: profileUrl) else { return }
-                        if UIApplication.shared.canOpenURL(url) {
-                            UIApplication.shared.open(url)
-                        }
-                    }, label: {
-                        ContributorItemView(contributor: contributor)
-                    })
-                    .hideListRowSeparator()
-                }
-                .listStyle(PlainListStyle())
+            List(viewStore.contributors, id: \.id) { contributor in
+                ContributorItemView(contributor: contributor, action: {
+                    guard let profileUrl = contributor.profileUrl else { return }
+                    guard let url = URL(string: profileUrl) else { return }
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                })
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(AssetColors.background.swiftUIColor)
+                .hideListRowSeparator()
             }
             .task {
                 await viewStore.send(.refresh).finish()
             }
+            .listStyle(PlainListStyle())
         }
     }
 }
@@ -83,14 +81,27 @@ public struct ContributorView: View {
 struct ContributorItemView: View {
 
     let contributor: Contributor
+    var action: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
-            Assets.colorfulLogo.swiftUIImage
+        Button {
+            action()
+        } label: {
+            HStack(spacing: 16) {
+                AsyncImage(url: URL(string: contributor.iconUrl)) { image in
+                    image.resizable()
+                } placeholder: {
+                    Color(.systemGray4)
+                }
                 .frame(width: 60, height: 60)
-            Text(contributor.username)
-                .font(Font.system(size: 16, weight: .bold, design: .default))
-                .foregroundColor(AssetColors.onBackground.swiftUIColor)
+                .clipShape(Circle())
+                Text(contributor.username)
+                    .font(Font.system(size: 16, weight: .bold, design: .default))
+                    .foregroundColor(AssetColors.onBackground.swiftUIColor)
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
     }
 }
@@ -125,15 +136,6 @@ struct ContributorView_Previews: PreviewProvider {
                 )
             )
         )
-        .preferredColorScheme(.dark)
-    }
-}
-struct ContributorViewItem_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ContributorItemView(contributor: Contributor.companion.fakes().first!)
-        }
-        .previewLayout(.fixed(width: 390, height: 60 + 8))
         .preferredColorScheme(.dark)
     }
 }
