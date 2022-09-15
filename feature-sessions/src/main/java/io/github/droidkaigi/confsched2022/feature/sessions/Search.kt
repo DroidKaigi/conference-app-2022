@@ -53,6 +53,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -63,7 +64,6 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 fun SearchRoot(
     modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
-    onBookMarkClick: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SearchViewModel>()
     val state: SearchUiModel by viewModel.uiModel
@@ -71,7 +71,9 @@ fun SearchRoot(
         modifier = modifier,
         uiModel = state,
         onItemClick = onItemClick,
-        onBookMarkClick = onBookMarkClick,
+        onBookMarkClick = { sessionId, currentIsFavorite ->
+            viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+        },
     )
 }
 
@@ -79,7 +81,7 @@ fun SearchRoot(
 private fun SearchScreen(
     uiModel: SearchUiModel,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
@@ -167,7 +169,7 @@ private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -212,7 +214,7 @@ private fun SearchedItem(
     timetableItemWithFavorite: TimetableItemWithFavorite,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -283,7 +285,12 @@ private fun SearchedItem(
                                 modifier = Modifier
                                     .size(30.dp)
                                     .weight(1f)
-                                    .clickable { onBookMarkClick.invoke() }
+                                    .clickable {
+                                        onBookMarkClick(
+                                            timeTable.id,
+                                            timetableItemWithFavorite.isFavorited
+                                        )
+                                    }
                             )
                         }
                     }
@@ -335,6 +342,6 @@ fun SearchScreenPreview() {
             state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
-        onBookMarkClick = {},
+        onBookMarkClick = { _, _ -> },
     )
 }
