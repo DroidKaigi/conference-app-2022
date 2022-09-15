@@ -1,0 +1,55 @@
+on:
+  pull_request:
+
+jobs:
+  screenshot-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Download Screenshots
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: UpdateScreenshots.yml
+          name: screenshots
+          path: preview-screenshots/src/test/snapshots/images
+
+      - name: Run screenshot tests
+        id: verifyPaparazziDebug
+        continue-on-error: true
+        run: ./gradlew preview-screenshots:verifyPaparazziDebug
+
+      - name: Error Screenshot tests
+        if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: scrennshot-test-results
+          path: preview-screenshots/out/failures
+
+      - name: Comment PR
+        if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          message: |
+            There are differences in Compose previews. Please check your build and download the diff artifact.
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
