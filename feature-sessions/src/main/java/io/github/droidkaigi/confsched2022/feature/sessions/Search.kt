@@ -293,7 +293,7 @@ private fun SearchedItem(
 }
 
 @Composable
-private fun FullScreenLoading(modifier: Modifier = Modifier) {
+fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -304,7 +304,7 @@ private fun FullScreenLoading(modifier: Modifier = Modifier) {
 
 @Preview(showSystemUi = true)
 @Composable
-private fun SearchScreenPreview() {
+fun SearchScreenPreview() {
     SearchScreen(
         uiModel = SearchUiModel(
             state = Success(DroidKaigiSchedule.fake())

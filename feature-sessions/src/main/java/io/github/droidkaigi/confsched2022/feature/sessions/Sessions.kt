@@ -1,18 +1,27 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +34,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -33,11 +43,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.view.doOnPreDraw
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -132,7 +145,6 @@ fun Sessions(
         Column(
             modifier = Modifier
                 .padding(top = 4.dp)
-                .padding(innerPadding)
         ) {
             when (scheduleState) {
                 is Error -> {
@@ -140,7 +152,9 @@ fun Sessions(
                     TODO()
                 }
                 Loading -> Box(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
@@ -154,7 +168,8 @@ fun Sessions(
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
                             days = days,
-                            onTimetableClick = onTimetableClick
+                            onTimetableClick = onTimetableClick,
+                            contentPadding = innerPadding,
                         )
                     } else {
                         SessionsList(
@@ -163,9 +178,19 @@ fun Sessions(
                             schedule = schedule,
                             days = days,
                             onTimetableClick = onTimetableClick,
-                            onFavoriteClick = onFavoriteClick
+                            onFavoriteClick = onFavoriteClick,
+                            contentPadding = innerPadding,
                         )
                     }
+                }
+            }
+            if (scheduleState !is Loading) {
+                // Workaround to call Activity.reportFullyDrawn from Jetpack Compose.
+                // ref. https://github.com/android/nowinandroid/blob/c67812563be5a710ea8a57b0580f6436599df8a5/feature-foryou/src/main/java/com/google/samples/apps/nowinandroid/feature/foryou/ForYouScreen.kt#L153
+                val localView = LocalView.current
+                LaunchedEffect(Unit) {
+                    val activity = localView.context as? Activity ?: return@LaunchedEffect
+                    localView.doOnPreDraw { activity.reportFullyDrawn() }
                 }
             }
         }
@@ -175,12 +200,13 @@ fun Sessions(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Timetable(
-    modifier: Modifier = Modifier,
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     HorizontalPager(
         count = days.size,
@@ -191,8 +217,15 @@ fun Timetable(
         val timetable = schedule.dayToTimetable[day].orEmptyContents()
         val timetableState = timetableListStates[dayIndex]
         val coroutineScope = rememberCoroutineScope()
+        val layoutDirection = LocalLayoutDirection.current
 
-        Row {
+        Row(
+            modifier = Modifier.padding(
+                top = contentPadding.calculateTopPadding(),
+                start = contentPadding.calculateStartPadding(layoutDirection),
+                end = contentPadding.calculateEndPadding(layoutDirection),
+            )
+        ) {
             Hours(
                 modifier = modifier.transformable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
@@ -213,7 +246,10 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    coroutineScope,
+                    coroutineScope = coroutineScope,
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                    )
                 ) { timetableItem, isFavorited ->
                     TimetableItem(
                         timetableItem = timetableItem,
@@ -240,8 +276,11 @@ fun SessionsList(
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     HorizontalPager(
+        modifier = modifier,
         count = days.size,
         state = pagerState
     ) { dayIndex ->
@@ -268,7 +307,8 @@ fun SessionsList(
         }
         SessionList(
             timetable = timeHeaderAndTimetableItems,
-            sessionsListListState = sessionsListListStates[dayIndex]
+            sessionsListListState = sessionsListListStates[dayIndex],
+            contentPadding = contentPadding
         ) { (timeHeader, timetableItemWithFavorite) ->
             Box(
                 modifier = Modifier
@@ -368,7 +408,10 @@ fun SessionsTopBar(
                         color = MaterialTheme.colorScheme
                             .surfaceColorAtElevation(2.dp)
                     )
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
+                    ),
                 containerColor = MaterialTheme.colorScheme
                     .surfaceColorAtElevation(2.dp),
                 indicator = {
