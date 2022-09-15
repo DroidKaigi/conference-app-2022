@@ -24,7 +24,7 @@ jobs:
         run: echo ok
 
   build:
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     timeout-minutes: 60
 
     steps:
