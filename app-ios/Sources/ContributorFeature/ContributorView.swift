@@ -1,7 +1,9 @@
+import Assets
 import ComposableArchitecture
 import SwiftUI
 import Model
-import Assets
+import Strings
+import SwiftUI
 import Theme
 
 public struct ContributorState: Equatable {
@@ -74,6 +76,8 @@ public struct ContributorView: View {
                 await viewStore.send(.refresh).finish()
             }
             .listStyle(PlainListStyle())
+            .navigationTitle(L10n.Contributors.title)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
@@ -126,17 +130,19 @@ struct ListItemButtonStyle: ButtonStyle {
 #if DEBUG
 struct ContributorView_Previews: PreviewProvider {
     static var previews: some View {
-        ContributorView(
-            store: .init(
-                initialState: .init(
-                    contributors: Contributor.companion.fakes()
-                ),
-                reducer: .empty,
-                environment: ContributorEnvironment(
-                    contributorsRepository: FakeContributorsRepository()
+        NavigationView {
+            ContributorView(
+                store: .init(
+                    initialState: .init(
+                        contributors: Contributor.companion.fakes()
+                    ),
+                    reducer: .empty,
+                    environment: ContributorEnvironment(
+                        contributorsRepository: FakeContributorsRepository()
+                    )
                 )
             )
-        )
+        }
         .preferredColorScheme(.dark)
     }
 }
