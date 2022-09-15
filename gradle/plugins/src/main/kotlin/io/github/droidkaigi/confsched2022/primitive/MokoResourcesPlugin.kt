@@ -17,6 +17,15 @@ class MokoResourcesPlugin : Plugin<Project> {
                     val os = DefaultNativePlatform.getCurrentOperatingSystem()
                     if (os.isMacOsX) {
                         res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
+                    } else {
+                        File(buildDir, "generated/moko/androidMain/res").walkTopDown()
+                            .onEnter {
+                                if (it.isFile) {
+                                    println(it.path)
+                                    println(it.readText())
+                                }
+                                true
+                            }
                     }
                 }
             }
