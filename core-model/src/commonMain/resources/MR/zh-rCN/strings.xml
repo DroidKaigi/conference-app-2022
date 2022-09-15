@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <!-- Navigation Drawer -->
-    <string name="title_sessions">タイムライン</string>
-    <string name="title_about">DroidKaigiとは</string>
-    <string name="title_announcement">お知らせ</string>
-    <string name="title_map">フロアマップ</string>
-    <string name="title_sponsors">スポンサー</string>
-    <string name="title_contributors">コントリビューター</string>
-    <string name="title_setting">設定</string>
+    <string name="title_sessions">动态消息</string>
+    <string name="title_about">关于DroidKaigi</string>
+    <string name="title_announcement">通知</string>
+    <string name="title_map">楼面导轨</string>
+    <string name="title_sponsors">赞助者</string>
+    <string name="title_contributors">Contributor</string>
+    <string name="title_setting">设置</string>
 
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
