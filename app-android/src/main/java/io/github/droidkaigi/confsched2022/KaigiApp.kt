@@ -44,11 +44,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
@@ -69,6 +70,7 @@ import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.coroutines.CoroutineScope
@@ -252,22 +254,26 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 }
 
-enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
-    Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
-    About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
+enum class DrawerItem(
+    val titleStringRes: StringResource,
+    val icon: ImageVector,
+    val navRoute: String
+) {
+    Sessions(Strings.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
+    About(Strings.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
     Announcement(
-        R.string.title_announcement,
+        Strings.title_announcement,
         Icons.Default.Announcement,
         AnnouncementNavGraph.announcementRoute
     ),
-    Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(R.string.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
+    Map(Strings.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
+    Sponsors(Strings.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
     Contributors(
-        R.string.title_contributors,
+        Strings.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(R.string.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
+    Setting(Strings.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
@@ -296,7 +302,7 @@ fun ColumnScope.DrawerSheetContent(
                     Icon(imageVector = drawerItem.icon, contentDescription = null)
                 },
                 label = {
-                    Text(stringResource(drawerItem.titleResId))
+                    Text(stringResource(drawerItem.titleStringRes))
                 },
                 selected = drawerItem == selectedDrawerItem,
                 onClick = {

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">タイムライン</string>
+    <string name="title_about">DroidKaigiとは</string>
+    <string name="title_announcement">お知らせ</string>
+    <string name="title_map">フロアマップ</string>
+    <string name="title_sponsors">スポンサー</string>
+    <string name="title_contributors">コントリビューター</string>
+    <string name="title_setting">設定</string>
+
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
+    <string name="about_description">
+        DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。
+    </string>
     <string name="about_access">会場アクセス</string>
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
