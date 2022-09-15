@@ -278,7 +278,7 @@ private fun SearchedItem(
                                     .size(30.dp)
                                     .weight(1f)
                                     .clickable {
-                                        onBookMarkClick.invoke(
+                                        onBookMarkClick(
                                             timeTable.id,
                                             timetableItemWithFavorite.isFavorited
                                         )
