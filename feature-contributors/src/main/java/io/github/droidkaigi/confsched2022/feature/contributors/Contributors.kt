@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.contributors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -58,11 +59,11 @@ fun Contributors(
             )
         }
     ) { innerPadding ->
-        Box(modifier = modifier) {
+        Box {
             when (uiModel.state) {
                 is Error -> TODO()
                 Loading -> Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.padding(innerPadding).fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
