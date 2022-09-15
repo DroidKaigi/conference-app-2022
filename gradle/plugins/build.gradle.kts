@@ -27,6 +27,8 @@ dependencies {
     implementation(libs.sqldelightGradlePlugin)
     implementation(libs.detektGradlePlugin)
     implementation(libs.mokoResourcesPlugin)
+    implementation(libs.kspGradlePlugin)
+    implementation(libs.paparazziGradlePlugin)
 }
 
 gradlePlugin {
@@ -108,7 +110,14 @@ gradlePlugin {
             id = "droidkaigi.primitive.detekt"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.DetektPlugin"
         }
-
+        register("paparazzi") {
+            id = "droidkaigi.primitive.android.paparazzi"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.PaparazziPlugin"
+        }
+        register("showkase") {
+            id = "droidkaigi.primitive.android.compose.showkase"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.ShowkasePlugin"
+        }
         // Conventions
         register("androidFeature") {
             id = "droidkaigi.convention.androidfeature"

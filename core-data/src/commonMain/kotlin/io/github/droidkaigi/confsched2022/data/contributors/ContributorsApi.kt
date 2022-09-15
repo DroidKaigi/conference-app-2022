@@ -12,8 +12,7 @@ class ContributorsApi(
 ) {
     suspend fun contributors(): PersistentList<Contributor> {
         return networkService.get<ContributorsResponse>(
-            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/contributors",
-            needAuth = true
+            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/contributors"
         ).toContributorList()
     }
 }

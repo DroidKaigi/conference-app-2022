@@ -1,5 +1,7 @@
+// TODO: Remove once https://youtrack.jetbrains.com/issue/KTIJ-19369 is fixed
 plugins {
     id("droidkaigi.convention.androidfeature")
+    id("droidkaigi.primitive.android.compose.showkase")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022.feature.contributors"

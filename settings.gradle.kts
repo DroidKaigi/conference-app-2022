@@ -4,7 +4,6 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-//        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -14,6 +13,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
         // for datastore-okio
 //        maven(url = "https://androidx.dev/snapshots/builds/8938977/artifacts/repository") {
 //            content {
@@ -41,7 +41,8 @@ include(
     ":core-designsystem",
     ":core-data",
     ":core-testing",
-    ":core-model"
+    ":core-model",
+    ":preview-screenshots"
 )
 
 // for iOS framework name

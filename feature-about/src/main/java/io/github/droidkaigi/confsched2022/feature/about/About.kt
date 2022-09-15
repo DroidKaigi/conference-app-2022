@@ -1,6 +1,8 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Person
@@ -160,6 +163,8 @@ fun About(
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
+                val codeConductUrl = "https://portal.droidkaigi.jp/about/code-of-conduct"
+                val context = LocalContext.current
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textRes = Strings.about_access,
@@ -175,18 +180,31 @@ fun About(
                 )
 
                 AuxiliaryInformationRow(
-                    imageVector = Icons.Filled.PrivacyTip,
-                    textRes = Strings.about_privacy,
-                    onClick = {
-                        // TODO: Implement privacy policy
-                    }
-                )
-
-                AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
                     textRes = Strings.about_license,
                     onClick = {
                         // TODO: Implement license
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.DirectionsWalk,
+                    textRes = Strings.about_code_conduct,
+                    onClick = {
+                        CustomTabsIntent.Builder().also { builder ->
+                            builder.setShowTitle(true)
+                            builder.build().also {
+                                it.launchUrl(context, Uri.parse(codeConductUrl))
+                            }
+                        }
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.PrivacyTip,
+                    textRes = Strings.about_privacy,
+                    onClick = {
+                        // TODO: Implement privacy policy
                     }
                 )
             }

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">タイムライン</string>
+    <string name="title_about">DroidKaigiとは</string>
+    <string name="title_announcement">お知らせ</string>
+    <string name="title_map">フロアマップ</string>
+    <string name="title_sponsors">スポンサー</string>
+    <string name="title_contributors">コントリビューター</string>
+    <string name="title_setting">設定</string>
+
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
@@ -8,6 +17,7 @@
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
     <string name="about_license">ライセンス</string>
+    <string name="about_code_conduct">行動規範</string>
     <string name="about_app_version">アプリバーション</string>
 
     <!-- Announcement -->
@@ -31,4 +41,9 @@
     <string name="setting_item_dark_mode">ダークモード</string>
     <string name="setting_item_language">言語設定</string>
 
+    <!-- Sponsors -->
+    <string name="sponsors_top_app_bar_title">スポンサー</string>
+
+    <!-- Staff -->
+    <string name="staff_top_app_bar_title">スタッフリスト</string>
 </resources>
