@@ -110,7 +110,16 @@ struct ContributorItemView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .frame(minHeight: 0, maxHeight: .infinity)
             }
+            .buttonStyle(ListItemButtonStyle())
         }
+    }
+}
+
+struct ListItemButtonStyle: ButtonStyle {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
+        configuration.label
+            .contentShape(Rectangle())
+            .background(configuration.isPressed ? Color(.systemGray).opacity(0.4) : Color.clear)
     }
 }
 
