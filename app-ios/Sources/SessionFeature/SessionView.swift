@@ -1,3 +1,4 @@
+import appioscombined
 import Assets
 import ComposableArchitecture
 import Model
@@ -7,7 +8,7 @@ import Theme
 
 public struct SessionState: Equatable {
     public var timetableItemWithFavorite: TimetableItemWithFavorite
-    public var showShareSheet: Bool = false
+    public var isShareSheetShown: Bool = false
 
     public init(timetableItemWithFavorite: TimetableItemWithFavorite) {
         self.timetableItemWithFavorite = timetableItemWithFavorite
@@ -18,7 +19,7 @@ public enum SessionAction {
     case tapCalendar(TimetableItem)
     case tapFavorite(TimetableItemId, Bool)
     case tapShare
-    case nothing
+    case hideShareSheet
 }
 
 public struct SessionEnvironment {
@@ -39,14 +40,20 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case .tapFavorite(let sessionId, let isFavorite):
-        state.timetableItemWithFavorite = TimetableItemWithFavorite(timetableItem: state.timetableItemWithFavorite.timetableItem, isFavorited: !isFavorite)
+        state.timetableItemWithFavorite = TimetableItemWithFavorite(
+            timetableItem: state.timetableItemWithFavorite.timetableItem,
+            isFavorited: !isFavorite
+        )
         return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: sessionId, favorite: !isFavorite)
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case .tapShare:
-        state.showShareSheet = true
+        state.isShareSheetShown = true
+        return .none
+    case .hideShareSheet:
+        state.isShareSheetShown = false
         return .none
     default:
         return .none
@@ -63,7 +70,7 @@ public struct SessionView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(self.store) { viewStore in
             let timeTableItem = viewStore.timetableItemWithFavorite.timetableItem
             let isFavorited = viewStore.timetableItemWithFavorite.isFavorited
 
@@ -71,7 +78,7 @@ public struct SessionView: View {
                 Button {
                     self.presentationMode.wrappedValue.dismiss()
                 } label: {
-                    Image(systemName: "xmark")
+                    Assets.close.swiftUIImage
                 }
                 .padding(.leading)
                 .padding([.top, .bottom], 16)
@@ -84,7 +91,7 @@ public struct SessionView: View {
                             .padding(.bottom)
 
                         timeTableItem.tagsView
-                            .padding(.bottom, 72)
+                            .padding(.bottom, 24)
 
                         timeTableItem.durationView
                             .padding(.bottom, 24)
@@ -111,14 +118,14 @@ public struct SessionView: View {
                         Button {
                             viewStore.send(.tapShare)
                         } label: {
-                            Image(systemName: "square.and.arrow.up")
+                            Assets.share.swiftUIImage
                         }
                         .frame(width: 48, height: 48)
 
                         Button {
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
-                            Assets.map.swiftUIImage
+                            Assets.navigate.swiftUIImage
                         }
                         .frame(width: 48, height: 48)
 
@@ -147,7 +154,7 @@ public struct SessionView: View {
             }
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
             .background(AssetColors.background.swiftUIColor)
-            .sheet(isPresented: viewStore.binding(get: { $0.showShareSheet }, send: .nothing)) {
+            .sheet(isPresented: viewStore.binding(get: { $0.isShareSheetShown }, send: .hideShareSheet)) {
                 let text = "\(timeTableItem.title.currentLangTitle)\nhttps://droidkaigi.jp/2022/timetable/\(timeTableItem.id.value)"
                 ShareTextView(text: text)
             }

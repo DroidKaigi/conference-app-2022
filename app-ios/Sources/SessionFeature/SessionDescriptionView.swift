@@ -1,3 +1,4 @@
+import appioscombined
 import SwiftUI
 import Theme
 import Strings
@@ -58,7 +59,7 @@ struct SessionDescriptionView: View {
 struct SessionDescriptionView_Previews: PreviewProvider {
     static var previews: some View {
         SessionDescriptionView(
-            text: ""
+            text: TimetableItem.Session.companion.fake().description_
         )
     }
 }

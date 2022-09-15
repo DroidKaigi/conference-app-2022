@@ -1,4 +1,5 @@
 import SwiftUI
+import Theme
 
 struct Tag: Equatable, Hashable {
     let text: String
@@ -7,13 +8,6 @@ struct Tag: Equatable, Hashable {
 
 extension Tag {
     var view: some View {
-        return Text(self.text)
-            .font(Font.system(size: 14, weight: .regular, design: .default))
-            .padding(.horizontal)
-            .padding(.vertical, 4)
-            .background(
-                Capsule()
-                    .fill(self.color)
-            )
+        return CapsuleText(text: self.text, foregroundColor: AssetColors.white.swiftUIColor, backgroundColor: self.color)
     }
 }

@@ -7,7 +7,7 @@ struct SessionSpeakersView: View {
 
     let speakers: [TimetableSpeaker]
     
-    public var body: some View {
+    var body: some View {
         VStack(alignment: .leading) {
             Text(L10n.Session.speaker)
                 .font(Font.system(size: 16, weight: .medium, design: .default))

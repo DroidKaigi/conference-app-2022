@@ -1,4 +1,5 @@
 import appioscombined
+import Assets
 import SwiftUI
 import Strings
 
@@ -14,7 +15,7 @@ struct SessionAssetsView: View {
                 .padding(.bottom)
             if let videoUrl = self.asset.videoUrl {
                 HStack {
-                    Image(systemName: "video")
+                    Assets.video.swiftUIImage
                         .padding(.trailing, 8)
                     Button {
                         self.openURL(URL(string: videoUrl)!)
@@ -27,7 +28,7 @@ struct SessionAssetsView: View {
             }
             if let slidesUrl = self.asset.slideUrl {
                 HStack {
-                    Image(systemName: "photo.on.rectangle")
+                    Assets.slides.swiftUIImage
                         .padding(.trailing, 8)
                     Button {
                         self.openURL(URL(string: slidesUrl)!)
