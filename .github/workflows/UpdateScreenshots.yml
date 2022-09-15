@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-screenshot:
-    runs-on: ubuntu-latest
+    runs-on: macos-12
     if: github.event.pull_request.merged == true
 
     steps:
