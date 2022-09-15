@@ -4,7 +4,6 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

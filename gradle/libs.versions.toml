@@ -45,7 +45,7 @@ coilCompose = "2.2.1"
 koin = "3.2.1"
 androidXChromeCustomTabs = "1.4.0"
 ksp = "1.7.10-1.0.6"
-paparazzi = "1.1.0-SNAPSHOT"
+paparazzi = "1.0.0"
 showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 mokoResources = "0.20.1"
@@ -66,6 +66,8 @@ firebasePlugin = { module = "com.google.gms:google-services", version.ref = "fir
 mokoResourcesPlugin = { module = "dev.icerock.moko:resources-generator", version.ref = "mokoResources" }
 androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+kspGradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+paparazziGradlePlugin = { module = "app.cash.paparazzi:paparazzi-gradle-plugin", version.ref = "paparazzi" }
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -136,8 +138,8 @@ androidxTestEspressoEspressoCore = { module = "androidx.test.espresso:espresso-c
 hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 kluentAndroid = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
-showkase-runtime = { group = "com.airbnb.android", name = "showkase", version.ref = "showkase" }
-showkase-processor = { group = "com.airbnb.android", name = "showkase-processor", version.ref = "showkase" }
+showkaseRuntime = { group = "com.airbnb.android", name = "showkase", version.ref = "showkase" }
+showkaseProcessor = { group = "com.airbnb.android", name = "showkase-processor", version.ref = "showkase" }
 testParameterInjector = { group = "com.google.testparameterinjector", name = "test-parameter-injector", version.ref = "testParameterInjector" }
 
 [plugins]
@@ -145,7 +147,7 @@ androidGradlePlugin = { id = "com.android.application", version.ref = "androidGr
 androidGradleLibraryPlugin = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hiltGradlePlugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
+kspPlugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+paparazziPlugin = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
 sqldelightGradlePlugin = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
 detektPlugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
