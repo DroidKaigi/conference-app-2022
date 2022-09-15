@@ -18,8 +18,10 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.EmptyCoroutineContext
 
+@Singleton
 class SessionsZipline @Inject constructor(
     okHttpClient: OkHttpClient
 ) {
