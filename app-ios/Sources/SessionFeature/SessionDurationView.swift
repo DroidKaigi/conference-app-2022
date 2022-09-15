@@ -2,23 +2,38 @@ import appioscombined
 import Assets
 import SwiftUI
 
-extension TimetableItem {
-    var durationView: some View {
+struct SessionDurationView: View {
+
+    let durationString: String
+
+    var body: some View {
         HStack {
             Assets.clock.swiftUIImage
                 .padding(.trailing, 8)
-            Text(self.durationString(languageCode: Locale.current.languageCode))
+            Text(self.durationString)
                 .font(Font.system(size: 12, weight: .regular, design: .default))
         }
     }
-    private func durationString(languageCode: String?) -> String {
+}
+
+#if DEBUG
+struct SessionDurationView_Previews: PreviewProvider {
+    static var previews: some View {
+        SessionDurationView(durationString: TimetableItem.Session.companion.fake().durationString(languageCode: nil))
+    }
+}
+#endif
+
+extension TimetableItem {
+
+    func durationString(languageCode: String?) -> String {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
 
         let startDate = Date(timeIntervalSince1970: TimeInterval(self.startsAt.epochSeconds))
         let endDate = Date(timeIntervalSince1970: TimeInterval(self.endsAt.epochSeconds))
-        
+
         return formatter.string(from: startDate, to: endDate)
     }
 }

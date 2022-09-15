@@ -49,6 +49,14 @@ struct SessionTagsView: View {
     }
 }
 
+#if DEBUG
+struct SessionTagsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SessionTagsView(tags: TimetableItem.Session.companion.fake().tags)
+    }
+}
+#endif
+
 extension TimetableItem {
     var tags: [Tag] {
         return [

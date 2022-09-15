@@ -33,3 +33,11 @@ struct SessionSpeakersView: View {
         }
     }
 }
+
+#if DEBUG
+struct SessionSpeakersView_Previews: PreviewProvider {
+    static var previews: some View {
+        SessionSpeakersView(speakers: TimetableItem.Session.companion.fake().speakers)
+    }
+}
+#endif

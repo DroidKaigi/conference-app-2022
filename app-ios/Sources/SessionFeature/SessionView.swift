@@ -71,7 +71,7 @@ public struct SessionView: View {
 
     public var body: some View {
         WithViewStore(self.store) { viewStore in
-            let timeTableItem = viewStore.timetableItemWithFavorite.timetableItem
+            let timetableItem = viewStore.timetableItemWithFavorite.timetableItem
             let isFavorited = viewStore.timetableItemWithFavorite.isFavorited
 
             VStack(alignment: .leading) {
@@ -84,31 +84,27 @@ public struct SessionView: View {
                 .padding([.top, .bottom], 16)
 
                 ScrollView {
-                    VStack(alignment: .leading) {
-                        Text(timeTableItem.title.currentLangTitle)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .font(Font.system(size: 32, weight: .medium, design: .default))
-                            .padding(.bottom)
+                    VStack(alignment: .leading, spacing: 48) {
+                        VStack(alignment: .leading, spacing: 24) {
+                            Text(timetableItem.title.currentLangTitle)
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                                .font(Font.system(size: 32, weight: .medium, design: .default))
 
-                        SessionTagsView(tags: timeTableItem.tags)
-                            .padding(.bottom, 24)
+                            SessionTagsView(tags: timetableItem.tags)
 
-                        timeTableItem.durationView
-                            .padding(.bottom, 24)
+                            SessionDurationView(durationString: timetableItem.durationString(languageCode: Locale.current.languageCode))
+                        }
 
-                        if let session = timeTableItem.asSession() {
+                        if let session = timetableItem.asSession() {
                             SessionDescriptionView(text: session.description_)
-                                .padding(.bottom, 24)
                         }
-                        SessionAudienceView(targetAudience: timeTableItem.targetAudience)
-                            .padding(.bottom, 24)
-                        if let session = timeTableItem.asSession() {
+                        SessionAudienceView(targetAudience: timetableItem.targetAudience)
+
+                        if let session = timetableItem.asSession() {
                             SessionSpeakersView(speakers: session.speakers)
-                                .padding(.bottom, 24)
                         }
 
-                        SessionAssetsView(asset: timeTableItem.asset)
-                            .padding(.bottom, 36)
+                        SessionAssetsView(asset: timetableItem.asset)
                     }
                     .padding(.horizontal)
                 }
@@ -138,7 +134,7 @@ public struct SessionView: View {
                     }
                     Spacer()
                     Button {
-                        viewStore.send(.tapFavorite(timeTableItem.id, isFavorited))
+                        viewStore.send(.tapFavorite(timetableItem.id, isFavorited))
                     } label: {
                         if isFavorited {
                             Assets.bookmark.swiftUIImage
@@ -155,8 +151,7 @@ public struct SessionView: View {
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
             .background(AssetColors.background.swiftUIColor)
             .sheet(isPresented: viewStore.binding(get: { $0.isShareSheetShown }, send: .hideShareSheet)) {
-                let text = "\(timeTableItem.title.currentLangTitle)\nhttps://droidkaigi.jp/2022/timetable/\(timeTableItem.id.value)"
-                ShareTextView(text: text)
+                ShareTextView(text: timetableItem.shareText)
             }
         }
     }
@@ -167,8 +162,7 @@ struct SessionView_Previews: PreviewProvider {
     static var previews: some View {
         SessionView(
             store: .init(
-                initialState: .init(
-                    timetableItemWithFavorite: TimetableItemWithFavorite(timetableItem: Timetable.companion.fake().timetableItems.first!, isFavorited: false)),
+                initialState: .init(timetableItemWithFavorite: TimetableItemWithFavorite.companion.fake()),
                 reducer: .empty,
                 environment: SessionEnvironment(sessionsRepository: FakeSessionsRepository())
             )

@@ -8,7 +8,7 @@ struct SessionAssetsView: View {
 
     let asset: TimetableAsset
 
-    public var body: some View {
+    var body: some View {
         VStack {
             Text(L10n.Session.material)
                 .font(Font.system(size: 16, weight: .medium, design: .default))
@@ -41,3 +41,11 @@ struct SessionAssetsView: View {
         }
     }
 }
+
+#if DEBUG
+struct SessionAssetsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SessionAssetsView(asset: TimetableItem.Session.companion.fake().asset)
+    }
+}
+#endif
