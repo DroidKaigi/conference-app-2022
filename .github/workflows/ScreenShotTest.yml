@@ -47,6 +47,7 @@ jobs:
 
       - name: Comment PR
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
+        continue-on-error: true # https://github.com/DroidKaigi/conference-app-2022/issues/497
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
