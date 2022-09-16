@@ -38,4 +38,3 @@ struct ContributorView_Previews: PreviewProvider {
     }
 }
 #endif
-

@@ -1,6 +1,6 @@
 import appioscombined
-import UIKit
 import SwiftUI
+import UIKit
 
 struct ShareTextView: UIViewControllerRepresentable {
     let text: String

@@ -38,4 +38,3 @@ struct SponsorView_Previews: PreviewProvider {
     }
 }
 #endif
-

@@ -1,7 +1,7 @@
 import appioscombined
 import Assets
-import SwiftUI
 import Strings
+import SwiftUI
 
 struct SessionAssetsView: View {
     @Environment(\.openURL) var openURL

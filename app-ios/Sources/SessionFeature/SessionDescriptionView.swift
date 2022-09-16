@@ -1,7 +1,7 @@
 import appioscombined
+import Strings
 import SwiftUI
 import Theme
-import Strings
 
 struct SessionDescriptionView: View {
     let text: String
@@ -10,7 +10,6 @@ struct SessionDescriptionView: View {
     @State private var isTruncated: Bool = false
 
     private static let lineLimit: Int = 5
-    
     var body: some View {
         VStack(alignment: .leading) {
             Text(self.text)

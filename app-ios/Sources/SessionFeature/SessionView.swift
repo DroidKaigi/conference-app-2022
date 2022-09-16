@@ -55,8 +55,6 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
     case .hideShareSheet:
         state.isShareSheetShown = false
         return .none
-    default:
-        return .none
     }
 }
 

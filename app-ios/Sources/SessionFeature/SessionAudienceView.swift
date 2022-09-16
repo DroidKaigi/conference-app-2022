@@ -1,5 +1,5 @@
-import SwiftUI
 import Strings
+import SwiftUI
 
 struct SessionAudienceView: View {
 
