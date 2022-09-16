@@ -1,7 +1,6 @@
 package io.github.droidkaigi.confsched2022.zipline
 
 import app.cash.zipline.EventListener
-import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ManifestVerifier
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
@@ -9,12 +8,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -22,7 +16,8 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 @Singleton
 class SessionsZipline @Inject constructor(
@@ -88,43 +83,30 @@ class SessionsZipline @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalTime::class) // measureTimedValue
     fun timetableModifier(
         coroutineScope: CoroutineScope,
-    ): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+    ): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> = channelFlow {
+        // The JS modifier takes about 300 ms to execute.
+        // Emitting the default Android modifier first prevents the JS modifier from being displayed
+        // as loading during execution.
         val androidScheduleModifier = AndroidScheduleModifier()
         val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
+            Logger.v("zipline Android")
             androidScheduleModifier.modify(timetable)
         }
-        val modifierStateFlow = MutableStateFlow(defaultModifier)
+        send(defaultModifier)
 
-        coroutineScope.launch(dispatcher) {
-            var zipline: Zipline? = null
-
-            // If the server works, we will comment in
-            val modifier = try {
-                val loadedZiplineFlow = ziplineLoader.load(
-                    applicationName = "timeline",
-                    manifestUrlFlow = flowOf(manifestUrl),
-                    initializer = { },
-                )
-                loadedZiplineFlow.catch { throwable -> throwable.printStackTrace() }
-                val loadedZipline = loadedZiplineFlow.firstOrNull()
-                if (loadedZipline == null) {
-                    loadedZiplineFlow.catch { it.printStackTrace() }
-                }
-                zipline = loadedZipline!!.zipline
-                zipline.take<ScheduleModifier>("sessionsModifier")
-            } catch (e: Exception) {
-                Logger.d(e) { "zipline load error" }
-                androidScheduleModifier
+        try {
+            val scheduleModifier = takeOrGetScheduleModifier()
+            send { timetable ->
+                Logger.v("zipline JS executing")
+                val timedValue = measureTimedValue { scheduleModifier.modify(timetable) }
+                Logger.v("zipline JS took ${timedValue.duration}")
+                timedValue.value
             }
-            modifierStateFlow.emit { timetable -> modifier.modify(timetable) }
-
-            coroutineContext.job.invokeOnCompletion {
-                dispatcher.dispatch(EmptyCoroutineContext) { zipline?.close() }
-                executorService.shutdown()
-            }
+        } catch (e: Exception) {
+            Logger.d(e) { "zipline load error" }
         }
-        return modifierStateFlow
     }
 }
