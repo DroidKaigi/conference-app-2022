@@ -485,38 +485,37 @@ fun SessionDetailSpeakers(
         Spacer(modifier = Modifier.padding(16.dp))
 
         speakers.forEach { speaker ->
-            if (speaker.iconUrl.isNotEmpty()) {
-                Row(
+            Row(
+                modifier = Modifier
+                    .clearAndSetSemantics {
+                        contentDescription = speaker.name
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AsyncImage(
+                    model = speaker.iconUrl,
                     modifier = Modifier
-                        .clearAndSetSemantics {
-                            contentDescription = speaker.name
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AsyncImage(
-                        model = speaker.iconUrl,
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(CircleShape),
-                        placeholder = painterResource(R.drawable.ic_baseline_person_24),
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center,
-                        contentDescription = "Speaker Icon",
-                    )
-                    Spacer(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
-                    // TODO Transition to Speaker detail
-                    Text(
-                        modifier = Modifier,
-                        text = speaker.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
+                        .size(60.dp)
+                        .clip(CircleShape),
+                    placeholder = painterResource(R.drawable.ic_baseline_person_24),
+                    error = painterResource(R.drawable.ic_baseline_person_24),
+                    contentScale = ContentScale.Fit,
+                    alignment = Alignment.Center,
+                    contentDescription = "Speaker Icon",
+                )
                 Spacer(
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                // TODO Transition to Speaker detail
+                Text(
+                    modifier = Modifier,
+                    text = speaker.name,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
+            Spacer(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
         }
 
         Spacer(
