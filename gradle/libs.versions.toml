@@ -50,6 +50,7 @@ showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
+twitterComposeRulesDetekt = "0.0.8"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -126,6 +127,8 @@ firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "fi
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
 mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
+
+twitterComposeRulesDetekt = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRulesDetekt" }
 
 # iOS
 koin = { module = "io.insert-koin:koin-core", version.ref = "koin" }
