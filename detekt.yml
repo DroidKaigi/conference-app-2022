@@ -50,4 +50,4 @@ TwitterCompose:
   ViewModelForwarding:
     active: false
   ViewModelInjection:
-    active: false
+    active: true
