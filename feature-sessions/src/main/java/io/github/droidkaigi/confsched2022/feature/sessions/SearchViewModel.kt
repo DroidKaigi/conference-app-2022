@@ -19,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,9 +41,7 @@ class SearchViewModel @Inject constructor(
             ::Pair
         ).map { (modifier, schedule) ->
             try {
-                withTimeout(100) {
-                    modifier(schedule)
-                }
+                modifier(schedule)
             } catch (e: Exception) {
                 Logger.d(throwable = e) { "Zipline modifier error" }
                 schedule
