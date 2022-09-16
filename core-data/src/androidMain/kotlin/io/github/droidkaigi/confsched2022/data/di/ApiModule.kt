@@ -74,12 +74,13 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            level = BASIC
+        val builder = OkHttpClient.Builder()
+        if (BuildConfig.DEBUG) {
+            val httpLoggingInterceptor = HttpLoggingInterceptor()
+            httpLoggingInterceptor.level = BASIC
+            builder.addNetworkInterceptor(httpLoggingInterceptor)
         }
-        return OkHttpClient.Builder()
-            .addNetworkInterceptor(httpLoggingInterceptor)
-            .build()
+        return builder.build()
     }
 
     @Provides
