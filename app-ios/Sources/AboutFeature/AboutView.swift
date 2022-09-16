@@ -44,7 +44,7 @@ public struct AboutView: View {
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 32)
                 .padding(.vertical, 32)
 
                 Divider()
@@ -65,7 +65,7 @@ public struct AboutView: View {
                         .frame(minHeight: 56)
                     }
                 }
-                .padding(.horizontal, 13)
+                .padding(.horizontal, 29)
 
                 Spacer()
                     .frame(height: 32)
