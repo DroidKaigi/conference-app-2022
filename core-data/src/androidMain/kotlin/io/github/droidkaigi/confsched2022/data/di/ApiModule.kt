@@ -20,6 +20,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -73,8 +74,13 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .build()
+        val builder = OkHttpClient.Builder()
+        if (BuildConfig.DEBUG) {
+            val httpLoggingInterceptor = HttpLoggingInterceptor()
+            httpLoggingInterceptor.level = BASIC
+            builder.addNetworkInterceptor(httpLoggingInterceptor)
+        }
+        return builder.build()
     }
 
     @Provides

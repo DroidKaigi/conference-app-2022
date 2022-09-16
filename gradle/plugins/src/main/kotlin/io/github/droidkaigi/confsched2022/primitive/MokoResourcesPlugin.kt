@@ -2,6 +2,7 @@ package io.github.droidkaigi.confsched2022.primitive
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import java.io.File
 
 @Suppress("unused")
@@ -12,8 +13,11 @@ class MokoResourcesPlugin : Plugin<Project> {
 
             android {
                 sourceSets.getByName("main").apply {
-                    assets.srcDir(File(buildDir, "generated/moko/androidMain/assets"))
-                    res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
+                    val os = DefaultNativePlatform.getCurrentOperatingSystem()
+                    if (os.isMacOsX) {
+                        assets.srcDir(File(buildDir, "generated/moko/androidMain/assets"))
+                        res.srcDir(File(buildDir, "generated/moko/androidMain/res"))
+                    }
                 }
             }
         }
