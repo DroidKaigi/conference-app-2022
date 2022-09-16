@@ -49,7 +49,7 @@ public struct AboutView: View {
 
                 Divider()
                     .background(AssetColors.outline.swiftUIColor)
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, 45)
 
                 ForEach(AboutNavigationItem.items, id: \.title) { item in
                     Button {
