@@ -10,7 +10,7 @@ data class MultiLangText(
     val currentLangTitle get() = getByLang(defaultLang())
 
     fun getByLang(lang: Lang): String {
-        return if (lang == Lang.JA) {
+        return if (lang == Lang.JAPANESE) {
             jaTitle
         } else {
             enTitle

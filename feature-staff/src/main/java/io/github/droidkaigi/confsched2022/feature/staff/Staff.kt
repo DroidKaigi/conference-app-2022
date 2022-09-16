@@ -29,11 +29,11 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 @Composable
 fun StaffScreenRoot(
     modifier: Modifier = Modifier,
+    viewModel: StaffViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> }
 ) {
-    val viewModel = hiltViewModel<StaffViewModel>()
     val uiModel by viewModel.uiModel
     Staff(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
 }

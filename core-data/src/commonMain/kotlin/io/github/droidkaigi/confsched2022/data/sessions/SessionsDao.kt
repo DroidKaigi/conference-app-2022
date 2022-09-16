@@ -16,6 +16,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
+import io.github.droidkaigi.confsched2022.model.TimetableLanguage
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import kotlinx.collections.immutable.PersistentList
@@ -118,7 +119,8 @@ class SessionsDao(
             roomNameEn = room.name.enTitle,
             roomSort = room.sort,
             targetAudience = targetAudience,
-            language = language,
+            language = language.langOfSpeaker,
+            isInterpretationTarget = language.isInterpretationTarget.toLong(),
             assetVideoUrl = asset.videoUrl,
             assetSlideUrl = asset.slideUrl,
             levels = levelsAdapter.encode(levels),
@@ -143,7 +145,8 @@ class SessionsDao(
             roomNameEn = room.name.enTitle,
             roomSort = room.sort,
             targetAudience = targetAudience,
-            language = language,
+            language = language.langOfSpeaker,
+            isInterpretationTarget = language.isInterpretationTarget.toLong(),
             assetVideoUrl = asset.videoUrl,
             assetSlideUrl = asset.slideUrl,
             levels = levelsAdapter.encode(levels),
@@ -188,7 +191,10 @@ class SessionsDao(
                     sort = session.roomSort,
                 ),
                 targetAudience = session.targetAudience,
-                language = session.language,
+                language = TimetableLanguage(
+                    langOfSpeaker = session.language,
+                    isInterpretationTarget = session.isInterpretationTarget.toBoolean(),
+                ),
                 asset = TimetableAsset(
                     videoUrl = session.assetVideoUrl,
                     slideUrl = session.assetSlideUrl,
@@ -232,7 +238,10 @@ class SessionsDao(
                     sort = special.roomSort,
                 ),
                 targetAudience = special.targetAudience,
-                language = special.language,
+                language = TimetableLanguage(
+                    langOfSpeaker = special.language,
+                    isInterpretationTarget = special.isInterpretationTarget.toBoolean(),
+                ),
                 asset = TimetableAsset(
                     videoUrl = special.assetVideoUrl,
                     slideUrl = special.assetSlideUrl,
@@ -252,6 +261,14 @@ class SessionsDao(
             tagLine = tagLine,
         )
     }
+
+    private fun Boolean.toLong(): Long = if (this) {
+        1
+    } else {
+        0
+    }
+
+    private fun Long.toBoolean(): Boolean = this == 1L
 
     companion object {
         private val levelsAdapter: ColumnAdapter<PersistentList<String>, String> =
