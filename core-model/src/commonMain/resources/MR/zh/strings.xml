@@ -35,6 +35,8 @@
     <string name="session_material">资料</string>
     <string name="session_movie">动画</string>
     <string name="session_slide">发表资料</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="session_language_interpretation">(interpretation)</string>
 
     <!-- Setting -->
     <string name="setting_title">设置</string>
