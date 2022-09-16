@@ -86,12 +86,11 @@ import java.util.Locale
 @Composable
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
+    viewModel: SessionDetailViewModel = hiltViewModel(),
     timetableItemId: TimetableItemId,
     onBackIconClick: () -> Unit = {},
     onNavigateFloorMapClick: () -> Unit,
 ) {
-
-    val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
     val shareManager = LocalShareManager.current
