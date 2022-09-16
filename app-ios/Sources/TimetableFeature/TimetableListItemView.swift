@@ -1,8 +1,8 @@
 import appioscombined
-import SwiftUI
 import Assets
-import Theme
 import Model
+import SwiftUI
+import Theme
 
 struct TimetableListItemView: View {
     let item: TimetableItem
