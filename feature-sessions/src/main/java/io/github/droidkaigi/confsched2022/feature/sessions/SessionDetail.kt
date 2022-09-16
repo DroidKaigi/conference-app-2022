@@ -299,16 +299,21 @@ fun SessionTagsLine(
 ) {
     val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
     val roomColor = TimetableItemColor.colorOfRoomName(enName = room.name.enTitle)
+    val lang = Lang.valueOf(language.langOfSpeaker)
+    val secondLang = lang.secondLang()
 
     FlowRow(
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
-        val lang = Lang.valueOf(language.langOfSpeaker)
-        val secondLang = lang.secondLang()
         KaigiTag(
-            backgroundColor = Color(lang.backgroundColor)
+            backgroundColor = Color(roomColor)
+        ) {
+            Text(room.name.currentLangTitle)
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
             Text(lang.tagName)
         }
@@ -316,18 +321,13 @@ fun SessionTagsLine(
             secondLang != null
         ) {
             KaigiTag(
-                backgroundColor = Color(secondLang.backgroundColor)
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
             ) {
                 Text(
                     secondLang.tagName +
                         stringResource(Strings.session_language_interpretation)
                 )
             }
-        }
-        KaigiTag(
-            backgroundColor = Color(roomColor)
-        ) {
-            Text(room.name.currentLangTitle)
         }
         KaigiTag(
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer

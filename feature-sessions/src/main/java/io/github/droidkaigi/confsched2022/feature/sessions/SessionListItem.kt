@@ -58,8 +58,10 @@ fun SessionListItem(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
                 KaigiTag(
-                    backgroundColor = Color(lang.backgroundColor)
+                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer
                 ) {
                     Text(lang.tagName)
                 }
@@ -67,12 +69,12 @@ fun SessionListItem(
                     secondLang != null
                 ) {
                     KaigiTag(
-                        backgroundColor = Color(secondLang.backgroundColor)
+                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                     ) {
                         Text(secondLang.tagName)
                     }
                 }
-                KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
                 KaigiTag(
                     labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     backgroundColor = MaterialTheme.colorScheme.secondaryContainer
