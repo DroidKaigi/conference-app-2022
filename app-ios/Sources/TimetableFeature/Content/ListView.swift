@@ -1,8 +1,8 @@
 import Assets
+import ComposableArchitecture
+import Model
 import SwiftUI
 import Theme
-import Model
-import ComposableArchitecture
 
 struct TimetableListView: View, ScrollDetectable {
 
