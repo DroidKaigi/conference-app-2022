@@ -8,16 +8,16 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
-    public var showTabDay: Bool
+    public var showDate: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1,
-        showTabDay: Bool = true
+        showDate: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
-        self.showTabDay = showTabDay
+        self.showDate = showDate
     }
 }
 
@@ -71,7 +71,7 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case let .scroll(position):
-        state.showTabDay = position.y >= TimetableView.scrollThreshold
+        state.showDate = position.y >= TimetableView.scrollThreshold
         return .none
     }
 }
@@ -109,7 +109,7 @@ public struct TimetableView: View {
                                         .font(Font.system(size: 12, weight: .semibold))
                                         .baselineOffset(0)
                                         .baselineOffset(0)
-                                    if viewStore.showTabDay {
+                                    if viewStore.showDate {
                                         Text("\(startDay)")
                                             .font(Font.system(size: 24, weight: .semibold))
                                             .frame(height: 32)
@@ -124,7 +124,7 @@ public struct TimetableView: View {
                                     : AssetColors.surface.swiftUIColor
                                 )
                                 .clipShape(Capsule())
-                                .animation(.linear(duration: 0.2), value: viewStore.showTabDay)
+                                .animation(.linear(duration: 0.2), value: viewStore.showDate)
                             }
                         }
                     }
