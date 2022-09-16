@@ -39,8 +39,7 @@ class SessionsViewModel @Inject constructor(
     val uiModel: State<SessionsUiModel>
 
     init {
-        val ziplineScheduleModifierFlow =
-            sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
+        val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
 
         val scheduleFlow = combine(

@@ -5,7 +5,6 @@ import app.cash.zipline.loader.ManifestVerifier
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -84,29 +83,29 @@ class SessionsZipline @Inject constructor(
     }
 
     @OptIn(ExperimentalTime::class) // measureTimedValue
-    fun timetableModifier(
-        coroutineScope: CoroutineScope,
-    ): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> = channelFlow {
-        // The JS modifier takes about 300 ms to execute.
-        // Emitting the default Android modifier first prevents the JS modifier from being displayed
-        // as loading during execution.
-        val androidScheduleModifier = AndroidScheduleModifier()
-        val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
-            Logger.v("zipline Android")
-            androidScheduleModifier.modify(timetable)
-        }
-        send(defaultModifier)
-
-        try {
-            val scheduleModifier = takeOrGetScheduleModifier()
-            send { timetable ->
-                Logger.v("zipline JS executing")
-                val timedValue = measureTimedValue { scheduleModifier.modify(timetable) }
-                Logger.v("zipline JS took ${timedValue.duration}")
-                timedValue.value
+    fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+        return channelFlow {
+            // The JS modifier takes about 300 ms to execute.
+            // Emitting the default Android modifier first prevents the JS modifier from being displayed
+            // as loading during execution.
+            val androidScheduleModifier = AndroidScheduleModifier()
+            val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
+                Logger.v("zipline Android")
+                androidScheduleModifier.modify(timetable)
             }
-        } catch (e: Exception) {
-            Logger.d(e) { "zipline load error" }
+            send(defaultModifier)
+
+            try {
+                val scheduleModifier = takeOrGetScheduleModifier()
+                send { timetable ->
+                    Logger.v("zipline JS executing")
+                    val timedValue = measureTimedValue { scheduleModifier.modify(timetable) }
+                    Logger.v("zipline JS took ${timedValue.duration}")
+                    timedValue.value
+                }
+            } catch (e: Exception) {
+                Logger.d(e) { "zipline load error" }
+            }
         }
     }
 }

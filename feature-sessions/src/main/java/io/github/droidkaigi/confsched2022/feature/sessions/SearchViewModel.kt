@@ -33,8 +33,7 @@ class SearchViewModel @Inject constructor(
     val uiModel: State<SearchUiModel>
 
     init {
-        val ziplineScheduleModifierFlow =
-            sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
+        val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
 
         val scheduleFlow = combine(
