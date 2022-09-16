@@ -142,10 +142,7 @@ fun Sessions(
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(top = 4.dp)
-        ) {
+        Column {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
