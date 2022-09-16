@@ -7,14 +7,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -53,6 +58,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -63,7 +69,6 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 fun SearchRoot(
     modifier: Modifier = Modifier,
     onItemClick: () -> Unit = {},
-    onBookMarkClick: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<SearchViewModel>()
     val state: SearchUiModel by viewModel.uiModel
@@ -71,7 +76,9 @@ fun SearchRoot(
         modifier = modifier,
         uiModel = state,
         onItemClick = onItemClick,
-        onBookMarkClick = onBookMarkClick,
+        onBookMarkClick = { sessionId, currentIsFavorite ->
+            viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+        },
     )
 }
 
@@ -79,16 +86,18 @@ fun SearchRoot(
 private fun SearchScreen(
     uiModel: SearchUiModel,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
         modifier = modifier,
         topBar = {},
-        content = { innerPadding ->
+        content = {
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+                )
             ) {
                 when (uiModel.state) {
                     is Error -> TODO()
@@ -167,7 +176,7 @@ private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -212,7 +221,7 @@ private fun SearchedItem(
     timetableItemWithFavorite: TimetableItemWithFavorite,
     searchWord: String,
     onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -283,7 +292,12 @@ private fun SearchedItem(
                                 modifier = Modifier
                                     .size(30.dp)
                                     .weight(1f)
-                                    .clickable { onBookMarkClick.invoke() }
+                                    .clickable {
+                                        onBookMarkClick(
+                                            timeTable.id,
+                                            timetableItemWithFavorite.isFavorited
+                                        )
+                                    }
                             )
                         }
                     }
@@ -335,6 +349,6 @@ fun SearchScreenPreview() {
             state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
-        onBookMarkClick = {},
+        onBookMarkClick = { _, _ -> },
     )
 }

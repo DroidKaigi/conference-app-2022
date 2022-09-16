@@ -10,6 +10,7 @@ import app.cash.molecule.RecompositionClock.ContextClock
 import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
@@ -17,12 +18,13 @@ import io.github.droidkaigi.confsched2022.zipline.SessionsZipline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    sessionsRepository: SessionsRepository,
+    private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
     private val moleculeScope =
@@ -54,6 +56,12 @@ class SearchViewModel @Inject constructor(
             val schedule by scheduleFlow.collectAsState(initial = UiLoadState.Loading)
 
             SearchUiModel(state = schedule)
+        }
+    }
+
+    fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
+        viewModelScope.launch {
+            sessionsRepository.setFavorite(sessionId, currentIsFavorite.not())
         }
     }
 }
