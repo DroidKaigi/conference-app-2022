@@ -194,13 +194,7 @@ fun SessionDetailScreen(
                             .padding(horizontal = 16.dp)
                     ) {
                         SessionDetailSessionInfo(
-                            title = item.title.currentLangTitle,
-                            startsAt = item.startsAt,
-                            endsAt = item.endsAt,
-                            room = item.room,
-                            category = item.category,
-                            // language = item.language, // TODO unused parameter
-                            levels = item.levels,
+                            item = item
                         )
 
                         if (item is Session)
@@ -372,36 +366,30 @@ fun SessionScheduleInfo(
 @Composable
 fun SessionDetailSessionInfo(
     modifier: Modifier = Modifier,
-    title: String,
-    startsAt: Instant,
-    endsAt: Instant,
-    room: TimetableRoom,
-    category: TimetableCategory,
-    // language: String, // TODO unused parameter
-    levels: PersistentList<String>,
+    item: TimetableItem
 ) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = title,
+            text = item.title.currentLangTitle,
             style = MaterialTheme.typography.headlineLarge,
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
 
         SessionTagsLine(
-            startsAt = startsAt,
-            endsAt = endsAt,
-            room = room,
-            category = category,
-            levels = levels
+            startsAt = item.startsAt,
+            endsAt = item.endsAt,
+            room = item.room,
+            category = item.category,
+            levels = item.levels
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
 
         SessionScheduleInfo(
-            startTime = startsAt,
-            endTime = endsAt,
+            startTime = item.startsAt,
+            endTime = item.endsAt,
             modifier = Modifier
         )
         // TODO favorite button
