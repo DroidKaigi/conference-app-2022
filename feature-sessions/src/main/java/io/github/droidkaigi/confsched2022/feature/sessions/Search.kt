@@ -68,7 +68,7 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
-    onItemClick: () -> Unit = {},
+    onItemClick: (TimetableItemId) -> Unit,
 ) {
     val viewModel = hiltViewModel<SearchViewModel>()
     val state: SearchUiModel by viewModel.uiModel
@@ -85,7 +85,7 @@ fun SearchRoot(
 @Composable
 private fun SearchScreen(
     uiModel: SearchUiModel,
-    onItemClick: () -> Unit,
+    onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -175,7 +175,7 @@ private fun SearchTextField(
 private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
-    onItemClick: () -> Unit,
+    onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -220,13 +220,13 @@ private fun SearchedItem(
     modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
     searchWord: String,
-    onItemClick: () -> Unit,
+    onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
 ) {
     Box(
         modifier = modifier
             .wrapContentHeight()
-            .clickable { onItemClick.invoke() }
+            .clickable { onItemClick.invoke(timetableItemWithFavorite.timetableItem.id) }
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
             Row {
