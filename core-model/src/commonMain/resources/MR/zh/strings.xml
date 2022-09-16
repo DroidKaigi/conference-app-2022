@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">动态消息</string>
+    <string name="title_about">关于DroidKaigi</string>
+    <string name="title_announcement">通知</string>
+    <string name="title_map">楼面地图</string>
+    <string name="title_sponsors">赞助者</string>
+    <string name="title_contributors">Contributor</string>
+    <string name="title_setting">设置</string>
+
+    <!-- About -->
+    <string name="about_top_app_bar_title">关于DroidKaigi</string>
+    <string name="about_title">DroidKaigi是什么集会？</string>
+    <string name="about_description">DroidKaigi is a conference tailored for Android developers. It\'s scheduled to take place on the 5 to 7 of October 2022.</string>
+    <string name="about_access">怎么走？</string>
+    <string name="about_staff">工作人员</string>
+    <string name="about_privacy">隐私政策</string>
+    <string name="about_license">许可</string>
+    <string name="about_code_conduct">行動規範</string>
+    <string name="about_app_version">版本</string>
+
+    <!-- Announcement -->
+    <string name="announcement_top_app_bar_title">通知</string>
+
+    <!-- Contributors -->
+    <string name="contributors_top_app_bar_title">贡献者</string>
+
+    <!-- Map -->
+
+    <!-- Sessions -->
+    <string name="session_description_read_more_text">读继续</string>
+    <string name="session_target_audience">对象听众</string>
+    <string name="session_speaker">演说者</string>
+    <string name="session_material">资料</string>
+    <string name="session_movie">动画</string>
+    <string name="session_slide">发表资料</string>
+
+    <!-- Setting -->
+    <string name="setting_title">设置</string>
+    <string name="setting_item_dark_mode">深色模式</string>
+    <string name="setting_item_language">语言设置</string>
+
+    <!-- Sponsors -->
+    <string name="sponsors_top_app_bar_title">赞助者</string>
+
+    <!-- Staff -->
+    <string name="staff_top_app_bar_title">工作人员</string>
+</resources>
