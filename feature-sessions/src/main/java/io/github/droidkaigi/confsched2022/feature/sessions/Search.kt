@@ -68,9 +68,9 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = hiltViewModel(),
     onItemClick: (TimetableItemId) -> Unit,
 ) {
-    val viewModel = hiltViewModel<SearchViewModel>()
     val state: SearchUiModel by viewModel.uiModel
     SearchScreen(
         modifier = modifier,

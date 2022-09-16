@@ -23,3 +23,31 @@ naming:
   TopLevelPropertyNaming:
     active: true
     constantPattern: '[A-Z][A-Za-z0-9]*'
+
+TwitterCompose:
+  ContentEmitterReturningValues:
+    active: false
+  ModifierComposable:
+    active: false
+  ModifierMissing:
+    active: false
+  ModifierReused:
+    active: false
+  ModifierWithoutDefault:
+    active: false
+  MultipleEmitters:
+    active: false
+  MutableParams:
+    active: false
+  ComposableNaming:
+    active: false
+  ComposableParamOrder:
+    active: false
+  PreviewPublic:
+    active: false
+  RememberMissing:
+    active: false
+  ViewModelForwarding:
+    active: false
+  ViewModelInjection:
+    active: true
