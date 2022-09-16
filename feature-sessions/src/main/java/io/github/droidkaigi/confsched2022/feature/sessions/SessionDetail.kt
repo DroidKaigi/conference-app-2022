@@ -384,7 +384,7 @@ fun SessionDetailSessionInfo(
         Text(
             modifier = Modifier,
             text = title,
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.headlineLarge,
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
