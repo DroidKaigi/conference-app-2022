@@ -17,7 +17,7 @@ class DataContributorsRepository(
             send(
                 contributorsApi
                     .contributors()
-                    .filter { !it.username.contains("[bot]") }
+                    .filter { !it.username.lowercase().contains("bot") }
                     .toPersistentList()
             )
             awaitClose { }
