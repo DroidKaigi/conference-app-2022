@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import Model
-import Strings
 import StaffFeature
+import Strings
 import SwiftUI
 import Theme
 
@@ -17,7 +17,7 @@ public struct AboutState: Equatable {
     public var isSheetPresented: Bool
     public var destination: AboutDestination?
     public init(
-        staffState: StaffState = .init(staffs: Staff.companion.fakes()),
+        staffState: StaffState = .init(),
         isSheetPresented: Bool = false,
         destination: AboutDestination? = nil
     ) {
