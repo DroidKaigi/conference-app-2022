@@ -107,8 +107,6 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
-                                        .baselineOffset(0)
-                                        .baselineOffset(0)
                                     if viewStore.showDate {
                                         Text("\(startDay)")
                                             .font(Font.system(size: 24, weight: .semibold))
