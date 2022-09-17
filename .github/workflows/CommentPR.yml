@@ -16,7 +16,6 @@ jobs:
       - name: Download artifact
         run: echo "download artifact later"
       - name: Comment PR
-        run: echo "comment pr later"
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
         continue-on-error: true # https://github.com/DroidKaigi/conference-app-2022/issues/497
         uses: thollander/actions-comment-pull-request@v1
