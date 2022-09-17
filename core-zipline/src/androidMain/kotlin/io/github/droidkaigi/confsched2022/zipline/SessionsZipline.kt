@@ -13,15 +13,16 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
-@Singleton
-class SessionsZipline @Inject constructor(
+public interface SessionsZipline {
+    public fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule>
+}
+
+internal class SessionsZiplineImpl(
     okHttpClient: OkHttpClient
-) {
+) : SessionsZipline {
     private val executorService = Executors.newSingleThreadExecutor { Thread(it, "Zipline") }
     private val dispatcher = executorService.asCoroutineDispatcher()
 
@@ -83,7 +84,7 @@ class SessionsZipline @Inject constructor(
     }
 
     @OptIn(ExperimentalTime::class) // measureTimedValue
-    fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+    override fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
         return channelFlow {
             // The JS modifier takes about 300 ms to execute.
             // Emitting the default Android modifier first prevents the JS modifier from being displayed
