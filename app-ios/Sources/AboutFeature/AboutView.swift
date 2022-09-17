@@ -53,12 +53,12 @@ public struct AboutView: View {
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 32)
                 .padding(.vertical, 32)
 
                 Divider()
                     .background(AssetColors.outline.swiftUIColor)
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, 45)
 
                 ForEach(AboutNavigationItem.items, id: \.title) { item in
                     Button {
@@ -74,6 +74,7 @@ public struct AboutView: View {
                         .frame(minHeight: 56)
                     }
                 }
+                .padding(.horizontal, 29)
 
                 ForEach(AboutTextItem.items, id: \.title) { item in
                     HStack {
