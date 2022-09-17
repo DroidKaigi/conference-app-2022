@@ -28,7 +28,7 @@ TwitterCompose:
   ContentEmitterReturningValues:
     active: true
   ModifierComposable:
-    active: false
+    active: true
   ModifierMissing:
     active: false
   ModifierReused:
