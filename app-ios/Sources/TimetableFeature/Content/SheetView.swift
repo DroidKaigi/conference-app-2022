@@ -29,19 +29,15 @@ struct TimetableSheetView: View, ScrollDetectable {
                             var result = result
                             let lastItem = result.last
                             if case .general(let lItem, _) = lastItem, lItem.timetableItem.endsAt != item.timetableItem.startsAt {
-                                result.append(.spacing(calculateMinute(
-                                    startSeconds: Int(lItem.timetableItem.endsAt.epochSeconds),
-                                    endSeconds: Int(item.timetableItem.startsAt.epochSeconds)
+                                result.append(.spacing(timetableInterval(
+                                    firstItem: lItem.timetableItem,
+                                    secondItem: item.timetableItem
                                 )))
                             }
-                            let minute = calculateMinute(
-                                startSeconds: Int(item.timetableItem.startsAt.epochSeconds),
-                                endSeconds: Int(item.timetableItem.endsAt.epochSeconds)
-                            )
                             result.append(
                                 TimetableItemType.general(
                                     item,
-                                    minute
+                                    item.timetableItem.minute
                                 )
                             )
 
