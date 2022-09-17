@@ -15,6 +15,7 @@ android.kotlinOptions.freeCompilerArgs = listOf(
 dependencies {
     api(projects.coreModel)
     api(projects.coreData)
+    api(projects.coreZipline)
     api(libs.robolectric)
     api(libs.androidxActivityCompose)
     api(libs.hiltAndroidTesting)
