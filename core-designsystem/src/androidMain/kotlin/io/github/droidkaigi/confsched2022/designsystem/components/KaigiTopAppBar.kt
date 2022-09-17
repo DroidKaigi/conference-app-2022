@@ -74,3 +74,15 @@ private fun KaigiTopAppBarPreview() = KaigiTopAppBar(
         )
     }
 )
+
+@Preview
+@Composable
+private fun KaigiTopAppBarPreview_HiddenNavigationIcon() = KaigiTopAppBar(
+    showNavigationIcon = false,
+    onNavigationIconClick = {},
+    title = {
+        Text(
+            text = "KaigiTopAppBarPreview",
+        )
+    }
+)
