@@ -1,4 +1,5 @@
 import Assets
+import CommonComponents
 import ComposableArchitecture
 import Model
 import SwiftUI
@@ -70,7 +71,6 @@ struct TimetableListView: View, ScrollDetectable {
                                     TimetableListItemView(
                                         item: item,
                                         isFavorite: isFavorite,
-                                        minute: timetableTimeGroupItems.minute,
                                         onFavoriteToggle: { id, currentIsFavorite in
                                             viewStore.send(.setFavorite(id, currentIsFavorite))
                                         }

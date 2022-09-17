@@ -13,6 +13,7 @@ var package = Package(
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "Auth", targets: ["Auth"]),
+        .library(name: "CommonComponents", targets: ["CommonComponents"]),
         .library(name: "Container", targets: ["Container"]),
         .library(name: "ContributorFeature", targets: ["ContributorFeature"]),
         .library(name: "Assets", targets: ["Assets"]),
@@ -20,6 +21,7 @@ var package = Package(
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
         .library(name: "SafariView", targets: ["SafariView"]),
+        .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
@@ -65,6 +67,7 @@ var package = Package(
                 .target(name: "SponsorFeature"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
                 .target(name: "TimetableFeature"),
@@ -86,6 +89,14 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+            ]
+        ),
+        .target(
+            name: "CommonComponents",
+            dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
             ]
         ),
         .target(
@@ -126,6 +137,14 @@ var package = Package(
         .target(
             name: "SafariView",
             dependencies: []
+        ),
+        .target(
+            name: "SearchFeature",
+            dependencies: [
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
         ),
         .target(
             name: "SessionFeature",
@@ -170,6 +189,7 @@ var package = Package(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
