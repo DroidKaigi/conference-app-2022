@@ -323,13 +323,19 @@ fun SessionsList(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             timeHeader?.let {
-                                Text(text = it.startAt)
+                                Text(
+                                    text = it.startAt,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
                                 Box(
                                     modifier = Modifier
                                         .size(1.dp, 2.dp)
                                         .background(MaterialTheme.colorScheme.onBackground)
                                 ) { }
-                                Text(text = it.endAt)
+                                Text(
+                                    text = it.endAt,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
                             }
                         }
                     }
