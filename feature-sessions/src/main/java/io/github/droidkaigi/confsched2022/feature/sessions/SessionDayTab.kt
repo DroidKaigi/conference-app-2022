@@ -21,11 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import io.github.droidkaigi.confsched2022.designsystem.theme.montserratFonts
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 
 @Composable
@@ -49,11 +47,9 @@ internal fun SessionDayTab(
         ) {
             Text(
                 text = day.name,
-                style = TextStyle(
+                style = MaterialTheme.typography.labelMedium.copy(
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight(500)
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -64,11 +60,10 @@ internal fun SessionDayTab(
             ) {
                 Text(
                     text = "${5 + index}",
-                    style = TextStyle(
-                        textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall.copy(
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight(500)
+                        fontFamily = montserratFonts,
+                        textAlign = TextAlign.Center
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
