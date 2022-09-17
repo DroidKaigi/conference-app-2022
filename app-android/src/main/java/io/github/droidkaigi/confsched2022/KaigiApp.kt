@@ -219,6 +219,10 @@ enum class DrawerItem(
             return values().firstOrNull { it.navRoute == route }
         }
     }
+
+    val isLastItem: Boolean = ordinal == DrawerItem.values().lastIndex
+    val isGroupLastItem: Boolean =
+        ordinal == DrawerItem.values().lastIndex || group != DrawerItem.values()[ordinal + 1].group
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -247,7 +251,7 @@ fun DrawerSheet(
                 },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
-            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+            if (!drawerItem.isLastItem && drawerItem.isGroupLastItem) {
                 Divider(
                     thickness = 1.dp,
                     modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
