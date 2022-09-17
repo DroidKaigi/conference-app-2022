@@ -220,9 +220,11 @@ enum class DrawerItem(
         }
     }
 
-    val isLastItem: Boolean = ordinal == DrawerItem.values().lastIndex
-    val isGroupLastItem: Boolean =
-        ordinal == DrawerItem.values().lastIndex || group != DrawerItem.values()[ordinal + 1].group
+    val isLastItem: Boolean
+        get() = ordinal == DrawerItem.values().lastIndex
+
+    val isGroupLastItem: Boolean
+        get() = isLastItem || group != DrawerItem.values()[ordinal + 1].group
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
