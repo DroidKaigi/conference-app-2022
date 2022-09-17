@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,15 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
+import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.secondLang
 
 @Composable
 fun SessionListItem(
@@ -37,10 +38,11 @@ fun SessionListItem(
 ) {
     val roomName = timetableItem.room.name
     val roomColor = Color(TimetableItemColor.colorOfRoomName(enName = roomName.enTitle))
+    val lang = Lang.valueOf(timetableItem.language.langOfSpeaker)
+    val secondLang = lang.secondLang()
+
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .semantics { contentDescription = "isFavorited$isFavorited" },
+        modifier = modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1F)) {
@@ -53,9 +55,26 @@ fun SessionListItem(
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
-                Spacer(modifier = Modifier.width(8.dp))
+                KaigiTag(
+                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+                ) {
+                    Text(lang.tagName)
+                }
+                if (timetableItem.language.isInterpretationTarget &&
+                    secondLang != null
+                ) {
+                    KaigiTag(
+                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ) {
+                        Text(secondLang.tagName)
+                    }
+                }
                 KaigiTag(
                     labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     backgroundColor = MaterialTheme.colorScheme.secondaryContainer
@@ -63,7 +82,11 @@ fun SessionListItem(
             }
         }
         IconButton(
-            modifier = Modifier.testTag("favorite"),
+            modifier = Modifier
+                .testTag("favorite")
+                .semantics {
+                    stateDescription = if (isFavorited) "ON" else "OFF"
+                },
             onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
         ) {
             Icon(
@@ -74,7 +97,7 @@ fun SessionListItem(
                         drawable.ic_bookmark
                     }
                 ),
-                contentDescription = "bookmark icon",
+                contentDescription = "favorite",
             )
         }
     }

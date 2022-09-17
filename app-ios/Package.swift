@@ -19,6 +19,7 @@ var package = Package(
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
+        .library(name: "SafariView", targets: ["SafariView"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
@@ -26,8 +27,8 @@ var package = Package(
         .library(name: "Theme", targets: ["Theme"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.5.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.1"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
     ],
     targets: [
         .target(
@@ -35,6 +36,7 @@ var package = Package(
             dependencies: [
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SafariView"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             resources: [
@@ -92,6 +94,10 @@ var package = Package(
         .target(
             name: "ContributorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -112,6 +118,10 @@ var package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
+        ),
+        .target(
+            name: "SafariView",
+            dependencies: []
         ),
         .target(
             name: "SessionFeature",

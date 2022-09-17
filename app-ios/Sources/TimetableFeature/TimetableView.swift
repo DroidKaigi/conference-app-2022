@@ -23,6 +23,7 @@ public enum TimetableAction {
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
+    case setFavorite(TimetableItemId, Bool)
 }
 
 public struct TimetableEnvironment {
@@ -36,7 +37,7 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
-        return .run { subscriber in
+        return .run { @MainActor subscriber in
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
                     .refreshResponse(
@@ -59,6 +60,12 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         return .init(value: .refresh)
     case .selectItem:
         return .none
+    case let .setFavorite(id, currentIsFavorite):
+        return .run { @MainActor _ in
+            try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
+        }
+        .receive(on: DispatchQueue.main.eraseToAnyScheduler())
+        .eraseToEffect()
     }
 }
 
@@ -72,7 +79,7 @@ public struct TimetableView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack {
+                VStack(spacing: 0) {
                     HStack(spacing: 8) {
                         ForEach(
                             [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
@@ -136,6 +143,7 @@ public struct TimetableView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
             }
+            .navigationViewStyle(.stack)
         }
     }
 }

@@ -12,6 +12,7 @@ dependencies {
 
     implementation(libs.accompanistPager)
     implementation(libs.androidxActivityCompose)
+    implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxCoreKtx)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
     implementation(libs.coilCompose)

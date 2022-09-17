@@ -40,7 +40,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -49,25 +53,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode.Expand
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor.AppBar
+import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
+import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
-import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
-import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.model.secondLang
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -77,18 +82,18 @@ import java.util.Locale
 @Composable
 fun SessionDetailScreenRoot(
     modifier: Modifier = Modifier,
+    viewModel: SessionDetailViewModel = hiltViewModel(),
     timetableItemId: TimetableItemId,
     onBackIconClick: () -> Unit = {},
     onNavigateFloorMapClick: () -> Unit,
 ) {
-
-    val viewModel = hiltViewModel<SessionDetailViewModel>()
     val uiModel by viewModel.uiModel
 
     val shareManager = LocalShareManager.current
     val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
+        modifier = modifier,
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
@@ -170,47 +175,41 @@ fun SessionDetailScreen(
                 )
             }
         },
-    ) {
-        when (uiState) {
-            is Error -> TODO()
-            Loading ->
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            is Success -> {
-                val (item, _) = uiState.value
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (uiState) {
+                is Error -> TODO()
+                Loading ->
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                is Success -> {
+                    val (item, _) = uiState.value
 
-                Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp)
-                ) {
-                    SessionDetailSessionInfo(
-                        title = item.title.currentLangTitle,
-                        startsAt = item.startsAt,
-                        endsAt = item.endsAt,
-                        room = item.room,
-                        category = item.category,
-                        language = item.language,
-                        levels = item.levels,
-                    )
+                    Column(
+                        modifier = modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        SessionDetailSessionInfo(item = item)
 
-                    if (item is Session)
-                        SessionDetailDescription(
-                            description = item.description
+                        if (item is Session)
+                            SessionDetailDescription(
+                                description = item.description
+                            )
+
+                        SessionDetailTargetAudience(
+                            targetAudience = item.targetAudience
                         )
 
-                    SessionDetailTargetAudience(
-                        targetAudience = item.targetAudience
-                    )
-
-                    if (item is Session)
-                        SessionDetailSpeakers(
-                            speakers = item.speakers,
+                        if (item is Session)
+                            SessionDetailSpeakers(
+                                speakers = item.speakers,
+                            )
+                        SessionDetailAssets(
+                            asset = item.asset
                         )
-                    SessionDetailAssets(
-                        asset = item.asset
-                    )
+                    }
                 }
             }
         }
@@ -278,22 +277,40 @@ fun SessionDetailBottomAppBar(
 
 @Composable
 fun SessionTagsLine(
-    startsAt: Instant,
-    endsAt: Instant,
-    room: TimetableRoom,
-    category: TimetableCategory,
-    levels: PersistentList<String>,
+    item: TimetableItem
 ) {
-    val sessionMinutes = "${(endsAt - startsAt).toComponents { minutes, _, _ -> minutes }}"
+    val sessionMinutes =
+        "${(item.endsAt - item.startsAt).toComponents { minutes, _, _ -> minutes }}"
+    val roomColor = TimetableItemColor.colorOfRoomName(enName = item.room.name.enTitle)
+    val lang = Lang.valueOf(item.language.langOfSpeaker)
+    val secondLang = lang.secondLang()
+
     FlowRow(
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
         KaigiTag(
-            backgroundColor = Color(AppBar.color)
+            backgroundColor = Color(roomColor)
         ) {
-            Text(room.name.currentLangTitle)
+            Text(item.room.name.currentLangTitle)
+        }
+        KaigiTag(
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(lang.tagName)
+        }
+        if (item.language.isInterpretationTarget &&
+            secondLang != null
+        ) {
+            KaigiTag(
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                Text(
+                    secondLang.tagName +
+                        stringResource(Strings.session_language_interpretation)
+                )
+            }
         }
         KaigiTag(
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer
@@ -303,9 +320,9 @@ fun SessionTagsLine(
         KaigiTag(
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
-            Text(category.title.currentLangTitle)
+            Text(item.category.title.currentLangTitle)
         }
-        levels.forEach {
+        item.levels.forEach {
             KaigiTag(
                 backgroundColor = MaterialTheme.colorScheme.secondaryContainer
             ) {
@@ -348,7 +365,7 @@ fun SessionScheduleInfo(
     ) {
         Image(
             painterResource(id = R.drawable.ic_schedule),
-            contentDescription = "Schedule-Icon",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
@@ -361,36 +378,24 @@ fun SessionScheduleInfo(
 @Composable
 fun SessionDetailSessionInfo(
     modifier: Modifier = Modifier,
-    title: String,
-    startsAt: Instant,
-    endsAt: Instant,
-    room: TimetableRoom,
-    category: TimetableCategory,
-    language: String,
-    levels: PersistentList<String>,
+    item: TimetableItem
 ) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = title,
-            style = MaterialTheme.typography.headlineSmall,
+            text = item.title.currentLangTitle,
+            style = MaterialTheme.typography.headlineLarge,
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
 
-        SessionTagsLine(
-            startsAt = startsAt,
-            endsAt = endsAt,
-            room = room,
-            category = category,
-            levels = levels
-        )
+        SessionTagsLine(item = item)
 
         Spacer(modifier = Modifier.padding(24.dp))
 
         SessionScheduleInfo(
-            startTime = startsAt,
-            endTime = endsAt,
+            startTime = item.startsAt,
+            endTime = item.endsAt,
             modifier = Modifier
         )
         // TODO favorite button
@@ -426,7 +431,7 @@ fun SessionDetailDescription(
                 modifier = Modifier.clickable {
                     isReadMore = true
                 },
-                text = stringResource(id = R.string.session_description_read_more_text),
+                text = stringResource(Strings.session_description_read_more_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color(0xFF6EFD9E),
             )
@@ -443,7 +448,7 @@ fun SessionDetailTargetAudience(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_target_audience),
+            text = stringResource(Strings.session_target_audience),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -467,40 +472,44 @@ fun SessionDetailSpeakers(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_speaker),
+            text = stringResource(Strings.session_speaker),
             style = MaterialTheme.typography.bodyLarge,
         )
 
         Spacer(modifier = Modifier.padding(16.dp))
 
         speakers.forEach { speaker ->
-            if (speaker.iconUrl.isNotEmpty()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AsyncImage(
-                        model = speaker.iconUrl,
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center,
-                        contentDescription = "Speaker Icon",
-                    )
-                    Spacer(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
-                    // TODO Transition to Speaker detail
-                    Text(
-                        modifier = Modifier,
-                        text = speaker.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
+            Row(
+                modifier = Modifier
+                    .clearAndSetSemantics {
+                        contentDescription = speaker.name
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AsyncImage(
+                    model = speaker.iconUrl,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape),
+                    placeholder = painterResource(R.drawable.ic_baseline_person_24),
+                    error = painterResource(R.drawable.ic_baseline_person_24),
+                    contentScale = ContentScale.Fit,
+                    alignment = Alignment.Center,
+                    contentDescription = "Speaker Icon",
+                )
                 Spacer(
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                // TODO Transition to Speaker detail
+                Text(
+                    modifier = Modifier,
+                    text = speaker.name,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
+            Spacer(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
         }
 
         Spacer(
@@ -523,7 +532,7 @@ fun SessionDetailAssets(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier,
-            text = stringResource(id = R.string.session_material),
+            text = stringResource(Strings.session_material),
             style = MaterialTheme.typography.bodyLarge,
         )
 
@@ -532,7 +541,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_video_cam),
-            text = stringResource(id = R.string.session_movie),
+            text = stringResource(Strings.session_movie),
             onClick = {
                 val videoUrl = asset.videoUrl
                 if (videoUrl != null) {
@@ -546,7 +555,7 @@ fun SessionDetailAssets(
         SessionDetailAssetsItem(
             modifier = Modifier,
             painter = painterResource(id = R.drawable.ic_photo_library),
-            text = stringResource(id = R.string.session_slide),
+            text = stringResource(Strings.session_slide),
             onClick = {
                 val slideUrl = asset.slideUrl
                 if (slideUrl != null) {
@@ -554,6 +563,8 @@ fun SessionDetailAssets(
                 }
             },
         )
+
+        Spacer(modifier = Modifier.padding(16.dp))
     }
 }
 
@@ -567,7 +578,8 @@ private fun SessionDetailAssetsItem(
     Row(
         modifier = modifier
             .height(36.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(

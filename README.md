@@ -1,4 +1,4 @@
-![DroidKaigi 2022 logo](https://user-images.githubusercontent.com/1386930/188439339-eb5221fa-51cb-4273-9036-39a6f6da7d84.png)
+![DroidKaigi 2022 logo](https://user-images.githubusercontent.com/1838962/190182290-85e61780-cacc-4ca5-a8c5-17782f89f607.png)
 
 # DroidKaigi 2022 official app
 
@@ -8,7 +8,7 @@
 
 | top | drawer |
 |---|---|
-| <img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" /> | <img src="https://user-images.githubusercontent.com/1386930/188312398-e89c4fd0-dd3a-4499-8975-35650a531c93.png" width="250px" /> |
+| <img src="https://user-images.githubusercontent.com/1386930/190039106-3c3a8377-6a2f-4668-9b51-cbe73c47128d.gif" width="250px" /> | <img src="https://user-images.githubusercontent.com/1838962/190182861-d18bb8eb-ce6c-45ec-8328-21f88d8e2859.png" width="250px" /> |
 
 ## Design
 
@@ -16,6 +16,7 @@
 * [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
 
 ## Try it out
+### Android
 
 The builds being distributed through mobile app distribution services.
 
@@ -23,6 +24,14 @@ The builds being distributed through mobile app distribution services.
 
 You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
+
+### iOS
+Beta version of this app is available on TestFlight.
+You can try and test this app with following public link.
+
+https://testflight.apple.com/join/YrBzLxIy
+
+In this project, distribute beta version with [Xcode Cloud](https://developer.apple.com/jp/xcode-cloud/).
 
 ## Contributing
 
@@ -39,7 +48,7 @@ Latest Android Studio **Electric Eel** and higher. You can download it from [thi
 
 This year's app pretty much takes the idea from [now in android](https://github.com/android/nowinandroid) and adds a lot of ideas to it.
 
-<img width="891" alt="image" src="https://user-images.githubusercontent.com/1386930/188314552-a12ff0bb-851e-465c-a51c-679a7c711e37.png">
+<img width="891" alt="image" src="https://user-images.githubusercontent.com/1838962/190183970-d9ef282a-59f8-4233-b996-209f143868b2.png">
 
 
 ## Configurable build logic
@@ -166,8 +175,7 @@ In this project, we will use Hilt in the JVM for integration testing to avoid de
 We believe that the more we use the same classes as the actual production application, the better the test will be able to catch real problems. Therefore, we use production dependencies as much as possible with Hilt.  
 The test basically uses the actual dependencies and Fake the Repository, which is the point of contact with the outside world.
 
-<img width="666" alt="image" src="https://user-images.githubusercontent.com/1386930/188339262-25092e16-3a19-435f-a241-3e63ba828e15.png">
-
+<img width="666" alt="image" src="https://user-images.githubusercontent.com/1838962/190193768-ff773dba-9569-40d7-b091-c219af0c8982.png">
 
 ```kotlin
 @TestInstallIn(
@@ -263,7 +271,7 @@ https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
 
 
-<img src="https://user-images.githubusercontent.com/1386930/188340626-d74e9b85-8586-427a-b12b-6531f2dba01c.png" width="250px" />
+<img src="https://user-images.githubusercontent.com/1838962/190185866-298a7c40-33f0-44af-b5e0-d030b0186e2c.png" width="250px" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
 

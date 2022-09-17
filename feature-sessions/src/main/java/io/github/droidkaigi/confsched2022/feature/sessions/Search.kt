@@ -7,15 +7,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,15 +33,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +58,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -56,24 +68,25 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
-    onItemClick: () -> Unit = {},
-    onBookMarkClick: () -> Unit = {},
+    viewModel: SearchViewModel = hiltViewModel(),
+    onItemClick: (TimetableItemId) -> Unit,
 ) {
-    val viewModel = hiltViewModel<SessionsViewModel>()
-    val state: SessionsUiModel by viewModel.uiModel
+    val state: SearchUiModel by viewModel.uiModel
     SearchScreen(
         modifier = modifier,
         uiModel = state,
         onItemClick = onItemClick,
-        onBookMarkClick = onBookMarkClick,
+        onBookMarkClick = { sessionId, currentIsFavorite ->
+            viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+        },
     )
 }
 
 @Composable
 private fun SearchScreen(
-    uiModel: SessionsUiModel,
-    onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    uiModel: SearchUiModel,
+    onItemClick: (TimetableItemId) -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
@@ -81,7 +94,11 @@ private fun SearchScreen(
         modifier = modifier,
         topBar = {},
         content = {
-            Column {
+            Column(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+                )
+            ) {
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
@@ -112,6 +129,10 @@ private fun SearchTextField(
     onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -122,7 +143,8 @@ private fun SearchTextField(
             value = searchWord,
             modifier = Modifier
                 .fillMaxWidth(fraction = 0.9F)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                .background(color = MaterialTheme.colorScheme.surfaceVariant)
+                .focusRequester(focusRequester),
             placeholder = { Text("Search Session") },
             singleLine = true,
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
@@ -153,8 +175,8 @@ private fun SearchTextField(
 private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
-    onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    onItemClick: (TimetableItemId) -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -168,6 +190,7 @@ private fun SearchedItemListField(
             items(sessions) {
                 SearchedItem(
                     timetableItemWithFavorite = it,
+                    searchWord = searchWord,
                     onItemClick = onItemClick,
                     onBookMarkClick = onBookMarkClick,
                 )
@@ -196,15 +219,14 @@ private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day
 private fun SearchedItem(
     modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
-    onItemClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
+    searchWord: String,
+    onItemClick: (TimetableItemId) -> Unit,
+    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
 ) {
-    var contentHeight = 100.dp
     Box(
         modifier = modifier
             .wrapContentHeight()
-            .heightIn(min = contentHeight)
-            .clickable { onItemClick.invoke() }
+            .clickable { onItemClick.invoke(timetableItemWithFavorite.timetableItem.id) }
     ) {
         Column(modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 15.dp)) {
             Row {
@@ -238,16 +260,11 @@ private fun SearchedItem(
                             .fillMaxSize(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
+                        HighlightedText(
                             text = timeTable.title.currentLangTitle,
-                            onTextLayout = {
-                                if (it.lineCount > 2) {
-                                    contentHeight = 140.dp
-                                }
-                            }
+                            keyword = searchWord
                         )
-
-                        Text("${timeTable.startsTimeString} 〜")
+                        Text(text = "${timeTable.startsTimeString} 〜")
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
@@ -275,7 +292,12 @@ private fun SearchedItem(
                                 modifier = Modifier
                                     .size(30.dp)
                                     .weight(1f)
-                                    .clickable { onBookMarkClick.invoke() }
+                                    .clickable {
+                                        onBookMarkClick(
+                                            timeTable.id,
+                                            timetableItemWithFavorite.isFavorited
+                                        )
+                                    }
                             )
                         }
                     }
@@ -286,7 +308,7 @@ private fun SearchedItem(
 }
 
 @Composable
-private fun FullScreenLoading(modifier: Modifier = Modifier) {
+fun FullScreenLoading(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -295,16 +317,38 @@ private fun FullScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun HighlightedText(
+    text: String,
+    keyword: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSecondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary
+) {
+    val highlightStyle = SpanStyle(color = color, background = backgroundColor)
+    val annotatedText = remember(text, keyword) {
+        buildAnnotatedString {
+            append(text)
+            if (keyword.isNotEmpty()) {
+                var index = text.indexOf(keyword)
+                while (index >= 0) {
+                    addStyle(highlightStyle, index, index + keyword.length)
+                    index = text.indexOf(keyword, index + 1)
+                }
+            }
+        }
+    }
+    Text(text = annotatedText, modifier = modifier)
+}
+
 @Preview(showSystemUi = true)
 @Composable
-private fun SearchScreenPreview() {
+fun SearchScreenPreview() {
     SearchScreen(
-        uiModel = SessionsUiModel(
-            state = Success(DroidKaigiSchedule.fake()),
-            isFilterOn = true,
-            isTimetable = true
+        uiModel = SearchUiModel(
+            state = Success(DroidKaigiSchedule.fake())
         ),
         onItemClick = {},
-        onBookMarkClick = {},
+        onBookMarkClick = { _, _ -> },
     )
 }

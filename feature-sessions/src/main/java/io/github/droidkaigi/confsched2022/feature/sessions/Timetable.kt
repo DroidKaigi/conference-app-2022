@@ -10,7 +10,11 @@ import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.foundation.lazy.layout.LazyLayoutItemProvider
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +40,7 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.ScrollAxisRange
 import androidx.compose.ui.semantics.horizontalScrollAxisRange
 import androidx.compose.ui.semantics.scrollBy
@@ -44,6 +49,7 @@ import androidx.compose.ui.semantics.verticalScrollAxisRange
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day2
@@ -70,6 +76,7 @@ fun Timetable(
     timetableState: TimetableState,
     coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
     val itemProvider = itemProvider({ timetable.timetableItems.size }) { index ->
@@ -92,9 +99,15 @@ fun Timetable(
     val visibleItemLayouts by remember(timetableScreen) { timetableScreen.visibleItemLayouts }
     val lineColor = MaterialTheme.colorScheme.surfaceVariant
     val linePxSize = with(timetableState.density) { TimetableSizes.lineStrokeSize.toPx() }
+    val layoutDirection = LocalLayoutDirection.current
 
     LazyLayout(
         modifier = modifier
+            .padding(
+                top = contentPadding.calculateTopPadding(),
+                start = contentPadding.calculateStartPadding(layoutDirection),
+                end = contentPadding.calculateEndPadding(layoutDirection),
+            )
             .focusGroup()
             .clipToBounds()
             .drawBehind {
@@ -171,7 +184,11 @@ fun Timetable(
         if (timetableScreen.width != constraint.maxWidth ||
             timetableScreen.height != constraint.maxHeight
         ) {
-            timetableScreen.updateBounds(width = constraint.maxWidth, height = constraint.maxHeight)
+            timetableScreen.updateBounds(
+                width = constraint.maxWidth,
+                height = constraint.maxHeight,
+                bottomPadding = contentPadding.calculateBottomPadding(),
+            )
             val originalContentHeight = timetableScreen.timetableLayout.timetableHeight *
                 timetableState.screenScaleState.verticalScale
             val layoutHeight = constraint.maxHeight
@@ -539,7 +556,10 @@ private class TimetableScreen(
         return (scrollState.maxY < nextPossibleY && nextPossibleY < 0f)
     }
 
-    fun updateBounds(width: Int, height: Int) {
+    fun updateBounds(width: Int, height: Int, bottomPadding: Dp) {
+        val bottomPaddingPx = with(density) {
+            bottomPadding.toPx()
+        }
         this.width = width
         this.height = height
         scrollState.updateBounds(
@@ -548,8 +568,9 @@ private class TimetableScreen(
             } else {
                 0f
             },
-            maxY = if (height < timetableLayout.timetableHeight) {
-                -(timetableLayout.timetableHeight - height).toFloat()
+            maxY = if (height < timetableLayout.timetableHeight - bottomPaddingPx) {
+                // Allow additional scrolling by bottomPadding (navigation bar height).
+                -(timetableLayout.timetableHeight - height).toFloat() - bottomPaddingPx
             } else {
                 0f
             }
@@ -612,5 +633,5 @@ private suspend fun PointerInputScope.detectDragGestures(
 object TimetableSizes {
     val columnWidth = 192.dp
     val lineStrokeSize = 1.dp
-    val minuteHeight = (4.23).dp
+    val minuteHeight = 4.dp
 }

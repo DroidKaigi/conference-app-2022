@@ -7,6 +7,7 @@ import io.github.droidkaigi.confsched2022.data.Database
 import io.github.droidkaigi.confsched2022.data.DatabaseService
 import io.github.droidkaigi.confsched2022.data.TimetableItemSession
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpeaker
+import io.github.droidkaigi.confsched2022.data.TimetableItemSpeakerCrossRef
 import io.github.droidkaigi.confsched2022.data.TimetableItemSpecial
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.Timetable
@@ -15,6 +16,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
+import io.github.droidkaigi.confsched2022.model.TimetableLanguage
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import kotlinx.collections.immutable.PersistentList
@@ -31,6 +33,7 @@ class SessionsDao(
     private val timetableItemSpeakerQueries = database.timetableItemSpeakerQueries
     private val timetableItemSpecialQueries = database.timetableItemSpecialQueries
     private val timetableItemSessionQueries = database.timetableItemSessionQueries
+    private val timetableItemSessionSpeakersQueries = database.timetableItemSpeakerCrossRefQueries
 
     fun selectAll(): Flow<Timetable> {
         val timetableItemSpeakers = timetableItemSpeakerQueries.selectAll().asFlow().mapToList()
@@ -43,7 +46,7 @@ class SessionsDao(
         ) { speakers, sessions, specials ->
             Timetable(
                 timetableItems = TimetableItemList(
-                    (sessions.mapToSessionList(speakers) + specials.mapToSpecialList(speakers))
+                    (sessions.mapToSessionList() + specials.mapToSpecialList(speakers))
                         .sortedWith(
                             compareBy<TimetableItem> { it.startsAt }
                                 .thenBy { it.room.sort }
@@ -55,16 +58,33 @@ class SessionsDao(
     }
 
     fun insert(timetable: Timetable) {
-        timetable.timetableItems.timetableItems.forEach { timetableItem ->
+        timetable.timetableItems.timetableItems.forEachIndexed { index, timetableItem ->
             when (timetableItem) {
                 is TimetableItem.Session -> {
                     timetableItemSessionQueries.insert(timetableItem.toModel())
+                    timetableItem.speakers.forEach { speaker ->
+                        val timetableItemSpeaker = TimetableItemSpeaker(
+                            id = speaker.id,
+                            name = speaker.name,
+                            iconUrl = speaker.iconUrl,
+                            bio = speaker.bio,
+                            tagLine = speaker.tagLine,
+                        )
+                        val timetableItemSessionSpeakers = TimetableItemSpeakerCrossRef(
+                            id = index.toLong(),
+                            sessionId = timetableItem.id.value,
+                            speakerId = speaker.id
+                        )
+
+                        timetableItemSpeakerQueries.insert(timetableItemSpeaker)
+                        timetableItemSessionSpeakersQueries.insert(timetableItemSessionSpeakers)
+                    }
                 }
                 is TimetableItem.Special -> {
                     timetableItemSpecialQueries.insert(timetableItem.toModel())
                     timetableItem.speakers.forEach { speaker ->
                         val timetableItemSpeaker = TimetableItemSpeaker(
-                            timetableItemId = timetableItem.id.value,
+                            id = timetableItem.id.value,
                             name = speaker.name,
                             iconUrl = speaker.iconUrl,
                             bio = speaker.bio,
@@ -81,6 +101,7 @@ class SessionsDao(
         timetableItemSpeakerQueries.deleteAll()
         timetableItemSpecialQueries.deleteAll()
         timetableItemSessionQueries.deleteAll()
+        timetableItemSessionSpeakersQueries.deleteAll()
     }
 
     private fun TimetableItem.Session.toModel(): TimetableItemSession {
@@ -98,7 +119,8 @@ class SessionsDao(
             roomNameEn = room.name.enTitle,
             roomSort = room.sort,
             targetAudience = targetAudience,
-            language = language,
+            language = language.langOfSpeaker,
+            isInterpretationTarget = language.isInterpretationTarget.toLong(),
             assetVideoUrl = asset.videoUrl,
             assetSlideUrl = asset.slideUrl,
             levels = levelsAdapter.encode(levels),
@@ -123,18 +145,19 @@ class SessionsDao(
             roomNameEn = room.name.enTitle,
             roomSort = room.sort,
             targetAudience = targetAudience,
-            language = language,
+            language = language.langOfSpeaker,
+            isInterpretationTarget = language.isInterpretationTarget.toLong(),
             assetVideoUrl = asset.videoUrl,
             assetSlideUrl = asset.slideUrl,
             levels = levelsAdapter.encode(levels),
         )
     }
 
-    private fun List<TimetableItemSession>.mapToSessionList(
-        timetableItemSpeakers: List<TimetableItemSpeaker>,
-    ): List<TimetableItem.Session> {
+    private fun List<TimetableItemSession>.mapToSessionList(): List<TimetableItem.Session> {
         return map { session ->
-            val speakers = timetableItemSpeakers.filter { it.timetableItemId == session.id }
+            val speakers = timetableItemSessionSpeakersQueries
+                .selectSpeakers(session.id)
+                .executeAsList()
                 .map { it.toSpeaker() }
                 .toPersistentList()
             val messageJa = session.messageJa
@@ -168,7 +191,10 @@ class SessionsDao(
                     sort = session.roomSort,
                 ),
                 targetAudience = session.targetAudience,
-                language = session.language,
+                language = TimetableLanguage(
+                    langOfSpeaker = session.language,
+                    isInterpretationTarget = session.isInterpretationTarget.toBoolean(),
+                ),
                 asset = TimetableAsset(
                     videoUrl = session.assetVideoUrl,
                     slideUrl = session.assetSlideUrl,
@@ -185,7 +211,7 @@ class SessionsDao(
         timetableItemSpeakers: List<TimetableItemSpeaker>
     ): List<TimetableItem.Special> {
         return map { special ->
-            val speakers = timetableItemSpeakers.filter { it.timetableItemId == special.id }
+            val speakers = timetableItemSpeakers.filter { it.id == special.id }
                 .map { it.toSpeaker() }
                 .toPersistentList()
             TimetableItem.Special(
@@ -212,7 +238,10 @@ class SessionsDao(
                     sort = special.roomSort,
                 ),
                 targetAudience = special.targetAudience,
-                language = special.language,
+                language = TimetableLanguage(
+                    langOfSpeaker = special.language,
+                    isInterpretationTarget = special.isInterpretationTarget.toBoolean(),
+                ),
                 asset = TimetableAsset(
                     videoUrl = special.assetVideoUrl,
                     slideUrl = special.assetSlideUrl,
@@ -225,12 +254,21 @@ class SessionsDao(
 
     private fun TimetableItemSpeaker.toSpeaker(): TimetableSpeaker {
         return TimetableSpeaker(
+            id = id,
             name = name,
             iconUrl = iconUrl,
             bio = bio,
             tagLine = tagLine,
         )
     }
+
+    private fun Boolean.toLong(): Long = if (this) {
+        1
+    } else {
+        0
+    }
+
+    private fun Long.toBoolean(): Boolean = this == 1L
 
     companion object {
         private val levelsAdapter: ColumnAdapter<PersistentList<String>, String> =
