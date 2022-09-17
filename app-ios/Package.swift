@@ -98,6 +98,10 @@ var package = Package(
         .target(
             name: "ContributorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),

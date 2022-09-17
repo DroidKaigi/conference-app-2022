@@ -7,7 +7,7 @@ public struct AboutState: Equatable {
     public enum NavigationDestination {
         case none
         case license
-        
+
         @ViewBuilder
         public var destination: some View {
             switch self {
@@ -18,9 +18,9 @@ public struct AboutState: Equatable {
             }
         }
     }
-    
+
     public var navigationDestination: NavigationDestination
-    
+
     public init(
         navigationDestination: NavigationDestination = .none
     ) {
@@ -85,12 +85,12 @@ public struct AboutView: View {
                             Spacer()
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 32)
                     .padding(.vertical, 32)
 
                     Divider()
                         .background(AssetColors.outline.swiftUIColor)
-                        .padding(.horizontal, 32)
+                        .padding(.horizontal, 45)
 
                     ForEach(AboutNavigationItem.items, id: \.title) { item in
                         Button {
@@ -106,6 +106,7 @@ public struct AboutView: View {
                             .frame(minHeight: 56)
                         }
                     }
+                    .padding(.horizontal, 29)
 
                     ForEach(AboutTextItem.items, id: \.title) { item in
                         HStack {

@@ -1,5 +1,5 @@
-import Strings
 import Foundation
+import Strings
 
 struct AboutTextItem {
     let title: String

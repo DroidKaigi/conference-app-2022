@@ -8,13 +8,16 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
+    public var showDate: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
-        selectedDay: DroidKaigi2022Day = .day1
+        selectedDay: DroidKaigi2022Day = .day1,
+        showDate: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
+        self.showDate = showDate
     }
 }
 
@@ -24,6 +27,7 @@ public enum TimetableAction {
     case selectDay(DroidKaigi2022Day)
     case selectItem(TimetableItem)
     case setFavorite(TimetableItemId, Bool)
+    case scroll(CGPoint)
 }
 
 public struct TimetableEnvironment {
@@ -66,6 +70,9 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
+    case let .scroll(position):
+        state.showDate = position.y >= TimetableView.scrollThreshold
+        return .none
     }
 }
 
@@ -76,10 +83,19 @@ public struct TimetableView: View {
         self.store = store
     }
 
+    static let scrollThreshold: CGFloat = 88
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+
+                    TimetableSheetView(store: store)
+                        .scrollThreshold(Self.scrollThreshold)
+                        .onScroll {
+                            viewStore.send(.scroll($0))
+                        }
+
                     HStack(spacing: 8) {
                         ForEach(
                             [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
@@ -91,9 +107,12 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
-                                    Text("\(startDay)")
-                                        .font(Font.system(size: 24, weight: .semibold))
-                                        .frame(height: 32)
+                                    if viewStore.showDate {
+                                        Text("\(startDay)")
+                                            .font(Font.system(size: 24, weight: .semibold))
+                                            .frame(height: 32)
+                                            .transition(.move(edge: .top).combined(with: .opacity))
+                                    }
                                 }
                                 .padding(4)
                                 .frame(maxWidth: .infinity)
@@ -103,6 +122,7 @@ public struct TimetableView: View {
                                     : AssetColors.surface.swiftUIColor
                                 )
                                 .clipShape(Capsule())
+                                .animation(.linear(duration: 0.2), value: viewStore.showDate)
                             }
                         }
                     }
@@ -110,8 +130,6 @@ public struct TimetableView: View {
                     .padding(.vertical, 16)
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
-
-                    TimetableSheetView(store: store)
                 }
                 .task {
                     await viewStore.send(.refresh).finish()

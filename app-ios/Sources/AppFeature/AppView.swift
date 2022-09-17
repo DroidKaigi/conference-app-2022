@@ -144,8 +144,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     contributorReducer.pullback(
         state: \.contributorState,
         action: /AppAction.contributor,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
         }
     ),
     settingReducer.pullback(
@@ -203,6 +205,20 @@ public struct AppView: View {
 
         // workaround for tabbar colors. From iOS16, toolbarBackground may be useful
         UITabBar.appearance().barTintColor = AssetColors.surface.color
+
+        // workaround for preventing translucent tabbar. From iOS15
+        let tabBarAppearance: UITabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.backgroundColor = AssetColors.surface.color
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+
+        // workaround for preventing translucent navigation bar. From iOS15
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = AssetColors.surface.color
+        navigationBarAppearance.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+        UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
     }
 
     public var body: some View {

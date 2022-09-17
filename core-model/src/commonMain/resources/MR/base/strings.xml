@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">タイムライン</string>
+    <string name="title_about">DroidKaigiとは</string>
+    <string name="title_announcement">お知らせ</string>
+    <string name="title_map">フロアマップ</string>
+    <string name="title_sponsors">スポンサー</string>
+    <string name="title_contributors">コントリビューター</string>
+    <string name="title_setting">設定</string>
+
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
@@ -26,6 +35,7 @@
     <string name="session_material">資料</string>
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">スライド</string>
+    <string name="session_language_interpretation">(同時通訳)</string>
 
     <!-- Setting -->
     <string name="setting_title">設定</string>

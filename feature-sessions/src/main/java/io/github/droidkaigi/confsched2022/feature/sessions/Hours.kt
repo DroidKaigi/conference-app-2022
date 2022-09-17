@@ -32,7 +32,8 @@ fun HoursItem(
         text = hour,
         color = Color.White,
         modifier = modifier,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleMedium
     )
 }
 

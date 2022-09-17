@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">Sessions</string>
+    <string name="title_about">About DroidKaigi</string>
+    <string name="title_announcement">Announcement</string>
+    <string name="title_map">Floor Map</string>
+    <string name="title_sponsors">Sponsors</string>
+    <string name="title_contributors">Contributors</string>
+    <string name="title_setting">Setting</string>
+
     <!-- About -->
     <string name="about_top_app_bar_title">About DroidKaigi</string>
     <string name="about_title">What is DroidKaigi?</string>
@@ -26,6 +35,7 @@
     <string name="session_material">Material</string>
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">SLIDE</string>
+    <string name="session_language_interpretation">(interpretation)</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>

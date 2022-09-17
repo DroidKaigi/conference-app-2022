@@ -93,7 +93,10 @@ fun Timetable.Companion.fake(): Timetable {
                 ),
                 room = roomsIterator.next(),
                 targetAudience = "TBW",
-                language = "TBD",
+                language = TimetableLanguage(
+                    langOfSpeaker = "JAPANESE",
+                    isInterpretationTarget = true,
+                ),
                 asset = TimetableAsset(null, null),
                 levels = persistentListOf(
                     "BEGINNER",
@@ -150,7 +153,10 @@ fun Timetable.Companion.fake(): Timetable {
                 ),
                 room = roomsIterator.next(),
                 targetAudience = "TBW",
-                language = "TBD",
+                language = TimetableLanguage(
+                    langOfSpeaker = "ENGLISH",
+                    isInterpretationTarget = true,
+                ),
                 asset = TimetableAsset(null, null),
                 levels = persistentListOf(
                     "BEGINNER",
