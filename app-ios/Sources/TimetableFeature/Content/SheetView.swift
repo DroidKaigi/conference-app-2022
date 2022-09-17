@@ -61,6 +61,7 @@ struct TimetableSheetView: View {
     }
 
     private static let minuteHeight: CGFloat = 4
+    private static let verticalItemSpacing: CGFloat = 3
     private static let timetableStartTime: DateComponents = .init(hour: 10, minute: 0)
     private let dateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -106,7 +107,8 @@ struct TimetableSheetView: View {
                                     ForEach(timetableItems) { item in
                                         if case let .general(item, minutes) = item {
                                             TimetableItemView(item: item)
-                                                .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight)
+                                                .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight - TimetableSheetView.verticalItemSpacing)
+                                                .padding(.bottom, TimetableSheetView.verticalItemSpacing)
                                         } else if case let .spacing(minutes) = item {
                                             Spacer()
                                                 .frame(maxHeight: CGFloat(minutes) * TimetableSheetView.minuteHeight)
