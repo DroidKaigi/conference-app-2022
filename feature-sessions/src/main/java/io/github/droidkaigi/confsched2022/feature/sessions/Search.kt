@@ -125,8 +125,8 @@ private fun SearchScreen(
 @Composable
 private fun SearchTextField(
     searchWord: String,
-    onSearchWordChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
