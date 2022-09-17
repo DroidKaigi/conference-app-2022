@@ -125,7 +125,6 @@ private fun SearchScreen(
 @Composable
 private fun SearchTextField(
     searchWord: String,
-    modifier: Modifier = Modifier,
     onSearchWordChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
