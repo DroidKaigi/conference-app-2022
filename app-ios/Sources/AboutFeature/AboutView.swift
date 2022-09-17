@@ -1,10 +1,30 @@
 import ComposableArchitecture
+import Model
 import Strings
+import StaffFeature
 import SwiftUI
 import Theme
 
+public enum AboutDestination {
+    case access
+    case staffs
+    case privacyPolicy
+    case license
+}
+
 public struct AboutState: Equatable {
-    public init() {}
+    public var staffState: StaffState
+    public var isSheetPresented: Bool
+    public var destination: AboutDestination?
+    public init(
+        staffState: StaffState = .init(staffs: Staff.companion.fakes()),
+        isSheetPresented: Bool = false,
+        destination: AboutDestination? = nil
+    ) {
+        self.isSheetPresented = isSheetPresented
+        self.staffState = staffState
+        self.destination = destination
+    }
 }
 
 public enum AboutAction {
@@ -12,15 +32,45 @@ public enum AboutAction {
     case openStaffs
     case openPrivacyPolicy
     case openLicense
+    case staff(StaffAction)
+    case setSheet(isPresented: Bool)
 }
 
 public struct AboutEnvironment {
     public init() {}
 }
 
-public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { _, _, _ in
-    return .none
-}
+public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.combine(
+    staffReducer.pullback(
+        state: \.staffState,
+        action: /AboutAction.staff,
+        environment: { _ in .init() }
+    ),
+    .init { state, action, _ in
+        switch action {
+        case .setSheet(isPresented: true):
+            state.isSheetPresented = true
+            return .none
+        case .setSheet(isPresented: false):
+            state.isSheetPresented = false
+            return .none
+        case .staff:
+            return .none
+        case .openAccess:
+            state.destination = .access
+            return .none
+        case .openStaffs:
+            state.destination = .staffs
+            return .none
+        case .openPrivacyPolicy:
+            state.destination = .privacyPolicy
+            return .none
+        case .openLicense:
+            state.destination  = .license
+            return .none
+        }
+    }
+)
 
 public struct AboutView: View {
     private let store: Store<AboutState, AboutAction>
@@ -63,6 +113,7 @@ public struct AboutView: View {
                 ForEach(AboutNavigationItem.items, id: \.title) { item in
                     Button {
                         viewStore.send(item.action)
+                        viewStore.send(.setSheet(isPresented: true))
                     } label: {
                         HStack(spacing: 12) {
                             item.image.swiftUIImage
@@ -73,6 +124,26 @@ public struct AboutView: View {
                         .padding(16)
                         .frame(minHeight: 56)
                     }
+                    .sheet(isPresented: viewStore.binding(get: \.isSheetPresented, send: { value in
+                            .setSheet(isPresented: value)
+                    }), onDismiss: {
+                        viewStore.send(.setSheet(isPresented: false))
+                    }, content: {
+                        if let destination = viewStore.state.destination {
+                            switch destination {
+                            case .access:
+                                Text("TODO: Access View")
+                            case .staffs:
+                                StaffView(
+                                    store: store.scope(state: \.staffState, action: AboutAction.staff)
+                                )
+                            case .privacyPolicy:
+                                Text("TODO: Privacy Policy")
+                            case .license:
+                                Text("TODO: License")
+                            }
+                        }
+                    })
                 }
 
                 ForEach(AboutTextItem.items, id: \.title) { item in
