@@ -29,7 +29,7 @@ struct StaffRowView: View {
     }
 }
 
-struct StaffListItemView_Previews: PreviewProvider {
+struct StaffRowView_Previews: PreviewProvider {
     static var previews: some View {
         StaffRowView(staff: Staff.companion.fakes().first!)
     }
