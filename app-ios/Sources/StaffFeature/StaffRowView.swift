@@ -29,8 +29,10 @@ struct StaffRowView: View {
     }
 }
 
+#if DEBUG
 struct StaffRowView_Previews: PreviewProvider {
     static var previews: some View {
         StaffRowView(staff: Staff.companion.fakes().first!)
     }
 }
+#endif

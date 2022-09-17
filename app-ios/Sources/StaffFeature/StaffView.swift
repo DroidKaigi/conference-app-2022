@@ -4,7 +4,7 @@ import SwiftUI
 
 public struct StaffState: Equatable {
     public var staffs: [Staff]
-    public init(staffs: [Staff]) {
+    public init(staffs: [Staff] = []) {
         self.staffs = staffs
     }
 }

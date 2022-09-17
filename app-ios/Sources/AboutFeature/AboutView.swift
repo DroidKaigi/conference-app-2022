@@ -48,11 +48,8 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
     ),
     .init { state, action, _ in
         switch action {
-        case .setSheet(isPresented: true):
-            state.isSheetPresented = true
-            return .none
-        case .setSheet(isPresented: false):
-            state.isSheetPresented = false
+        case let .setSheet(isPresented):
+            state.isSheetPresented = isPresented
             return .none
         case .staff:
             return .none
