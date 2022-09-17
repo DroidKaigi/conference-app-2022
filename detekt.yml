@@ -44,7 +44,7 @@ TwitterCompose:
   ComposableParamOrder:
     active: false
   PreviewPublic:
-    active: false
+    active: true
   RememberMissing:
     active: false
   ViewModelForwarding:
