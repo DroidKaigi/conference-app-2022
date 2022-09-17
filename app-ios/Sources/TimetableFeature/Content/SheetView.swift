@@ -3,7 +3,11 @@ import Model
 import SwiftUI
 import Theme
 
-struct TimetableSheetView: View {
+struct TimetableSheetView: View, ScrollDetectable {
+
+    var scrollThreshold: CGFloat = 0
+    var onScroll: (CGPoint) -> Void = { _ in }
+
     struct ViewState: Equatable {
         var roomTimetableItems: [TimetableRoomItems]
         var hours: [Int]
@@ -73,6 +77,10 @@ struct TimetableSheetView: View {
     var body: some View {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
+
+                Spacer()
+                    .frame(height: scrollThreshold)
+
                 HStack(alignment: .top, spacing: 0) {
                     Spacer()
                         .frame(width: 16)
@@ -122,7 +130,14 @@ struct TimetableSheetView: View {
                         }
                     }
                 }
+                .background(
+                    ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
+                        .onDetect { position in
+                            onScroll(position)
+                        }
+                )
             }
+            .coordinateSpace(name: "TimetableSheetView")
         }
     }
 }
