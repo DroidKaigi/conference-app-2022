@@ -79,12 +79,12 @@ import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
 @Composable
 fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
+    viewModel: SessionsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
-    val viewModel = hiltViewModel<SessionsViewModel>()
     val state: SessionsUiModel by viewModel.uiModel
 
     Sessions(
@@ -142,10 +142,7 @@ fun Sessions(
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(top = 4.dp)
-        ) {
+        Column {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()

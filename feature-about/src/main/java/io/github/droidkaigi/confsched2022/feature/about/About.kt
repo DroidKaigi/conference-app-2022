@@ -200,11 +200,12 @@ fun About(
                     }
                 )
 
+                val privacyPolicyUrl = "https://portal.droidkaigi.jp/about/privacy"
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.PrivacyTip,
                     textRes = Strings.about_privacy,
                     onClick = {
-                        // TODO: Implement privacy policy
+                        onLinkClick(privacyPolicyUrl, null)
                     }
                 )
             }
