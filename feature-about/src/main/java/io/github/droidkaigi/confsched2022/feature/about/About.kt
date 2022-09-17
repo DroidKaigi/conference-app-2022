@@ -66,8 +66,8 @@ fun AboutScreenRoot(
         onNavigationIconClick,
         onLinkClick,
         onStaffListClick,
+        versionName,
         modifier,
-        versionName
     )
 }
 
@@ -77,8 +77,8 @@ fun About(
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
     onStaffListClick: () -> Unit,
+    versionName: String?,
     modifier: Modifier = Modifier,
-    versionName: String?
 ) {
     KaigiScaffold(
         topBar = {
@@ -235,10 +235,10 @@ fun About(
 
 @Composable
 private fun AuxiliaryInformationRow(
-    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     textRes: StringResource,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier

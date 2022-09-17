@@ -107,13 +107,13 @@ fun SessionsScreenRoot(
 @Composable
 fun Sessions(
     uiModel: SessionsUiModel,
-    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scheduleState = uiModel.state
     val isTimetable = uiModel.isTimetable
