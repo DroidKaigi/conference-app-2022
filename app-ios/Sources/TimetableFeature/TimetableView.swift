@@ -28,6 +28,7 @@ public enum TimetableAction {
     case selectItem(TimetableItem)
     case setFavorite(TimetableItemId, Bool)
     case scroll(CGPoint)
+    case search
 }
 
 public struct TimetableEnvironment {
@@ -72,6 +73,8 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .eraseToEffect()
     case let .scroll(position):
         state.showDate = position.y >= TimetableView.scrollThreshold
+        return .none
+    case .search:
         return .none
     }
 }
@@ -143,7 +146,7 @@ public struct TimetableView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Group {
                             Button {
-                                // TODO: search
+                                viewStore.send(.search)
                             } label: {
                                 Assets.search.swiftUIImage
                                     .renderingMode(.template)
