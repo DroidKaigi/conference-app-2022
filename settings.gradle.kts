@@ -41,7 +41,6 @@ val modules = listOf(
     "core-data",
     "core-testing",
     "core-model",
-    "preview-screenshots"
 )
 
 modules.forEach { filePath ->
@@ -50,6 +49,8 @@ modules.forEach { filePath ->
     include(newProjetName)
 //    project(newProjetName).projectDir = file(filePath)
 }
+
+include(":preview-screenshots")
 
 include(":appioscombined")
 // for iOS framework name
