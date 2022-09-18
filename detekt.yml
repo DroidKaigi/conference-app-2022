@@ -36,7 +36,7 @@ TwitterCompose:
   ModifierWithoutDefault:
     active: true
   MultipleEmitters:
-    active: false
+    active: true
   MutableParams:
     active: false
   ComposableNaming:
