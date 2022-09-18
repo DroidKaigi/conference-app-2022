@@ -293,17 +293,27 @@ enum class DrawerItem(
         DrawerGroup.Information,
         Strings.title_announcement,
         Icons.Default.Announcement,
-        ""
+        AnnouncementNavGraph.announcementRoute
     ),
     Map(DrawerGroup.Information, Strings.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(DrawerGroup.Others, Strings.title_sponsors, Icons.Default.Business, ""),
+    Sponsors(
+        DrawerGroup.Others,
+        Strings.title_sponsors,
+        Icons.Default.Business,
+        SponsorsNavGraph.sponsorsRoute
+    ),
     Contributors(
         DrawerGroup.Others,
         Strings.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(DrawerGroup.Others, Strings.title_setting, Icons.Default.Settings, "");
+    Setting(
+        DrawerGroup.Others,
+        Strings.title_setting,
+        Icons.Default.Settings,
+        SettingNavGraph.settingRoute
+    );
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
