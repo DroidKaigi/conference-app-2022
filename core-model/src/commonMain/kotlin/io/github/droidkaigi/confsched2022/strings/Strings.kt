@@ -9,5 +9,3 @@ public val shared: strings
 
 public val Strings: strings
     get() = Res.strings
-
-
