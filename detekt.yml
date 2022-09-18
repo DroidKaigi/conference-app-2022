@@ -40,7 +40,7 @@ TwitterCompose:
   MutableParams:
     active: false
   ComposableNaming:
-    active: false
+    active: true
   ComposableParamOrder:
     active: true
   PreviewPublic:
