@@ -36,7 +36,6 @@ fun SponsorsScreenRoot(
 
 @Composable
 fun Sponsors(
-    modifier: Modifier = Modifier,
     uiModel: SponsorsUiModel,
     showNavigationIcon: Boolean,
     modifier: Modifier = Modifier,
