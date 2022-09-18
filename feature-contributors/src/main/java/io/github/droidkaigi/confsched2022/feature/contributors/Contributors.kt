@@ -34,17 +34,24 @@ fun ContributorsScreenRoot(
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
 ) {
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick)
+    Contributors(
+        uiModel = uiModel,
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick,
+        onLinkClick = onLinkClick
+    )
 }
 
 @Composable
 fun Contributors(
+    modifier: Modifier = Modifier,
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit
 ) {
     KaigiScaffold(
+        modifier = modifier,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,

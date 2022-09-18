@@ -28,13 +28,13 @@ TwitterCompose:
   ContentEmitterReturningValues:
     active: true
   ModifierComposable:
-    active: false
+    active: true
   ModifierMissing:
-    active: false
+    active: true
   ModifierReused:
     active: false
   ModifierWithoutDefault:
-    active: false
+    active: true
   MultipleEmitters:
     active: false
   MutableParams:

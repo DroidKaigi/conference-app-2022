@@ -1,10 +1,15 @@
 import Assets
+import CommonComponents
+import ComposableArchitecture
+import Model
 import SwiftUI
 import Theme
-import Model
-import ComposableArchitecture
 
-struct TimetableListView: View {
+struct TimetableListView: View, ScrollDetectable {
+
+    var scrollThreshold: CGFloat = 0
+    var onScroll: (CGPoint) -> Void = { _ in }
+
     struct ViewState: Equatable {
         var timeGroupTimetableItems: [TimetableTimeGroupItems]
 
@@ -43,6 +48,10 @@ struct TimetableListView: View {
     var body: some View {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
+
+                Spacer()
+                    .frame(height: scrollThreshold)
+
                 LazyVStack(spacing: 32) {
                     ForEach(viewStore.timeGroupTimetableItems) { timetableTimeGroupItems in
                         HStack(alignment: .top, spacing: 28) {
@@ -62,7 +71,6 @@ struct TimetableListView: View {
                                     TimetableListItemView(
                                         item: item,
                                         isFavorite: isFavorite,
-                                        minute: timetableTimeGroupItems.minute,
                                         onFavoriteToggle: { id, currentIsFavorite in
                                             viewStore.send(.setFavorite(id, currentIsFavorite))
                                         }
@@ -74,7 +82,14 @@ struct TimetableListView: View {
                     }
                 }
                 .padding(.vertical, 24)
+                .background(
+                    ScrollDetector(coordinateSpace: .named("TimetableListView"))
+                        .onDetect { position in
+                            onScroll(position)
+                        }
+                )
             }
+            .coordinateSpace(name: "TimetableListView")
         }
     }
 

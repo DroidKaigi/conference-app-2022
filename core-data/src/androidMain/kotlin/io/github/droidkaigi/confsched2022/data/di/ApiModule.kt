@@ -25,10 +25,10 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-class ApiModule {
+public class ApiModule {
     @Provides
     @Singleton
-    fun provideNetworkService(
+    public fun provideNetworkService(
         httpClient: HttpClient,
         authApi: AuthApi
     ): NetworkService {
@@ -37,7 +37,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(
+    public fun provideAuthApi(
         httpClient: HttpClient,
         settingsDatastore: SettingsDatastore,
         authenticator: Authenticator
@@ -47,7 +47,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(
+    public fun provideHttpClient(
         okHttpClient: OkHttpClient,
         settingsDatastore: SettingsDatastore
     ): HttpClient {
@@ -73,7 +73,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    public fun provideOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -85,7 +85,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticator(): Authenticator {
+    public fun provideAuthenticator(): Authenticator {
         return AuthenticatorImpl()
     }
 
@@ -95,13 +95,13 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideFlowSettings(application: Application): FlowSettings {
+    public fun provideFlowSettings(application: Application): FlowSettings {
         return DataStoreSettings(datastore = application.dataStore)
     }
 
     @Provides
     @Singleton
-    fun providePreferenceDatastore(flowSettings: FlowSettings): SettingsDatastore {
+    public fun providePreferenceDatastore(flowSettings: FlowSettings): SettingsDatastore {
         return SettingsDatastore(flowSettings)
     }
 }

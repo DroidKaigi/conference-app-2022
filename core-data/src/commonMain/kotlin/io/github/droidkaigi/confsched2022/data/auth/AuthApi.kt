@@ -13,12 +13,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.first
 
-class AuthApi(
+public class AuthApi(
     private val httpClient: HttpClient,
     private val userDataStore: SettingsDatastore,
     private val authenticator: Authenticator
 ) {
-    suspend fun authIfNeeded() {
+    public suspend fun authIfNeeded() {
         var idToken = authenticator.currentUser()?.idToken
 
         if (idToken == null) {

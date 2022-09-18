@@ -9,7 +9,7 @@ import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-fun HttpClientConfig<*>.defaultKtorConfig(
+public fun HttpClientConfig<*>.defaultKtorConfig(
     settingsDatastore: SettingsDatastore,
 ) {
     install(ContentNegotiation) {

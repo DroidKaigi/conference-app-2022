@@ -218,6 +218,7 @@ fun SessionDetailScreen(
 
 @Composable
 fun SessionDetailBottomAppBar(
+    modifier: Modifier = Modifier,
     item: TimetableItem,
     isFavorite: Boolean,
     onFavoriteClick: (Boolean) -> Unit,
@@ -225,7 +226,7 @@ fun SessionDetailBottomAppBar(
     onNavigateFloorMapClick: () -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
 ) {
-    BottomAppBar {
+    BottomAppBar(modifier = modifier) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
@@ -277,6 +278,7 @@ fun SessionDetailBottomAppBar(
 
 @Composable
 fun SessionTagsLine(
+    modifier: Modifier = Modifier,
     item: TimetableItem
 ) {
     val sessionMinutes =
@@ -286,6 +288,7 @@ fun SessionTagsLine(
     val secondLang = lang.secondLang()
 
     FlowRow(
+        modifier = modifier,
         mainAxisSize = Expand,
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
