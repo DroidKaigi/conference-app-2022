@@ -17,7 +17,7 @@ class DataStaffRepository(
             send(
                 staffApi
                     .staff()
-                    .filterNot { ExcludedGitHubUserNames.LIST.contains(it.username) }
+                    .filterNot { ExcludedGitHubUserNames.SET.contains(it.username) }
                     .toPersistentList()
             )
             awaitClose { }

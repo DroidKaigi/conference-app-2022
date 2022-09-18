@@ -18,7 +18,7 @@ class DataContributorsRepository(
             send(
                 contributorsApi
                     .contributors()
-                    .filterNot { ExcludedGitHubUserNames.LIST.contains(it.username) }
+                    .filterNot { ExcludedGitHubUserNames.SET.contains(it.username) }
                     .toPersistentList()
             )
             awaitClose { }
