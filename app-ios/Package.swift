@@ -34,6 +34,7 @@ var package = Package(
         .target(
             name: "AboutFeature",
             dependencies: [
+                .target(name: "appioscombined"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
@@ -189,16 +190,28 @@ var package = Package(
                 .target(name: "swiftgen"),
             ]
         ),
+//        .plugin(
+//            name: "Copy MokoResources",
+//            capability: .buildTool(),
+//            dependencies: [
+//                .target(name: "gradle")
+//            ]
+//        ),
         .binaryTarget(
             name: "SwiftLintBinary",
             url: "https://github.com/realm/SwiftLint/releases/download/0.48.0/SwiftLintBinary-macos.artifactbundle.zip",
             checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
         ),
         .binaryTarget(
-          name: "swiftgen",
-          url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
-          checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
+            name: "swiftgen",
+            url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
+            checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
         ),
+//        .binaryTarget(
+//            name: "gradle",
+//            url: "https://services.gradle.org/distributions/gradle-7.5.1-bin.zip",
+//            checksum: "f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4"
+//        ),
     ]
 )
 

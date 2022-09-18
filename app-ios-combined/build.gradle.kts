@@ -3,9 +3,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     id("droidkaigi.primitive.kmp")
+    id("droidkaigi.primitive.kmp.android")
     id("droidkaigi.primitive.kmp.ios")
+    id("droidkaigi.primitive.mokoresources")
 }
-
 
 kotlin {
     sourceSets {
@@ -34,6 +35,7 @@ kotlin {
                 projects.forEach { projects ->
                     export(projects)
                 }
+                export(libs.mokoResources)
             }
         }
 
@@ -46,4 +48,10 @@ kotlin {
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "io.github.droidkaigi.confsched2022"
+    multiplatformResourcesClassName = "Res"
+    iosBaseLocalizationRegion = "ja"
 }
