@@ -86,9 +86,10 @@ internal class SessionsZiplineImpl(
     @OptIn(ExperimentalTime::class) // measureTimedValue
     override fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
         return channelFlow {
-            // The JS modifier takes about 300 ms to execute.
-            // Emitting the default Android modifier first prevents the JS modifier from being displayed
-            // as loading during execution.
+            // The loaded JsScheduleModifier takes about 300 ms to execute.
+            // Therefore, if a cached loaded JsScheduleModifier is emitted first,
+            // the UI will show loading while the JsScheduleModifier is running.
+            // Prevent this by emitting the AndroidScheduleModifier first, even if it is cached.
             val androidScheduleModifier = AndroidScheduleModifier()
             val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
                 Logger.v("zipline Android")
