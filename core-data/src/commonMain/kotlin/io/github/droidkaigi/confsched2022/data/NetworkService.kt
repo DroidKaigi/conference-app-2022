@@ -13,9 +13,9 @@ import io.ktor.client.request.put
 import io.ktor.util.cio.ChannelReadException
 import kotlinx.coroutines.TimeoutCancellationException
 
-class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
+public class NetworkService(public val httpClient: HttpClient, public val authApi: AuthApi) {
 
-    suspend inline fun <reified T : Any> get(
+    public suspend inline fun <reified T : Any> get(
         url: String
     ): T = try {
         authApi.authIfNeeded()
@@ -25,7 +25,7 @@ class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
         throw e.toAppError()
     }
 
-    suspend inline fun <reified T> post(
+    public suspend inline fun <reified T> post(
         urlString: String,
         block: HttpRequestBuilder.() -> Unit = {},
     ): T = try {
@@ -36,7 +36,7 @@ class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
         throw e.toAppError()
     }
 
-    suspend inline fun <reified T> put(
+    public suspend inline fun <reified T> put(
         urlString: String,
         block: HttpRequestBuilder.() -> Unit = {},
     ): T = try {
@@ -48,7 +48,7 @@ class NetworkService(val httpClient: HttpClient, val authApi: AuthApi) {
     }
 }
 
-fun Throwable.toAppError(): AppError {
+public fun Throwable.toAppError(): AppError {
     return when (this) {
         is AppError -> this
         is ResponseException ->

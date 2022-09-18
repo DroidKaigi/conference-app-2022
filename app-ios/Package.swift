@@ -149,7 +149,9 @@ var package = Package(
         .target(
             name: "SessionFeature",
             dependencies: [
-                .target(name: "Model"),
+                .target(name: "appioscombined"),
+                .target(name: "Assets"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
