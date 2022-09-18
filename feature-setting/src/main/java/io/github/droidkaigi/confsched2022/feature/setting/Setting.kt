@@ -39,8 +39,8 @@ fun SettingScreenRoot(
 
 @Composable
 fun Setting(
-    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
+    modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit
 ) {
     KaigiScaffold(
@@ -81,9 +81,9 @@ enum class SettingItem(val titleStringRes: StringResource, val icon: ImageVector
 
 @Composable
 fun SettingItem(
-    modifier: Modifier = Modifier,
     icon: ImageVector,
-    title: String
+    title: String,
+    modifier: Modifier = Modifier,
 ) {
     val checkedState = remember { mutableStateOf(true) }
     Row(

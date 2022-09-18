@@ -27,8 +27,8 @@ fun AnnouncementScreenRoot(
 
 @Composable
 fun Announcement(
-    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
+    modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
     KaigiScaffold(

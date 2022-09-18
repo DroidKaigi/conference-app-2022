@@ -81,9 +81,9 @@ import java.util.Locale
 
 @Composable
 fun SessionDetailScreenRoot(
+    timetableItemId: TimetableItemId,
     modifier: Modifier = Modifier,
     viewModel: SessionDetailViewModel = hiltViewModel(),
-    timetableItemId: TimetableItemId,
     onBackIconClick: () -> Unit = {},
     onNavigateFloorMapClick: () -> Unit,
 ) {
@@ -144,8 +144,8 @@ fun SessionDetailTopAppBar(
 
 @Composable
 fun SessionDetailScreen(
-    modifier: Modifier = Modifier,
     uiModel: SessionDetailUiModel,
+    modifier: Modifier = Modifier,
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
     onShareClick: (TimetableItem) -> Unit = {},
@@ -218,13 +218,13 @@ fun SessionDetailScreen(
 
 @Composable
 fun SessionDetailBottomAppBar(
-    modifier: Modifier = Modifier,
     item: TimetableItem,
     isFavorite: Boolean,
     onFavoriteClick: (Boolean) -> Unit,
     onShareClick: (TimetableItem) -> Unit,
     onNavigateFloorMapClick: () -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BottomAppBar(modifier = modifier) {
         Row(
@@ -278,8 +278,8 @@ fun SessionDetailBottomAppBar(
 
 @Composable
 fun SessionTagsLine(
+    item: TimetableItem,
     modifier: Modifier = Modifier,
-    item: TimetableItem
 ) {
     val sessionMinutes =
         "${(item.endsAt - item.startsAt).toComponents { minutes, _, _ -> minutes }}"
@@ -337,9 +337,9 @@ fun SessionTagsLine(
 
 @Composable
 fun SessionScheduleInfo(
-    modifier: Modifier = Modifier,
     startTime: Instant,
-    endTime: Instant
+    endTime: Instant,
+    modifier: Modifier = Modifier,
 ) {
     val sessionStartDateTime = startTime
         .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -380,8 +380,8 @@ fun SessionScheduleInfo(
 
 @Composable
 fun SessionDetailSessionInfo(
+    item: TimetableItem,
     modifier: Modifier = Modifier,
-    item: TimetableItem
 ) {
     Column(modifier = modifier) {
         Text(
@@ -407,8 +407,8 @@ fun SessionDetailSessionInfo(
 
 @Composable
 fun SessionDetailDescription(
-    modifier: Modifier = Modifier,
     description: String,
+    modifier: Modifier = Modifier,
 ) {
     var isReadMore by remember { mutableStateOf(false) }
     var isOverFlow by remember { mutableStateOf(false) }
@@ -445,8 +445,8 @@ fun SessionDetailDescription(
 
 @Composable
 fun SessionDetailTargetAudience(
-    modifier: Modifier = Modifier,
     targetAudience: String,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -469,8 +469,8 @@ fun SessionDetailTargetAudience(
 
 @Composable
 fun SessionDetailSpeakers(
-    modifier: Modifier = Modifier,
     speakers: List<TimetableSpeaker>,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -527,8 +527,8 @@ fun SessionDetailSpeakers(
 
 @Composable
 fun SessionDetailAssets(
-    modifier: Modifier = Modifier,
     asset: TimetableAsset,
+    modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -573,9 +573,9 @@ fun SessionDetailAssets(
 
 @Composable
 private fun SessionDetailAssetsItem(
-    modifier: Modifier = Modifier,
     painter: Painter,
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Row(

@@ -42,7 +42,7 @@ TwitterCompose:
   ComposableNaming:
     active: false
   ComposableParamOrder:
-    active: false
+    active: true
   PreviewPublic:
     active: true
   RememberMissing:
