@@ -25,25 +25,32 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DroidKaigi2022"
-include(
-    ":app-android",
-    ":core-zipline",
-    ":appioscombined",
-    ":feature-sessions",
-    ":feature-contributors",
-    ":feature-about",
-    ":feature-map",
-    ":feature-announcement",
-    ":feature-setting",
-    ":feature-staff",
-    ":feature-sponsors",
-    ":core-ui",
-    ":core-designsystem",
-    ":core-data",
-    ":core-testing",
-    ":core-model",
-    ":preview-screenshots"
+val modules = listOf(
+    "app-android",
+    "core-zipline",
+    "feature-sessions",
+    "feature-contributors",
+    "feature-about",
+    "feature-map",
+    "feature-announcement",
+    "feature-setting",
+    "feature-staff",
+    "feature-sponsors",
+    "core-ui",
+    "core-designsystem",
+    "core-data",
+    "core-testing",
+    "core-model",
+    "preview-screenshots"
 )
 
+modules.forEach { filePath ->
+    val (type, name) = filePath.split("-")
+    val newProjetName = ":$type:$name"
+    include(newProjetName)
+    project(newProjetName).projectDir = file(filePath)
+}
+
+include(":appioscombined")
 // for iOS framework name
 project(":appioscombined").projectDir = file("app-ios-combined")
