@@ -7,17 +7,17 @@ import io.github.droidkaigi.confsched2022.model.Contributor
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-class ContributorsApi(
+public class ContributorsApi(
     private val networkService: NetworkService,
 ) {
-    suspend fun contributors(): PersistentList<Contributor> {
+    public suspend fun contributors(): PersistentList<Contributor> {
         return networkService.get<ContributorsResponse>(
             url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/contributors"
         ).toContributorList()
     }
 }
 
-fun ContributorsResponse.toContributorList(): PersistentList<Contributor> {
+private fun ContributorsResponse.toContributorList(): PersistentList<Contributor> {
     return contributors.map {
         Contributor(
             id = it.id,
