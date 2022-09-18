@@ -46,10 +46,10 @@ fun Rooms(
     rooms: List<TimetableRoom>,
     timetableState: TimetableState,
     modifier: Modifier = Modifier,
-    content: @Composable (Modifier, TimetableRoom) -> Unit,
+    content: @Composable (TimetableRoom) -> Unit,
 ) {
     val itemProvider = itemProvider({ rooms.size }) { index ->
-        content(modifier, rooms[index])
+        content(rooms[index])
     }
     val density = timetableState.density
     val roomsLayout = remember(rooms) {
