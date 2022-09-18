@@ -1,0 +1,53 @@
+complexity:
+  active: true
+  LongParameterList:
+    active: true
+    threshold: 12
+    ignoreDefaultParameters: true
+
+style:
+  active: true
+  MagicNumber:
+    active: false
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: ['Preview']
+
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][A-Za-z0-9]*'
+
+TwitterCompose:
+  ContentEmitterReturningValues:
+    active: true
+  ModifierComposable:
+    active: false
+  ModifierMissing:
+    active: false
+  ModifierReused:
+    active: false
+  ModifierWithoutDefault:
+    active: false
+  MultipleEmitters:
+    active: false
+  MutableParams:
+    active: false
+  ComposableNaming:
+    active: false
+  ComposableParamOrder:
+    active: false
+  PreviewPublic:
+    active: true
+  RememberMissing:
+    active: false
+  ViewModelForwarding:
+    active: false
+  ViewModelInjection:
+    active: true

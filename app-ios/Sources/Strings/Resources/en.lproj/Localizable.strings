@@ -3,11 +3,12 @@
 // About
 "About.Title" = "DroidKaigiとは";
 "About.WhatIsDroidKaigi" = "What is DroidKaigi?";
-"About.Description" = "DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。";
+"About.Description" = "DroidKaigiはエンジニアが主役のカンファレンスです。\n技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。";
 "About.Access" = "会場アクセス";
 "About.Staffs" = "スタッフリスト";
 "About.PrivacyPolicy" = "プライバシーポリシー";
 "About.License" = "ライセンス";
+"About.Version" = "アプリバージョン";
 
 "Notification.Title" = "Notification";
 "Map.Title" = "Floor Map";

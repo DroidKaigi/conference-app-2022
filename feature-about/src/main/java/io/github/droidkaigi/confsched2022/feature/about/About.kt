@@ -1,10 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,17 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,49 +33,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.feature.about.R.string
+import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun AboutScreenRoot(
     modifier: Modifier = Modifier,
+    showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
+    onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
+    onStaffListClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
-    About(onNavigationIconClick, modifier, versionName)
+    About(
+        showNavigationIcon,
+        onNavigationIconClick,
+        onLinkClick,
+        onStaffListClick,
+        modifier,
+        versionName
+    )
 }
 
 @Composable
 fun About(
+    showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onLinkClick: (url: String, packageName: String?) -> Unit,
+    onStaffListClick: () -> Unit,
     modifier: Modifier = Modifier,
     versionName: String?
 ) {
     KaigiScaffold(
         topBar = {
             KaigiTopAppBar(
+                showNavigationIcon = showNavigationIcon,
                 onNavigationIconClick = onNavigationIconClick,
                 title = {
                     Text(
-                        text = stringResource(id = string.about_top_app_bar_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(Strings.about_top_app_bar_title),
                     )
                 },
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
@@ -85,7 +104,11 @@ fun About(
                     .padding(
                         top = 67.dp,
                         bottom = 75.dp,
-                    ),
+                    )
+                    .clearAndSetSemantics {
+                        contentDescription = "Logo"
+                        role = Role.Image
+                    },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(40.dp)
             ) {
@@ -105,38 +128,29 @@ fun About(
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
-                        bottom = 32.dp,
+                        bottom = 14.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
                     style = MaterialTheme.typography.headlineLarge,
-                    text = stringResource(id = string.about_title)
+                    text = stringResource(Strings.about_title)
                 )
                 Text(
                     style = TextStyle(
                         fontSize = 16.sp
                     ),
-                    text = stringResource(id = string.about_description)
+                    text = stringResource(Strings.about_description)
                 )
+            }
 
-                val context = LocalContext.current
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
+            Row(modifier = Modifier.padding(start = 4.dp, bottom = 22.dp)) {
+                ExternalServices.values().forEach { serviceType ->
                     ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Twitter
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Youtube
-                    )
-                    ExternalServiceImage(
-                        context = context,
-                        serviceType = ExternalServices.Medium
-                    )
+                        serviceType = serviceType
+                    ) {
+                        onLinkClick(serviceType.url, serviceType.packageName)
+                    }
                 }
             }
             Divider(
@@ -148,48 +162,50 @@ fun About(
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                val context = LocalContext.current
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
+                val codeConductUrl = "https://portal.droidkaigi.jp/about/code-of-conduct"
+                val context = LocalContext.current
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
-                    textResId = string.about_access,
+                    textRes = Strings.about_access,
                     onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(googleMapUrl)
-                        )
-                        try {
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            navigateToCustomTab(
-                                url = googleMapUrl,
-                                context = context,
-                            )
-                        }
+                        onLinkClick(googleMapUrl, null)
                     }
                 )
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Person,
-                    textResId = string.about_staff,
-                    onClick = {
-                        // TODO: Implement show staff screen
-                    }
-                )
-
-                AuxiliaryInformationRow(
-                    imageVector = Icons.Filled.PrivacyTip,
-                    textResId = string.about_privacy,
-                    onClick = {
-                        // TODO: Implement privacy policy
-                    }
+                    textRes = Strings.about_staff,
+                    onClick = onStaffListClick
                 )
 
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
-                    textResId = string.about_license,
+                    textRes = Strings.about_license,
                     onClick = {
                         // TODO: Implement license
+                    }
+                )
+
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.DirectionsWalk,
+                    textRes = Strings.about_code_conduct,
+                    onClick = {
+                        CustomTabsIntent.Builder().also { builder ->
+                            builder.setShowTitle(true)
+                            builder.build().also {
+                                it.launchUrl(context, Uri.parse(codeConductUrl))
+                            }
+                        }
+                    }
+                )
+
+                val privacyPolicyUrl = "https://portal.droidkaigi.jp/about/privacy"
+                AuxiliaryInformationRow(
+                    imageVector = Icons.Filled.PrivacyTip,
+                    textRes = Strings.about_privacy,
+                    onClick = {
+                        onLinkClick(privacyPolicyUrl, null)
                     }
                 )
             }
@@ -200,9 +216,10 @@ fun About(
                 modifier = Modifier
                     .padding(vertical = 18.dp, horizontal = 32.dp)
                     .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {}
             ) {
                 Text(
-                    text = "アプリバージョン",
+                    text = stringResource(Strings.about_app_version),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 if (versionName != null) {
@@ -220,7 +237,7 @@ fun About(
 private fun AuxiliaryInformationRow(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
-    @StringRes textResId: Int,
+    textRes: StringResource,
     onClick: () -> Unit
 ) {
     Row(
@@ -240,55 +257,22 @@ private fun AuxiliaryInformationRow(
 
         Text(
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            text = stringResource(id = textResId)
+            text = stringResource(textRes)
         )
     }
 }
 
 @Composable
 private fun ExternalServiceImage(
-    context: Context,
     serviceType: ExternalServices,
+    onClick: () -> Unit,
 ) {
-    Image(
-        modifier = Modifier
-            .size(24.dp)
-            .clickable {
-                navigateToExternalServices(
-                    context = context,
-                    serviceType = serviceType
-                )
-            },
-        imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
-        contentDescription = serviceType.contentDescription,
-    )
-}
-
-private fun navigateToExternalServices(
-    context: Context,
-    serviceType: ExternalServices,
-) {
-    try {
-        Intent(Intent.ACTION_VIEW).also {
-            it.setPackage(serviceType.packageName)
-            it.data = Uri.parse(serviceType.url)
-            context.startActivity(it)
-        }
-    } catch (e: ActivityNotFoundException) {
-        navigateToCustomTab(
-            url = serviceType.url,
-            context = context,
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = serviceType.iconRes),
+            contentDescription = serviceType.contentDescription,
+            tint = Color.Unspecified,
         )
-    }
-}
-
-private fun navigateToCustomTab(url: String, context: Context) {
-    val uri = Uri.parse(url)
-    CustomTabsIntent.Builder().also { builder ->
-        builder.setShowTitle(true)
-        builder.build().also {
-            it.launchUrl(context, uri)
-        }
     }
 }
 

@@ -1,19 +1,19 @@
-import appioscombined
 import AboutFeature
+import appioscombined
 import Assets
 import Auth
 import ComposableArchitecture
 import Container
 import ContributorFeature
-import NotificationFeature
 import MapFeature
-import Theme
-import TimetableFeature
+import NotificationFeature
 import SessionFeature
 import SettingFeature
 import SponsorFeature
-import SwiftUI
 import Strings
+import SwiftUI
+import Theme
+import TimetableFeature
 
 public enum AppTab {
     case timetable
@@ -144,8 +144,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     contributorReducer.pullback(
         state: \.contributorState,
         action: /AppAction.contributor,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
         }
     ),
     settingReducer.pullback(
@@ -235,8 +237,7 @@ public struct AppView: View {
                     )
                 )
                 .tabItem {
-                    Assets.droid.swiftUIImage
-                        .renderingMode(.template)
+                    Image(systemName: "questionmark.circle")
                     Text(L10n.About.title)
                 }
                 .tag(AppTab.about)
