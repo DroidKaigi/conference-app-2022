@@ -38,7 +38,7 @@ TwitterCompose:
   MultipleEmitters:
     active: true
   MutableParams:
-    active: false
+    active: true
   ComposableNaming:
     active: true
   ComposableParamOrder:
@@ -48,6 +48,6 @@ TwitterCompose:
   RememberMissing:
     active: false
   ViewModelForwarding:
-    active: false
+    active: true
   ViewModelInjection:
     active: true
