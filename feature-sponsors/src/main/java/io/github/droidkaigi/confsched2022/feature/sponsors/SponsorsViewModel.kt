@@ -26,6 +26,7 @@ class SponsorsViewModel @Inject constructor(
 
     init {
         val sponsorsFlow = sponsorsRepository.sponsors().asLoadState()
+
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
             val sponsors by sponsorsFlow.collectAsState(initial = UiLoadState.Loading)
             SponsorsUiModel(sponsors)

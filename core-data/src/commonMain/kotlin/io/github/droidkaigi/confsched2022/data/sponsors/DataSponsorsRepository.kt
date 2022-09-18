@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.sponsors
 
+import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.Sponsor
 import io.github.droidkaigi.confsched2022.model.SponsorsRepository
 import kotlinx.collections.immutable.PersistentList
@@ -12,8 +13,10 @@ public class DataSponsorsRepository(
 ) : SponsorsRepository {
     override fun sponsors(): Flow<PersistentList<Sponsor>> =
         callbackFlow {
+            val sponsors = sponsorsApi.sponsors()
+            Logger.d("sponsors repository: $sponsors")
             send(
-                sponsorsApi.sponsors()
+                sponsors
             )
             awaitClose { }
         }
