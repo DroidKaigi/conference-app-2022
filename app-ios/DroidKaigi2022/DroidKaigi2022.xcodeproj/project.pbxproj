@@ -185,7 +185,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export JAVA_HOME=\"/Users/kittinun-vantasin/.sdkman/candidates/java/current\"\n\n\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/../../\" :appioscombined:copyFrameworkResourcesToApp \\\n    -Pmoko.resources.PLATFORM_NAME=$PLATFORM_NAME \\\n    -Pmoko.resources.CONFIGURATION=$CONFIGURATION \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=$BUILT_PRODUCTS_DIR \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=$CONTENTS_FOLDER_PATH\n";
+			shellScript = "./../scripts/copy_mokoresources.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
