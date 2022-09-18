@@ -1,6 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.contributors
 
-import io.github.droidkaigi.confsched2022.data.ExcludedNames
+import io.github.droidkaigi.confsched2022.data.ExcludedGitHubUserNames
 import io.github.droidkaigi.confsched2022.model.Contributor
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import kotlinx.collections.immutable.PersistentList
@@ -18,7 +18,7 @@ class DataContributorsRepository(
             send(
                 contributorsApi
                     .contributors()
-                    .filterNot { ExcludedNames.LIST.contains(it.username) }
+                    .filterNot { ExcludedGitHubUserNames.LIST.contains(it.username) }
                     .toPersistentList()
             )
             awaitClose { }
