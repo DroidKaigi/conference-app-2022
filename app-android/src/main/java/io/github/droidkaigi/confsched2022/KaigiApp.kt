@@ -47,9 +47,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -182,7 +184,11 @@ fun rememberKaigiAppScaffoldState(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
@@ -203,8 +209,13 @@ fun KaigiAppDrawer(
             }
         }
     } else {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val drawerState = kaigiAppScaffoldState.drawerState
+        if (drawerState.isAnimationRunning && drawerState.isClosed) {
+            keyboardController?.hide()
+        }
         ModalNavigationDrawer(
-            drawerState = kaigiAppScaffoldState.drawerState,
+            drawerState = drawerState,
             drawerContent = { ModalDrawerSheet { drawerSheetContent() } },
         ) {
             content()
