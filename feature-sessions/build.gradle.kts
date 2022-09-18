@@ -7,12 +7,12 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022.feature.sessions"
 
 dependencies {
-    implementation(projects.core.ui)
-    implementation(projects.core.designsystem)
-    implementation(projects.core.model)
-    testImplementation(projects.core.testing)
+    implementation(projects.coreUi)
+    implementation(projects.coreDesignsystem)
+    implementation(projects.coreModel)
+    testImplementation(projects.coreTesting)
 
-    implementation(projects.core.zipline)
+    implementation(projects.coreZipline)
 
     implementation(libs.kermit)
     implementation(libs.hiltNavigationCompose)
