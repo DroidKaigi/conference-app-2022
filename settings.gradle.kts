@@ -26,7 +26,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DroidKaigi2022"
 val modules = listOf(
-    "app-android",
     "core-zipline",
     "feature-sessions",
     "feature-contributors",
@@ -49,8 +48,10 @@ modules.forEach { filePath ->
     include(newProjetName)
 //    project(newProjetName).projectDir = file(filePath)
 }
-
-include(":preview-screenshots")
+include(
+    ":app-android",
+    ":preview-screenshots"
+)
 
 include(":appioscombined")
 // for iOS framework name
