@@ -34,7 +34,7 @@ TwitterCompose:
   ModifierReused:
     active: false
   ModifierWithoutDefault:
-    active: false
+    active: true
   MultipleEmitters:
     active: false
   MutableParams:

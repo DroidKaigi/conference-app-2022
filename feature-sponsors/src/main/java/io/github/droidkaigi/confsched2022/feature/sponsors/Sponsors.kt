@@ -27,7 +27,7 @@ fun SponsorsScreenRoot(
 
 @Composable
 fun Sponsors(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit
 ) {

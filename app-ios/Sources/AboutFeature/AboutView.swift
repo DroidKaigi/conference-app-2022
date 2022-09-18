@@ -119,6 +119,7 @@ public struct AboutView: View {
                         .padding(16)
                         .frame(minHeight: 56)
                     }
+                    .padding(.horizontal, 29)
 
                     Spacer()
                         .frame(height: 32)

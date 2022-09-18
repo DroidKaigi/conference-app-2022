@@ -14,11 +14,11 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-class SessionDataModule {
+public class SessionDataModule {
 
     @Provides
     @Singleton
-    fun provideSessionsRepository(
+    public fun provideSessionsRepository(
         networkService: NetworkService,
         sessionsDao: SessionsDao,
         settingsDatastore: SettingsDatastore
