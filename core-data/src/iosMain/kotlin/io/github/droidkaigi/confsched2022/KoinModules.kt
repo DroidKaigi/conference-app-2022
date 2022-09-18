@@ -15,8 +15,10 @@ import io.github.droidkaigi.confsched2022.data.sessions.DataSessionsRepository
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsApi
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
+import io.github.droidkaigi.confsched2022.data.sponsors.DataSponsorsRepository
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
+import io.github.droidkaigi.confsched2022.model.SponsorsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.core.module.Module
@@ -45,4 +47,5 @@ public val dataModule: Module = module {
     singleOf(::SessionsDao)
     singleOf(::DataContributorsRepository) bind ContributorsRepository::class
     singleOf(::DataSessionsRepository) bind SessionsRepository::class
+    singleOf(::DataSponsorsRepository) bind SponsorsRepository::class
 }
