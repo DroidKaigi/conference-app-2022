@@ -7,8 +7,8 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class FakeStaffRepository : StaffRepository {
-    val staff: PersistentList<Staff> = Staff.fakes()
+public class FakeStaffRepository : StaffRepository {
+    public val staff: PersistentList<Staff> = Staff.fakes()
     override fun staff(): Flow<PersistentList<Staff>> {
         return flowOf(staff)
     }

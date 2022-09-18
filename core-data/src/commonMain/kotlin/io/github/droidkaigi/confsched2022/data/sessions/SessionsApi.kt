@@ -13,6 +13,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
+import io.github.droidkaigi.confsched2022.model.TimetableLanguage
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import kotlinx.collections.immutable.toPersistentList
@@ -21,10 +22,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-class SessionsApi(
+public class SessionsApi(
     private val networkService: NetworkService,
 ) {
-    suspend fun timetable(): Timetable {
+    public suspend fun timetable(): Timetable {
         return networkService
             .get<SessionAllResponse>(
                 url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/timetable"
@@ -88,7 +89,10 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         category = categoryIdToCategory[apiSession.sessionCategoryItemId]!!,
                         room = roomIdToRoom[apiSession.roomId]!!,
                         targetAudience = apiSession.targetAudience,
-                        language = apiSession.language,
+                        language = TimetableLanguage(
+                            langOfSpeaker = apiSession.language,
+                            isInterpretationTarget = apiSession.interpretationTarget,
+                        ),
                         asset = apiSession.asset.toTimetableAsset(),
                         description = apiSession.description ?: "",
                         speakers = apiSession.speakers
@@ -106,7 +110,10 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                         category = categoryIdToCategory[apiSession.sessionCategoryItemId]!!,
                         room = roomIdToRoom[apiSession.roomId]!!,
                         targetAudience = apiSession.targetAudience,
-                        language = apiSession.language,
+                        language = TimetableLanguage(
+                            langOfSpeaker = apiSession.language,
+                            isInterpretationTarget = apiSession.interpretationTarget,
+                        ),
                         asset = apiSession.asset.toTimetableAsset(),
                         speakers = apiSession.speakers
                             .map { speakerIdToSpeaker[it]!! }

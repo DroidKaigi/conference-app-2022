@@ -19,15 +19,20 @@ fun AnnouncementScreenRoot(
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit,
 ) {
-    Announcement(showNavigationIcon, onNavigationIconClick)
+    Announcement(
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick
+    )
 }
 
 @Composable
 fun Announcement(
+    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
 ) {
     KaigiScaffold(
+        modifier = modifier,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,

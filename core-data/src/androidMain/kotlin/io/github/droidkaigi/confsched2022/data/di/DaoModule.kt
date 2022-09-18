@@ -14,11 +14,11 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-class DaoModule {
+public class DaoModule {
 
     @Provides
     @Singleton
-    fun provideSessionsDao(
+    public fun provideSessionsDao(
         databaseService: DatabaseService
     ): SessionsDao {
         return SessionsDao(databaseService)
@@ -26,7 +26,7 @@ class DaoModule {
 
     @Provides
     @Singleton
-    fun provideDatabaseService(
+    public fun provideDatabaseService(
         driverFactory: DriverFactory
     ): DatabaseService {
         return DatabaseService(driverFactory)
@@ -34,7 +34,7 @@ class DaoModule {
 
     @Provides
     @Singleton
-    fun provideDriverFactory(
+    public fun provideDriverFactory(
         @ApplicationContext context: Context
     ): DriverFactory {
         return AndroidDriverFactory(context)

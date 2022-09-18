@@ -10,10 +10,10 @@ plugins {
 
 kotlin {
     sourceSets {
-        val projects = listOf(
-            projects.coreModel,
-            projects.coreDesignsystem,
-            projects.coreData
+        val exportProjects = listOf(
+            projects.core.model,
+            projects.core.designsystem,
+            projects.core.data
         )
         val xcFrameworkName = "appioscombined"
         val xcf = XCFramework(xcFrameworkName)
@@ -32,7 +32,7 @@ kotlin {
                 baseName = xcFrameworkName
                 isStatic = true
                 xcf.add(this)
-                projects.forEach { projects ->
+                exportProjects.forEach { projects ->
                     export(projects)
                 }
                 export(libs.mokoResources)
@@ -41,7 +41,7 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                projects.forEach {
+                exportProjects.forEach {
                     api(it)
                 }
                 implementation(libs.koin)

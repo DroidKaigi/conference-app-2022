@@ -31,15 +31,20 @@ fun SettingScreenRoot(
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
-    Setting(showNavigationIcon, onNavigationIconClick)
+    Setting(
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick
+    )
 }
 
 @Composable
 fun Setting(
+    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit
 ) {
     KaigiScaffold(
+        modifier = modifier,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,
@@ -76,12 +81,13 @@ enum class SettingItem(val titleStringRes: StringResource, val icon: ImageVector
 
 @Composable
 fun SettingItem(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
     title: String
 ) {
     val checkedState = remember { mutableStateOf(true) }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

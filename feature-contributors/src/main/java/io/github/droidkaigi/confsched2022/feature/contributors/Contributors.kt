@@ -28,23 +28,30 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun ContributorsScreenRoot(
+    viewModel: ContributorsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
 ) {
-    val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick)
+    Contributors(
+        uiModel = uiModel,
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick,
+        onLinkClick = onLinkClick
+    )
 }
 
 @Composable
 fun Contributors(
+    modifier: Modifier = Modifier,
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit
 ) {
     KaigiScaffold(
+        modifier = modifier,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,

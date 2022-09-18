@@ -7,17 +7,17 @@ import io.github.droidkaigi.confsched2022.model.Staff
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-class StaffApi(
+public class StaffApi(
     private val networkService: NetworkService
 ) {
-    suspend fun staff(): PersistentList<Staff> {
+    public suspend fun staff(): PersistentList<Staff> {
         return networkService.get<StaffResponse>(
             url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/staff"
         ).toStaffList()
     }
 }
 
-fun StaffResponse.toStaffList(): PersistentList<Staff> {
+private fun StaffResponse.toStaffList(): PersistentList<Staff> {
     return staff.map {
         Staff(
             id = it.id,

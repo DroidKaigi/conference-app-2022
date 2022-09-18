@@ -2,7 +2,7 @@ import appioscombined
 import SwiftUI
 import Theme
 
-extension TimetableRoom {
+public extension TimetableRoom {
     var roomColor: Color {
         switch name.enTitle {
         case "App Bar": return AssetColors.pink.swiftUIColor
