@@ -44,11 +44,11 @@ fun ContributorsScreenRoot(
 
 @Composable
 fun Contributors(
-    modifier: Modifier = Modifier,
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
-    onLinkClick: (url: String, packageName: String?) -> Unit
+    onLinkClick: (url: String, packageName: String?) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     KaigiScaffold(
         modifier = modifier,

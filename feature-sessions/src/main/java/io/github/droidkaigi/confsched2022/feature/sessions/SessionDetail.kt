@@ -218,13 +218,13 @@ fun SessionDetailScreen(
 
 @Composable
 fun SessionDetailBottomAppBar(
-    modifier: Modifier = Modifier,
     item: TimetableItem,
     isFavorite: Boolean,
     onFavoriteClick: (Boolean) -> Unit,
     onShareClick: (TimetableItem) -> Unit,
     onNavigateFloorMapClick: () -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BottomAppBar(modifier = modifier) {
         Row(
@@ -278,8 +278,8 @@ fun SessionDetailBottomAppBar(
 
 @Composable
 fun SessionTagsLine(
+    item: TimetableItem,
     modifier: Modifier = Modifier,
-    item: TimetableItem
 ) {
     val sessionMinutes =
         "${(item.endsAt - item.startsAt).toComponents { minutes, _, _ -> minutes }}"
