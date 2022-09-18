@@ -48,6 +48,6 @@ TwitterCompose:
   RememberMissing:
     active: false
   ViewModelForwarding:
-    active: false
+    active: true
   ViewModelInjection:
     active: true
