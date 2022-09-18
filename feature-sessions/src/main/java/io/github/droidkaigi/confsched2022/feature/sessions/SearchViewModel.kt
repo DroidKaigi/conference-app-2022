@@ -19,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,8 +32,7 @@ class SearchViewModel @Inject constructor(
     val uiModel: State<SearchUiModel>
 
     init {
-        val ziplineScheduleModifierFlow =
-            sessionsZipline.timetableModifier(coroutineScope = viewModelScope)
+        val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
 
         val scheduleFlow = combine(
@@ -43,9 +41,7 @@ class SearchViewModel @Inject constructor(
             ::Pair
         ).map { (modifier, schedule) ->
             try {
-                withTimeout(100) {
-                    modifier(schedule)
-                }
+                modifier(schedule)
             } catch (e: Exception) {
                 Logger.d(throwable = e) { "Zipline modifier error" }
                 schedule

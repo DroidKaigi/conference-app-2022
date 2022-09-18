@@ -1,27 +1,28 @@
 package io.github.droidkaigi.confsched2022.zipline
 
 import app.cash.zipline.EventListener
-import app.cash.zipline.Zipline
 import app.cash.zipline.loader.ManifestVerifier
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executors
-import javax.inject.Inject
-import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
-class SessionsZipline @Inject constructor(
+public interface SessionsZipline {
+    public fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule>
+}
+
+internal class SessionsZiplineImpl(
     okHttpClient: OkHttpClient
-) {
+) : SessionsZipline {
     private val executorService = Executors.newSingleThreadExecutor { Thread(it, "Zipline") }
     private val dispatcher = executorService.asCoroutineDispatcher()
 
@@ -62,43 +63,51 @@ class SessionsZipline @Inject constructor(
         nowEpochMs = { System.currentTimeMillis() },
     )
 
-    fun timetableModifier(
-        coroutineScope: CoroutineScope,
-    ): MutableStateFlow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
-        val androidScheduleModifier = AndroidScheduleModifier()
-        val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
-            androidScheduleModifier.modify(timetable)
+    // Limit the write access only on the Zipline thread
+    private val mutex = Mutex()
+    private var cachedScheduleModifier: ScheduleModifier? = null
+    private suspend fun takeOrGetScheduleModifier(): ScheduleModifier = withContext(dispatcher) {
+        mutex.withLock {
+            val cached = cachedScheduleModifier
+            if (cached != null) {
+                return@withLock cached
+            }
+            val loadedZipline = ziplineLoader.loadOnce(
+                applicationName = "timeline",
+                manifestUrl = manifestUrl,
+                initializer = { },
+            )
+            val taken = loadedZipline.zipline.take<ScheduleModifier>("sessionsModifier")
+            cachedScheduleModifier = taken
+            taken
         }
-        val modifierStateFlow = MutableStateFlow(defaultModifier)
+    }
 
-        coroutineScope.launch(dispatcher) {
-            var zipline: Zipline? = null
+    @OptIn(ExperimentalTime::class) // measureTimedValue
+    override fun timetableModifier(): Flow<suspend (DroidKaigiSchedule) -> DroidKaigiSchedule> {
+        return channelFlow {
+            // The loaded JsScheduleModifier takes about 300 ms to execute.
+            // Therefore, if a cached loaded JsScheduleModifier is emitted first,
+            // the UI will show loading while the JsScheduleModifier is running.
+            // Prevent this by emitting the AndroidScheduleModifier first, even if it is cached.
+            val androidScheduleModifier = AndroidScheduleModifier()
+            val defaultModifier: suspend (DroidKaigiSchedule) -> DroidKaigiSchedule = { timetable ->
+                Logger.v("zipline Android")
+                androidScheduleModifier.modify(timetable)
+            }
+            send(defaultModifier)
 
-            // If the server works, we will comment in
-            val modifier = try {
-                val loadedZiplineFlow = ziplineLoader.load(
-                    applicationName = "timeline",
-                    manifestUrlFlow = flowOf(manifestUrl),
-                    initializer = { },
-                )
-                loadedZiplineFlow.catch { throwable -> throwable.printStackTrace() }
-                val loadedZipline = loadedZiplineFlow.firstOrNull()
-                if (loadedZipline == null) {
-                    loadedZiplineFlow.catch { it.printStackTrace() }
+            try {
+                val scheduleModifier = takeOrGetScheduleModifier()
+                send { timetable ->
+                    Logger.v("zipline JS executing")
+                    val timedValue = measureTimedValue { scheduleModifier.modify(timetable) }
+                    Logger.v("zipline JS took ${timedValue.duration}")
+                    timedValue.value
                 }
-                zipline = loadedZipline!!.zipline
-                zipline.take<ScheduleModifier>("sessionsModifier")
             } catch (e: Exception) {
                 Logger.d(e) { "zipline load error" }
-                androidScheduleModifier
-            }
-            modifierStateFlow.emit { timetable -> modifier.modify(timetable) }
-
-            coroutineContext.job.invokeOnCompletion {
-                dispatcher.dispatch(EmptyCoroutineContext) { zipline?.close() }
-                executorService.shutdown()
             }
         }
-        return modifierStateFlow
     }
 }
