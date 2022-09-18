@@ -1,7 +1,7 @@
 import appioscombined
 import Assets
 import ComposableArchitecture
-import Model
+import CoreModel
 import Strings
 import SwiftUI
 import Theme

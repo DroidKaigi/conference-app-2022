@@ -1,5 +1,5 @@
 import ComposableArchitecture
-import Model
+import CoreModel
 import SwiftUI
 import Theme
 

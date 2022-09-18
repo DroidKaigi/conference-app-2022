@@ -1,6 +1,6 @@
 import appioscombined
 import Assets
-import Model
+import CoreModel
 import SwiftUI
 import Theme
 
