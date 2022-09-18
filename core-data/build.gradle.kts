@@ -11,7 +11,7 @@ plugins {
 android.namespace = "io.github.droidkaigi.confsched2022.core.data"
 
 kotlin {
-    explicitApiWarning()
+    explicitApi()
 
     sourceSets {
         val commonMain by getting {

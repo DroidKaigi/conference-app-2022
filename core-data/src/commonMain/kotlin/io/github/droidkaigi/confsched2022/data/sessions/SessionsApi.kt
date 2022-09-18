@@ -22,10 +22,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-class SessionsApi(
+public class SessionsApi(
     private val networkService: NetworkService,
 ) {
-    suspend fun timetable(): Timetable {
+    public suspend fun timetable(): Timetable {
         return networkService
             .get<SessionAllResponse>(
                 url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/timetable"

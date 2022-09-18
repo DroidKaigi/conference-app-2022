@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 // TODO: Move to core-testing, once contributors server is created
-class FakeContributorsRepository : ContributorsRepository {
+public class FakeContributorsRepository : ContributorsRepository {
     override fun contributors(): Flow<PersistentList<Contributor>> {
         return flowOf(Contributor.fakes())
     }

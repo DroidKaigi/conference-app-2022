@@ -19,12 +19,13 @@ import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import platform.Foundation.NSUserDefaults
 
-val dataModule = module {
+public val dataModule: Module = module {
     singleOf<FlowSettings> {
         AppleSettings(NSUserDefaults.new()!!).toFlowSettings()
     }

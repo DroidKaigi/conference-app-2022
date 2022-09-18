@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.datetime.Instant
 
-class SessionsDao(
+public class SessionsDao(
     databaseService: DatabaseService,
 ) {
     private val database: Database = databaseService.database
@@ -35,7 +35,7 @@ class SessionsDao(
     private val timetableItemSessionQueries = database.timetableItemSessionQueries
     private val timetableItemSessionSpeakersQueries = database.timetableItemSpeakerCrossRefQueries
 
-    fun selectAll(): Flow<Timetable> {
+    public fun selectAll(): Flow<Timetable> {
         val timetableItemSpeakers = timetableItemSpeakerQueries.selectAll().asFlow().mapToList()
         val timetableItemSessions = timetableItemSessionQueries.selectAll().asFlow().mapToList()
         val timetableItemSpecials = timetableItemSpecialQueries.selectAll().asFlow().mapToList()
@@ -57,7 +57,7 @@ class SessionsDao(
         }
     }
 
-    fun insert(timetable: Timetable) {
+    public fun insert(timetable: Timetable) {
         timetable.timetableItems.timetableItems.forEachIndexed { index, timetableItem ->
             when (timetableItem) {
                 is TimetableItem.Session -> {
@@ -97,7 +97,7 @@ class SessionsDao(
         }
     }
 
-    fun deleteAll() {
+    public fun deleteAll() {
         timetableItemSpeakerQueries.deleteAll()
         timetableItemSpecialQueries.deleteAll()
         timetableItemSessionQueries.deleteAll()
@@ -270,7 +270,7 @@ class SessionsDao(
 
     private fun Long.toBoolean(): Boolean = this == 1L
 
-    companion object {
+    private companion object {
         private val levelsAdapter: ColumnAdapter<PersistentList<String>, String> =
             object : ColumnAdapter<PersistentList<String>, String> {
 
