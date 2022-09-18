@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.data.staff
 
+import io.github.droidkaigi.confsched2022.data.ExcludedGitHubUserNames
 import io.github.droidkaigi.confsched2022.model.Staff
 import io.github.droidkaigi.confsched2022.model.StaffRepository
 import kotlinx.collections.immutable.PersistentList
@@ -16,7 +17,7 @@ public class DataStaffRepository(
             send(
                 staffApi
                     .staff()
-                    .filter { !it.username.contains("[bot]") }
+                    .filterNot { ExcludedGitHubUserNames.SET.contains(it.username) }
                     .toPersistentList()
             )
             awaitClose { }
