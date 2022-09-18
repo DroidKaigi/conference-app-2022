@@ -38,7 +38,7 @@ TwitterCompose:
   MultipleEmitters:
     active: true
   MutableParams:
-    active: false
+    active: true
   ComposableNaming:
     active: true
   ComposableParamOrder:
