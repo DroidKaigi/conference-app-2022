@@ -1,5 +1,4 @@
 import appioscombined
-import Strings
 import SwiftUI
 import Theme
 
@@ -44,7 +43,7 @@ struct SessionDescriptionView: View {
                         self.isExpanded.toggle()
                     }
                 } label: {
-                    Text(L10n.Session.readMore)
+                    Text(StringsKt.shared.session_description_read_more_text.desc().localized())
                         .font(Font.system(size: 16, weight: .regular, design: .default))
                         .lineSpacing(6)
                         .foregroundColor(AssetColors.onPrimaryContainer.swiftUIColor)

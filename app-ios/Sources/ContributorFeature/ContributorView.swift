@@ -1,3 +1,4 @@
+import appioscombined
 import Assets
 import ComposableArchitecture
 import Model
@@ -77,7 +78,7 @@ public struct ContributorView: View {
                 await viewStore.send(.refresh).finish()
             }
             .listStyle(PlainListStyle())
-            .navigationTitle(L10n.Contributors.title)
+            .navigationTitle(StringsKt.shared.title_contributors.desc().localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }

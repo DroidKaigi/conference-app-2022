@@ -9,7 +9,7 @@ struct AboutTextItem {
     static var items: [Self] {
         [
             AboutTextItem(
-                title: Res.strings().about_app_version.desc().localized(),
+                title: StringsKt.shared.about_app_version.desc().localized(),
                 content: appVersion
             ),
         ]

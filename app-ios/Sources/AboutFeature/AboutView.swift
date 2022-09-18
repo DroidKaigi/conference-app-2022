@@ -66,9 +66,9 @@ public struct AboutView: View {
                 ScrollView {
                     AboutViewAssets.logoCharacter.swiftUIImage
                     VStack(alignment: .leading, spacing: 24) {
-                        Text(Res.strings().about_title.desc().localized())
+                        Text(StringsKt.shared.about_title.desc().localized())
                             .font(Font.system(size: 32, weight: .medium))
-                        Text(Res.strings().about_description.desc().localized())
+                        Text(StringsKt.shared.about_description.desc().localized())
                         HStack(spacing: 16) {
                             LinkImage(
                                 image: AboutViewAssets.twitter.swiftUIImage,
