@@ -9,15 +9,18 @@ public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
     public var showDate: Bool
+    public var showSheet: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1,
-        showDate: Bool = true
+        showDate: Bool = true,
+        showSheet: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
         self.showDate = showDate
+        self.showSheet = showSheet
     }
 }
 
@@ -29,6 +32,7 @@ public enum TimetableAction {
     case setFavorite(TimetableItemId, Bool)
     case scroll(CGPoint)
     case search
+    case switchContent
 }
 
 public struct TimetableEnvironment {
@@ -76,6 +80,9 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         return .none
     case .search:
         return .none
+    case .switchContent:
+        state.showSheet.toggle()
+        return .none
     }
 }
 
@@ -93,11 +100,19 @@ public struct TimetableView: View {
             NavigationView {
                 ZStack(alignment: .top) {
 
-                    TimetableSheetView(store: store)
-                        .scrollThreshold(Self.scrollThreshold)
-                        .onScroll {
-                            viewStore.send(.scroll($0))
-                        }
+                    if viewStore.state.showSheet {
+                        TimetableSheetView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    } else {
+                        TimetableListView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    }
 
                     HStack(spacing: 8) {
                         ForEach(
@@ -152,7 +167,7 @@ public struct TimetableView: View {
                                     .renderingMode(.template)
                             }
                             Button {
-                                // TODO: switch TimetableView
+                                viewStore.send(.switchContent)
                             } label: {
                                 Assets.calendar.swiftUIImage
                                     .renderingMode(.template)
