@@ -124,8 +124,8 @@ private fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchTextField(
-    modifier: Modifier = Modifier,
     searchWord: String,
+    modifier: Modifier = Modifier,
     onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -200,7 +200,7 @@ private fun SearchedItemListField(
 }
 
 @Composable
-private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day) {
+private fun SearchedHeader(day: DroidKaigi2022Day, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -217,11 +217,11 @@ private fun SearchedHeader(modifier: Modifier = Modifier, day: DroidKaigi2022Day
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchedItem(
-    modifier: Modifier = Modifier,
     timetableItemWithFavorite: TimetableItemWithFavorite,
     searchWord: String,
     onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier

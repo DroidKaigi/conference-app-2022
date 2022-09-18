@@ -25,8 +25,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun HoursItem(
+    hour: String,
     modifier: Modifier = Modifier,
-    hour: String
 ) {
     Text(
         text = hour,
@@ -40,8 +40,8 @@ fun HoursItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Hours(
-    modifier: Modifier = Modifier,
     timetableState: TimetableState,
+    modifier: Modifier = Modifier,
     content: @Composable (Modifier, String) -> Unit,
 ) {
     val itemProvider = itemProvider({ hoursList.size }) { index ->
