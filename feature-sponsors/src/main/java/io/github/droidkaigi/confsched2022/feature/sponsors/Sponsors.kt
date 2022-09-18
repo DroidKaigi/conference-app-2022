@@ -27,8 +27,8 @@ fun SponsorsScreenRoot(
 
 @Composable
 fun Sponsors(
-    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
+    modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit
 ) {
     KaigiScaffold(
