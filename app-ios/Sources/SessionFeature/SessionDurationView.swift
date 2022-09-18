@@ -19,14 +19,14 @@ struct SessionDurationView: View {
 #if DEBUG
 struct SessionDurationView_Previews: PreviewProvider {
     static var previews: some View {
-        SessionDurationView(durationString: TimetableItem.Session.companion.fake().durationString(languageCode: nil))
+        SessionDurationView(durationString: TimetableItem.Session.companion.fake().durationString)
     }
 }
 #endif
 
 extension TimetableItem {
 
-    func durationString(languageCode: String?) -> String {
+    var durationString: String {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short

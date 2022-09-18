@@ -8,7 +8,6 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
-    public var selectedItem: TimetableItemWithFavorite?
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
@@ -59,15 +58,14 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .selectDay(day):
         state.selectedDay = day
         return .init(value: .refresh)
-    case .selectItem(let item):
-        state.selectedItem = item
-        return .none
     case let .setFavorite(id, currentIsFavorite):
         return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
+    default:
+        return .none
     }
 }
 

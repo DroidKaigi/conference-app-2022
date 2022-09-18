@@ -90,7 +90,7 @@ public struct SessionView: View {
 
                             SessionTagsView(tags: timetableItem.tags)
 
-                            SessionDurationView(durationString: timetableItem.durationString(languageCode: Locale.current.languageCode))
+                            SessionDurationView(durationString: timetableItem.durationString)
                         }
 
                         if let session = timetableItem.asSession() {
