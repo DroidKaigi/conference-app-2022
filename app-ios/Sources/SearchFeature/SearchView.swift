@@ -1,6 +1,6 @@
 import CommonComponents
 import ComposableArchitecture
-import CoreModel
+import Model
 import SwiftUI
 
 public struct SearchState: Equatable {

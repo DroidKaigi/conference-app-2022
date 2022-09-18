@@ -1,6 +1,6 @@
 import Assets
 import ComposableArchitecture
-import CoreModel
+import Model
 import Strings
 import SwiftUI
 import Theme

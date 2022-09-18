@@ -1,7 +1,7 @@
 import Assets
 import CommonComponents
 import ComposableArchitecture
-import CoreModel
+import Model
 import SwiftUI
 import Theme
 
