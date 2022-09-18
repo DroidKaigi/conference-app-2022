@@ -24,13 +24,13 @@ androidComponents {
 
 dependencies {
 
-    implementation(projects.core.ui)
-    implementation(projects.feature.contributors)
-    implementation(projects.feature.sessions)
+    implementation(project(":core-ui"))
+    implementation(project(":feature-contributors"))
+    implementation(project(":feature-sessions"))
 
     implementation(libs.composeUi)
 
-    testImplementation(projects.core.testing)
+    testImplementation(projects.coreTesting)
     testImplementation(libs.testParameterInjector)
 }
 
