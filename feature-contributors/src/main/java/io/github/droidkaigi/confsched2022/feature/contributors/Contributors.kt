@@ -28,25 +28,30 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 
 @Composable
 fun ContributorsScreenRoot(
-    modifier: Modifier = Modifier,
+    viewModel: ContributorsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
 ) {
-    val viewModel = hiltViewModel<ContributorsViewModel>()
     val uiModel by viewModel.uiModel
-    Contributors(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
+    Contributors(
+        uiModel = uiModel,
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick,
+        onLinkClick = onLinkClick
+    )
 }
 
 @Composable
 fun Contributors(
+    modifier: Modifier = Modifier,
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
-    onLinkClick: (url: String, packageName: String?) -> Unit,
-    modifier: Modifier = Modifier
+    onLinkClick: (url: String, packageName: String?) -> Unit
 ) {
     KaigiScaffold(
+        modifier = modifier,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,
@@ -59,11 +64,11 @@ fun Contributors(
             )
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box {
             when (uiModel.state) {
                 is Error -> TODO()
                 Loading -> Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.padding(innerPadding).fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
@@ -72,7 +77,8 @@ fun Contributors(
                     val contributors = uiModel.state.value
 
                     LazyColumn(
-                        modifier = modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = innerPadding
                     ) {
                         items(items = contributors, key = { it.id }) { contributor ->
                             UsernameRow(

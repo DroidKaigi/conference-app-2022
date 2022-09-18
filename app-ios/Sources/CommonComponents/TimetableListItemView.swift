@@ -4,13 +4,22 @@ import Model
 import SwiftUI
 import Theme
 
-struct TimetableListItemView: View {
+public struct TimetableListItemView: View {
     let item: TimetableItem
     let isFavorite: Bool
-    let minute: Int
     let onFavoriteToggle: @Sendable (TimetableItemId, Bool) -> Void
 
-    var body: some View {
+    public init(
+        item: TimetableItem,
+        isFavorite: Bool,
+        onFavoriteToggle: @Sendable @escaping (TimetableItemId, Bool) -> Void
+    ) {
+        self.item = item
+        self.isFavorite = isFavorite
+        self.onFavoriteToggle = onFavoriteToggle
+    }
+
+    public var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(item.title.jaTitle)
@@ -33,7 +42,7 @@ struct TimetableListItemView: View {
                         backgroundColor: item.room.roomColor
                     )
                     CapsuleText(
-                        text: "\(minute)min",
+                        text: "\(item.minute)min",
                         foregroundColor: AssetColors.onSurface.swiftUIColor,
                         backgroundColor: AssetColors.secondaryContainer.swiftUIColor
                     )
@@ -53,13 +62,10 @@ struct TimetableListItemView: View {
 struct TimetableListItemView_Previews: PreviewProvider {
     static var previews: some View {
         let item = TimetableItemWithFavorite.companion.fake()
+        let minute = (Int(item.timetableItem.endsAt.epochSeconds) - Int(item.timetableItem.startsAt.epochSeconds)) / 60
         TimetableListItemView(
             item: item.timetableItem,
             isFavorite: item.isFavorited,
-            minute: calculateMinute(
-                startSeconds: Int(item.timetableItem.startsAt.epochSeconds),
-                endSeconds: Int(item.timetableItem.endsAt.epochSeconds)
-            ),
             onFavoriteToggle: { _, _ in }
         )
     }

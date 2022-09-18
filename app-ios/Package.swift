@@ -13,6 +13,7 @@ var package = Package(
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "Auth", targets: ["Auth"]),
+        .library(name: "CommonComponents", targets: ["CommonComponents"]),
         .library(name: "Container", targets: ["Container"]),
         .library(name: "ContributorFeature", targets: ["ContributorFeature"]),
         .library(name: "Assets", targets: ["Assets"]),
@@ -20,6 +21,7 @@ var package = Package(
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
         .library(name: "SafariView", targets: ["SafariView"]),
+        .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
@@ -29,6 +31,7 @@ var package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
+        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
     ],
     targets: [
         .target(
@@ -38,13 +41,16 @@ var package = Package(
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "LicenseList", package: "LicenseList")
             ],
             resources: [
                 .process("swiftgen.yml"),
                 .process("Resources"),
+                .process("license-list.plist"),
             ],
             plugins: [
                 .plugin(name: "SwiftGenPlugin"),
+                .plugin(name: "LicenseListPlugin")
             ]
         ),
         .target(
@@ -61,6 +67,7 @@ var package = Package(
                 .target(name: "SponsorFeature"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
                 .target(name: "TimetableFeature"),
@@ -85,6 +92,14 @@ var package = Package(
             ]
         ),
         .target(
+            name: "CommonComponents",
+            dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
+            ]
+        ),
+        .target(
             name: "Container",
             dependencies: [
                 .target(name: "Auth"),
@@ -94,6 +109,10 @@ var package = Package(
         .target(
             name: "ContributorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -118,6 +137,14 @@ var package = Package(
         .target(
             name: "SafariView",
             dependencies: []
+        ),
+        .target(
+            name: "SearchFeature",
+            dependencies: [
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
         ),
         .target(
             name: "SessionFeature",
@@ -164,6 +191,7 @@ var package = Package(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -191,6 +219,13 @@ var package = Package(
                 .target(name: "swiftgen"),
             ]
         ),
+        .plugin(
+            name: "LicenseListPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "licenselist")
+            ]
+        ),
         .binaryTarget(
             name: "SwiftLintBinary",
             url: "https://github.com/realm/SwiftLint/releases/download/0.48.0/SwiftLintBinary-macos.artifactbundle.zip",
@@ -201,6 +236,11 @@ var package = Package(
           url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
           checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
         ),
+        .binaryTarget(
+            name: "licenselist",
+            url: "https://github.com/touyou/LicenseList/releases/download/0.1.5/licenselist.artifactbundle.zip",
+            checksum: "02d1b096c60dd0a4f3ff67a6ec82d801c6a609867fc84aa9ad40d00b42395417"
+        )
     ]
 )
 
