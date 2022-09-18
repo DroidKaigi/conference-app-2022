@@ -32,7 +32,7 @@ TwitterCompose:
   ModifierMissing:
     active: true
   ModifierReused:
-    active: false
+    active: true
   ModifierWithoutDefault:
     active: false
   MultipleEmitters:
