@@ -48,7 +48,7 @@ modules.forEach { filePath ->
     val (type, name) = filePath.split("-")
     val newProjetName = ":$type:$name"
     include(newProjetName)
-    project(newProjetName).projectDir = file(filePath)
+//    project(newProjetName).projectDir = file(filePath)
 }
 
 include(":appioscombined")
