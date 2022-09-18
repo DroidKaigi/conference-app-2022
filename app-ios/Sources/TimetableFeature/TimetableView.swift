@@ -72,6 +72,8 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .scroll(position):
         state.showDate = position.y >= TimetableView.scrollThreshold
         return .none
+    case .selectItem:
+        return .none
     case .search:
         return .none
     }
