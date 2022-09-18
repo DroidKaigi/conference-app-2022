@@ -19,7 +19,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.coreModel)
+                implementation(projects.core.model)
                 implementation(libs.zipline)
                 implementation(libs.kermit)
             }
@@ -30,7 +30,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(projects.coreUi)
+                implementation(projects.core.ui)
                 implementation(libs.okHttpCore)
                 implementation(libs.sqldelightDriverAndroid)
                 implementation(libs.ziplineLoader)
