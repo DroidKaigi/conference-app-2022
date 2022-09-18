@@ -25,9 +25,10 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
-    case selectItem(TimetableItem)
+    case selectItem(TimetableItemWithFavorite)
     case setFavorite(TimetableItemId, Bool)
     case scroll(CGPoint)
+    case search
 }
 
 public struct TimetableEnvironment {
@@ -62,8 +63,6 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .selectDay(day):
         state.selectedDay = day
         return .init(value: .refresh)
-    case .selectItem:
-        return .none
     case let .setFavorite(id, currentIsFavorite):
         return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
@@ -72,6 +71,10 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .eraseToEffect()
     case let .scroll(position):
         state.showDate = position.y >= TimetableView.scrollThreshold
+        return .none
+    case .selectItem:
+        return .none
+    case .search:
         return .none
     }
 }
@@ -143,7 +146,7 @@ public struct TimetableView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Group {
                             Button {
-                                // TODO: search
+                                viewStore.send(.search)
                             } label: {
                                 Assets.search.swiftUIImage
                                     .renderingMode(.template)

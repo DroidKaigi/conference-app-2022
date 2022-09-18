@@ -1,9 +1,9 @@
 package io.github.droidkaigi.confsched2022.data.auth
-data class User(
+public data class User(
     val idToken: String
 )
 
-interface Authenticator {
-    suspend fun currentUser(): User?
-    suspend fun signInAnonymously(): User?
+public interface Authenticator {
+    public suspend fun currentUser(): User?
+    public suspend fun signInAnonymously(): User?
 }

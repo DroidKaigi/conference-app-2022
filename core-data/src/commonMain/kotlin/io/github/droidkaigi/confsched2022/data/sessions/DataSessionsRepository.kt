@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-class DataSessionsRepository(
-    val sessionsApi: SessionsApi,
+public class DataSessionsRepository(
+    private val sessionsApi: SessionsApi,
     private val sessionsDao: SessionsDao,
     private val settingsDatastore: SettingsDatastore
 ) : SessionsRepository {

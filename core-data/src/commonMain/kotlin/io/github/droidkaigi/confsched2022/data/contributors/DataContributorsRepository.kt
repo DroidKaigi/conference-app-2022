@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 // TODO: Move to core-testing, once contributors server is created
-class DataContributorsRepository(
+public class DataContributorsRepository(
     private val contributorsApi: ContributorsApi,
 ) : ContributorsRepository {
     override fun contributors(): Flow<PersistentList<Contributor>> {

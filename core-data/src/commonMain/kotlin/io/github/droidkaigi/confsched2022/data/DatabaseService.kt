@@ -1,7 +1,7 @@
 package io.github.droidkaigi.confsched2022.data
 
-class DatabaseService(
+public class DatabaseService(
     driverFactory: DriverFactory,
 ) {
-    val database: Database = Database(driver = driverFactory.createDriver())
+    public val database: Database = Database(driver = driverFactory.createDriver())
 }

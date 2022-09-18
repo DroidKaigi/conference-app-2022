@@ -12,17 +12,17 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-class ContributorDataModule {
+public class ContributorDataModule {
 
     @Provides
     @Singleton
-    fun provideContributorsApi(networkService: NetworkService): ContributorsApi {
+    public fun provideContributorsApi(networkService: NetworkService): ContributorsApi {
         return ContributorsApi(networkService)
     }
 
     @Provides
     @Singleton
-    fun provideContributorsRepository(
+    public fun provideContributorsRepository(
         contributorsApi: ContributorsApi
     ): ContributorsRepository {
         return DataContributorsRepository(contributorsApi)
