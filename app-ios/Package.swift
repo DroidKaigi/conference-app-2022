@@ -112,6 +112,7 @@ var package = Package(
             name: "ContributorFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
