@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
@@ -62,7 +61,7 @@ fun TimetableItem(
                     imageVector = Icons.Default.Info,
                     contentDescription = "message by the session",
                     modifier = Modifier.size(16.dp),
-                    tint = Color(KaigiColors.errorKeyColor80)
+                    tint = Color.White
                 )
             }
             Text(
