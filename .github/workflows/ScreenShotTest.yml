@@ -43,15 +43,52 @@ jobs:
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
         uses: actions/upload-artifact@v3
         with:
-          name: scrennshot-test-results
+          name: screenshot-test-results
           path: preview-screenshots/out/failures
 
-      - name: Comment PR
+      - name: Checkout the docs branch
+        id: checkout_docs
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
+        uses: actions/checkout@v3
+        with:
+          path: temp_docs
+          ref: docs
+
+      - name: Commit the screenshot to the branch
+        id: docs_images
+        if: steps.checkout_docs.outcome == 'success'
         continue-on-error: true # https://github.com/DroidKaigi/conference-app-2022/issues/497
+        run: |
+          cp -a preview-screenshots/out/failures/. temp_docs/docs/screenshots/
+          cd temp_docs/
+          if ! git diff --exit-code --quiet
+          then
+            git add . --update
+            git commit -m "Upload screenshots to github page."
+            git push
+            sleep 3 # wait 3 minutes for github page to update
+          fi
+          cd ..
+          cd preview-screenshots/out/failures
+          echo ::set-output name=images::$(ls | jq -R -s -c 'split("\n")[:-1]' | jq -r '.[] |= "https://droidkaigi.github.io/conference-app-2022/screenshots/" + .')
+
+      - name: Build PR Comment with Preview
+        id: pr_comment
+        if: steps.docs_images.outcome == 'success'
+        continue-on-error: true # https://github.com/DroidKaigi/conference-app-2022/issues/497
+        env:
+          ALL_SCREENSHOTS: ${{ steps.docs_images.outputs.images }}
+        # Build a comment message with the image from snapshot images for demo purpose.
+        run: |
+          echo "There are differences in Compose previews." > report.md
+          echo "$ALL_SCREENSHOTS" | jq -r '.[]' | while read -r image; do 
+            echo "![]($image)" >> report.md
+          done
+          echo ::set-output name=comment::$(cat report.md)
+
+      - name: Comment PR
+        if: steps.pr_comment.outcome == 'success'
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: |
-            There are differences in Compose previews. Please check your build and download the diff artifact.
-            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          message: ${{ steps.pr_comment.outputs.comment }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
