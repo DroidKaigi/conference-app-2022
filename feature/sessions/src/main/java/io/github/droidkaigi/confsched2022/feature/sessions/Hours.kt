@@ -42,10 +42,10 @@ fun HoursItem(
 fun Hours(
     timetableState: TimetableState,
     modifier: Modifier = Modifier,
-    content: @Composable (Modifier, String) -> Unit,
+    content: @Composable (String) -> Unit,
 ) {
     val itemProvider = itemProvider({ hoursList.size }) { index ->
-        content(modifier, hoursList[index])
+        content(hoursList[index])
     }
     val density = timetableState.density
     val verticalScale = timetableState.screenScaleState.verticalScale
