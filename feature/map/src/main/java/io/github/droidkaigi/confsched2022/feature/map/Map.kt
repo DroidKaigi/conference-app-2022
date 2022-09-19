@@ -42,10 +42,10 @@ fun MapScreenRoot(
 
 @Composable
 fun Map(
-    modifier: Modifier = Modifier,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onPinClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     KaigiScaffold(
         modifier = modifier,
