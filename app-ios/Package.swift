@@ -27,6 +27,7 @@ var package = Package(
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
+        .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
     ],
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
@@ -213,6 +214,11 @@ var package = Package(
                 .target(name: "SwiftLintBinary"),
             ]
         ),
+        .plugin(
+            name: "SwiftLintCommandPlugin",
+            capability: .command(intent: .custom(verb: "swiftlint",
+                                                 description: "Enforce Swift style and conventions")),
+            dependencies: ["SwiftLintBinary"]),
         .plugin(
             name: "SwiftGenPlugin",
             capability: .buildTool(),
