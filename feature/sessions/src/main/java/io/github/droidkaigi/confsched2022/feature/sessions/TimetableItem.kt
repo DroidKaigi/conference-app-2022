@@ -5,6 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +24,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.TimetableItem
+import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 
 @Composable
 fun TimetableItem(
@@ -51,6 +57,14 @@ fun TimetableItem(
                 .semantics { contentDescription = "isFavorited$isFavorited" }
                 .testTag("favorite")
         ) {
+            if (timetableItem is Session && timetableItem.message != null) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "information",
+                    modifier = Modifier.size(16.dp),
+                    tint = Color(KaigiColors.errorKeyColor80)
+                )
+            }
             Text(
                 text = timetableItem.title.currentLangTitle,
                 color = Color.White,
