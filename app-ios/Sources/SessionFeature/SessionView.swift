@@ -90,7 +90,11 @@ public struct SessionView: View {
 
                             SessionTagsView(tags: timetableItem.tags)
 
-                            SessionDurationView(durationString: timetableItem.durationString)
+                            VStack(alignment: .leading, spacing: 8) {
+                                SessionDurationView(durationString: timetableItem.durationString)
+
+                                SessionCancellView()
+                            }
                         }
 
                         if let session = timetableItem.asSession() {
