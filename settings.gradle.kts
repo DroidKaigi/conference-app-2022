@@ -44,7 +44,7 @@ val modules = listOf(
 
 modules.forEach { filePath ->
     val (type, name) = filePath.split("-")
-    val newProjectName = ":$type.$name"
+    val newProjectName = ":${type}_${name}"
     include(newProjectName)
 //    project(newProjetName).projectDir = file(filePath)
 }
