@@ -267,32 +267,65 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 }
 
+enum class DrawerGroup {
+    Session, Information, Others
+}
+
 enum class DrawerItem(
+    val group: DrawerGroup,
     val titleStringRes: StringResource,
     val icon: ImageVector,
     val navRoute: String
 ) {
-    Sessions(Strings.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
-    About(Strings.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
+    Sessions(
+        DrawerGroup.Session,
+        Strings.title_sessions,
+        Icons.Default.Event,
+        SessionsNavGraph.sessionRoute
+    ),
+    About(
+        DrawerGroup.Information,
+        Strings.title_about,
+        Icons.Default.Android,
+        AboutNavGraph.aboutRoute
+    ),
     Announcement(
+        DrawerGroup.Information,
         Strings.title_announcement,
         Icons.Default.Announcement,
         AnnouncementNavGraph.announcementRoute
     ),
-    Map(Strings.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(Strings.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
+    Map(DrawerGroup.Information, Strings.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
+    Sponsors(
+        DrawerGroup.Others,
+        Strings.title_sponsors,
+        Icons.Default.Business,
+        SponsorsNavGraph.sponsorsRoute
+    ),
     Contributors(
+        DrawerGroup.Others,
         Strings.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(Strings.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
+    Setting(
+        DrawerGroup.Others,
+        Strings.title_setting,
+        Icons.Default.Settings,
+        SettingNavGraph.settingRoute
+    );
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
             return values().firstOrNull { it.navRoute == route }
         }
     }
+
+    val isLastItem: Boolean
+        get() = ordinal == DrawerItem.values().lastIndex
+
+    val isGroupLastItem: Boolean
+        get() = isLastItem || group != DrawerItem.values()[ordinal + 1].group
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -323,7 +356,7 @@ fun ColumnScope.DrawerSheetContent(
                 },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
-            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+            if (!drawerItem.isLastItem && drawerItem.isGroupLastItem) {
                 Divider(
                     thickness = 1.dp,
                     modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)
