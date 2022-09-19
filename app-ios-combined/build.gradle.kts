@@ -58,6 +58,6 @@ multiplatformResources {
 
 // This module is for iOS only, skipping lint
 tasks {
-    val lintTask = findByName("lint")
+    val lintTask = findByName("lintDebug")
     lintTask?.enabled = false
 }
