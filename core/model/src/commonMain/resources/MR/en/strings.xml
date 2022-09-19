@@ -27,6 +27,8 @@
     <string name="contributors_top_app_bar_title">Contributors</string>
 
     <!-- Map -->
+    <!-- TODO: Waiting for official translation -->
+    <string name="map_top_app_bar_title">(interpretation)</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">Read more</string>
