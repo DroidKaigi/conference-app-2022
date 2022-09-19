@@ -93,7 +93,9 @@ public struct SessionView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 SessionDurationView(durationString: timetableItem.durationString)
 
-                                SessionCancelView()
+                                if timetableItem.asSession()?.message != nil {
+                                    SessionCancelView()
+                                }
                             }
                         }
 
