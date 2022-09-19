@@ -4,6 +4,7 @@ import Kingfisher
 public struct NetworkImage: View {
 
     public let url: URL?
+    public let contentMode: SwiftUI.ContentMode
     public let placeholder: (() -> AnyView)?
     public let failure: ((KingfisherError) -> AnyView)?
 
@@ -13,14 +14,16 @@ public struct NetworkImage: View {
 
     @State private var error: KingfisherError?
 
-    init(
+    public init(
         url: URL?,
+        contentMode: SwiftUI.ContentMode = .fill,
         enableCache: Bool = true,
         cacheInMemory: Bool = true,
         placeholder: (() -> AnyView)? = nil,
         failure: ((KingfisherError) -> AnyView)? = nil
     ) {
         self.url = url
+        self.contentMode = contentMode
         self.enableCache = enableCache
         self.cacheInMemory = cacheInMemory
         self.placeholder = placeholder
@@ -39,6 +42,7 @@ public struct NetworkImage: View {
                 .onFailure { error in
                     self.error = error
                 }
+                .aspectRatio(contentMode: contentMode)
         }
     }
 }
