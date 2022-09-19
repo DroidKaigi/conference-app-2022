@@ -45,6 +45,7 @@
     <string name="setting_title">Setting</string>
     <string name="setting_item_dark_mode">Dark Mode</string>
     <string name="setting_item_language">Language</string>
+    <string name="setting_dialog_confirm">OK</string>
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">Sponsors</string>

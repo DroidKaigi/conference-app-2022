@@ -47,6 +47,8 @@
     <string name="setting_title">设置</string>
     <string name="setting_item_dark_mode">深色模式</string>
     <string name="setting_item_language">语言设置</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="setting_dialog_confirm">OK</string>
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">赞助者</string>
