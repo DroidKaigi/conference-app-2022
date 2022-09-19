@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 fun KaigiTopAppBar(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    title: (@Composable RowScope.() -> Unit),
     modifier: Modifier = Modifier,
     elevation: Dp = 2.dp,
-    title: (@Composable RowScope.() -> Unit),
     trailingIcons: (@Composable RowScope.() -> Unit)? = null,
 ) {
     TopAppBar(
