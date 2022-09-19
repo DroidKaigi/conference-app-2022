@@ -32,6 +32,7 @@ var package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
         .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
         .target(
@@ -97,6 +98,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
+                .product(name: "Kingfisher", package: "Kingfisher"),
             ]
         ),
         .target(
