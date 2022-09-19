@@ -60,7 +60,7 @@ fun TimetableItem(
             if (timetableItem is Session && timetableItem.message != null) {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = "information",
+                    contentDescription = "message by the session",
                     modifier = Modifier.size(16.dp),
                     tint = Color(KaigiColors.errorKeyColor80)
                 )
