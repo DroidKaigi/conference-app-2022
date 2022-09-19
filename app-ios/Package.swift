@@ -24,6 +24,7 @@ var package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
+        .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
