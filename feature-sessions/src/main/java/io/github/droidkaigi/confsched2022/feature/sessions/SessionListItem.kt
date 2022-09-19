@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -42,7 +45,8 @@ fun SessionListItem(
     isFavorited: Boolean,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    maxTitleLines: Int = 4
+    maxTitleLines: Int = 4,
+    searchWord: String? = null,
 ) {
     val roomName = timetableItem.room.name
     val roomColor = Color(TimetableItemColor.colorOfRoomName(enName = roomName.enTitle))
@@ -54,14 +58,22 @@ fun SessionListItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1F)) {
-            Text(
-                text = timetableItem.title.currentLangTitle,
-                color = Color.White,
-                modifier = Modifier,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = maxTitleLines,
-                style = MaterialTheme.typography.titleLarge
-            )
+            if (searchWord.isNullOrEmpty()) {
+                Text(
+                    text = timetableItem.title.currentLangTitle,
+                    color = Color.White,
+                    modifier = Modifier,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = maxTitleLines,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+                HighlightedText(
+                    text = timetableItem.title.currentLangTitle,
+                    keyword = searchWord,
+                    maxTitleLines = maxTitleLines,
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             if (timetableItem is Session) {
                 Row(
@@ -133,4 +145,36 @@ fun SessionListItem(
             )
         }
     }
+}
+
+@Composable
+private fun HighlightedText(
+    text: String,
+    keyword: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSecondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    maxTitleLines: Int = 4,
+) {
+    val highlightStyle = SpanStyle(color = color, background = backgroundColor)
+    val annotatedText = remember(text, keyword) {
+        buildAnnotatedString {
+            append(text)
+            if (keyword.isNotEmpty()) {
+                var index = text.indexOf(keyword)
+                while (index >= 0) {
+                    addStyle(highlightStyle, index, index + keyword.length)
+                    index = text.indexOf(keyword, index + 1)
+                }
+            }
+        }
+    }
+    Text(
+        text = annotatedText,
+        color = Color.White,
+        modifier = modifier,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = maxTitleLines,
+        style = MaterialTheme.typography.titleLarge
+    )
 }
