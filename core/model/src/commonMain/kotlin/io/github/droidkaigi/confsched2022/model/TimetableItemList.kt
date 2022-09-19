@@ -11,10 +11,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
-data class TimetableItemList(
+public data class TimetableItemList(
     val timetableItems: PersistentList<TimetableItem> = persistentListOf(),
 ) : PersistentList<TimetableItem> by timetableItems {
-    fun getDayTimetableItems(day: DroidKaigi2022Day): TimetableItemList {
+    public fun getDayTimetableItems(day: DroidKaigi2022Day): TimetableItemList {
         return TimetableItemList(
             timetableItems.filter {
                 it.startsAt in day.start..day.end

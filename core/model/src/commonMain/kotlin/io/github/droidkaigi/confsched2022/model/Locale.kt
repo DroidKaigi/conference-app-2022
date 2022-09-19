@@ -1,8 +1,8 @@
 package io.github.droidkaigi.confsched2022.model
 
-enum class Locale {
+public enum class Locale {
     JAPAN,
     OTHER
 }
 
-expect fun getDefaultLocale(): Locale
+public expect fun getDefaultLocale(): Locale

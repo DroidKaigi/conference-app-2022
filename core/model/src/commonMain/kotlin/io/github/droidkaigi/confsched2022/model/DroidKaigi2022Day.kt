@@ -5,7 +5,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-enum class DroidKaigi2022Day(val start: Instant, val end: Instant) {
+public enum class DroidKaigi2022Day(
+    public val start: Instant,
+    public val end: Instant
+) {
     Day1(
         start = LocalDateTime
             .parse("2022-10-05T00:00:00")
@@ -31,8 +34,8 @@ enum class DroidKaigi2022Day(val start: Instant, val end: Instant) {
             .toInstant(TimeZone.of("UTC+9"))
     );
 
-    companion object {
-        fun ofOrNull(time: Instant): DroidKaigi2022Day? {
+    public companion object {
+        public fun ofOrNull(time: Instant): DroidKaigi2022Day? {
             return values().firstOrNull() {
                 time in it.start..it.end
             }

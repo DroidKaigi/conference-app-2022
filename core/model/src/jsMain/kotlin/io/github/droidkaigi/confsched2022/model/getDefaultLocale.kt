@@ -4,7 +4,7 @@ import io.github.droidkaigi.confsched2022.model.Locale.JAPAN
 import io.github.droidkaigi.confsched2022.model.Locale.OTHER
 import kotlinx.browser.window
 
-actual fun getDefaultLocale(): Locale {
+public actual fun getDefaultLocale(): Locale {
     if (window.navigator.language.contains("JP", ignoreCase = true)) {
         return JAPAN
     }
