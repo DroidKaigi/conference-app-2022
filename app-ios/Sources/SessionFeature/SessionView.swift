@@ -93,7 +93,7 @@ public struct SessionView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 SessionDurationView(durationString: timetableItem.durationString)
 
-                                SessionCancellView()
+                                SessionCancelView()
                             }
                         }
 

@@ -3,7 +3,7 @@ import Strings
 import SwiftUI
 import Theme
 
-struct SessionCancellView: View {
+struct SessionCancelView: View {
     var body: some View {
         HStack(spacing: 6) {
             Assets.error.swiftUIImage
@@ -17,7 +17,7 @@ struct SessionCancellView: View {
 struct SessionCancellView_Previews: PreviewProvider {
     static var previews: some View {
 
-        SessionCancellView()
+        SessionCancelView()
             .previewLayout(.sizeThatFits)
     }
 }
