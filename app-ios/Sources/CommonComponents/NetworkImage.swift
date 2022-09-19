@@ -3,14 +3,14 @@ import Kingfisher
 
 public struct NetworkImage: View {
 
-    public let url: URL?
-    public let contentMode: SwiftUI.ContentMode
-    public let placeholder: (() -> AnyView)?
-    public let failure: ((KingfisherError) -> AnyView)?
+    let url: URL?
+    let contentMode: SwiftUI.ContentMode
+    let placeholder: (() -> AnyView)?
+    let failure: ((KingfisherError) -> AnyView)?
 
     // cache settings
-    public let enableCache: Bool
-    public let cacheInMemory: Bool
+    let enableCache: Bool
+    let cacheInMemory: Bool
 
     @State private var error: KingfisherError?
 
