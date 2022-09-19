@@ -36,7 +36,7 @@
             <set>
                 <objectAnimator
                     android:propertyName="alpha"
-                    android:duration="850"
+                    android:duration="900"
                     android:valueFrom="0"
                     android:valueTo="1"
                     android:valueType="floatType"
@@ -50,8 +50,8 @@
             <set>
                 <objectAnimator
                     android:propertyName="translateY"
-                    android:duration="850"
-                    android:valueFrom="30"
+                    android:duration="900"
+                    android:valueFrom="50"
                     android:valueTo="0"
                     android:valueType="floatType"
                     android:interpolator="@android:interpolator/linear_out_slow_in"/>

@@ -84,4 +84,5 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.firebaseCommon)
     implementation(libs.firebaseAuth)
+    implementation(libs.androidxSplashScreen)
 }
