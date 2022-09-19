@@ -10,12 +10,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
-data class DroidKaigiSchedule(
+public data class DroidKaigiSchedule(
     val dayToTimetable: PersistentMap<DroidKaigi2022Day, Timetable>,
     private val timetable: Timetable
 ) {
-    val days = DroidKaigi2022Day.values()
-    fun filtered(value: Filters): DroidKaigiSchedule {
+    val days: Array<DroidKaigi2022Day> = DroidKaigi2022Day.values()
+    public fun filtered(value: Filters): DroidKaigiSchedule {
         return DroidKaigiSchedule(
             dayToTimetable = dayToTimetable
                 .mapValues { it.value.filtered(value) }
@@ -24,12 +24,12 @@ data class DroidKaigiSchedule(
         )
     }
 
-    fun findTimetableItem(id: TimetableItemId): TimetableItemWithFavorite {
+    public fun findTimetableItem(id: TimetableItemId): TimetableItemWithFavorite {
         return timetable.contents.first { id == it.timetableItem.id }
     }
 
-    companion object {
-        fun of(timetable: Timetable): DroidKaigiSchedule {
+    public companion object {
+        public fun of(timetable: Timetable): DroidKaigiSchedule {
             return DroidKaigiSchedule(
                 DroidKaigi2022Day.values().associateWith { day ->
                     timetable.dayTimetable(day)
@@ -40,6 +40,6 @@ data class DroidKaigiSchedule(
     }
 }
 
-fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
+public fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
     return of(Timetable.fake())
 }

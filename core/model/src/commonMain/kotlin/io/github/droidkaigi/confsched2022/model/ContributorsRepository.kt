@@ -3,7 +3,7 @@ package io.github.droidkaigi.confsched2022.model
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 
-interface ContributorsRepository {
-    fun contributors(): Flow<PersistentList<Contributor>>
-    suspend fun refresh()
+public interface ContributorsRepository {
+    public fun contributors(): Flow<PersistentList<Contributor>>
+    public suspend fun refresh()
 }
