@@ -1,5 +1,8 @@
 "Timetable.Title" = "Timetable";
 
+// Search
+"Search.EmptyMessage" = "この検索条件に一致する結果はありません";
+
 // Session
 "Session.ReadMore" = "続きを見る";
 "Session.TargetAudience" = "対象者";

@@ -1,5 +1,8 @@
 "Timetable.Title" = "Timetable";
 
+// Search
+"Search.EmptyMessage" = "No results match your search criteria";
+
 // Session
 "Session.ReadMore" = "Read more";
 "Session.TargetAudience" = "Target Audience";
