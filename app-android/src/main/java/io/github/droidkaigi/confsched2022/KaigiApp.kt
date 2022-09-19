@@ -43,6 +43,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -211,8 +212,10 @@ fun KaigiAppDrawer(
     } else {
         val keyboardController = LocalSoftwareKeyboardController.current
         val drawerState = kaigiAppScaffoldState.drawerState
-        if (drawerState.isAnimationRunning && drawerState.isClosed) {
-            keyboardController?.hide()
+        LaunchedEffect(drawerState.isAnimationRunning) {
+            if (drawerState.isAnimationRunning && drawerState.isClosed) {
+                keyboardController?.hide()
+            }
         }
         ModalNavigationDrawer(
             drawerState = drawerState,
