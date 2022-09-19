@@ -3,7 +3,7 @@ import Kingfisher
 
 public struct NetworkImage: View {
 
-    public let url: URL
+    public let url: URL?
     public let placeholder: (() -> AnyView)?
     public let failure: ((KingfisherError) -> AnyView)?
 
@@ -14,7 +14,7 @@ public struct NetworkImage: View {
     @State private var error: KingfisherError?
 
     init(
-        url: URL,
+        url: URL?,
         enableCache: Bool = true,
         cacheInMemory: Bool = true,
         placeholder: (() -> AnyView)? = nil,
@@ -57,7 +57,7 @@ private extension KFImage {
 struct NetworkImage_Previews: PreviewProvider {
     static var previews: some View {
         // DroidKaigi Icon
-        let imageURL = URL(string: "https://avatars.githubusercontent.com/u/10727543?s=200&v=4")!
+        let imageURL = URL(string: "https://avatars.githubusercontent.com/u/10727543?s=200&v=4")
         ScrollView {
             LazyVGrid(columns: [.init(), .init()]) {
                 ForEach(0..<100, id: \.self) { _ in
@@ -68,7 +68,7 @@ struct NetworkImage_Previews: PreviewProvider {
         }
         .previewDisplayName("Success")
 
-        let invalidImageURL = URL(string: "https://")!
+        let invalidImageURL = URL(string: "https://")
         ScrollView {
             LazyVGrid(columns: [.init(), .init()]) {
                 ForEach(0..<100, id: \.self) { _ in
