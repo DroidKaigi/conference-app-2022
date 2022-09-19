@@ -27,11 +27,13 @@ var package = Package(
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
+        .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
     ],
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
         .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
         .target(
@@ -97,6 +99,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
+                .product(name: "Kingfisher", package: "Kingfisher"),
             ]
         ),
         .target(
@@ -110,6 +113,7 @@ var package = Package(
             name: "ContributorFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
@@ -151,6 +155,7 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -213,6 +218,11 @@ var package = Package(
                 .target(name: "SwiftLintBinary"),
             ]
         ),
+        .plugin(
+            name: "SwiftLintCommandPlugin",
+            capability: .command(intent: .custom(verb: "swiftlint",
+                                                 description: "Enforce Swift style and conventions")),
+            dependencies: ["SwiftLintBinary"]),
         .plugin(
             name: "SwiftGenPlugin",
             capability: .buildTool(),
