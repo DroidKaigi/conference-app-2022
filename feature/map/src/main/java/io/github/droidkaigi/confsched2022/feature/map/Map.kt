@@ -30,7 +30,7 @@ private const val MAP_IMAGE_URL = "https://user-images.githubusercontent.com" +
 @Composable
 fun MapScreenRoot(
     showNavigationIcon: Boolean,
-    onNavigationIconClick: () -> Unit,
+    onNavigationIconClick: () -> Unit = {},
     onPinClick: () -> Unit = { Logger.w("TODO: Pin is not implemented yet!") },
 ) {
     Map(
