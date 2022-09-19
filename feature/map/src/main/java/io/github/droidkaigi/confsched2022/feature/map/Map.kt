@@ -9,6 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+// FIXME: This is a temporary image.
+private const val MAP_IMAGE_URL = "https://user-images.githubusercontent.com" +
+    "/5885032/191023087-d595c963-31b9-45e6-be9c-55565192b76e.png"
+
 @Composable
 fun MapScreenRoot() {
     Map()
