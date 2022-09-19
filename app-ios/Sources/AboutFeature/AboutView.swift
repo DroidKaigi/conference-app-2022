@@ -15,20 +15,22 @@ public enum AboutAction {
 }
 
 public struct AboutEnvironment {
+    @Environment(\.openURL) var openURL
+
+    struct StaticURLs {
+        static let privacyPolicy = URL(string: "https://portal.droidkaigi.jp/about/privacy")!
+    }
     public init() {}
 }
 
-public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { _, action, _ in
-    @Environment(\.openURL) var openURL
+public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { _, action, environment in
     switch action {
     case .openAccess:
         return .none
     case .openStaffs:
         return .none
     case .openPrivacyPolicy:
-        if let url = URL(string: "https://portal.droidkaigi.jp/about/privacy") {
-            openURL(url)
-        }
+        environment.openURL(AboutEnvironment.StaticURLs.privacyPolicy)
         return .none
     case .openLicense:
         return .none
