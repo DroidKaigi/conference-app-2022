@@ -38,6 +38,7 @@ var package = Package(
                 .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
+                .target(name: "StaffFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             resources: [
