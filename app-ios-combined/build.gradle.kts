@@ -55,3 +55,9 @@ multiplatformResources {
     multiplatformResourcesClassName = "Res"
     iosBaseLocalizationRegion = "ja"
 }
+
+// This module is for iOS only, skipping lint
+tasks {
+    val lintTask = findByName("lint")
+    lintTask?.enabled = false
+}
