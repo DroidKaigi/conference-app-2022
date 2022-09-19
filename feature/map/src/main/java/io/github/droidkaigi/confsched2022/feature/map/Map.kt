@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
+import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
@@ -25,7 +27,7 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 // FIXME: This is a temporary image.
 private const val MAP_IMAGE_URL = "https://user-images.githubusercontent.com" +
-    "/5885032/191023087-d595c963-31b9-45e6-be9c-55565192b76e.png"
+    "/5885032/191032572-b128660f-bff2-4cd4-8228-27cc8f8974a9.png"
 
 @Composable
 fun MapScreenRoot(
@@ -73,9 +75,14 @@ fun Map(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "Map is temporarily unavailable :)",
-                color = MaterialTheme.colorScheme.onBackground
+            AsyncImage(
+                model = MAP_IMAGE_URL,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                contentDescription = "Floor map",
             )
         }
     }
