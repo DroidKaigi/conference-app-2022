@@ -1,6 +1,7 @@
 import CommonComponents
 import ComposableArchitecture
 import Model
+import Strings
 import SwiftUI
 
 public struct SearchState: Equatable {
@@ -15,6 +16,12 @@ public struct SearchState: Equatable {
         self.searchText = searchText
         self.dayToTimetable = dayToTimetable
         self.searchResult = dayToTimetable
+    }
+
+    public func shouldShowEmptyView(days: [DroidKaigi2022Day]) -> Bool {
+        days.flatMap { day in
+            searchResult[day]?.contents ?? []
+        }.isEmpty
     }
 }
 
@@ -87,16 +94,25 @@ public struct SearchView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                List {
-                    ForEach([DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
-                    ) { day in
-                        Section(header: Text("\(day)")) {
-                            ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
-                                TimetableListItemView(
-                                    item: timetableItem.timetableItem,
-                                    isFavorite: timetableItem.isFavorited
-                                ) { id, isFavorited in
-                                    viewStore.send(.setFavorite(id, isFavorited))
+                let days = [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
+                Group {
+                    if viewStore.state.shouldShowEmptyView(days: days) {
+                        VStack(alignment: .center, spacing: 16) {
+                            Image(systemName: "magnifyingglass").font(.largeTitle)
+                            Text(L10n.Search.emptyMessage)
+                        }
+                    } else {
+                        List {
+                            ForEach(days) { day in
+                                Section(header: Text("\(day)")) {
+                                    ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
+                                        TimetableListItemView(
+                                            item: timetableItem.timetableItem,
+                                            isFavorite: timetableItem.isFavorited
+                                        ) { id, isFavorited in
+                                            viewStore.send(.setFavorite(id, isFavorited))
+                                        }
+                                    }
                                 }
                             }
                         }
