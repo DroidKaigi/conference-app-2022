@@ -59,6 +59,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.model.Lang
+import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
@@ -340,6 +341,7 @@ fun SessionScheduleInfo(
     startTime: Instant,
     endTime: Instant,
     modifier: Modifier = Modifier,
+    message: MultiLangText? = null,
 ) {
     val sessionStartDateTime = startTime
         .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -348,33 +350,53 @@ fun SessionScheduleInfo(
 
     fun LocalDateTime.toTime() = "$hour:${minute.toString().padStart(2, '0')}"
 
-    val japanese = "ja"
-
-    val month = if (Locale.getDefault().language == japanese) {
+    val month = if (Locale.getDefault().language == Lang.JAPANESE.tagName.lowercase()) {
         "${sessionStartDateTime.monthNumber}月"
     } else {
         sessionStartDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
     }
 
-    val day = if (Locale.getDefault().language == japanese) {
+    val day = if (Locale.getDefault().language == Lang.JAPANESE.tagName.lowercase()) {
         "${sessionStartDateTime.dayOfMonth}日"
     } else {
         "${sessionStartDateTime.dayOfMonth}th"
     }
 
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Image(
-            painterResource(id = R.drawable.ic_schedule),
-            contentDescription = null,
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}",
-            style = MaterialTheme.typography.labelMedium,
-        )
+    val sessionDateString =
+        "$month $day ${sessionStartDateTime.toTime()}-${sessionEndDateTime.toTime()}"
+
+    Column {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painterResource(id = R.drawable.ic_schedule),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = sessionDateString,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+        if (message != null) {
+            Spacer(modifier = Modifier.size(8.dp))
+            Row(
+                modifier = modifier,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painterResource(id = R.drawable.ic_baseline_error_24),
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = message.currentLangTitle,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        }
     }
 }
 
@@ -399,7 +421,12 @@ fun SessionDetailSessionInfo(
         SessionScheduleInfo(
             startTime = item.startsAt,
             endTime = item.endsAt,
-            modifier = Modifier
+            modifier = Modifier,
+            message = if (item is Session) {
+                item.message
+            } else {
+                null
+            }
         )
         // TODO favorite button
     }
