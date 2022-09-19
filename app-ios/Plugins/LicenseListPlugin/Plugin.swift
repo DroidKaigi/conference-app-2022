@@ -4,7 +4,7 @@ import PackagePlugin
 @main
 struct LicenseListPlugin: BuildToolPlugin {
     func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
-        let regex = try! NSRegularExpression(pattern: ".*SourcePackages")
+        let regex = try NSRegularExpression(pattern: ".*SourcePackages")
         let pluginWorkDirectory = context.pluginWorkDirectory.string
         guard let matchRange = regex.firstMatch(in: pluginWorkDirectory, range: NSRange(0..<pluginWorkDirectory.count))?.range(at: 0) else {
             print("Failed match")
