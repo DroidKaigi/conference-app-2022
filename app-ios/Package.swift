@@ -151,6 +151,7 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
+                .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
