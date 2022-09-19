@@ -1,8 +1,6 @@
 name: iOS Lint
 
 on:
-  push:
-    branches: [ "*" ]
   pull_request:
 
 jobs:
