@@ -16,11 +16,15 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -41,6 +45,7 @@ fun HoursItem(
 @Composable
 fun Hours(
     timetableState: TimetableState,
+    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
     content: @Composable (String) -> Unit,
 ) {
@@ -82,6 +87,28 @@ fun Hours(
                         linePxSize
                     )
                 }
+            }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        if (change.positionChange() != Offset.Zero) change.consume()
+                        coroutineScope.launch {
+                            hoursScreen.scroll(
+                                dragAmount,
+                                change.uptimeMillis,
+                                change.position
+                            )
+                        }
+                    },
+                    onDragCancel = {
+                        scrollState.resetTracking()
+                    },
+                    onDragEnd = {
+                        coroutineScope.launch {
+                            scrollState.flingYIfPossible()
+                        }
+                    }
+                )
             },
         itemProvider = itemProvider
     ) { constraint ->
@@ -206,6 +233,26 @@ private class HoursScreen(
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
+    }
+
+    suspend fun scroll(
+        dragAmount: Offset,
+        timeMillis: Long,
+        position: Offset,
+    ) {
+        val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
+        scrollState.scroll(
+            Offset(scrollState.scrollX, nextPossibleY),
+            timeMillis,
+            position
+        )
+    }
+
+    private fun calculatePossibleScrollY(scrollY: Float): Float {
+        val currentValue = scrollState.scrollY
+        val nextValue = currentValue + scrollY
+        val maxScroll = scrollState.maxY
+        return maxOf(minOf(nextValue, 0f), maxScroll)
     }
 }
 
