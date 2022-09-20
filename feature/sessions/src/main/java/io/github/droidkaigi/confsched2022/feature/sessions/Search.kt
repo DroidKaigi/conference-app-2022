@@ -183,7 +183,7 @@ private fun SearchedItemListField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onItemClick(timetableItemWithFavorite.timetableItem.id) }
-                        .padding(12.dp)
+                        .padding(16.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth()
@@ -233,17 +233,15 @@ private fun SearchedItemListField(
 
 @Composable
 private fun SearchedHeader(day: DroidKaigi2022Day, modifier: Modifier = Modifier) {
-    Column(
+    Text(
+        text = day.name,
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colorScheme.onPrimary)
-    ) {
-        Text(
-            text = day.name,
-            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
-        )
-    }
+            .background(color = MaterialTheme.colorScheme.background)
+            .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
+        style = MaterialTheme.typography.titleLarge
+    )
 }
 
 @Composable

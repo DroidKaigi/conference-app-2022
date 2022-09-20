@@ -37,6 +37,7 @@
     <string name="session_slide">发表资料</string>
     <!-- TODO:Translation into Chinese -->
     <string name="session_language_interpretation">(interpretation)</string>
+    <string name="session_cancel">このセッションは事情により中止となりました</string>
 
     <!-- Setting -->
     <string name="setting_title">设置</string>

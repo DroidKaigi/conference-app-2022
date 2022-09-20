@@ -1,5 +1,6 @@
 import appioscombined
 import Assets
+import CommonComponents
 import ComposableArchitecture
 import Model
 import Strings
@@ -92,10 +93,8 @@ struct ContributorItemView: View {
     var body: some View {
         ZStack {
             HStack(spacing: 16) {
-                AsyncImage(url: URL(string: contributor.iconUrl)) { image in
-                    image.resizable()
-                } placeholder: {
-                    Color(.systemGray4)
+                NetworkImage(url: URL(string: contributor.iconUrl)) {
+                    AnyView(Color(.systemGray4))
                 }
                 .frame(width: 60, height: 60)
                 .clipShape(Circle())

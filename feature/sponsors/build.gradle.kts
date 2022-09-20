@@ -10,4 +10,5 @@ dependencies {
     implementation(projects.core.model)
 
     implementation(libs.hiltNavigationCompose)
+    implementation(libs.kermit)
 }
