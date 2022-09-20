@@ -6,8 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.announcement.AnnouncementsApi
-import io.github.droidkaigi.confsched2022.data.announcement.DataAnnouncementRepository
-import io.github.droidkaigi.confsched2022.model.AnnouncementRepository
+import io.github.droidkaigi.confsched2022.data.announcement.DataAnnouncementsRepository
+import io.github.droidkaigi.confsched2022.model.AnnouncementsRepository
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -24,7 +24,7 @@ public class AnnouncementsDataModule {
     @Singleton
     public fun provideAnnouncementsRepository(
         announcementsApi: AnnouncementsApi
-    ): AnnouncementRepository {
-        return DataAnnouncementRepository(announcementsApi)
+    ): AnnouncementsRepository {
+        return DataAnnouncementsRepository(announcementsApi)
     }
 }
