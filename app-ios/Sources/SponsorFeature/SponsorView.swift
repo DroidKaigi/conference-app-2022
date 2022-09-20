@@ -8,8 +8,13 @@ import Theme
 
 public struct SponsorState: Equatable {
     public var sponsors: [Sponsor]
+    public var isLoading: Bool
 
-    public init(sponsors: [Sponsor] = []) {
+    public init(
+        sponsors: [Sponsor] = [],
+        isLoading: Bool = false
+    ) {
+        self.isLoading = isLoading
         self.sponsors = sponsors
     }
 }
@@ -28,6 +33,7 @@ public struct SponsorEnvironment {
 public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironment> { state, action, environment in
     switch action {
     case .refresh:
+        state.isLoading = true
         return .run { @MainActor subscriber in
             for try await result: [Sponsor] in environment.sponsorsRepository.sponsors().stream() {
                 await subscriber.send(
@@ -42,9 +48,11 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
     case .refreshResponse(.success(let sponsors)):
+        state.isLoading = false
         state.sponsors = sponsors
         return .none
-    case .refreshResponse(.failure):
+    case .refreshResponse(.failure(let error)):
+        state.isLoading = false
         return .none
     }
 }
@@ -64,45 +72,51 @@ public struct SponsorView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    SponsorGridView(
-                        title: "PLATINUM SPONSORS",
-                        sponsors: viewStore.sponsors.filter { $0.plan == .platinum },
-                        columns: 1
-                    )
-                    .onTapItem { sponsor in
-                        sheetItem = SheetItem(sponsor: sponsor)
+            ZStack(alignment: .center) {
+                if viewStore.isLoading {
+                    ActivityIndicator(color: AssetColors.onBackground.swiftUIColor)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 24) {
+                            SponsorGridView(
+                                title: "PLATINUM SPONSORS",
+                                sponsors: viewStore.sponsors.filter { $0.plan == .platinum },
+                                columns: 1
+                            )
+                            .onTapItem { sponsor in
+                                sheetItem = SheetItem(sponsor: sponsor)
+                            }
+                            Divider().padding(.horizontal, 16)
+                            SponsorGridView(
+                                title: "GOLD SPONSORS",
+                                sponsors: viewStore.sponsors.filter { $0.plan == .gold },
+                                columns: 2
+                            )
+                            .onTapItem { sponsor in
+                                sheetItem = SheetItem(sponsor: sponsor)
+                            }
+                            Divider().padding(.horizontal, 16)
+                            SponsorGridView(
+                                title: "SPONSORS",
+                                sponsors: viewStore.sponsors.filter { $0.plan == .supporter },
+                                columns: 2
+                            )
+                            .onTapItem { sponsor in
+                                sheetItem = SheetItem(sponsor: sponsor)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 24)
                     }
-                    Divider().padding(.horizontal, 16)
-                    SponsorGridView(
-                        title: "GOLD SPONSORS",
-                        sponsors: viewStore.sponsors.filter { $0.plan == .gold },
-                        columns: 2
-                    )
-                    .onTapItem { sponsor in
-                        sheetItem = SheetItem(sponsor: sponsor)
-                    }
-                    Divider().padding(.horizontal, 16)
-                    SponsorGridView(
-                        title: "SPONSORS",
-                        sponsors: viewStore.sponsors.filter { $0.plan == .supporter },
-                        columns: 2
-                    )
-                    .onTapItem { sponsor in
-                        sheetItem = SheetItem(sponsor: sponsor)
+                    .sheet(item: $sheetItem) { item in
+                        if let url = URL(string: item.sponsor.link) {
+                            SafariView(url: url)
+                        }
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 24)
             }
             .task {
                 viewStore.send(.refresh)
-            }
-            .sheet(item: $sheetItem) { item in
-                if let url = URL(string: item.sponsor.link) {
-                    SafariView(url: url)
-                }
             }
             .frame(minWidth: 0, maxWidth: .infinity)
             .frame(minHeight: 0, maxHeight: .infinity)
@@ -184,7 +198,8 @@ struct SponsorView_Previews: PreviewProvider {
             SponsorView(
                 store: .init(
                     initialState: .init(
-                        sponsors: Sponsor.companion.fakes()
+                        sponsors: Sponsor.companion.fakes(),
+                        isLoading: false
                     ),
                     reducer: .empty,
                     environment: SponsorEnvironment(
