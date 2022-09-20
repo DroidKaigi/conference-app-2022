@@ -96,12 +96,15 @@ public struct SearchView: View {
                             ) { day in
                                 Section(header: Text("\(day)")) {
                                     ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
-                                        TimetableListItemView(
-                                            item: timetableItem.timetableItem,
-                                            isFavorite: timetableItem.isFavorited,
-                                            searchText: viewStore.searchText
-                                        ) { id, isFavorited in
-                                            viewStore.send(.setFavorite(id, isFavorited))
+                                        HStack(alignment: .top, spacing: 33) {
+                                            SearchedSessionTimeView()
+                                            TimetableListItemView(
+                                                item: timetableItem.timetableItem,
+                                                isFavorite: timetableItem.isFavorited,
+                                                searchText: viewStore.searchText
+                                            ) { id, isFavorited in
+                                                viewStore.send(.setFavorite(id, isFavorited))
+                                            }
                                         }
                                     }
                                 }
