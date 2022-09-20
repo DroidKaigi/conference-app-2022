@@ -85,7 +85,9 @@ public struct SponsorView: View {
         WithViewStore(store) { viewStore in
             ZStack(alignment: .center) {
                 if viewStore.isLoading {
-                    ActivityIndicator(color: AssetColors.onBackground.swiftUIColor)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: AssetColors.onBackground.swiftUIColor))
+                        .scaleEffect(x: 2, y: 2)
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 24) {
@@ -211,6 +213,24 @@ struct SponsorView_Previews: PreviewProvider {
                     initialState: .init(
                         sponsors: Sponsor.companion.fakes(),
                         isLoading: false
+                    ),
+                    reducer: .empty,
+                    environment: SponsorEnvironment(
+                        sponsorsRepository: FakeSponsorsRepository()
+                    )
+                )
+            )
+        }
+    }
+}
+struct SponsorView_Loading_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            SponsorView(
+                store: .init(
+                    initialState: .init(
+                        sponsors: [],
+                        isLoading: true
                     ),
                     reducer: .empty,
                     environment: SponsorEnvironment(
