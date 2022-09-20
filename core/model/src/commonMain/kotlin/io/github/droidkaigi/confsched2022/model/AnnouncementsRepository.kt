@@ -4,5 +4,5 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 
 public interface AnnouncementsRepository {
-    public fun announcements(): Flow<PersistentList<Announcement>>
+    public fun announcements(): Flow<PersistentList<AnnouncementsByDate>>
 }
