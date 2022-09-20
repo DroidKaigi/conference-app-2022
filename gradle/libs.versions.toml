@@ -50,7 +50,7 @@ showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
-twitterComposeRulesDetekt = "0.0.11"
+twitterComposeRulesDetekt = "0.0.12"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -72,6 +72,7 @@ paparazziGradlePlugin = { module = "app.cash.paparazzi:paparazzi-gradle-plugin",
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+composeUiGoogleFonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "compose" }
 composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }

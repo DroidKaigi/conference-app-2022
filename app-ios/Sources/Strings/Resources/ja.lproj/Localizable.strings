@@ -1,5 +1,14 @@
 "Timetable.Title" = "Timetable";
 
+// Session
+"Session.ReadMore" = "続きを見る";
+"Session.TargetAudience" = "対象者";
+"Session.Speaker" = "スピーカー";
+"Session.Material" = "資料";
+"Session.Slides" = "スライド";
+"Session.Movie" = "MOVIE";
+"Session.CancellMessage" = "このセッションは事情により中止となりました";
+
 // About
 "About.Title" = "DroidKaigiとは";
 "About.WhatIsDroidKaigi" = "What is DroidKaigi?";
@@ -15,3 +24,6 @@
 "Sponsor.Title" = "スポンサー";
 "Contributors.Title" = "Contributors";
 "Setting.Title" = "Setting";
+
+// Search
+"Search.Empty.Message" = "この検索条件に一致する結果はありません";

@@ -3,7 +3,11 @@ import Model
 import SwiftUI
 import Theme
 
-struct TimetableSheetView: View {
+struct TimetableSheetView: View, ScrollDetectable {
+
+    var scrollThreshold: CGFloat = 0
+    var onScroll: (CGPoint) -> Void = { _ in }
+
     struct ViewState: Equatable {
         var roomTimetableItems: [TimetableRoomItems]
         var hours: [Int]
@@ -25,19 +29,15 @@ struct TimetableSheetView: View {
                             var result = result
                             let lastItem = result.last
                             if case .general(let lItem, _) = lastItem, lItem.timetableItem.endsAt != item.timetableItem.startsAt {
-                                result.append(.spacing(calculateMinute(
-                                    startSeconds: Int(lItem.timetableItem.endsAt.epochSeconds),
-                                    endSeconds: Int(item.timetableItem.startsAt.epochSeconds)
+                                result.append(.spacing(timetableInterval(
+                                    firstItem: lItem.timetableItem,
+                                    secondItem: item.timetableItem
                                 )))
                             }
-                            let minute = calculateMinute(
-                                startSeconds: Int(item.timetableItem.startsAt.epochSeconds),
-                                endSeconds: Int(item.timetableItem.endsAt.epochSeconds)
-                            )
                             result.append(
                                 TimetableItemType.general(
                                     item,
-                                    minute
+                                    item.timetableItem.minute
                                 )
                             )
 
@@ -73,6 +73,10 @@ struct TimetableSheetView: View {
     var body: some View {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
+
+                Spacer()
+                    .frame(height: scrollThreshold)
+
                 HStack(alignment: .top, spacing: 0) {
                     Spacer()
                         .frame(width: 16)
@@ -109,6 +113,9 @@ struct TimetableSheetView: View {
                                             TimetableItemView(item: item)
                                                 .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight - TimetableSheetView.verticalItemSpacing)
                                                 .padding(.bottom, TimetableSheetView.verticalItemSpacing)
+                                                .onTapGesture {
+                                                    viewStore.send(.selectItem(item))
+                                                }
                                         } else if case let .spacing(minutes) = item {
                                             Spacer()
                                                 .frame(maxHeight: CGFloat(minutes) * TimetableSheetView.minuteHeight)
@@ -122,7 +129,14 @@ struct TimetableSheetView: View {
                         }
                     }
                 }
+                .background(
+                    ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
+                        .onDetect { position in
+                            onScroll(position)
+                        }
+                )
             }
+            .coordinateSpace(name: "TimetableSheetView")
         }
     }
 }

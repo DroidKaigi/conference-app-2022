@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Model
+import Strings
 import SwiftUI
 
 public struct StaffState: Equatable {
@@ -32,6 +33,7 @@ public struct StaffView: View {
                 }
             }
         }
+        .navigationTitle(L10n.About.staffs)
     }
 }
 

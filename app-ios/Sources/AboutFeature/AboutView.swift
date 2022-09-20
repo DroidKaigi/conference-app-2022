@@ -1,10 +1,12 @@
 import ComposableArchitecture
+import LicenseList
 import StaffFeature
 import Strings
 import SwiftUI
 import Theme
 
 public enum AboutDestination {
+    case none
     case access
     case staffs
     case privacyPolicy
@@ -13,20 +15,19 @@ public enum AboutDestination {
 
 public struct AboutState: Equatable {
     public var staffState: StaffState
-    public var isSheetPresented: Bool
-    public var destination: AboutDestination?
+    public var navigationDestination: AboutDestination
+
     public init(
         staffState: StaffState = .init(),
-        isSheetPresented: Bool = false,
-        destination: AboutDestination? = nil
+        navigationDestination: AboutDestination = .none
     ) {
-        self.isSheetPresented = isSheetPresented
         self.staffState = staffState
-        self.destination = destination
+        self.navigationDestination = navigationDestination
     }
 }
 
 public enum AboutAction {
+    case backToTop
     case openAccess
     case openStaffs
     case openPrivacyPolicy
@@ -47,22 +48,22 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
     ),
     .init { state, action, _ in
         switch action {
-        case let .setSheet(isPresented):
-            state.isSheetPresented = isPresented
-            return .none
-        case .staff:
-            return .none
-        case .openAccess:
-            state.destination = .access
-            return .none
-        case .openStaffs:
-            state.destination = .staffs
-            return .none
-        case .openPrivacyPolicy:
-            state.destination = .privacyPolicy
+        case .backToTop:
+            state.navigationDestination = .none
             return .none
         case .openLicense:
-            state.destination  = .license
+            state.navigationDestination = .license
+            return .none
+        case .openStaffs:
+            state.navigationDestination = .staffs
+            return .none
+        case .openAccess:
+            state.navigationDestination = .access
+            return .none
+        case .openPrivacyPolicy:
+            state.navigationDestination = .privacyPolicy
+            return .none
+        default:
             return .none
         }
     }
@@ -77,88 +78,99 @@ public struct AboutView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            ScrollView {
-                AboutViewAssets.logoCharacter.swiftUIImage
-                VStack(alignment: .leading, spacing: 24) {
-                    Text(L10n.About.whatIsDroidKaigi)
-                        .font(Font.system(size: 32, weight: .medium))
-                    Text(L10n.About.description)
-                    HStack(spacing: 16) {
-                        LinkImage(
-                            image: AboutViewAssets.twitter.swiftUIImage,
-                            url: URL(string: StaticURLs.twitter)!
-                        )
-                        LinkImage(
-                            image: AboutViewAssets.youtube.swiftUIImage,
-                            url: URL(string: StaticURLs.youtube)!
-                        )
-                        LinkImage(
-                            image: AboutViewAssets.medium.swiftUIImage,
-                            url: URL(string: StaticURLs.medium)!
-                        )
-                        Spacer()
+            NavigationView {
+                ScrollView {
+                    AboutViewAssets.logoCharacter.swiftUIImage
+                    VStack(alignment: .leading, spacing: 24) {
+                        Text(L10n.About.whatIsDroidKaigi)
+                            .font(Font.system(size: 32, weight: .medium))
+                        Text(L10n.About.description)
+                        HStack(spacing: 16) {
+                            LinkImage(
+                                image: AboutViewAssets.twitter.swiftUIImage,
+                                url: URL(string: StaticURLs.twitter)!
+                            )
+                            LinkImage(
+                                image: AboutViewAssets.youtube.swiftUIImage,
+                                url: URL(string: StaticURLs.youtube)!
+                            )
+                            LinkImage(
+                                image: AboutViewAssets.medium.swiftUIImage,
+                                url: URL(string: StaticURLs.medium)!
+                            )
+                            Spacer()
+                        }
                     }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 32)
-
-                Divider()
-                    .background(AssetColors.outline.swiftUIColor)
                     .padding(.horizontal, 32)
+                    .padding(.vertical, 32)
 
-                ForEach(AboutNavigationItem.items, id: \.title) { item in
-                    Button {
-                        viewStore.send(item.action)
-                        viewStore.send(.setSheet(isPresented: true))
-                    } label: {
-                        HStack(spacing: 12) {
-                            item.image.swiftUIImage
-                                .renderingMode(.template)
+                    Divider()
+                        .background(AssetColors.outline.swiftUIColor)
+                        .padding(.horizontal, 45)
+
+                    ForEach(AboutNavigationItem.items, id: \.title) { item in
+                        Button {
+                            viewStore.send(item.action)
+                        } label: {
+                            HStack(spacing: 12) {
+                                item.image.swiftUIImage
+                                    .renderingMode(.template)
+                                Text(item.title)
+                                Spacer()
+                            }
+                            .padding(16)
+                            .frame(minHeight: 56)
+                        }
+                    }
+                    .padding(.horizontal, 29)
+
+                    ForEach(AboutTextItem.items, id: \.title) { item in
+                        HStack {
                             Text(item.title)
                             Spacer()
+                            Text(item.content)
+                            Spacer()
+                                .frame(width: 14)
                         }
                         .padding(16)
                         .frame(minHeight: 56)
                     }
-                    .sheet(isPresented: viewStore.binding(get: \.isSheetPresented, send: { value in
-                            .setSheet(isPresented: value)
-                    }), onDismiss: {
-                        viewStore.send(.setSheet(isPresented: false))
-                    }, content: {
-                        if let destination = viewStore.state.destination {
-                            switch destination {
-                            case .access:
-                                Text("TODO: Access View")
+                    .padding(.horizontal, 29)
+
+                    Spacer()
+                        .frame(height: 32)
+                    
+                    NavigationLink(isActive: Binding<Bool>(
+                        get: {
+                            viewStore.navigationDestination != .none
+                        }, set: { newValue in
+                            if !newValue {
+                                viewStore.send(.backToTop)
+                            }
+                        }), destination: {
+                            switch viewStore.state.navigationDestination {
+                            case .none:
+                                EmptyView()
                             case .staffs:
                                 StaffView(
                                     store: store.scope(state: \.staffState, action: AboutAction.staff)
                                 )
+                            case .access:
+                                Text("TODO: Access")
                             case .privacyPolicy:
                                 Text("TODO: Privacy Policy")
                             case .license:
-                                Text("TODO: License")
+                                AboutLicenseView()
                             }
+                        }, label: {
+                            EmptyView()
                         }
-                    })
+                    )
                 }
-
-                ForEach(AboutTextItem.items, id: \.title) { item in
-                    HStack {
-                        Text(item.title)
-                        Spacer()
-                        Text(item.content)
-                        Spacer()
-                            .frame(width: 14)
-                    }
-                    .padding(16)
-                    .frame(minHeight: 56)
-                }
-
-                Spacer()
-                    .frame(height: 32)
+                .foregroundColor(AssetColors.onBackground.swiftUIColor)
+                .background(AssetColors.background.swiftUIColor)
+                .navigationBarHidden(true)
             }
-            .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            .background(AssetColors.background.swiftUIColor)
         }
     }
 }
