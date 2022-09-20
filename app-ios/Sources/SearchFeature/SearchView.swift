@@ -88,9 +88,7 @@ public struct SearchView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 Group {
-                    if viewStore.searchResult.values.allSatisfy { timetable in
-                        timetable.timetableItems.isEmpty
-                    } {
+                    if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
                         EmptyResultView()
                     } else {
                         List {
