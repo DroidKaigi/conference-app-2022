@@ -94,7 +94,8 @@ public struct SearchView: View {
                             ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
                                 TimetableListItemView(
                                     item: timetableItem.timetableItem,
-                                    isFavorite: timetableItem.isFavorited
+                                    isFavorite: timetableItem.isFavorited,
+                                    searchText: viewStore.searchText
                                 ) { id, isFavorited in
                                     viewStore.send(.setFavorite(id, isFavorited))
                                 }
