@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
@@ -254,14 +255,16 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = false)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(
-        uiModel = SearchUiModel(
-            state = Success(DroidKaigiSchedule.fake())
-        ),
-        onItemClick = {},
-        onBookMarkClick = { _, _ -> },
-    )
+    KaigiTheme {
+        SearchScreen(
+            uiModel = SearchUiModel(
+                state = Success(DroidKaigiSchedule.fake())
+            ),
+            onItemClick = {},
+            onBookMarkClick = { _, _ -> },
+        )
+    }
 }
