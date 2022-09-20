@@ -16,10 +16,7 @@ public enum AboutAction {
 
 public struct AboutEnvironment {
     @Environment(\.openURL) var openURL
-
-    struct StaticURLs {
-        static let privacyPolicy = URL(string: "https://portal.droidkaigi.jp/about/privacy")!
-    }
+    
     public init() {}
 }
 
@@ -30,7 +27,7 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { _
     case .openStaffs:
         return .none
     case .openPrivacyPolicy:
-        environment.openURL(AboutEnvironment.StaticURLs.privacyPolicy)
+        environment.openURL(StaticURLs.privacyPolicy)
         return .none
     case .openLicense:
         return .none
