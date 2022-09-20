@@ -48,4 +48,7 @@
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">Staff</string>
+
+    <!-- Search -->
+    <string name="search_placeholder">Search Session</string>
 </resources>

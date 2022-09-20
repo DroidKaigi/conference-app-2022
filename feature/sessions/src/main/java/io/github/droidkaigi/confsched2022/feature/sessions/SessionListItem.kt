@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors.errorKeyColor80
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
 import io.github.droidkaigi.confsched2022.model.Lang
@@ -74,8 +77,32 @@ fun SessionListItem(
                     maxTitleLines = maxTitleLines,
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+
             if (timetableItem is Session) {
+                val message = timetableItem.message
+                if (message != null) {
+                    val infoColor = Color(errorKeyColor80)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "message by the session",
+                            modifier = Modifier.size(16.dp),
+                            tint = infoColor
+                        )
+                        Text(
+                            text = message.currentLangTitle,
+                            color = infoColor,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -97,8 +124,10 @@ fun SessionListItem(
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
