@@ -1,7 +1,7 @@
-import ComposableArchitecture
-import SwiftUI
-import Strings
 import Assets
+import ComposableArchitecture
+import Strings
+import SwiftUI
 import Theme
 
 public struct MapState: Equatable {
@@ -17,7 +17,7 @@ public enum MapAction {
 public struct MapEnvironment {
     public init() {}
 }
-public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { state, action, environment in
+public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, action, _ in
     switch action {
     case .tapPin:
         print("TODO: Pin is not implemented yet!")
@@ -44,11 +44,10 @@ public struct MapView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {
-                        Button(action: {
-                            viewStore.send(.tapPin)
-                        }) {
-                            Image(asset: Assets.pin)
-                        }
+                        Button(
+                            action: { viewStore.send(.tapPin) },
+                            label: { Image(asset: Assets.pin) }
+                        )
                     }
                     ToolbarItem(placement: .bottomBar) {
                         Spacer()
