@@ -99,10 +99,10 @@ private fun SearchScreen(
                     is Error -> TODO()
                     is Success -> {
                         SearchTextField(
-                            onBackClick = onBackIconClick,
                             searchWord = searchWord.value,
+                            onSearchWordChange = { searchWord.value = it }
                         ) {
-                            searchWord.value = it
+                            onBackIconClick()
                         }
                         SearchedItemListField(
                             schedule = uiModel.state.value,
@@ -123,10 +123,10 @@ private fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchTextField(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
     searchWord: String,
     onSearchWordChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
