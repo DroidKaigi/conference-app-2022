@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -24,8 +25,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
@@ -49,6 +51,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
@@ -59,6 +62,7 @@ import kotlinx.datetime.toLocalDateTime
 fun SearchRoot(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
+    onBackIconClick: () -> Unit = {},
     onItemClick: (TimetableItemId) -> Unit,
 ) {
     val state: SearchUiModel by viewModel.uiModel
@@ -69,6 +73,7 @@ fun SearchRoot(
         onBookMarkClick = { sessionId, currentIsFavorite ->
             viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
         },
+        onBackIconClick = onBackIconClick
     )
 }
 
@@ -78,6 +83,7 @@ private fun SearchScreen(
     onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onBackIconClick: () -> Unit = {},
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
     KaigiScaffold(
@@ -92,7 +98,10 @@ private fun SearchScreen(
                 when (uiModel.state) {
                     is Error -> TODO()
                     is Success -> {
-                        SearchTextField(searchWord = searchWord.value) {
+                        SearchTextField(
+                            onBackClick = onBackIconClick,
+                            searchWord = searchWord.value,
+                        ) {
                             searchWord.value = it
                         }
                         SearchedItemListField(
@@ -114,8 +123,9 @@ private fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchTextField(
-    searchWord: String,
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    searchWord: String,
     onSearchWordChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -123,41 +133,37 @@ private fun SearchTextField(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-    Box(
+    TextField(
+        value = searchWord,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        OutlinedTextField(
-            value = searchWord,
-            modifier = Modifier
-                .fillMaxWidth(fraction = 0.9F)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant)
-                .focusRequester(focusRequester),
-            placeholder = { Text("Search Session") },
-            singleLine = true,
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_search),
-                    contentDescription = "search_icon",
-                )
-            },
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "search_word_delete_icon",
-                    modifier = Modifier.clickable {
-                        onSearchWordChange("")
-                    }
-                )
-            },
-            onValueChange = {
-                onSearchWordChange(it)
-            },
-        )
-    }
+            .fillMaxWidth(1.0f)
+            .height(64.dp)
+            .background(color = MaterialTheme.colorScheme.surfaceVariant)
+            .focusRequester(focusRequester),
+        placeholder = { Text(stringResource(Strings.search_placeholder)) },
+        singleLine = true,
+        keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
+                contentDescription = "arrow_back_icon",
+                modifier = modifier
+                    .clickable { onBackClick() }
+            )
+        },
+        trailingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_delete),
+                contentDescription = "search_word_delete_icon",
+                modifier = Modifier.clickable {
+                    onSearchWordChange("")
+                }
+            )
+        },
+        onValueChange = {
+            onSearchWordChange(it)
+        },
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
