@@ -33,6 +33,13 @@ android {
         }
     }
     buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         debug {
             signingConfig = null
         }
@@ -65,15 +72,18 @@ androidComponents {
 }
 
 dependencies {
-    implementation(projects.featureSessions)
-    implementation(projects.featureContributors)
-    implementation(projects.featureMap)
-    implementation(projects.featureAnnouncement)
-    implementation(projects.featureAbout)
-    implementation(projects.coreData)
-    implementation(projects.coreDesignsystem)
-    implementation(projects.coreUi)
-    implementation(projects.coreModel)
+    implementation(projects.feature.sessions)
+    implementation(projects.feature.contributors)
+    implementation(projects.feature.map)
+    implementation(projects.feature.announcement)
+    implementation(projects.feature.about)
+    implementation(projects.feature.setting)
+    implementation(projects.feature.staff)
+    implementation(projects.feature.sponsors)
+    implementation(projects.core.data)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.ui)
+    implementation(projects.core.model)
 
     implementation(libs.composeMaterialIcons)
     implementation(libs.composeMaterial3WindowSizeClass)
