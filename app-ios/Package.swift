@@ -145,8 +145,10 @@ var package = Package(
         .target(
             name: "SearchFeature",
             dependencies: [
+                .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
