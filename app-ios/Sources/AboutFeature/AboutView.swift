@@ -16,7 +16,6 @@ public enum AboutAction {
 
 public struct AboutEnvironment {
     @Environment(\.openURL) var openURL
-    
     public init() {}
 }
 
