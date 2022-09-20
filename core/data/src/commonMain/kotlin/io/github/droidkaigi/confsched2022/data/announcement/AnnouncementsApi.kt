@@ -19,31 +19,29 @@ public class AnnouncementsApi(
     ): PersistentList<AnnouncementsByDate> {
         return networkService.get<AnnouncementsResponse>(
             url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/announcements/$language"
-        )
-            .toAnnouncementList()
-            .toAnnouncementsByDate()
+        ).toAnnouncementsByDate()
     }
 }
 
-private fun AnnouncementsResponse.toAnnouncementList(): PersistentList<Announcement> {
+private fun AnnouncementsResponse.toAnnouncementsByDate(): PersistentList<AnnouncementsByDate> {
     val systemTZ = TimeZone.currentSystemDefault()
 
-    return announcements.map { response ->
-        Announcement(
-            id = response.id,
-            title = response.title,
-            content = response.content,
-            type = response.type.lowercase().replaceFirstChar { it.uppercase() },
-            publishedAt = response.publishedAt.toInstantAsJST().toLocalDateTime(systemTZ).date,
-            language = response.language,
-        )
-    }.toPersistentList()
+    return announcements
+        .groupBy { response ->
+            response.publishedAt.toInstantAsJST().toLocalDateTime(systemTZ).date
+        }
+        .map {
+            AnnouncementsByDate(
+                publishedAt = it.key,
+                announcements = it.value.map { response ->
+                    Announcement(
+                        id = response.id,
+                        title = response.title,
+                        content = response.content,
+                        type = response.type.lowercase().replaceFirstChar { it.uppercase() },
+                        language = response.language,
+                    )
+                }.toPersistentList()
+            )
+        }.toPersistentList()
 }
-
-private fun PersistentList<Announcement>.toAnnouncementsByDate():
-    PersistentList<AnnouncementsByDate> = groupBy { it.publishedAt }.map {
-    AnnouncementsByDate(
-        publishedAt = it.key,
-        announcements = it.value.toPersistentList()
-    )
-}.toPersistentList()

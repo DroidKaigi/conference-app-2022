@@ -33,7 +33,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = today,
                     language = "japanese"
                 ),
                 Announcement(
@@ -41,7 +40,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = today,
                     language = "japanese"
                 ),
                 Announcement(
@@ -49,7 +47,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = today,
                     language = "japanese"
                 ),
             )
@@ -62,7 +59,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = yesterday,
                     language = "japanese"
                 ),
                 Announcement(
@@ -70,7 +66,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = yesterday,
                     language = "japanese"
                 ),
                 Announcement(
@@ -78,7 +73,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = yesterday,
                     language = "japanese"
                 ),
             )
@@ -91,7 +85,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = beforeYesterday,
                     language = "japanese"
                 ),
                 Announcement(
@@ -99,7 +92,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = beforeYesterday,
                     language = "japanese"
                 ),
                 Announcement(
@@ -107,7 +99,6 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
-                    publishedAt = beforeYesterday,
                     language = "japanese"
                 ),
             )

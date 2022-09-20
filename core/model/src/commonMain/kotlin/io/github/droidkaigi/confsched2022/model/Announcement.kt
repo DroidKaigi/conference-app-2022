@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.model
 
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,7 +8,6 @@ public data class Announcement(
     val title: String,
     val content: String,
     val type: String,
-    val publishedAt: LocalDate,
     val language: String,
 ) {
     public companion object
