@@ -30,7 +30,7 @@ public struct MapView: View {
                 VStack(alignment: .center) {
                     AsyncImage(url: viewStore.mapURL)
                         .aspectRatio(contentMode: .fit)
-                        .padding(16)
+                        .padding(8)
                 }
                 .navigationTitle(L10n.Map.title)
                 .navigationBarTitleDisplayMode(.inline)
