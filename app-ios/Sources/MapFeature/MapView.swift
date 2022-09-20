@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import Strings
 
 public struct MapState: Equatable {
     // FIXME: This is a temporary image.
@@ -25,10 +26,14 @@ public struct MapView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack(alignment: .center) {
-                AsyncImage(url: viewStore.mapURL)
-                    .aspectRatio(contentMode: .fit)
-                    .padding(16)
+            NavigationView {
+                VStack(alignment: .center) {
+                    AsyncImage(url: viewStore.mapURL)
+                        .aspectRatio(contentMode: .fit)
+                        .padding(16)
+                }
+                .navigationTitle(L10n.Map.title)
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
