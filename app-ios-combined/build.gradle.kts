@@ -32,8 +32,8 @@ kotlin {
                 baseName = xcFrameworkName
                 isStatic = true
                 xcf.add(this)
-                exportProjects.forEach { projects ->
-                    export(projects)
+                exportProjects.forEach { project ->
+                    export(project)
                 }
                 export(libs.mokoResources)
             }
