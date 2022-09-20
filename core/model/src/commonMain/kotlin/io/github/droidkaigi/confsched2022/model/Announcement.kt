@@ -9,6 +9,4 @@ public data class Announcement(
     val content: String,
     val type: String,
     val language: String,
-) {
-    public companion object
-}
+)
