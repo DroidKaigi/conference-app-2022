@@ -2,6 +2,9 @@ import ComposableArchitecture
 import SwiftUI
 
 public struct MapState: Equatable {
+    // FIXME: This is a temporary image.
+    let mapURL = URL(string: "https://user-images.githubusercontent.com/5885032/191032572-b128660f-bff2-4cd4-8228-27cc8f8974a9.png")
+
     public init() {}
 }
 
@@ -21,7 +24,13 @@ public struct MapView: View {
     }
 
     public var body: some View {
-        Text("TODO: Map")
+        WithViewStore(store) { viewStore in
+            VStack(alignment: .center) {
+                AsyncImage(url: viewStore.mapURL)
+                    .aspectRatio(contentMode: .fit)
+                    .padding(16)
+            }
+        }
     }
 }
 
