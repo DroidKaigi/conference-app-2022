@@ -50,14 +50,10 @@ kotlin {
     }
 }
 
+android.namespace = "io.github.droidkaigi.confsched2022"
+
 multiplatformResources {
     multiplatformResourcesPackage = "io.github.droidkaigi.confsched2022"
     multiplatformResourcesClassName = "Res"
     iosBaseLocalizationRegion = "ja"
-}
-
-// This module is for iOS only, skipping lint
-tasks {
-    val lintTask = findByName("lintDebug")
-    lintTask?.enabled = false
 }
