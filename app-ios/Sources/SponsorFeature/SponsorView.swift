@@ -7,21 +7,32 @@ import SwiftUI
 import Theme
 
 public struct SponsorState: Equatable {
+
+    public struct SheetItem: Identifiable, Equatable {
+        public var id: UUID = UUID()
+        public var sponsor: Sponsor
+    }
+
     public var sponsors: [Sponsor]
     public var isLoading: Bool
+    public var sheetItem: SheetItem?
 
     public init(
         sponsors: [Sponsor] = [],
-        isLoading: Bool = false
+        isLoading: Bool = false,
+        sheetItem: SheetItem? = nil
     ) {
         self.isLoading = isLoading
         self.sponsors = sponsors
+        self.sheetItem = sheetItem
     }
 }
 
 public enum SponsorAction {
     case refresh
     case refreshResponse(TaskResult<[Sponsor]>)
+    case showLinkSheet(Sponsor)
+    case hideLinkSheet
 }
 public struct SponsorEnvironment {
     public let sponsorsRepository: SponsorsRepository
@@ -54,6 +65,12 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
     case .refreshResponse(.failure(let error)):
         state.isLoading = false
         return .none
+    case .showLinkSheet(let sponsor):
+        state.sheetItem = SponsorState.SheetItem(sponsor: sponsor)
+        return .none
+    case .hideLinkSheet:
+        state.sheetItem = nil
+        return .none
     }
 }
 
@@ -62,12 +79,6 @@ public struct SponsorView: View {
 
     public init(store: Store<SponsorState, SponsorAction>) {
         self.store = store
-    }
-
-    @State private var sheetItem: SheetItem?
-    private struct SheetItem: Identifiable {
-        var id: UUID = UUID()
-        var sponsor: Sponsor
     }
 
     public var body: some View {
@@ -84,7 +95,7 @@ public struct SponsorView: View {
                                 columns: 1
                             )
                             .onTapItem { sponsor in
-                                sheetItem = SheetItem(sponsor: sponsor)
+                                viewStore.send(.showLinkSheet(sponsor))
                             }
                             Divider().padding(.horizontal, 16)
                             SponsorGridView(
@@ -93,7 +104,7 @@ public struct SponsorView: View {
                                 columns: 2
                             )
                             .onTapItem { sponsor in
-                                sheetItem = SheetItem(sponsor: sponsor)
+                                viewStore.send(.showLinkSheet(sponsor))
                             }
                             Divider().padding(.horizontal, 16)
                             SponsorGridView(
@@ -102,13 +113,13 @@ public struct SponsorView: View {
                                 columns: 2
                             )
                             .onTapItem { sponsor in
-                                sheetItem = SheetItem(sponsor: sponsor)
+                                viewStore.send(.showLinkSheet(sponsor))
                             }
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 24)
                     }
-                    .sheet(item: $sheetItem) { item in
+                    .sheet(item: viewStore.binding(get: { $0.sheetItem }, send: .hideLinkSheet)) { item in
                         if let url = URL(string: item.sponsor.link) {
                             SafariView(url: url)
                         }
