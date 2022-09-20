@@ -11,7 +11,7 @@ public struct EmptyResultView: View {
             Assets.search.swiftUIImage
                 .resizable()
                 .scaledToFit()
-                .frame(width: 58.3, height: 58.3)
+                .frame(width: 80, height: 80)
             Text(L10n.Search.Empty.message)
         }
     }
