@@ -172,6 +172,12 @@ var package = Package(
         .target(
             name: "SponsorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "SafariView"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),

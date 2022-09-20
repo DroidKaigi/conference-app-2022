@@ -80,13 +80,16 @@ public enum AppAction {
 
 public struct AppEnvironment {
     public let contributorsRepository: ContributorsRepository
+    public let sponsorsRepository: SponsorsRepository
     public let sessionsRepository: SessionsRepository
 
     public init(
         contributorsRepository: ContributorsRepository,
+        sponsorsRepository: SponsorsRepository,
         sessionsRepository: SessionsRepository
     ) {
         self.contributorsRepository = contributorsRepository
+        self.sponsorsRepository = sponsorsRepository
         self.sessionsRepository = sessionsRepository
     }
 }
@@ -97,6 +100,7 @@ public extension AppEnvironment {
 
         return .init(
             contributorsRepository: container.get(type: ContributorsRepository.self),
+            sponsorsRepository: container.get(type: SponsorsRepository.self),
             sessionsRepository: container.get(type: SessionsRepository.self)
         )
     }
@@ -104,6 +108,7 @@ public extension AppEnvironment {
     static var mock: Self {
         return .init(
             contributorsRepository: FakeContributorsRepository(),
+            sponsorsRepository: FakeSponsorsRepository(),
             sessionsRepository: FakeSessionsRepository()
         )
     }
@@ -143,8 +148,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     sponsorReducer.pullback(
         state: \.sponsorState,
         action: /AppAction.sponsor,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                sponsorsRepository: $0.sponsorsRepository
+            )
         }
     ),
     contributorReducer.pullback(
