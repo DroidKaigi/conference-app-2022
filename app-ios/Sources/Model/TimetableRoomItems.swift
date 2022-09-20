@@ -1,5 +1,3 @@
-import appioscombined
-
 public struct TimetableRoomItems: Equatable {
     public var room: TimetableRoom
     public var items: [TimetableItemType]
