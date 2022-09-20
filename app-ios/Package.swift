@@ -157,6 +157,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
