@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.startup
 
-import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -18,9 +17,10 @@ class StartupBenchmark {
         packageName = "io.github.droidkaigi.confsched2022",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
-        startupMode = StartupMode.COLD,
+        setupBlock = {
+            pressHome()
+        }
     ) {
-        pressHome()
         startActivityAndWait()
     }
 }
