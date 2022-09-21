@@ -70,7 +70,7 @@ class SearchViewModel @Inject constructor(
 
             SearchUiModel(
                 filter = SearchFilterUiModel(
-                    selectedCategories = filters.value.categories.joinToString { it.title.currentLangTitle },
+                    selectedCategories = filters.value.categories,
                     selectedDay = filters.value.day,
                     isFavoritesOn = filters.value.filterFavorite
                 ),
@@ -96,7 +96,6 @@ class SearchViewModel @Inject constructor(
                     remove(category)
             }
         )
-        filterSheetState.value = SearchFilterSheetState.Hide
     }
 
     fun onDaySelected(day: DroidKaigi2022Day) {
@@ -117,12 +116,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onFilterCategoriesClicked() {
-        val schedule = uiModel.value.state.getOrNull() ?: return
-        filterSheetState.value = SearchFilterSheetState.ShowCategoriesFilterSheet(
-            categories = schedule.dayToTimetable.flatMap { (_, timetable) ->
-                timetable.timetableItems.timetableItems.map { it.category }
-            }.toSet().toList()
-        );
+        viewModelScope.launch {
+            val categories = sessionsRepository.getCategories()
+            if (categories.isEmpty())
+                return@launch
+
+            filterSheetState.value = SearchFilterSheetState.ShowCategoriesFilterSheet(
+                categories = categories
+            )
+        }
     }
 
     fun onFilterSheetDismissed() {

@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.data.sessions
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,10 @@ public class DataSessionsRepository(
                     DroidKaigiSchedule.of(timetable.copy(favorites = favorites))
                 )
             }
+    }
+
+    override suspend fun getCategories(): List<TimetableCategory> {
+        return sessionsDao.selectAllCategories()
     }
 
     override suspend fun refresh() {

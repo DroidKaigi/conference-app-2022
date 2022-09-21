@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.IconButton
 import androidx.compose.material.RadioButton
@@ -26,7 +28,7 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 fun FilterDaySheet(
     modifier: Modifier = Modifier,
     selectedDay: DroidKaigi2022Day?,
-    days: Array<DroidKaigi2022Day>,
+    days: List<DroidKaigi2022Day>,
     onDaySelected: (DroidKaigi2022Day) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -77,22 +79,26 @@ fun FilterCategoriesSheet(
             onDismissClicked = onDismiss
         )
 
-        categories.forEach { category ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Checkbox(
-                    checked = selectedCategories.contains(category),
-                    onCheckedChange = { isChecked -> onDaySelectedUpdated(category, isChecked) }
-                )
+        LazyColumn {
+            items(categories) { category ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = selectedCategories.contains(category),
+                        onCheckedChange = { isChecked -> onDaySelectedUpdated(category, isChecked) }
+                    )
 
-                Text(
-                    text = category.title.currentLangTitle,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Text(
+                        text = category.title.currentLangTitle,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
             }
         }
     }

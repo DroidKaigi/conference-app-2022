@@ -12,12 +12,15 @@ data class SearchUiModel(
 )
 
 data class SearchFilterUiModel(
-    val selectedCategories: String = "",
+    val selectedCategories: List<TimetableCategory> = emptyList(),
     val selectedDay: DroidKaigi2022Day? = null,
     val isFavoritesOn: Boolean = false,
 ) {
     val isDaySelected: Boolean
         get() = selectedDay != null
+
+    val selectedCategoriesValue: String
+        get() = selectedCategories.joinToString { it.title.currentLangTitle }
 
     val isCategoriesSelected: Boolean
         get() = selectedCategories.isNotEmpty()

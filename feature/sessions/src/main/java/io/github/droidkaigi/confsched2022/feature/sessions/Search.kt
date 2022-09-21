@@ -26,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
@@ -96,14 +97,19 @@ fun SearchRoot(
         }
     }
 
+    LaunchedEffect(scaffoldState.bottomSheetState.currentValue) {
+        if (scaffoldState.bottomSheetState.currentValue == BottomSheetValue.Collapsed)
+            viewModel.onFilterSheetDismissed()
+    }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            when (state.filterSheetState) {
+            when (val sheetState = state.filterSheetState) {
                 is SearchFilterSheetState.ShowDayFilter -> {
                     FilterDaySheet(
                         selectedDay = state.filter.selectedDay,
-                        days = state.state.getOrNull()!!.days,
+                        days = sheetState.days,
                         onDaySelected =viewModel::onDaySelected,
                         onDismiss = viewModel::onFilterSheetDismissed
                     )
@@ -111,8 +117,8 @@ fun SearchRoot(
 
                 is SearchFilterSheetState.ShowCategoriesFilterSheet -> {
                     FilterCategoriesSheet(
-                        selectedCategories = emptyList(),
-                        categories = emptyList(),
+                        selectedCategories = state.filter.selectedCategories,
+                        categories = sheetState.categories,
                         onCategoriesSelected = viewModel::onCategoriesSelected,
                         onDismiss = viewModel::onFilterSheetDismissed
                     )
@@ -341,8 +347,8 @@ fun SearchFilter(
 
         FilterButton(
             isSelected = model.isCategoriesSelected,
-            text = model.selectedCategories.ifEmpty {
-                stringResource(id = Strings.search_filter_select_category.resourceId)
+            text = model.selectedCategoriesValue.ifEmpty {
+                 stringResource(id = Strings.search_filter_select_category.resourceId)
             },
             isDropDown = true,
             onClicked = onCategoryClicked
