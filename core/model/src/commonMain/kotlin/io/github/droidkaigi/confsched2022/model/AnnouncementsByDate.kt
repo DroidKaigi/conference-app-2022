@@ -21,8 +21,8 @@ public data class AnnouncementsByDate(
 public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsByDate> {
     val systemTZ = TimeZone.currentSystemDefault()
     val today = Clock.System.todayIn(systemTZ)
-    val yesterday = today.minus(2, DateTimeUnit.DAY)
-    val beforeYesterday = today.minus(3, DateTimeUnit.DAY)
+    val yesterday = today.minus(1, DateTimeUnit.DAY)
+    val beforeYesterday = today.minus(2, DateTimeUnit.DAY)
 
     return persistentListOf(
         AnnouncementsByDate(
@@ -39,14 +39,14 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     id = 2,
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
                     id = 3,
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Notification",
                     language = "japanese"
                 ),
             )
@@ -65,14 +65,14 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     id = 5,
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
                     id = 6,
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Notification",
                     language = "japanese"
                 ),
             )
@@ -91,14 +91,14 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
                     id = 8,
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
                     id = 9,
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
-                    type = "Alert",
+                    type = "Notification",
                     language = "japanese"
                 ),
             )
