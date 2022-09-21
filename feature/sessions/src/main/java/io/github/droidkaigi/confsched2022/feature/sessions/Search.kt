@@ -107,7 +107,7 @@ fun SearchRoot(
                     FilterDaySheet(
                         selectedDay = state.filter.selectedDay,
                         kaigiDays = sheetState.days,
-                        onDaySelected =viewModel::onDaySelected,
+                        onDaySelected = viewModel::onDaySelected,
                         onDismiss = viewModel::onFilterSheetDismissed
                     )
                 }
@@ -356,7 +356,7 @@ fun SearchFilter(
         FilterButton(
             isSelected = model.isCategoriesSelected,
             text = model.selectedCategoriesValue.ifEmpty {
-                 stringResource(id = Strings.search_filter_select_category.resourceId)
+                stringResource(id = Strings.search_filter_select_category.resourceId)
             },
             isDropDown = true,
             onClicked = onCategoryClicked

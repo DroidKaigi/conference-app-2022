@@ -92,7 +92,7 @@ fun FilterDaySheet(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
     }
 }
@@ -139,7 +139,6 @@ fun FilterCategoriesSheet(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
             }
 
             item {

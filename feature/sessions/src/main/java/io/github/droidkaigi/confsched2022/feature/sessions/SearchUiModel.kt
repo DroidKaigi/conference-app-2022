@@ -29,9 +29,9 @@ data class SearchFilterUiModel(
 sealed interface SearchFilterSheetState {
     data class ShowDayFilter(
         val days: List<DroidKaigi2022Day>
-    ): SearchFilterSheetState
+    ) : SearchFilterSheetState
     data class ShowCategoriesFilterSheet(
         val categories: List<TimetableCategory>
-    ): SearchFilterSheetState
-    object Hide: SearchFilterSheetState
+    ) : SearchFilterSheetState
+    object Hide : SearchFilterSheetState
 }
