@@ -26,6 +26,11 @@
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">コントリビューター</string>
 
+    <!-- Search -->
+    <string name="search_filter_select_day">開催日</string>
+    <string name="search_filter_select_category">カテゴリ</string>
+    <string name="search_filter_favorites">お気に入り済み</string>
+
     <!-- Map -->
 
     <!-- Sessions -->

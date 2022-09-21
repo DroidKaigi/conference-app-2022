@@ -3,9 +3,12 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,18 +22,30 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.RadioButton
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -39,21 +54,27 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
@@ -61,14 +82,66 @@ fun SearchRoot(
     onItemClick: (TimetableItemId) -> Unit,
 ) {
     val state: SearchUiModel by viewModel.uiModel
-    SearchScreen(
-        modifier = modifier,
-        uiModel = state,
-        onItemClick = onItemClick,
-        onBookMarkClick = { sessionId, currentIsFavorite ->
-            viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+
+    val scaffoldState = rememberBottomSheetScaffoldState()
+
+    LaunchedEffect(state.filterSheetState) {
+        when (state.filterSheetState) {
+            is SearchFilterSheetState.ShowDayFilter,
+            is SearchFilterSheetState.ShowCategoriesFilterSheet -> {
+                scaffoldState.bottomSheetState.expand()
+            }
+
+            else -> scaffoldState.bottomSheetState.collapse()
+        }
+    }
+
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            when (state.filterSheetState) {
+                is SearchFilterSheetState.ShowDayFilter -> {
+                    FilterDaySheet(
+                        selectedDay = state.filter.selectedDay,
+                        days = state.state.getOrNull()!!.days,
+                        onDaySelected =viewModel::onDaySelected,
+                        onDismiss = viewModel::onFilterSheetDismissed
+                    )
+                }
+
+                is SearchFilterSheetState.ShowCategoriesFilterSheet -> {
+                    FilterCategoriesSheet(
+                        selectedCategories = emptyList(),
+                        categories = emptyList(),
+                        onCategoriesSelected = viewModel::onCategoriesSelected,
+                        onDismiss = viewModel::onFilterSheetDismissed
+                    )
+                }
+
+                else -> {}
+            }
         },
-    )
+        sheetShape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp
+        ),
+        sheetPeekHeight = 0.dp,
+        sheetBackgroundColor = MaterialTheme
+            .colorScheme.surfaceColorAtElevation(2.dp),
+        sheetElevation = 4.dp
+    ) { padding ->
+        SearchScreen(
+            modifier = modifier.padding(paddingValues = padding),
+            uiModel = state,
+            onItemClick = onItemClick,
+            onBookMarkClick = { sessionId, currentIsFavorite ->
+                viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+            },
+            onDayFilterClicked = viewModel::onFilterDayClicked,
+            onCategoriesFilteredClicked = viewModel::onFilterCategoriesClicked,
+            onFavoritesToggleClicked = viewModel::onFilterFavoritesToggle
+        )
+    }
 }
 
 @Composable
@@ -76,6 +149,9 @@ private fun SearchScreen(
     uiModel: SearchUiModel,
     onItemClick: (TimetableItemId) -> Unit,
     onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
+    onDayFilterClicked: () -> Unit,
+    onCategoriesFilteredClicked: () -> Unit,
+    onFavoritesToggleClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
@@ -94,6 +170,16 @@ private fun SearchScreen(
                         SearchTextField(searchWord = searchWord.value) {
                             searchWord.value = it
                         }
+                        SearchFilter(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(state = rememberScrollState())
+                                .padding(vertical = 16.dp),
+                            model = uiModel.filter,
+                            onDayClicked = onDayFilterClicked,
+                            onCategoryClicked = onCategoriesFilteredClicked,
+                            onFavoritesClicked = onFavoritesToggleClicked
+                        )
                         SearchedItemListField(
                             schedule = uiModel.state.value,
                             searchWord = searchWord.value,
@@ -232,6 +318,48 @@ private fun SearchedItemListField(
 }
 
 @Composable
+fun SearchFilter(
+    modifier: Modifier = Modifier,
+    model: SearchFilterUiModel,
+    onDayClicked: () -> Unit,
+    onCategoryClicked: () -> Unit,
+    onFavoritesClicked: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(8.dp))
+
+        FilterButton(
+            isSelected = model.isDaySelected,
+            isDropDown = true,
+            text = model.selectedDay?.name
+                ?: stringResource(id = Strings.search_filter_select_day.resourceId),
+            onClicked = onDayClicked
+        )
+
+        FilterButton(
+            isSelected = model.isCategoriesSelected,
+            text = model.selectedCategories.ifEmpty {
+                stringResource(id = Strings.search_filter_select_category.resourceId)
+            },
+            isDropDown = true,
+            onClicked = onCategoryClicked
+        )
+
+        FilterButton(
+            isSelected = model.isFavoritesOn,
+            isDropDown = false,
+            text = stringResource(id = Strings.search_filter_favorites.resourceId),
+            onClicked = onFavoritesClicked
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+    }
+}
+
+@Composable
 private fun SearchedHeader(day: DroidKaigi2022Day, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
@@ -259,11 +387,18 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
 @Preview(showSystemUi = true)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(
-        uiModel = SearchUiModel(
-            state = Success(DroidKaigiSchedule.fake())
-        ),
-        onItemClick = {},
-        onBookMarkClick = { _, _ -> },
-    )
+    KaigiTheme {
+        SearchScreen(
+            uiModel = SearchUiModel(
+                filter = SearchFilterUiModel(),
+                filterSheetState = SearchFilterSheetState.Hide,
+                state = Success(DroidKaigiSchedule.fake())
+            ),
+            onItemClick = {},
+            onBookMarkClick = { _, _ -> },
+            onFavoritesToggleClicked = {},
+            onDayFilterClicked = {},
+            onCategoriesFilteredClicked = {}
+        )
+    }
 }

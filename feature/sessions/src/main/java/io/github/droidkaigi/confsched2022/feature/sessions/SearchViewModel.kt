@@ -2,14 +2,21 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
+import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
@@ -31,6 +38,10 @@ class SearchViewModel @Inject constructor(
 
     val uiModel: State<SearchUiModel>
 
+    private val filters = mutableStateOf(Filters())
+
+    private val filterSheetState = mutableStateOf<SearchFilterSheetState>(SearchFilterSheetState.Hide)
+
     init {
         val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
@@ -51,7 +62,21 @@ class SearchViewModel @Inject constructor(
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
             val schedule by scheduleFlow.collectAsState(initial = UiLoadState.Loading)
 
-            SearchUiModel(state = schedule)
+            val filteredSchedule by remember(filters) {
+                derivedStateOf {
+                    schedule.mapSuccess { it.filtered(filters.value) }
+                }
+            }
+
+            SearchUiModel(
+                filter = SearchFilterUiModel(
+                    selectedCategories = filters.value.categories.joinToString { it.title.currentLangTitle },
+                    selectedDay = filters.value.day,
+                    isFavoritesOn = filters.value.filterFavorite
+                ),
+                filterSheetState = filterSheetState.value,
+                state = filteredSchedule
+            )
         }
     }
 
@@ -59,5 +84,48 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             sessionsRepository.setFavorite(sessionId, currentIsFavorite.not())
         }
+    }
+
+    fun onCategoriesSelected(category: TimetableCategory, isSelected: Boolean) {
+        val selectedCategories = filters.value.categories.toMutableList()
+        filters.value = filters.value.copy(
+            categories = selectedCategories.apply {
+                if (isSelected)
+                    add(category)
+                else
+                    remove(category)
+            }
+        )
+        filterSheetState.value = SearchFilterSheetState.Hide
+    }
+
+    fun onDaySelected(day: DroidKaigi2022Day) {
+        filters.value = filters.value.copy(day = day)
+        filterSheetState.value = SearchFilterSheetState.Hide
+    }
+
+    fun onFilterFavoritesToggle() {
+        filters.value = filters.value.copy(
+            filterFavorite = !filters.value.filterFavorite
+        )
+    }
+
+    fun onFilterDayClicked() {
+        filterSheetState.value = SearchFilterSheetState.ShowDayFilter(
+            days = DroidKaigi2022Day.values().toList()
+        )
+    }
+
+    fun onFilterCategoriesClicked() {
+        val schedule = uiModel.value.state.getOrNull() ?: return
+        filterSheetState.value = SearchFilterSheetState.ShowCategoriesFilterSheet(
+            categories = schedule.dayToTimetable.flatMap { (_, timetable) ->
+                timetable.timetableItems.timetableItems.map { it.category }
+            }.toSet().toList()
+        );
+    }
+
+    fun onFilterSheetDismissed() {
+        filterSheetState.value = SearchFilterSheetState.Hide
     }
 }
