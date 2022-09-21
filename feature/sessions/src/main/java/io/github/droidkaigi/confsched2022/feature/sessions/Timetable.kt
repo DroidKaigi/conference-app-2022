@@ -653,5 +653,5 @@ internal suspend fun PointerInputScope.detectDragGestures(
 object TimetableSizes {
     val columnWidth = 192.dp
     val lineStrokeSize = 1.dp
-    val minuteHeight = 4.dp
+    val minuteHeight = 3.dp
 }
