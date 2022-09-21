@@ -45,6 +45,7 @@ fun TimetableItem(
     val titleTextStyle = MaterialTheme.typography.titleMedium
     val localDensity = LocalDensity.current.let {
         check(titleTextStyle.fontSize.isSp)
+        // Limit the size to no more than 8sp or less
         val densityScale = maxOf(verticalScale, 8f / titleTextStyle.fontSize.value)
         Density(it.density * densityScale, it.fontScale)
     }
