@@ -22,6 +22,10 @@
 
     <!-- Announcement -->
     <string name="announcement_top_app_bar_title">通知</string>
+    <!-- TODO: Translation into Chinese -->
+    <string name="announcement_content_header_title_today">Today</string>
+    <string name="announcement_content_header_title_yesterday">Yesterday</string>
+    <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>
 
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">贡献者</string>

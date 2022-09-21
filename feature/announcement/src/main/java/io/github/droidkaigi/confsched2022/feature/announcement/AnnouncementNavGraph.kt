@@ -8,7 +8,7 @@ fun NavGraphBuilder.announcementGraph(
     onNavigationIconClick: () -> Unit,
 ) {
     composable(route = AnnouncementNavGraph.announcementRoute) {
-        AnnouncementScreenRoot(
+        AnnouncementsScreenRoot(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick
         )

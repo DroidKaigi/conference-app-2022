@@ -22,6 +22,9 @@
 
     <!-- Announcement -->
     <string name="announcement_top_app_bar_title">お知らせ</string>
+    <string name="announcement_content_header_title_today">今日</string>
+    <string name="announcement_content_header_title_yesterday">昨日</string>
+    <string name="announcement_content_empty">現在お知らせはありません</string>
 
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">コントリビューター</string>
