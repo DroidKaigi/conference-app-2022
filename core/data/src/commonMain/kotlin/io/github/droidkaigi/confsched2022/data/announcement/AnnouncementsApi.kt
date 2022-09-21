@@ -18,7 +18,7 @@ public class AnnouncementsApi(
         language: String
     ): PersistentList<AnnouncementsByDate> {
         return networkService.get<AnnouncementsResponse>(
-            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/announcements/$language"
+            url = "${BuildKonfig.apiUrl}/announcements/$language"
         ).toAnnouncementsByDate()
     }
 }
