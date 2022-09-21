@@ -63,7 +63,7 @@ jobs:
           cd temp_docs/
           git switch -C $BRANCH_NAME
           mkdir -p docs/screenshots/
-          cp -a ../preview-screenshots/out/failures/. docs/screenshots/
+          cp -a ../preview-screenshots/out/failures/delta* docs/screenshots/
           git add .
           git config --global push.default current
           git config --global remote.pushDefault origin
