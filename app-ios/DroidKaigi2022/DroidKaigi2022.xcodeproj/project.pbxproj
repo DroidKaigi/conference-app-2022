@@ -104,6 +104,7 @@
 				8C541ED628B1313B00354E7B /* Sources */,
 				8C541ED728B1313B00354E7B /* Frameworks */,
 				8C541ED828B1313B00354E7B /* Resources */,
+				FACB42BD28D7208F0034CED3 /* Copy MokoResources */,
 			);
 			buildRules = (
 			);
@@ -124,8 +125,8 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1400;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					8C541ED928B1313B00354E7B = {
 						CreatedOnToolsVersion = 13.3;
@@ -139,6 +140,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 8C541ECD28B1313800354E7B;
 			packageReferences = (
@@ -165,6 +167,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FACB42BD28D7208F0034CED3 /* Copy MokoResources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy MokoResources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./../scripts/copy_mokoresources.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8C541ED628B1313B00354E7B /* Sources */ = {

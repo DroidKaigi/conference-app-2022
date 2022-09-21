@@ -24,6 +24,8 @@ var package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
+        .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
+        .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
@@ -39,9 +41,11 @@ var package = Package(
         .target(
             name: "AboutFeature",
             dependencies: [
+                .target(name: "appioscombined"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
+                .target(name: "StaffFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "LicenseList", package: "LicenseList")
             ],
@@ -72,6 +76,7 @@ var package = Package(
                 .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
+                .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -115,7 +120,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
-                .target(name: "Strings"),
+                .target(name: "appioscombined"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -159,7 +164,6 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
-                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -173,6 +177,20 @@ var package = Package(
         .target(
             name: "SponsorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "SafariView"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "StaffFeature",
+            dependencies: [
+                .target(name: "Model"),
+                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -246,15 +264,21 @@ var package = Package(
             checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
         ),
         .binaryTarget(
-          name: "swiftgen",
-          url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
-          checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
+            name: "swiftgen",
+            url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
+            checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
         ),
+
         .binaryTarget(
             name: "licenselist",
             url: "https://github.com/touyou/LicenseList/releases/download/0.1.5/licenselist.artifactbundle.zip",
             checksum: "02d1b096c60dd0a4f3ff67a6ec82d801c6a609867fc84aa9ad40d00b42395417"
-        )
+        ),
+//        .binaryTarget(
+//            name: "gradle",
+//            url: "https://services.gradle.org/distributions/gradle-7.5.1-bin.zip",
+//            checksum: "f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4"
+//        ),
     ]
 )
 

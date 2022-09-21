@@ -1,5 +1,3 @@
-import appioscombined
-
 public enum TimetableItemType: Identifiable, Equatable {
     case general(TimetableItemWithFavorite, Int)
     case spacing(Int)
