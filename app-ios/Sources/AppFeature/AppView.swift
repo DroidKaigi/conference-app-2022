@@ -241,6 +241,8 @@ public struct AppView: View {
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+
+        UIToolbar.appearance().backgroundColor = AssetColors.surface.color
     }
 
     public var body: some View {
