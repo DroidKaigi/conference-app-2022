@@ -6,6 +6,7 @@ import io.github.droidkaigi.confsched2022.data.sessions.response.LocaledResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionAllResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionAssetResponse
 import io.github.droidkaigi.confsched2022.data.sessions.response.SessionMessageResponse
+import io.github.droidkaigi.confsched2022.data.toInstantAsJST
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
@@ -17,10 +18,6 @@ import io.github.droidkaigi.confsched2022.model.TimetableLanguage
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 
 public class SessionsApi(
     private val networkService: NetworkService,
@@ -32,11 +29,6 @@ public class SessionsApi(
             )
             .toTimetable()
     }
-}
-
-private fun String.toInstantAsJST(): Instant {
-    val (date, _) = split("+")
-    return LocalDateTime.parse(date).toInstant(TimeZone.of("UTC+9"))
 }
 
 internal fun SessionAllResponse.toTimetable(): Timetable {
