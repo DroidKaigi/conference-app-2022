@@ -277,7 +277,7 @@ https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79
 
 ## Jetpack Compose preview in GitHub comments
 
-If we can check Compose's Preview during GitHub code review, we can efficiently review changes.  
+If we can review the Compose's Preview during GitHub code review, we can address the issue effectively.  
 For the DroidKaigi app, we have addressed several issues in addition to the existing Paparazzi + Showkase approach.
 
 * Committing Preview images to the GitHub repository increases the GitHub repository size.
