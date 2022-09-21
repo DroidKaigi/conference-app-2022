@@ -18,6 +18,7 @@ import io.github.droidkaigi.confsched2022.data.sessions.SessionsApi
 import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.github.droidkaigi.confsched2022.data.sponsors.DataSponsorsRepository
+import io.github.droidkaigi.confsched2022.data.sponsors.SponsorsApi
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.SponsorsRepository
@@ -45,6 +46,7 @@ public val dataModule: Module = module {
     singleOf(::SessionsApi)
     singleOf(::ContributorsApi)
     singleOf(::AnnouncementsApi)
+    singleOf(::SponsorsApi)
     singleOf<DriverFactory>(::NativeDriverFactory)
     singleOf(::DatabaseService)
     singleOf(::SessionsDao)

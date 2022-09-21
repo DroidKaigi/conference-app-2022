@@ -113,6 +113,9 @@ struct TimetableSheetView: View, ScrollDetectable {
                                             TimetableItemView(item: item)
                                                 .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight - TimetableSheetView.verticalItemSpacing)
                                                 .padding(.bottom, TimetableSheetView.verticalItemSpacing)
+                                                .onTapGesture {
+                                                    viewStore.send(.selectItem(item))
+                                                }
                                         } else if case let .spacing(minutes) = item {
                                             Spacer()
                                                 .frame(maxHeight: CGFloat(minutes) * TimetableSheetView.minuteHeight)

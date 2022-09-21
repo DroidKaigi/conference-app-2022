@@ -13,4 +13,5 @@ kotlin {
 dependencies {
     kotlinCompilerPluginClasspath(libs.composeCompiler)
     implementation(libs.coilCompose)
+    implementation(libs.composeUiGoogleFonts)
 }
