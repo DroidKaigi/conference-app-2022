@@ -165,7 +165,7 @@ private fun SearchScreen(
     onDayFilterClicked: () -> Unit,
     onCategoriesFilteredClicked: () -> Unit,
     onFavoritesToggleClicked: () -> Unit,
-    onBackIconClick: () -> Unit = {},
+    onBackIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
@@ -408,6 +408,7 @@ fun SearchScreenPreview() {
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
+            onBackIconClick = {},
             onFavoritesToggleClicked = {},
             onDayFilterClicked = {},
             onCategoriesFilteredClicked = {}
