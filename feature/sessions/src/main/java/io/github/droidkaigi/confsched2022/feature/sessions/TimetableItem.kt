@@ -42,8 +42,12 @@ fun TimetableItem(
     } else {
         Color(roomColor).copy(alpha = 0.2F)
     }
+    val titleTextStyle = MaterialTheme.typography.titleMedium
     val localDensity = LocalDensity.current.let {
-        Density(it.density * verticalScale, it.fontScale)
+        check(titleTextStyle.fontSize.isSp)
+        // Limit the size to no more than 8sp or less
+        val densityScale = maxOf(verticalScale, 8f / titleTextStyle.fontSize.value)
+        Density(it.density * densityScale, it.fontScale)
     }
     CompositionLocalProvider(
         LocalDensity provides localDensity,
@@ -72,7 +76,7 @@ fun TimetableItem(
                     .weight(weight = 1f, fill = false)
                     .fillMaxWidth(),
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleMedium.copy(
+                style = titleTextStyle.copy(
                     letterSpacing = 0.1.sp
                 )
             )
