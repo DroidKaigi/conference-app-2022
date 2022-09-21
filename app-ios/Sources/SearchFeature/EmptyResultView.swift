@@ -1,5 +1,5 @@
+import appioscombined
 import Assets
-import Strings
 import SwiftUI
 
 public struct EmptyResultView: View {
@@ -12,7 +12,7 @@ public struct EmptyResultView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 80, height: 80)
-            Text(L10n.Search.Empty.message)
+            Text(StringsKt.shared.search_empty_result.desc().localized())
         }
     }
 }

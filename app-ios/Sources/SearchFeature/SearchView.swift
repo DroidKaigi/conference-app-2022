@@ -104,10 +104,11 @@ public struct SearchView: View {
                                             TimetableListItemView(
                                                 item: timetableItem.timetableItem,
                                                 isFavorite: timetableItem.isFavorited,
+                                                onFavoriteToggle: { id, isFavorited in
+                                                    viewStore.send(.setFavorite(id, isFavorited))
+                                                },
                                                 searchText: viewStore.searchText
-                                            ) { id, isFavorited in
-                                                viewStore.send(.setFavorite(id, isFavorited))
-                                            }
+                                            )
                                         }
                                     }
                                 }

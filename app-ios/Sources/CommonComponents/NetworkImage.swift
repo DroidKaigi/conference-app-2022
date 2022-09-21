@@ -1,5 +1,5 @@
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 public struct NetworkImage: View {
 
@@ -78,7 +78,7 @@ struct NetworkImage_Previews: PreviewProvider {
                 ForEach(0..<100, id: \.self) { _ in
                     NetworkImage(
                         url: invalidImageURL,
-                        failure:  { error in
+                        failure: { _ in
                             AnyView(Color.red)
                         }
                     )

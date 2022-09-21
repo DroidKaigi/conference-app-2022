@@ -21,7 +21,10 @@
     <string name="about_app_version">App Version</string>
 
     <!-- Announcement -->
-    <string name="announcement_top_app_bar_title">Announcement</string>
+    <string name="announcement_top_app_bar_title">News</string>
+    <string name="announcement_content_header_title_today">Today</string>
+    <string name="announcement_content_header_title_yesterday">Yesterday</string>
+    <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>
 
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">Contributors</string>
@@ -36,6 +39,7 @@
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">SLIDE</string>
     <string name="session_language_interpretation">(interpretation)</string>
+    <string name="session_cancel">このセッションは事情により中止となりました</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
@@ -50,4 +54,5 @@
 
     <!-- Search -->
     <string name="search_placeholder">Search Session</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
 </resources>
