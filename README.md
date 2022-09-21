@@ -283,7 +283,7 @@ For the DroidKaigi app, we have addressed several issues in addition to the exis
 * Committing Preview images to the GitHub repository increases the GitHub repository size.
 * When uploading preview images to the cloud, the images may not be viewable depending on their permissions.
 
-In the DroidKaigi app, you can use GitHub Actions to save a golden snapshot of the main branch using GitHub Actions Artifacts, create a companion branch for the pull request, upload the preview image there, and commit the image to GitHub. Comment the URL GitHub of the image.
+In the DroidKaigi app, you can use GitHub Actions to save a golden snapshot of the main branch using GitHub Actions Artifacts, create a companion branch for the pull request, upload the preview image there, and commit the image to GitHub. Comment the URL of the image.
 
 <img src="https://user-images.githubusercontent.com/1386930/191486713-178afc67-91a7-47e3-9213-81f1326367e6.png" width="650px" />
 
