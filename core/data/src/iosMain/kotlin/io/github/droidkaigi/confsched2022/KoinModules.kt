@@ -8,6 +8,8 @@ import io.github.droidkaigi.confsched2022.data.DriverFactory
 import io.github.droidkaigi.confsched2022.data.NativeDriverFactory
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
+import io.github.droidkaigi.confsched2022.data.announcement.AnnouncementsApi
+import io.github.droidkaigi.confsched2022.data.announcement.DataAnnouncementsRepository
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
 import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
 import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
@@ -43,6 +45,7 @@ public val dataModule: Module = module {
     singleOf(::AuthApi)
     singleOf(::SessionsApi)
     singleOf(::ContributorsApi)
+    singleOf(::AnnouncementsApi)
     singleOf(::SponsorsApi)
     singleOf<DriverFactory>(::NativeDriverFactory)
     singleOf(::DatabaseService)
@@ -50,4 +53,5 @@ public val dataModule: Module = module {
     singleOf(::DataContributorsRepository) bind ContributorsRepository::class
     singleOf(::DataSessionsRepository) bind SessionsRepository::class
     singleOf(::DataSponsorsRepository) bind SponsorsRepository::class
+    singleOf(::DataAnnouncementsRepository) bind DataAnnouncementsRepository::class
 }

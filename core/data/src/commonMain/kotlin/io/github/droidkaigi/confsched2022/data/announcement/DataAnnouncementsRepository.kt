@@ -4,6 +4,7 @@ import io.github.droidkaigi.confsched2022.model.AnnouncementsByDate
 import io.github.droidkaigi.confsched2022.model.AnnouncementsRepository
 import io.github.droidkaigi.confsched2022.model.defaultLang
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -16,6 +17,7 @@ public class DataAnnouncementsRepository(
                 announcementsApi
                     .announcements(defaultLang().name.lowercase())
             )
+            awaitClose { }
         }
     }
 }
