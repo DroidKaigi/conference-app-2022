@@ -4,7 +4,8 @@ echo "♻️  Copying MokoResources..."
 
 file="../../local.properties"
 if [ ! -f "$file" ]; then
-    echo "$file does not exist, please setup java home location first. If you are unsure how, please consult the app-ios/README.md file"
+    echo "$file does not exist, please setup java home location first. If you are unsure how to do that, please consult the app-ios/README.md file"
+    exit 1
 fi
 
 function prop {
