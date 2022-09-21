@@ -8,13 +8,16 @@ public struct TimetableListItemView: View {
     let item: TimetableItem
     let isFavorite: Bool
     let onFavoriteToggle: @Sendable (TimetableItemId, Bool) -> Void
+    let searchText: String
 
     public init(
         item: TimetableItem,
         isFavorite: Bool,
-        onFavoriteToggle: @Sendable @escaping (TimetableItemId, Bool) -> Void
+        onFavoriteToggle: @Sendable @escaping (TimetableItemId, Bool) -> Void,
+        searchText: String = ""
     ) {
         self.item = item
+        self.searchText = searchText
         self.isFavorite = isFavorite
         self.onFavoriteToggle = onFavoriteToggle
     }
@@ -22,7 +25,7 @@ public struct TimetableListItemView: View {
     public var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(item.title.jaTitle)
+                Text(highlightedString(text: item.title.jaTitle, searchText: searchText))
                     .multilineTextAlignment(.leading)
                     .font(Font.system(size: 22, weight: .medium, design: .default))
                     .foregroundColor(AssetColors.onBackground.swiftUIColor)
@@ -55,6 +58,16 @@ public struct TimetableListItemView: View {
                     .frame(width: 24, height: 24)
             }
         }
+    }
+
+    private func highlightedString(text: String, searchText: String) -> AttributedString {
+        var attrString = AttributedString(stringLiteral: text)
+
+        if let range = attrString.range(of: searchText) {
+            attrString[range].backgroundColor = AssetColors.secondaryContainer.swiftUIColor
+        }
+
+        return attrString
     }
 }
 

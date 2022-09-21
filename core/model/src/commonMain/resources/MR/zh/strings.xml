@@ -48,4 +48,8 @@
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">工作人员</string>
+
+    <!-- Search -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="search_placeholder">Search Session</string>
 </resources>

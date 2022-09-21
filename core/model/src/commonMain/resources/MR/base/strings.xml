@@ -47,4 +47,7 @@
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">スタッフリスト</string>
+
+    <!-- Search -->
+    <string name="search_placeholder">検索する</string>
 </resources>

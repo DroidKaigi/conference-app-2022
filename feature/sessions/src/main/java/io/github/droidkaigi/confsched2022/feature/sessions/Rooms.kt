@@ -18,11 +18,15 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RoomItem(
@@ -45,6 +49,7 @@ fun RoomItem(
 fun Rooms(
     rooms: List<TimetableRoom>,
     timetableState: TimetableState,
+    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
     content: @Composable (TimetableRoom) -> Unit,
 ) {
@@ -52,6 +57,7 @@ fun Rooms(
         content(rooms[index])
     }
     val density = timetableState.density
+    val scrollState = timetableState.screenScrollState
     val roomsLayout = remember(rooms) {
         RoomsLayout(
             rooms = rooms,
@@ -62,7 +68,7 @@ fun Rooms(
     val roomsScreen = remember(roomsLayout, density) {
         RoomScreen(
             roomsLayout = roomsLayout,
-            scrollState = timetableState.screenScrollState,
+            scrollState = scrollState,
             density = density
         )
     }
@@ -91,6 +97,30 @@ fun Rooms(
                     Offset(0f, roomsScreen.height.toFloat()),
                     Offset(roomsScreen.width.toFloat(), roomsScreen.height.toFloat()),
                     linePxSize
+                )
+            }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        if (roomsScreen.enableHorizontalScroll(dragAmount.x)) {
+                            if (change.positionChange() != Offset.Zero) change.consume()
+                        }
+                        coroutineScope.launch {
+                            roomsScreen.scroll(
+                                dragAmount,
+                                change.uptimeMillis,
+                                change.position
+                            )
+                        }
+                    },
+                    onDragCancel = {
+                        scrollState.resetTracking()
+                    },
+                    onDragEnd = {
+                        coroutineScope.launch {
+                            scrollState.flingXIfPossible()
+                        }
+                    }
                 )
             },
         itemProvider = itemProvider
@@ -206,9 +236,34 @@ private class RoomScreen(
             ")"
     }
 
+    fun enableHorizontalScroll(dragX: Float): Boolean {
+        val nextPossibleX = calculatePossibleScrollX(dragX)
+        return (scrollState.maxX < nextPossibleX && nextPossibleX < 0f)
+    }
+
     fun updateBounds(width: Int, height: Int) {
         this.width = width
         this.height = height
+    }
+
+    suspend fun scroll(
+        dragAmount: Offset,
+        timeMillis: Long,
+        position: Offset,
+    ) {
+        val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
+        scrollState.scroll(
+            Offset(nextPossibleX, scrollState.scrollY),
+            timeMillis,
+            position
+        )
+    }
+
+    private fun calculatePossibleScrollX(scrollX: Float): Float {
+        val currentValue = scrollState.scrollX
+        val nextValue = currentValue + scrollX
+        val maxScroll = scrollState.maxX
+        return maxOf(minOf(nextValue, 0f), maxScroll)
     }
 }
 
