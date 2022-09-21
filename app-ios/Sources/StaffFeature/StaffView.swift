@@ -1,6 +1,6 @@
+import appioscombined
 import ComposableArchitecture
 import Model
-import Strings
 import SwiftUI
 
 public struct StaffState: Equatable {
@@ -33,7 +33,7 @@ public struct StaffView: View {
                 }
             }
         }
-        .navigationTitle(L10n.About.staffs)
+        .navigationTitle(StringsKt.shared.about_staff.desc().localized())
     }
 }
 
