@@ -38,6 +38,14 @@ public struct TimetableListItemView: View {
                         }
                     }
                 }
+                if item.asSession()?.message != nil {
+                    HStack(spacing: 4) {
+                        Assets.error.swiftUIImage
+                        Text(StringsKt.shared.session_cancel.desc().localized())
+                            .foregroundColor(AssetColors.error.swiftUIColor)
+                            .font(Font.system(size: 12, weight: .regular, design: .default))
+                    }
+                }
                 HStack(spacing: 8) {
                     CapsuleText(
                         text: item.room.name.jaTitle,
