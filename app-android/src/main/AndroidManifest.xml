@@ -17,11 +17,6 @@
         android:usesCleartextTraffic="true"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="33">
-
-        <profileable
-            android:shell="true"
-            tools:targetApi="29" />
-
         <activity
             android:name="io.github.droidkaigi.confsched2022.MainActivity"
             android:exported="true"
