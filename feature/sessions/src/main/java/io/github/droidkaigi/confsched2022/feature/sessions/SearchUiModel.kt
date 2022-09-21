@@ -27,7 +27,11 @@ data class SearchFilterUiModel(
 }
 
 sealed interface SearchFilterSheetState {
-    data class ShowDayFilter(val days: List<DroidKaigi2022Day>): SearchFilterSheetState
-    data class ShowCategoriesFilterSheet(val categories: List<TimetableCategory>): SearchFilterSheetState
+    data class ShowDayFilter(
+        val days: List<DroidKaigi2022Day>
+    ): SearchFilterSheetState
+    data class ShowCategoriesFilterSheet(
+        val categories: List<TimetableCategory>
+    ): SearchFilterSheetState
     object Hide: SearchFilterSheetState
 }

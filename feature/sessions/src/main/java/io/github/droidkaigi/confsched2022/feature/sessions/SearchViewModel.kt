@@ -40,7 +40,9 @@ class SearchViewModel @Inject constructor(
 
     private val filters = mutableStateOf(Filters())
 
-    private val filterSheetState = mutableStateOf<SearchFilterSheetState>(SearchFilterSheetState.Hide)
+    private val filterSheetState = mutableStateOf<SearchFilterSheetState>(
+        SearchFilterSheetState.Hide
+    )
 
     init {
         val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()

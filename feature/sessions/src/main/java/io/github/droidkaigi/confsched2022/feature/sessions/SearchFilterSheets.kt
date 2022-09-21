@@ -124,7 +124,9 @@ fun FilterCategoriesSheet(
                 ) {
                     Checkbox(
                         checked = selectedCategories.contains(category),
-                        onCheckedChange = { isChecked -> onDaySelectedUpdated(category, isChecked) },
+                        onCheckedChange = { isChecked ->
+                            onDaySelectedUpdated(category, isChecked)
+                        },
                         colors = CheckboxDefaults.colors(
                             checkedColor = MaterialTheme.colorScheme.primary,
                             uncheckedColor = MaterialTheme.colorScheme.primary
