@@ -87,17 +87,23 @@ public struct SearchView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                List {
-                    ForEach([DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
-                    ) { day in
-                        Section(header: Text("\(day)")) {
-                            ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
-                                TimetableListItemView(
-                                    item: timetableItem.timetableItem,
-                                    isFavorite: timetableItem.isFavorited,
-                                    searchText: viewStore.searchText
-                                ) { id, isFavorited in
-                                    viewStore.send(.setFavorite(id, isFavorited))
+                Group {
+                    if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
+                        EmptyResultView()
+                    } else {
+                        List {
+                            ForEach([DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
+                            ) { day in
+                                Section(header: Text("\(day)")) {
+                                    ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
+                                        TimetableListItemView(
+                                            item: timetableItem.timetableItem,
+                                            isFavorite: timetableItem.isFavorited,
+                                            searchText: viewStore.searchText
+                                        ) { id, isFavorited in
+                                            viewStore.send(.setFavorite(id, isFavorited))
+                                        }
+                                    }
                                 }
                             }
                         }

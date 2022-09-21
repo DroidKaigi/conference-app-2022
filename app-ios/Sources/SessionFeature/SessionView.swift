@@ -16,8 +16,9 @@ public struct SessionState: Equatable {
 }
 
 public enum SessionAction {
-    case tapCalendar(TimetableItem)
-    case tapFavorite(TimetableItemId, Bool)
+    case tapCalendar
+    case tapMap
+    case tapFavorite
     case tapShare
     case hideShareSheet
 }
@@ -33,19 +34,24 @@ public struct SessionEnvironment {
 public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironment> { state, action, environment in
 
     switch action {
-    case .tapCalendar(let item):
+    case .tapCalendar:
         return .run { @MainActor _ in
             // TODO: Add event using EventKit
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
-    case .tapFavorite(let sessionId, let isFavorite):
+    case .tapMap:
+        // TODO: Open Session Map Location
+        return .none
+    case .tapFavorite:
+        let timetableItem = state.timetableItemWithFavorite.timetableItem
+        let isFavorite = state.timetableItemWithFavorite.isFavorited
         state.timetableItemWithFavorite = TimetableItemWithFavorite(
-            timetableItem: state.timetableItemWithFavorite.timetableItem,
+            timetableItem: timetableItem,
             isFavorited: !isFavorite
         )
         return .run { @MainActor _ in
-            try await environment.sessionsRepository.setFavorite(sessionId: sessionId, favorite: !isFavorite)
+            try await environment.sessionsRepository.setFavorite(sessionId: timetableItem.id, favorite: !isFavorite)
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
@@ -123,14 +129,14 @@ public struct SessionView: View {
                         .frame(width: 48, height: 48)
 
                         Button {
-                            self.presentationMode.wrappedValue.dismiss()
+                            viewStore.send(.tapMap)
                         } label: {
                             Assets.navigate.swiftUIImage
                         }
                         .frame(width: 48, height: 48)
 
                         Button {
-                            self.presentationMode.wrappedValue.dismiss()
+                            viewStore.send(.tapCalendar)
                         } label: {
                             Assets.calendar.swiftUIImage
                         }
@@ -138,7 +144,7 @@ public struct SessionView: View {
                     }
                     Spacer()
                     Button {
-                        viewStore.send(.tapFavorite(timetableItem.id, isFavorited))
+                        viewStore.send(.tapFavorite)
                     } label: {
                         if isFavorited {
                             Assets.bookmark.swiftUIImage
