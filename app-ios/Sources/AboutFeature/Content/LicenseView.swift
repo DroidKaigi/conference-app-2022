@@ -1,4 +1,5 @@
 import appioscombined
+import Model
 import LicenseList
 import SwiftUI
 
@@ -7,7 +8,7 @@ struct AboutLicenseView: View {
 
     var body: some View {
         LicenseListView(fileURL: url)
-            .navigationTitle(StringsKt.shared.about_license.desc().localized())
+            .navigationTitle(StringsKt.shared.about_license.localized())
     }
 }
 
