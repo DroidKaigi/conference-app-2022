@@ -117,6 +117,7 @@ fun AnnouncementContentList(
         contentPadding = innerPadding,
     ) {
         announcements.forEach {
+            // TODO: Need to fix stickyHeader to make it work.
             stickyHeader {
                 AnnouncementsHeader(dayString = it.publishedAt.convertString())
             }
