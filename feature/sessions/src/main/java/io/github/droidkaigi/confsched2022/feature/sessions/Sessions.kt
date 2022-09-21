@@ -228,6 +228,7 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
             }
@@ -235,7 +236,8 @@ fun Timetable(
             Column(modifier = Modifier.weight(1f)) {
                 Rooms(
                     rooms = timetable.rooms,
-                    timetableState = timetableState
+                    timetableState = timetableState,
+                    coroutineScope = coroutineScope,
                 ) { room ->
                     RoomItem(room = room)
                 }

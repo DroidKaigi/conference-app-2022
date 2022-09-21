@@ -43,7 +43,10 @@ fun NavGraphBuilder.sessionsNavGraph(
     composable(
         route = SessionsNavGraph.sessionSearchRoute(),
     ) {
-        SearchRoot(onItemClick = onTimetableClick)
+        SearchRoot(
+            onItemClick = onTimetableClick,
+            onBackIconClick = onBackIconClick,
+        )
     }
 }
 
