@@ -1,5 +1,6 @@
 import appioscombined
 import Assets
+import CommonComponents
 import ComposableArchitecture
 import Model
 import SwiftUI
@@ -10,17 +11,20 @@ public struct TimetableState: Equatable {
     public var selectedDay: DroidKaigi2022Day
     public var showDate: Bool
     public var showSheet: Bool
+    public var showLoading: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1,
         showDate: Bool = true,
-        showSheet: Bool = true
+        showSheet: Bool = true,
+        showLoading: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
         self.showDate = showDate
         self.showSheet = showSheet
+        self.showLoading = showLoading
     }
 }
 
@@ -46,6 +50,7 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
+        state.showLoading = true
         return .run { @MainActor subscriber in
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
@@ -61,8 +66,10 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .eraseToEffect()
     case let .refreshResponse(.success(droidKaigiSchedule)):
         state.dayToTimetable = droidKaigiSchedule.dayToTimetable
+        state.showLoading = false
         return .none
     case .refreshResponse(.failure):
+        state.showLoading = false
         return .none
     case let .selectDay(day):
         state.selectedDay = day
@@ -100,18 +107,23 @@ public struct TimetableView: View {
             NavigationView {
                 ZStack(alignment: .top) {
 
-                    if viewStore.state.showSheet {
-                        TimetableSheetView(store: store)
-                            .scrollThreshold(Self.scrollThreshold)
-                            .onScroll {
-                                viewStore.send(.scroll($0))
-                            }
-                    } else {
-                        TimetableListView(store: store)
-                            .scrollThreshold(Self.scrollThreshold)
-                            .onScroll {
-                                viewStore.send(.scroll($0))
-                            }
+                    ZStack {
+                        if viewStore.state.showSheet {
+                            TimetableSheetView(store: store)
+                                .scrollThreshold(Self.scrollThreshold)
+                                .onScroll {
+                                    viewStore.send(.scroll($0))
+                                }
+                        } else {
+                            TimetableListView(store: store)
+                                .scrollThreshold(Self.scrollThreshold)
+                                .onScroll {
+                                    viewStore.send(.scroll($0))
+                                }
+                        }
+                        if viewStore.state.showLoading {
+                            LoadingView()
+                        }
                     }
 
                     HStack(spacing: 8) {
