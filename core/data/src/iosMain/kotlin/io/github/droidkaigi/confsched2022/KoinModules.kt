@@ -8,8 +8,8 @@ import io.github.droidkaigi.confsched2022.data.DriverFactory
 import io.github.droidkaigi.confsched2022.data.NativeDriverFactory
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.SettingsDatastore
-import io.github.droidkaigi.confsched2022.data.announcement.DataAnnouncementsRepository
 import io.github.droidkaigi.confsched2022.data.announcement.AnnouncementsApi
+import io.github.droidkaigi.confsched2022.data.announcement.DataAnnouncementsRepository
 import io.github.droidkaigi.confsched2022.data.auth.AuthApi
 import io.github.droidkaigi.confsched2022.data.contributors.ContributorsApi
 import io.github.droidkaigi.confsched2022.data.contributors.DataContributorsRepository
