@@ -75,7 +75,6 @@ public struct TimetableListItemView: View {
 struct TimetableListItemView_Previews: PreviewProvider {
     static var previews: some View {
         let item = TimetableItemWithFavorite.companion.fake()
-        let minute = (Int(item.timetableItem.endsAt.epochSeconds) - Int(item.timetableItem.startsAt.epochSeconds)) / 60
         TimetableListItemView(
             item: item.timetableItem,
             isFavorite: item.isFavorited,
