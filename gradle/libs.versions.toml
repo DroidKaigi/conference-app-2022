@@ -50,6 +50,7 @@ showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
+androidxSplashScreen = "1.0.0-alpha02"
 twitterComposeRulesDetekt = "0.0.12"
 
 [libraries]
@@ -96,6 +97,7 @@ androidxFragment = { module = "androidx.fragment:fragment", version.ref = "andro
 androidxDatastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 androidxStartup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
 androidXChromeCustomTabs = { module = "androidx.browser:browser", version.ref = "androidXChromeCustomTabs" }
+androidxSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
 
 multiplatformSettingsCoroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
 multiplatformSettingsDatastore = { module = "com.russhwolf:multiplatform-settings-datastore", version.ref = "multiplatformSettings" }
