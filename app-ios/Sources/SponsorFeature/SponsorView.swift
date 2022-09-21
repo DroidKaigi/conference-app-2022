@@ -94,29 +94,29 @@ public struct SponsorView: View {
                             SponsorGridView(
                                 title: "PLATINUM SPONSORS",
                                 sponsors: viewStore.sponsors.filter { $0.plan == .platinum },
-                                columns: 1
+                                columns: 1,
+                                action: { sponsor in
+                                    viewStore.send(.showLinkSheet(sponsor))
+                                }
                             )
-                            .onTapItem { sponsor in
-                                viewStore.send(.showLinkSheet(sponsor))
-                            }
                             Divider().padding(.horizontal, 16)
                             SponsorGridView(
                                 title: "GOLD SPONSORS",
                                 sponsors: viewStore.sponsors.filter { $0.plan == .gold },
-                                columns: 2
+                                columns: 2,
+                                action: { sponsor in
+                                    viewStore.send(.showLinkSheet(sponsor))
+                                }
                             )
-                            .onTapItem { sponsor in
-                                viewStore.send(.showLinkSheet(sponsor))
-                            }
                             Divider().padding(.horizontal, 16)
                             SponsorGridView(
                                 title: "SPONSORS",
                                 sponsors: viewStore.sponsors.filter { $0.plan == .supporter },
-                                columns: 2
+                                columns: 2,
+                                action: { sponsor in
+                                    viewStore.send(.showLinkSheet(sponsor))
+                                }
                             )
-                            .onTapItem { sponsor in
-                                viewStore.send(.showLinkSheet(sponsor))
-                            }
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 24)
@@ -146,7 +146,7 @@ struct SponsorGridView: View {
     let title: String
     let sponsors: [Sponsor]
     let columns: Int
-    var action: (Sponsor) -> Void = { _ in }
+    var action: (Sponsor) -> Void
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -160,12 +160,6 @@ struct SponsorGridView: View {
                 }
             }
         }
-    }
-
-    func onTapItem(perform action: @escaping (Sponsor) -> Void) -> some View {
-        var view = self
-        view.action = action
-        return view
     }
 }
 
