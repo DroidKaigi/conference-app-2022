@@ -27,11 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.RadioButton
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,8 +41,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -64,18 +58,16 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
-import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
-import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
@@ -85,6 +77,8 @@ fun SearchRoot(
     val state: SearchUiModel by viewModel.uiModel
 
     val scaffoldState = rememberBottomSheetScaffoldState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(state.filterSheetState) {
         when (state.filterSheetState) {
@@ -109,7 +103,7 @@ fun SearchRoot(
                 is SearchFilterSheetState.ShowDayFilter -> {
                     FilterDaySheet(
                         selectedDay = state.filter.selectedDay,
-                        days = sheetState.days,
+                        kaigiDays = sheetState.days,
                         onDaySelected =viewModel::onDaySelected,
                         onDismiss = viewModel::onFilterSheetDismissed
                     )
@@ -143,9 +137,18 @@ fun SearchRoot(
             onBookMarkClick = { sessionId, currentIsFavorite ->
                 viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
             },
-            onDayFilterClicked = viewModel::onFilterDayClicked,
-            onCategoriesFilteredClicked = viewModel::onFilterCategoriesClicked,
-            onFavoritesToggleClicked = viewModel::onFilterFavoritesToggle
+            onDayFilterClicked = {
+                keyboardController?.hide()
+                viewModel.onFilterDayClicked()
+            },
+            onCategoriesFilteredClicked = {
+                keyboardController?.hide()
+                viewModel.onFilterCategoriesClicked()
+            },
+            onFavoritesToggleClicked = {
+                keyboardController?.hide()
+                viewModel.onFilterFavoritesToggle()
+            }
         )
     }
 }

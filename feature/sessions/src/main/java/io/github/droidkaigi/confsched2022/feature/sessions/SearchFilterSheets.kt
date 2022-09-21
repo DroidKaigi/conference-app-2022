@@ -2,15 +2,19 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Checkbox
 import androidx.compose.material.IconButton
-import androidx.compose.material.RadioButton
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,12 +27,15 @@ import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.strings.Strings
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.util.Locale
 
 @Composable
 fun FilterDaySheet(
     modifier: Modifier = Modifier,
     selectedDay: DroidKaigi2022Day?,
-    days: List<DroidKaigi2022Day>,
+    kaigiDays: List<DroidKaigi2022Day>,
     onDaySelected: (DroidKaigi2022Day) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -40,25 +47,53 @@ fun FilterDaySheet(
             onDismissClicked = onDismiss
         )
 
-        days.forEach { day ->
+        kaigiDays.forEach { kaigiDay ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val japanese = "ja"
+
+                val date = kaigiDay.start.toLocalDateTime(TimeZone.currentSystemDefault())
+
+                val year = if (Locale.getDefault().language == japanese) {
+                    "${date.year}年"
+                } else {
+                    "${date.year}"
+                }
+
+                val month = if (Locale.getDefault().language == japanese) {
+                    "${date.monthNumber}月"
+                } else {
+                    date.month.name.lowercase().replaceFirstChar { it.uppercase() }
+                }
+
+                val day = if (Locale.getDefault().language == japanese) {
+                    "${date.dayOfMonth}日"
+                } else {
+                    "${date.dayOfMonth}th"
+                }
+
                 RadioButton(
-                    selected = selectedDay == day,
-                    onClick = { onDaySelectedUpdated(day) }
+                    selected = selectedDay == kaigiDay,
+                    onClick = { onDaySelectedUpdated(kaigiDay) },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.primary
+                    )
                 )
 
                 Text(
-                    text = "${day.name} (${day.start})",
+                    text = "${kaigiDay.name} ($year $month $day)",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
+        
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -89,7 +124,11 @@ fun FilterCategoriesSheet(
                 ) {
                     Checkbox(
                         checked = selectedCategories.contains(category),
-                        onCheckedChange = { isChecked -> onDaySelectedUpdated(category, isChecked) }
+                        onCheckedChange = { isChecked -> onDaySelectedUpdated(category, isChecked) },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colorScheme.primary,
+                            uncheckedColor = MaterialTheme.colorScheme.primary
+                        )
                     )
 
                     Text(
@@ -99,6 +138,10 @@ fun FilterCategoriesSheet(
                     )
                 }
 
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
