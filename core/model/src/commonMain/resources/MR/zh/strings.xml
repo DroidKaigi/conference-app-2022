@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- Navigation Drawer -->
+    <string name="title_sessions">会议列表</string>
+    <string name="title_about">关于 DroidKaigi</string>
+    <string name="title_announcement">通知</string>
+    <string name="title_map">地图</string>
+    <string name="title_sponsors">赞助者</string>
+    <string name="title_contributors">贡献者</string>
+    <string name="title_setting">设置</string>
+
+    <!-- About -->
+    <string name="about_top_app_bar_title">关于 DroidKaigi</string>
+    <string name="about_title">DroidKaigi 是什么？</string>
+    <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。</string>
+    <string name="about_access">怎么走？</string>
+    <string name="about_staff">工作人员</string>
+    <string name="about_privacy">隐私政策</string>
+    <string name="about_license">许可</string>
+    <string name="about_code_conduct">行为准则</string>
+    <string name="about_app_version">当前版本</string>
+
+    <!-- Announcement -->
+    <string name="announcement_top_app_bar_title">通知</string>
+    <!-- TODO: Translation into Chinese -->
+    <string name="announcement_content_header_title_today">Today</string>
+    <string name="announcement_content_header_title_yesterday">Yesterday</string>
+    <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>
+
+    <!-- Contributors -->
+    <string name="contributors_top_app_bar_title">贡献者</string>
+
+    <!-- Map -->
+
+    <!-- Sessions -->
+    <string name="session_description_read_more_text">展开更多</string>
+    <string name="session_target_audience">对象听众</string>
+    <string name="session_speaker">演讲者</string>
+    <string name="session_material">资料</string>
+    <string name="session_movie">动画</string>
+    <string name="session_slide">发表资料</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="session_language_interpretation">(interpretation)</string>
+    <string name="session_cancel">このセッションは事情により中止となりました</string>
+
+    <!-- Setting -->
+    <string name="setting_title">设置</string>
+    <string name="setting_item_dark_mode">深色模式</string>
+    <string name="setting_item_language">语言设置</string>
+
+    <!-- Sponsors -->
+    <string name="sponsors_top_app_bar_title">赞助者</string>
+
+    <!-- Staff -->
+    <string name="staff_top_app_bar_title">工作人员</string>
+
+    <!-- Search -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="search_placeholder">Search Session</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+</resources>

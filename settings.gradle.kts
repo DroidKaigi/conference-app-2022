@@ -4,7 +4,6 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-//        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -14,6 +13,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
         // for datastore-okio
 //        maven(url = "https://androidx.dev/snapshots/builds/8938977/artifacts/repository") {
 //            content {
@@ -25,24 +25,34 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DroidKaigi2022"
-include(
-    ":app-android",
-    ":core-zipline",
-    ":appioscombined",
-    ":feature-sessions",
-    ":feature-contributors",
-    ":feature-about",
-    ":feature-map",
-    ":feature-announcement",
-    ":feature-setting",
-    ":feature-staff",
-    ":feature-sponsors",
-    ":core-ui",
-    ":core-designsystem",
-    ":core-data",
-    ":core-testing",
-    ":core-model"
+val modules = listOf(
+    "core-zipline",
+    "feature-sessions",
+    "feature-contributors",
+    "feature-about",
+    "feature-map",
+    "feature-announcement",
+    "feature-setting",
+    "feature-staff",
+    "feature-sponsors",
+    "core-ui",
+    "core-designsystem",
+    "core-data",
+    "core-testing",
+    "core-model",
 )
 
+modules.forEach { filePath ->
+    val (type, name) = filePath.split("-")
+    val newProjectName = ":${type}:${name}"
+    include(newProjectName)
+//    project(newProjetName).projectDir = file(filePath)
+}
+include(
+    ":app-android",
+    ":preview-screenshots"
+)
+
+include(":appioscombined")
 // for iOS framework name
 project(":appioscombined").projectDir = file("app-ios-combined")

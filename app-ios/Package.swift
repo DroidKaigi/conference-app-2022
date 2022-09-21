@@ -13,36 +13,50 @@ var package = Package(
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "Auth", targets: ["Auth"]),
+        .library(name: "CommonComponents", targets: ["CommonComponents"]),
         .library(name: "Container", targets: ["Container"]),
         .library(name: "ContributorFeature", targets: ["ContributorFeature"]),
         .library(name: "Assets", targets: ["Assets"]),
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
         .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
+        .library(name: "SafariView", targets: ["SafariView"]),
+        .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
+        .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
+        .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
+        .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.5.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.1"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
+        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
         .target(
             name: "AboutFeature",
             dependencies: [
+                .target(name: "appioscombined"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SafariView"),
+                .target(name: "StaffFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "LicenseList", package: "LicenseList")
             ],
             resources: [
                 .process("swiftgen.yml"),
                 .process("Resources"),
+                .process("license-list.plist"),
             ],
             plugins: [
                 .plugin(name: "SwiftGenPlugin"),
+                .plugin(name: "LicenseListPlugin")
             ]
         ),
         .target(
@@ -59,8 +73,10 @@ var package = Package(
                 .target(name: "SponsorFeature"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
+                .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
+                .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -83,6 +99,15 @@ var package = Package(
             ]
         ),
         .target(
+            name: "CommonComponents",
+            dependencies: [
+                .target(name: "Assets"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
+                .product(name: "Kingfisher", package: "Kingfisher"),
+            ]
+        ),
+        .target(
             name: "Container",
             dependencies: [
                 .target(name: "Auth"),
@@ -92,6 +117,11 @@ var package = Package(
         .target(
             name: "ContributorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "appioscombined"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -114,9 +144,27 @@ var package = Package(
             ]
         ),
         .target(
+            name: "SafariView",
+            dependencies: []
+        ),
+        .target(
+            name: "SearchFeature",
+            dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "Strings"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
             name: "SessionFeature",
             dependencies: [
+                .target(name: "appioscombined"),
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -129,6 +177,20 @@ var package = Package(
         .target(
             name: "SponsorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "SafariView"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "StaffFeature",
+            dependencies: [
+                .target(name: "Model"),
+                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -156,6 +218,7 @@ var package = Package(
             name: "TimetableFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -177,10 +240,22 @@ var package = Package(
             ]
         ),
         .plugin(
+            name: "SwiftLintCommandPlugin",
+            capability: .command(intent: .custom(verb: "swiftlint",
+                                                 description: "Enforce Swift style and conventions")),
+            dependencies: ["SwiftLintBinary"]),
+        .plugin(
             name: "SwiftGenPlugin",
             capability: .buildTool(),
             dependencies: [
                 .target(name: "swiftgen"),
+            ]
+        ),
+        .plugin(
+            name: "LicenseListPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "licenselist")
             ]
         ),
         .binaryTarget(
@@ -189,10 +264,21 @@ var package = Package(
             checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
         ),
         .binaryTarget(
-          name: "swiftgen",
-          url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
-          checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
+            name: "swiftgen",
+            url: "https://github.com/SwiftGen/SwiftGen/releases/download/6.6.2/swiftgen-6.6.2.artifactbundle.zip",
+            checksum: "7586363e24edcf18c2da3ef90f379e9559c1453f48ef5e8fbc0b818fbbc3a045"
         ),
+
+        .binaryTarget(
+            name: "licenselist",
+            url: "https://github.com/touyou/LicenseList/releases/download/0.1.5/licenselist.artifactbundle.zip",
+            checksum: "02d1b096c60dd0a4f3ff67a6ec82d801c6a609867fc84aa9ad40d00b42395417"
+        ),
+//        .binaryTarget(
+//            name: "gradle",
+//            url: "https://services.gradle.org/distributions/gradle-7.5.1-bin.zip",
+//            checksum: "f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4"
+//        ),
     ]
 )
 

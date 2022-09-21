@@ -7,6 +7,7 @@ group = "droidkaigi.confsched2022.buildlogic"
 repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
 }
 
 java {
@@ -25,6 +26,9 @@ dependencies {
     implementation(libs.firebasePlugin)
     implementation(libs.sqldelightGradlePlugin)
     implementation(libs.detektGradlePlugin)
+    implementation(libs.mokoResourcesPlugin)
+    implementation(libs.kspGradlePlugin)
+    implementation(libs.paparazziGradlePlugin)
 }
 
 gradlePlugin {
@@ -98,11 +102,22 @@ gradlePlugin {
             id = "droidkaigi.primitive.sqldelight"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.SqldelightPlugin"
         }
+        register("mokoResources") {
+            id = "droidkaigi.primitive.mokoresources"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.MokoResourcesPlugin"
+        }
         register("detekt") {
             id = "droidkaigi.primitive.detekt"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.DetektPlugin"
         }
-
+        register("paparazzi") {
+            id = "droidkaigi.primitive.android.paparazzi"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.PaparazziPlugin"
+        }
+        register("showkase") {
+            id = "droidkaigi.primitive.android.compose.showkase"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.ShowkasePlugin"
+        }
         // Conventions
         register("androidFeature") {
             id = "droidkaigi.convention.androidfeature"

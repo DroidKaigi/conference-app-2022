@@ -40,7 +40,7 @@ abstract class DependencyGraphTask : DefaultTask() {
             queue.addAll(project.childProjects.values)
         }
 
-        val projects = LinkedHashSet<Project>()
+        val dependencyProjects = LinkedHashSet<Project>()
         val dependencies = LinkedHashMap<Pair<Project, Project>, MutableList<String>>()
         val multiplatformProjects = mutableListOf<Project>()
         val jsProjects = mutableListOf<Project>()
@@ -75,8 +75,8 @@ abstract class DependencyGraphTask : DefaultTask() {
                     .withType(ProjectDependency::class.java)
                     .map { it.dependencyProject }
                     .forEach { dependency ->
-                        projects.add(project)
-                        projects.add(dependency)
+                        dependencyProjects.add(project)
+                        dependencyProjects.add(dependency)
                         rootProjects.remove(dependency)
 
                         val graphKey = Pair(project, dependency)
@@ -89,13 +89,13 @@ abstract class DependencyGraphTask : DefaultTask() {
             }
         }
 
-        projects.sortedBy { it.path }.also {
-            projects.clear()
-            projects.addAll(it)
+        dependencyProjects.sortedBy { it.path }.also {
+            dependencyProjects.clear()
+            dependencyProjects.addAll(it)
         }
 
         dot.appendText("\n  # Projects\n\n")
-        for (project in projects) {
+        for (project in dependencyProjects) {
             val traits = mutableListOf<String>()
 
             if (rootProjects.contains(project)) {
@@ -124,7 +124,7 @@ abstract class DependencyGraphTask : DefaultTask() {
         }
 
         dot.appendText("\n  {rank = same;")
-        for (project in projects) {
+        for (project in dependencyProjects) {
             if (rootProjects.contains(project)) {
                 dot.appendText(" \"${project.path}\";")
             }

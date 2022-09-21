@@ -1,4 +1,8 @@
 import Foundation
-struct StaticURLs {
-    static let privacyPolicy = URL(string: "https://portal.droidkaigi.jp/about/privacy")!
+
+public struct StaticURLs {
+    public static let twitter: String = "https://twitter.com/DroidKaigi"
+    public static let youtube: String = "https://www.youtube.com/c/DroidKaigi"
+    public static let medium: String = "https://medium.com/droidkaigi"
+    public static let twitter: String = "https://portal.droidkaigi.jp/about/privacy"
 }

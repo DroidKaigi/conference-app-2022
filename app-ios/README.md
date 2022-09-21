@@ -1,5 +1,8 @@
 ## Get Started
+
 ### Setup
+- Build Kotlin Multiplatform Mobile XCFramework for iOS
+
 ```sh
 cd ../
 ./gradlew appioscombined:assembleXCFramework
@@ -10,8 +13,27 @@ cd ../
  open DroidKaigi2022/DroidKaigi2022.xcodeproj
 ```
 
+### Building prerequisite
+
+- As we run gradle task as a part of buliding, Xcode needs to know location of your java home. Usually you should be able to find out about this by type command
+
+```sh
+echo $JAVA_HOME
+```
+
+If you java home is not found, you need to install it as it is a required for building this iOS app for DrodKaigi.
+
+- Setup you Java home location found above in the file called `local.properties`. Usually, this file is created automatically once you successfully loaded project with Android Studio. If you don't find this file, you can craete this file manually at the root of the project.
+
+![](../art/local.properties-sample.png)
+
+- Add content of your JAVA_HOME into the file with the key `org.gradle.java.home=<YOUR_JAVA_HOME_PATH>`
+
+
 ## Requirements
-- Xcode 13.4.1 ([Workaround needed for build](#workaround))
+- Xcode 13.4.1
+  > **Warning**
+  > If you cloned for the first time, you need to try some workaround. Please check it. [Workaround needed for build](#workaround)
 - Xcode 14.0 or Later (Recommended)
 
 ## Source Code

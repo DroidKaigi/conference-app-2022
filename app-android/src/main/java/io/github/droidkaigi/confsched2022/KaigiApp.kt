@@ -6,9 +6,16 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -36,19 +43,23 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.about.AboutNavGraph
 import io.github.droidkaigi.confsched2022.feature.about.aboutNavGraph
@@ -69,6 +80,7 @@ import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import kotlinx.coroutines.CoroutineScope
@@ -173,7 +185,11 @@ fun rememberKaigiAppScaffoldState(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun KaigiAppDrawer(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
@@ -185,11 +201,24 @@ fun KaigiAppDrawer(
         PermanentNavigationDrawer(
             drawerContent = { PermanentDrawerSheet { drawerSheetContent() } },
         ) {
-            content()
+            Box(
+                modifier = Modifier.consumedWindowInsets(
+                    WindowInsets.systemBars.only(WindowInsetsSides.Start)
+                )
+            ) {
+                content()
+            }
         }
     } else {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val drawerState = kaigiAppScaffoldState.drawerState
+        LaunchedEffect(drawerState.isAnimationRunning) {
+            if (drawerState.isAnimationRunning && drawerState.isClosed) {
+                keyboardController?.hide()
+            }
+        }
         ModalNavigationDrawer(
-            drawerState = kaigiAppScaffoldState.drawerState,
+            drawerState = drawerState,
             drawerContent = { ModalDrawerSheet { drawerSheetContent() } },
         ) {
             content()
@@ -252,28 +281,65 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 }
 
-enum class DrawerItem(val titleResId: Int, val icon: ImageVector, val navRoute: String) {
-    Sessions(R.string.title_sessions, Icons.Default.Event, SessionsNavGraph.sessionRoute),
-    About(R.string.title_about, Icons.Default.Android, AboutNavGraph.aboutRoute),
+enum class DrawerGroup {
+    Session, Information, Others
+}
+
+enum class DrawerItem(
+    val group: DrawerGroup,
+    val titleStringRes: StringResource,
+    val icon: ImageVector,
+    val navRoute: String
+) {
+    Sessions(
+        DrawerGroup.Session,
+        Strings.title_sessions,
+        Icons.Default.Event,
+        SessionsNavGraph.sessionRoute
+    ),
+    About(
+        DrawerGroup.Information,
+        Strings.title_about,
+        Icons.Default.Android,
+        AboutNavGraph.aboutRoute
+    ),
     Announcement(
-        R.string.title_announcement,
+        DrawerGroup.Information,
+        Strings.title_announcement,
         Icons.Default.Announcement,
         AnnouncementNavGraph.announcementRoute
     ),
-    Map(R.string.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
-    Sponsors(R.string.title_sponsors, Icons.Default.Business, SponsorsNavGraph.sponsorsRoute),
+    Map(DrawerGroup.Information, Strings.title_map, Icons.Default.Map, MapNavGraph.mapRoute),
+    Sponsors(
+        DrawerGroup.Others,
+        Strings.title_sponsors,
+        Icons.Default.Business,
+        SponsorsNavGraph.sponsorsRoute
+    ),
     Contributors(
-        R.string.title_contributors,
+        DrawerGroup.Others,
+        Strings.title_contributors,
         Icons.Default.People,
         ContributorsNavGraph.contributorsRoute
     ),
-    Setting(R.string.title_setting, Icons.Default.Settings, SettingNavGraph.settingRoute);
+    Setting(
+        DrawerGroup.Others,
+        Strings.title_setting,
+        Icons.Default.Settings,
+        SettingNavGraph.settingRoute
+    );
 
     companion object {
         fun ofOrNull(route: String): DrawerItem? {
             return values().firstOrNull { it.navRoute == route }
         }
     }
+
+    val isLastItem: Boolean
+        get() = ordinal == DrawerItem.values().lastIndex
+
+    val isGroupLastItem: Boolean
+        get() = isLastItem || group != DrawerItem.values()[ordinal + 1].group
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -296,7 +362,7 @@ fun ColumnScope.DrawerSheetContent(
                     Icon(imageVector = drawerItem.icon, contentDescription = null)
                 },
                 label = {
-                    Text(stringResource(drawerItem.titleResId))
+                    Text(stringResource(drawerItem.titleStringRes))
                 },
                 selected = drawerItem == selectedDrawerItem,
                 onClick = {
@@ -304,7 +370,7 @@ fun ColumnScope.DrawerSheetContent(
                 },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
-            if (drawerItem == DrawerItem.Sessions || drawerItem == DrawerItem.Map) {
+            if (!drawerItem.isLastItem && drawerItem.isGroupLastItem) {
                 Divider(
                     thickness = 1.dp,
                     modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp)

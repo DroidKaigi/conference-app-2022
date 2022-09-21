@@ -5,6 +5,7 @@ disabled_rules:
 
 opt_in_rules:
   - file_header
+  - sorted_imports
 
 excluded:
   - .build
@@ -13,5 +14,5 @@ identifier_name:
   min_length: 2
 
 file_header:
-  severity: error
+  severity: warning
   forbidden_pattern: ^(?!// Workaround:)

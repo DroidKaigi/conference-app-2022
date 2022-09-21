@@ -23,3 +23,9 @@ fun DependencyHandlerScope.kaptTest(
 fun TestedExtension.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
+
+fun DependencyHandlerScope.ksp(
+    artifact: Optional<Provider<MinimalExternalModuleDependency>>
+) {
+    add("ksp", artifact.get())
+}
