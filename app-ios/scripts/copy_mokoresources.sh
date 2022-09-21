@@ -5,7 +5,7 @@ echo "♻️  Copying MokoResources..."
 file="../../local.properties"
 
 if [ -n "$CI" ]; then
-  # We are in CI, don't validate file
+  echo "CI mode"
 else
   if [ ! -f "$file" ]; then
     echo "$file does not exist, please setup java home location first. If you are unsure how to do that, please consult the app-ios/README.md file"
