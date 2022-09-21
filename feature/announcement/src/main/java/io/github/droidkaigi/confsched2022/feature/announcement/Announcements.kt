@@ -119,7 +119,6 @@ fun AnnouncementContentList(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             announcements.forEach {
-                // TODO: Need to fix stickyHeader to make it work.
                 stickyHeader {
                     AnnouncementsHeader(
                         dayString = it.publishedAt.convertString()
