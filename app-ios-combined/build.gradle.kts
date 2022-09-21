@@ -3,9 +3,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     id("droidkaigi.primitive.kmp")
+    id("droidkaigi.primitive.kmp.android")
     id("droidkaigi.primitive.kmp.ios")
+    id("droidkaigi.primitive.mokoresources")
 }
-
 
 kotlin {
     sourceSets {
@@ -31,9 +32,10 @@ kotlin {
                 baseName = xcFrameworkName
                 isStatic = true
                 xcf.add(this)
-                exportProjects.forEach { projects ->
-                    export(projects)
+                exportProjects.forEach { project ->
+                    export(project)
                 }
+                export(libs.mokoResources)
             }
         }
 
@@ -46,4 +48,12 @@ kotlin {
             }
         }
     }
+}
+
+android.namespace = "io.github.droidkaigi.confsched2022"
+
+multiplatformResources {
+    multiplatformResourcesPackage = "io.github.droidkaigi.confsched2022"
+    multiplatformResourcesClassName = "Res"
+    iosBaseLocalizationRegion = "ja"
 }

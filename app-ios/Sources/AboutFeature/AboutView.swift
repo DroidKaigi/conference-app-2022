@@ -1,7 +1,7 @@
+import appioscombined
 import ComposableArchitecture
 import LicenseList
 import StaffFeature
-import Strings
 import SwiftUI
 import Theme
 
@@ -82,9 +82,9 @@ public struct AboutView: View {
                 ScrollView {
                     AboutViewAssets.logoCharacter.swiftUIImage
                     VStack(alignment: .leading, spacing: 24) {
-                        Text(L10n.About.whatIsDroidKaigi)
+                        Text(StringsKt.shared.about_title.desc().localized())
                             .font(Font.system(size: 32, weight: .medium))
-                        Text(L10n.About.description)
+                        Text(StringsKt.shared.about_description.desc().localized())
                         HStack(spacing: 16) {
                             LinkImage(
                                 image: AboutViewAssets.twitter.swiftUIImage,

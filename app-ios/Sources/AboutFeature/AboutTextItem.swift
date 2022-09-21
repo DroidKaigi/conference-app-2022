@@ -1,5 +1,4 @@
-import Foundation
-import Strings
+import appioscombined
 
 struct AboutTextItem {
     let title: String
@@ -10,7 +9,7 @@ struct AboutTextItem {
     static var items: [Self] {
         [
             AboutTextItem(
-                title: L10n.About.version,
+                title: StringsKt.shared.about_app_version.desc().localized(),
                 content: appVersion
             ),
         ]
