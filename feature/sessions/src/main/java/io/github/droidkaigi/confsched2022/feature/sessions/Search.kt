@@ -328,11 +328,11 @@ private fun SearchedItemListField(
 
 @Composable
 fun SearchFilter(
-    modifier: Modifier = Modifier,
     model: SearchFilterUiModel,
     onDayClicked: () -> Unit,
     onCategoryClicked: () -> Unit,
-    onFavoritesClicked: () -> Unit
+    onFavoritesClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,

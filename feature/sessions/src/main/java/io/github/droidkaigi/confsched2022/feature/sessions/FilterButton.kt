@@ -23,10 +23,10 @@ private const val TransitionAnimationDuration = 300
 
 @Composable
 fun FilterButton(
-    modifier: Modifier = Modifier,
     isSelected: Boolean,
     isDropDown: Boolean,
     text: String,
+    modifier: Modifier = Modifier,
     onClicked: () -> Unit
 ) {
     val transition = updateTransition(targetState = isSelected)

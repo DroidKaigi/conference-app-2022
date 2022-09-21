@@ -33,10 +33,10 @@ import java.util.Locale
 
 @Composable
 fun FilterDaySheet(
-    modifier: Modifier = Modifier,
     selectedDay: DroidKaigi2022Day?,
     kaigiDays: List<DroidKaigi2022Day>,
     onDaySelected: (DroidKaigi2022Day) -> Unit,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
     val onDaySelectedUpdated by rememberUpdatedState(newValue = onDaySelected)
@@ -99,10 +99,10 @@ fun FilterDaySheet(
 
 @Composable
 fun FilterCategoriesSheet(
-    modifier: Modifier = Modifier,
     selectedCategories: List<TimetableCategory>,
     categories: List<TimetableCategory>,
     onCategoriesSelected: (TimetableCategory, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
     val onDaySelectedUpdated by rememberUpdatedState(newValue = onCategoriesSelected)
@@ -149,8 +149,8 @@ fun FilterCategoriesSheet(
 
 @Composable
 private fun TopBar(
-    modifier: Modifier = Modifier,
     title: String,
+    modifier: Modifier = Modifier,
     onDismissClicked: () -> Unit
 ) {
     Row(
