@@ -24,6 +24,7 @@ var package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
+        .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
         .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
@@ -176,6 +177,12 @@ var package = Package(
         .target(
             name: "SponsorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "SafariView"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
