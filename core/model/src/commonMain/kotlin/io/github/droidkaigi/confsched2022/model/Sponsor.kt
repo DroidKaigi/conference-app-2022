@@ -1,7 +1,7 @@
 package io.github.droidkaigi.confsched2022.model
 
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,35 +27,27 @@ public enum class Plan {
     }
 }
 
-public fun Sponsor.Companion.fakes(): PersistentList<Sponsor> = persistentListOf(
-    Sponsor(
-        name = "DroidKaigi",
-        logo = "https://placehold.jp/150x150.png",
-        plan = Plan.SUPPORTER,
-        link = "https://developer.android.com/"
-    ),
-    Sponsor(
-        name = "DroidKaigi",
-        logo = "https://placehold.jp/150x150.png",
-        plan = Plan.SUPPORTER,
-        link = "https://developer.android.com/"
-    ),
-    Sponsor(
-        name = "DroidKaigi",
-        logo = "https://placehold.jp/150x150.png",
-        plan = Plan.SUPPORTER,
-        link = "https://developer.android.com/"
-    ),
-    Sponsor(
-        name = "DroidKaigi",
-        logo = "https://placehold.jp/150x150.png",
-        plan = Plan.SUPPORTER,
-        link = "https://developer.android.com/"
-    ),
-    Sponsor(
-        name = "DroidKaigi",
-        logo = "https://placehold.jp/150x150.png",
-        plan = Plan.SUPPORTER,
-        link = "https://developer.android.com/"
-    ),
-)
+public fun Sponsor.Companion.fakes(): PersistentList<Sponsor> = (
+    List(3) {
+        Sponsor(
+            name = "DroidKaigi",
+            logo = "https://placehold.jp/150x150.png",
+            plan = Plan.PLATINUM,
+            link = "https://developer.android.com/"
+        )
+    } + List(5) {
+        Sponsor(
+            name = "DroidKaigi",
+            logo = "https://placehold.jp/150x150.png",
+            plan = Plan.GOLD,
+            link = "https://developer.android.com/"
+        )
+    } + List(12) {
+        Sponsor(
+            name = "DroidKaigi",
+            logo = "https://placehold.jp/150x150.png",
+            plan = Plan.SUPPORTER,
+            link = "https://developer.android.com/"
+        )
+    }
+    ).toPersistentList()
