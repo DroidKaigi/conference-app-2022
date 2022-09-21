@@ -5,13 +5,17 @@ on:
     branches: [ "main" ]
   pull_request:
 
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-kmm-module:
+  build-ios:
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v1.0.4
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
       - name: Set up JDK 11
@@ -21,22 +25,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build KMM Module
-        run: ./gradlew appioscombined:assembleAppioscombinedReleaseXCFramework
+        run: ./gradlew appioscombined:assembleAppioscombinedDebugXCFramework
       - name: Upload xcframework artifact
         uses: actions/upload-artifact@v3
         with:
           name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/release/appioscombined.xcframework/
-  build-ios:
-    needs: build-kmm-module
-    runs-on: macos-12
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download xcframeworks
-        uses: actions/download-artifact@v3
-        with:
-          name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework
+          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework/
       - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
         working-directory: app-ios
         run: |

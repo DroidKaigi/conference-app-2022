@@ -1,5 +1,5 @@
-import XCTest
 @testable import App
+import XCTest
 
 final class AppTests: XCTestCase {
 }

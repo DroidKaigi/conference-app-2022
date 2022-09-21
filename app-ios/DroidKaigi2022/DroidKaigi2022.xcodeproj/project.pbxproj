@@ -11,6 +11,8 @@
 		8C541EE328B1313B00354E7B /* DroidKaigi2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C541ED328B1313800354E7B /* DroidKaigi2022App.swift */; };
 		8C541EE728B1313B00354E7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C541ED528B1313A00354E7B /* Assets.xcassets */; };
 		8CDF83C928B558CF00D4C570 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF83C828B558CF00D4C570 /* AppFeature */; };
+		E831922728C9DACE009FC9F6 /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */; };
+		E831922928C9DDA5009FC9F6 /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,10 @@
 		8C541ED528B1313A00354E7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C541EDA28B1313B00354E7B /* DroidKaigi2022.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DroidKaigi2022.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C541EF228B1315C00354E7B /* app-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "app-ios"; path = ..; sourceTree = "<group>"; };
+		E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
+		E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		E831922A28CADE5F009FC9F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8E0B49728D03E0200E1C8D8 /* DroidKaigi2022.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DroidKaigi2022.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +42,8 @@
 		8C541ECD28B1313800354E7B = {
 			isa = PBXGroup;
 			children = (
+				E831922C28CADEDB009FC9F6 /* iOS */,
+				E831922528C9DABD009FC9F6 /* ci_scripts */,
 				8C541ED228B1313800354E7B /* Shared */,
 				8C541EF228B1315C00354E7B /* app-ios */,
 				8C541EDB28B1313B00354E7B /* Products */,
@@ -66,6 +74,24 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E831922528C9DABD009FC9F6 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				E831922628C9DACE009FC9F6 /* ci_pre_xcodebuild.sh */,
+				E831922828C9DDA5009FC9F6 /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
+			sourceTree = "<group>";
+		};
+		E831922C28CADEDB009FC9F6 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				E8E0B49728D03E0200E1C8D8 /* DroidKaigi2022.entitlements */,
+				E831922A28CADE5F009FC9F6 /* Info.plist */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,7 +125,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					8C541ED928B1313B00354E7B = {
 						CreatedOnToolsVersion = 13.3;
@@ -115,6 +141,8 @@
 				Base,
 			);
 			mainGroup = 8C541ECD28B1313800354E7B;
+			packageReferences = (
+			);
 			productRefGroup = 8C541EDB28B1313B00354E7B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -130,6 +158,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C541EE728B1313B00354E7B /* Assets.xcassets in Resources */,
+				E831922728C9DACE009FC9F6 /* ci_pre_xcodebuild.sh in Resources */,
+				E831922928C9DDA5009FC9F6 /* ci_post_clone.sh in Resources */,
 				8C1F600928C6500100B56B92 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +211,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -239,6 +270,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -262,11 +294,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iOS/DroidKaigi2022.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -292,11 +326,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iOS/DroidKaigi2022.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

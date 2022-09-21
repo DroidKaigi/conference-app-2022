@@ -1,0 +1,14 @@
+name: iOS Lint
+
+on:
+  pull_request:
+
+jobs:
+  build-ios:
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run swiftlint command plugin
+        working-directory: app-ios
+        run: |
+          swift package plugin swiftlint

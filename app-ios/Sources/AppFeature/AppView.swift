@@ -1,19 +1,20 @@
-import appioscombined
 import AboutFeature
+import appioscombined
 import Assets
 import Auth
 import ComposableArchitecture
 import Container
 import ContributorFeature
-import NotificationFeature
 import MapFeature
-import Theme
-import TimetableFeature
+import NotificationFeature
+import SearchFeature
 import SessionFeature
 import SettingFeature
 import SponsorFeature
-import SwiftUI
 import Strings
+import SwiftUI
+import Theme
+import TimetableFeature
 
 public enum AppTab {
     case timetable
@@ -34,6 +35,7 @@ public struct AppState: Equatable {
     public var contributorState: ContributorState
     public var settingState: SettingState
     public var sessionState: SessionState?
+    public var searchState: SearchState?
     public var selectedTab: AppTab
 
     public init(
@@ -45,6 +47,7 @@ public struct AppState: Equatable {
         contributorState: ContributorState = .init(),
         settingState: SettingState = .init(),
         sessionState: SessionState? = nil,
+        searchState: SearchState? = nil,
         selectedTab: AppTab = .timetable
     ) {
         self.timetableState = timetableState
@@ -54,6 +57,7 @@ public struct AppState: Equatable {
         self.sponsorState = sponsorState
         self.contributorState = contributorState
         self.settingState = settingState
+        self.searchState = searchState
         self.sessionState = sessionState
         self.selectedTab = selectedTab
     }
@@ -67,8 +71,10 @@ public enum AppAction {
     case sponsor(SponsorAction)
     case contributor(ContributorAction)
     case setting(SettingAction)
+    case search(SearchAction)
     case session(SessionAction)
     case selectTab(AppTab)
+    case hideSearchSheet
     case hideSessionSheet
 }
 
@@ -144,8 +150,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     contributorReducer.pullback(
         state: \.contributorState,
         action: /AppAction.contributor,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
         }
     ),
     settingReducer.pullback(
@@ -155,19 +163,31 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             .init()
         }
     ),
+    searchReducer.optional().pullback(
+        state: \.searchState,
+        action: /AppAction.search,
+        environment: {
+            .init(
+                sessionsRepository: $0.sessionsRepository
+            )
+        }
+    ),
     sessionReducer.optional().pullback(
         state: \.sessionState,
         action: /AppAction.session,
-        environment: {_ in
-            .init()
+        environment: {
+            .init(sessionsRepository: $0.sessionsRepository)
         }
     ),
     .init { state, action, _ in
         switch action {
         case let .timetable(.selectItem(item)):
             state.sessionState = .init(
-                timetableItem: item
+                timetableItemWithFavorite: item
             )
+            return .none
+        case .timetable(.search):
+            state.searchState = .init()
             return .none
         case .timetable:
             return .none
@@ -183,10 +203,15 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             return .none
         case .setting:
             return .none
+        case .search:
+            return .none
         case .session:
             return .none
         case let .selectTab(tab):
             state.selectedTab = tab
+            return .none
+        case .hideSearchSheet:
+            state.searchState = nil
             return .none
         case .hideSessionSheet:
             state.sessionState = nil
@@ -203,6 +228,20 @@ public struct AppView: View {
 
         // workaround for tabbar colors. From iOS16, toolbarBackground may be useful
         UITabBar.appearance().barTintColor = AssetColors.surface.color
+
+        // workaround for preventing translucent tabbar. From iOS15
+        let tabBarAppearance: UITabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.backgroundColor = AssetColors.surface.color
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+
+        // workaround for preventing translucent navigation bar. From iOS15
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = AssetColors.surface.color
+        navigationBarAppearance.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+        UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
     }
 
     public var body: some View {
@@ -235,8 +274,7 @@ public struct AppView: View {
                     )
                 )
                 .tabItem {
-                    Assets.droid.swiftUIImage
-                        .renderingMode(.template)
+                    Image(systemName: "questionmark.circle")
                     Text(L10n.About.title)
                 }
                 .tag(AppTab.about)
@@ -302,6 +340,24 @@ public struct AppView: View {
                 .tag(AppTab.setting)
             }
             .accentColor(AssetColors.onSurface.swiftUIColor)
+            .sheet(
+                isPresented: viewStore.binding(
+                    get: { $0.searchState != nil },
+                    send: { _ in .hideSearchSheet }
+                ),
+                onDismiss: {
+                    viewStore.send(.hideSearchSheet)
+                }, content: {
+                    IfLetStore(
+                        store.scope(
+                            state: \.searchState,
+                            action: AppAction.search
+                        )
+                    ) { searchStore in
+                        SearchView(store: searchStore)
+                    }
+                }
+            )
             .sheet(
                 isPresented: viewStore.binding(
                     get: { $0.sessionState != nil },

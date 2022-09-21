@@ -1,5 +1,5 @@
-import SwiftUI
 import ComposableArchitecture
+import SwiftUI
 
 public struct SponsorState: Equatable {
     public init() {}
@@ -38,4 +38,3 @@ struct SponsorView_Previews: PreviewProvider {
     }
 }
 #endif
-

@@ -1,9 +1,13 @@
+import ComposableArchitecture
+import Model
 import SwiftUI
 import Theme
-import Model
-import ComposableArchitecture
 
-struct TimetableSheetView: View {
+struct TimetableSheetView: View, ScrollDetectable {
+
+    var scrollThreshold: CGFloat = 0
+    var onScroll: (CGPoint) -> Void = { _ in }
+
     struct ViewState: Equatable {
         var roomTimetableItems: [TimetableRoomItems]
         var hours: [Int]
@@ -17,36 +21,31 @@ struct TimetableSheetView: View {
             self.hours = timetable.hours
             self.roomTimetableItems = Set(timetable.timetableItems.map(\.room))
                 .map { room in
-
-                    var items = timetable.timetableItems
-                        .filter {
-                            $0.room == room
+                    var items = timetable.contents
+                        .filter { itemWithFavorite in
+                            itemWithFavorite.timetableItem.room == room
                         }
                         .reduce([TimetableItemType]()) { result, item in
                             var result = result
                             let lastItem = result.last
-                            if case .general(let lItem, _) = lastItem, lItem.endsAt != item.startsAt {
-                                result.append(.spacing(calculateMinute(
-                                    startSeconds: Int(lItem.endsAt.epochSeconds),
-                                    endSeconds: Int(item.startsAt.epochSeconds)
+                            if case .general(let lItem, _) = lastItem, lItem.timetableItem.endsAt != item.timetableItem.startsAt {
+                                result.append(.spacing(timetableInterval(
+                                    firstItem: lItem.timetableItem,
+                                    secondItem: item.timetableItem
                                 )))
                             }
-                            let minute = calculateMinute(
-                                startSeconds: Int(item.startsAt.epochSeconds),
-                                endSeconds: Int(item.endsAt.epochSeconds)
-                            )
                             result.append(
                                 TimetableItemType.general(
                                     item,
-                                    minute
+                                    item.timetableItem.minute
                                 )
                             )
 
                             return result
                         }
                     if case let .general(firstItem, _) = items.first {
-                        let hour = Calendar.current.component(.hour, from: firstItem.startsAt.toDate())
-                        let minute = Calendar.current.component(.minute, from: firstItem.startsAt.toDate())
+                        let hour = Calendar.current.component(.hour, from: firstItem.timetableItem.startsAt.toDate())
+                        let minute = Calendar.current.component(.minute, from: firstItem.timetableItem.startsAt.toDate())
                         let firstSpacingItem: TimetableItemType = .spacing(minute + max(hour - timetable.hours.first!, 0) * 60)
                         items.insert(firstSpacingItem, at: 0)
                     }
@@ -62,6 +61,7 @@ struct TimetableSheetView: View {
     }
 
     private static let minuteHeight: CGFloat = 4
+    private static let verticalItemSpacing: CGFloat = 3
     private static let timetableStartTime: DateComponents = .init(hour: 10, minute: 0)
     private let dateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -73,6 +73,10 @@ struct TimetableSheetView: View {
     var body: some View {
         WithViewStore(store.scope(state: ViewState.init)) { viewStore in
             ScrollView(.vertical) {
+
+                Spacer()
+                    .frame(height: scrollThreshold)
+
                 HStack(alignment: .top, spacing: 0) {
                     Spacer()
                         .frame(width: 16)
@@ -107,7 +111,8 @@ struct TimetableSheetView: View {
                                     ForEach(timetableItems) { item in
                                         if case let .general(item, minutes) = item {
                                             TimetableItemView(item: item)
-                                                .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight)
+                                                .frame(height: CGFloat(minutes) * TimetableSheetView.minuteHeight - TimetableSheetView.verticalItemSpacing)
+                                                .padding(.bottom, TimetableSheetView.verticalItemSpacing)
                                         } else if case let .spacing(minutes) = item {
                                             Spacer()
                                                 .frame(maxHeight: CGFloat(minutes) * TimetableSheetView.minuteHeight)
@@ -121,7 +126,14 @@ struct TimetableSheetView: View {
                         }
                     }
                 }
+                .background(
+                    ScrollDetector(coordinateSpace: .named("TimetableSheetView"))
+                        .onDetect { position in
+                            onScroll(position)
+                        }
+                )
             }
+            .coordinateSpace(name: "TimetableSheetView")
         }
     }
 }
