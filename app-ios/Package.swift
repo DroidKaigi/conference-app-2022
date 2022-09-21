@@ -184,8 +184,7 @@ var package = Package(
         .target(
             name: "StaffFeature",
             dependencies: [
-                .target(name: "appioscombined"),
-                .target(name: "CommonComponents"),
+                .target(name: "Model"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
