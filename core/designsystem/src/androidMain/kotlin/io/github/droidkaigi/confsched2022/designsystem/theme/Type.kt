@@ -7,17 +7,30 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import io.github.droidkaigi.confsched2022.core.designsystem.R
 import io.github.droidkaigi.confsched2022.core.designsystem.R.font
 
+@OptIn(ExperimentalTextApi::class)
+val provider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+@OptIn(ExperimentalTextApi::class)
 val montserratFonts = FontFamily(
-    Font(font.montserrat_medium)
+    Font(googleFont = GoogleFont("Montserrat"), fontProvider = provider, weight = FontWeight(400)),
+    Font(googleFont = GoogleFont("Montserrat"), fontProvider = provider, weight = FontWeight(500)),
 )
 
 val robotoFonts = FontFamily(

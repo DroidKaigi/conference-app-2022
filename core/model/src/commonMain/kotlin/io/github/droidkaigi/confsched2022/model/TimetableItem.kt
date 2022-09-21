@@ -122,7 +122,10 @@ public fun TimetableItem.Session.Companion.fake(): Session {
             ),
         ).toPersistentList(),
         description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
-        message = null,
+        message = MultiLangText(
+            jaTitle = "このセッションは事情により中止となりました",
+            enTitle = "This session has been cancelled due to circumstances."
+        ),
         levels = listOf(
             "INTERMEDIATE",
         ).toPersistentList(),

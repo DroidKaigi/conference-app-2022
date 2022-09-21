@@ -7,6 +7,7 @@
 "Session.Material" = "Material";
 "Session.Slides" = "Slides";
 "Session.Movie" = "Movie";
+"Session.CancellMessage" = "このセッションは事情により中止となりました";
 
 // About
 "About.Title" = "DroidKaigiとは";
@@ -23,3 +24,6 @@
 "Sponsor.Title" = "Sponsor";
 "Contributors.Title" = "Contributors";
 "Setting.Title" = "Setting";
+
+// Search
+"Search.Empty.Message" = "この検索条件に一致する結果はありません";

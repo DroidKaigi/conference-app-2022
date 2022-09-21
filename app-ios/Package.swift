@@ -24,14 +24,18 @@ var package = Package(
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
+        .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
+        .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
+        .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
     ],
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
         .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
         .target(
@@ -40,6 +44,7 @@ var package = Package(
                 .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
+                .target(name: "StaffFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "LicenseList", package: "LicenseList")
             ],
@@ -70,6 +75,7 @@ var package = Package(
                 .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
                 .target(name: "SettingFeature"),
+                .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -97,6 +103,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
+                .product(name: "Kingfisher", package: "Kingfisher"),
             ]
         ),
         .target(
@@ -110,6 +117,7 @@ var package = Package(
             name: "ContributorFeature",
             dependencies: [
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Strings"),
                 .target(name: "Theme"),
@@ -141,8 +149,10 @@ var package = Package(
         .target(
             name: "SearchFeature",
             dependencies: [
+                .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -151,7 +161,9 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -165,6 +177,20 @@ var package = Package(
         .target(
             name: "SponsorFeature",
             dependencies: [
+                .target(name: "Assets"),
+                .target(name: "CommonComponents"),
+                .target(name: "Model"),
+                .target(name: "SafariView"),
+                .target(name: "Strings"),
+                .target(name: "Theme"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "StaffFeature",
+            dependencies: [
+                .target(name: "Model"),
+                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -213,6 +239,11 @@ var package = Package(
                 .target(name: "SwiftLintBinary"),
             ]
         ),
+        .plugin(
+            name: "SwiftLintCommandPlugin",
+            capability: .command(intent: .custom(verb: "swiftlint",
+                                                 description: "Enforce Swift style and conventions")),
+            dependencies: ["SwiftLintBinary"]),
         .plugin(
             name: "SwiftGenPlugin",
             capability: .buildTool(),
