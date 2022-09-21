@@ -3,6 +3,9 @@
 echo "♻️  Copying MokoResources..."
 
 file="../../local.properties"
+if [ ! -f "$file" ]; then
+    echo "$file does not exist, please setup java home location first. If you are unsure how, please consult the app-ios/README.md file"
+fi
 
 function prop {
     grep "${1}" ${file} | cut -d'=' -f2
