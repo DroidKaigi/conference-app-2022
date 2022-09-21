@@ -25,6 +25,9 @@ public enum class Plan {
             return values().firstOrNull { it.name == plan }
         }
     }
+
+    public val isSupporter: Boolean
+        get() = this == SUPPORTER
 }
 
 public fun Sponsor.Companion.fakes(): PersistentList<Sponsor> = persistentListOf(
