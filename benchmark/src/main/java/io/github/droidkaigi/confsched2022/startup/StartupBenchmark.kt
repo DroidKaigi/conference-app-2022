@@ -14,7 +14,7 @@ class StartupBenchmark {
 
     @Test
     fun startup() = benchmarkRule.measureRepeated(
-        packageName = "io.github.droidkaigi.confsched2022",
+        packageName = "io.github.droidkaigi.confsched2022.dev",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
         setupBlock = {
