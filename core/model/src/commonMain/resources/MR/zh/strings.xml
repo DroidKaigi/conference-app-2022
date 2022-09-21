@@ -53,4 +53,5 @@
     <!-- Search -->
     <!-- TODO:Translation into Chinese -->
     <string name="search_placeholder">Search Session</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
 </resources>

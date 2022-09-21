@@ -51,4 +51,5 @@
 
     <!-- Search -->
     <string name="search_placeholder">検索する</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
 </resources>
