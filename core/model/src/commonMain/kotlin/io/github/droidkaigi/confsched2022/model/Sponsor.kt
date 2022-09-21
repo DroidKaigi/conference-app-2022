@@ -28,24 +28,24 @@ public enum class Plan {
 }
 
 public fun Sponsor.Companion.fakes(): PersistentList<Sponsor> = (
-    List(3) { index ->
+    List(3) {
         Sponsor(
             name = "DroidKaigi",
-            logo = "https://placehold.jp/150x150.png#$index",
+            logo = "https://placehold.jp/150x150.png",
             plan = Plan.PLATINUM,
             link = "https://developer.android.com/"
         )
-    } + List(5) { index ->
+    } + List(5) {
         Sponsor(
             name = "DroidKaigi",
-            logo = "https://placehold.jp/150x150.png#$index",
+            logo = "https://placehold.jp/150x150.png",
             plan = Plan.GOLD,
             link = "https://developer.android.com/"
         )
-    } + List(12) { index ->
+    } + List(12) {
         Sponsor(
             name = "DroidKaigi",
-            logo = "https://placehold.jp/150x150.png#$index",
+            logo = "https://placehold.jp/150x150.png",
             plan = Plan.SUPPORTER,
             link = "https://developer.android.com/"
         )

@@ -153,7 +153,7 @@ struct SponsorGridView: View {
             Text(title)
                 .font(.system(size: 22, weight: .semibold, design: .default))
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 16), count: columns), spacing: 16) {
-                ForEach(sponsors, id: \.self) { sponsor in
+                ForEach(sponsors) { sponsor in
                     SponsorItemView(sponsor: sponsor) {
                         action(sponsor)
                     }
