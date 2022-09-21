@@ -4,7 +4,7 @@ import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
 
-actual fun getDefaultLocale(): Locale =
+public actual fun getDefaultLocale(): Locale =
     if (NSLocale.currentLocale.countryCode == "JP") {
         Locale.JAPAN
     } else {

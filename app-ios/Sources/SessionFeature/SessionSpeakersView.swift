@@ -1,5 +1,5 @@
 import appioscombined
-import Strings
+import CommonComponents
 import SwiftUI
 import Theme
 
@@ -9,21 +9,17 @@ struct SessionSpeakersView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(L10n.Session.speaker)
+            Text(StringsKt.shared.session_speaker.desc().localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
 
             ForEach(self.speakers, id: \.self) { speaker in
                 HStack {
-                    AsyncImage(
-                        url: URL(string: speaker.iconUrl),
-                        content: {
-                            $0.image?.resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 60, height: 60)
-                                .clipShape(Circle())
-                        }
+                    NetworkImage(
+                        url: URL(string: speaker.iconUrl)
                     )
+                    .frame(width: 60, height: 60)
+                    .clipShape(Circle())
                     .padding(.trailing)
                     Text(speaker.name)
                         .font(Font.system(size: 16, weight: .regular, design: .default))

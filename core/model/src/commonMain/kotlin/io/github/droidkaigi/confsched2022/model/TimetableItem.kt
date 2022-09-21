@@ -17,21 +17,21 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
-sealed class TimetableItem {
-    abstract val id: TimetableItemId
-    abstract val title: MultiLangText
-    abstract val startsAt: Instant
-    abstract val endsAt: Instant
-    abstract val category: TimetableCategory
-    abstract val room: TimetableRoom
-    abstract val targetAudience: String
-    abstract val language: TimetableLanguage
-    abstract val asset: TimetableAsset
-    abstract val levels: PersistentList<String>
-    val day: DroidKaigi2022Day? get() = DroidKaigi2022Day.ofOrNull(startsAt)
+public sealed class TimetableItem {
+    public abstract val id: TimetableItemId
+    public abstract val title: MultiLangText
+    public abstract val startsAt: Instant
+    public abstract val endsAt: Instant
+    public abstract val category: TimetableCategory
+    public abstract val room: TimetableRoom
+    public abstract val targetAudience: String
+    public abstract val language: TimetableLanguage
+    public abstract val asset: TimetableAsset
+    public abstract val levels: PersistentList<String>
+    public val day: DroidKaigi2022Day? get() = DroidKaigi2022Day.ofOrNull(startsAt)
 
     @Serializable
-    data class Session(
+    public data class Session(
         override val id: TimetableItemId,
         override val title: MultiLangText,
         override val startsAt: Instant,
@@ -46,11 +46,11 @@ sealed class TimetableItem {
         val speakers: PersistentList<TimetableSpeaker>,
         val message: MultiLangText?,
     ) : TimetableItem() {
-        companion object
+        public companion object
     }
 
     @Serializable
-    data class Special(
+    public data class Special(
         override val id: TimetableItemId,
         override val title: MultiLangText,
         override val startsAt: Instant,
@@ -64,19 +64,19 @@ sealed class TimetableItem {
         val speakers: PersistentList<TimetableSpeaker> = persistentListOf(),
     ) : TimetableItem()
 
-    val startsTimeString: String by lazy {
+    public val startsTimeString: String by lazy {
         val localDate = startsAt.toLocalDateTime(TimeZone.currentSystemDefault())
         "${localDate.hour}".padStart(2, '0') + ":" + "${localDate.minute}".padStart(2, '0')
     }
 
-    val minutesString: String by lazy {
+    public val minutesString: String by lazy {
         val minutes = (endsAt - startsAt)
             .toComponents { minutes, _, _ -> minutes }
         "${minutes}min"
     }
 }
 
-fun TimetableItem.Session.Companion.fake(): Session {
+public fun TimetableItem.Session.Companion.fake(): Session {
     return Session(
         id = TimetableItemId("2"),
         title = MultiLangText("DroidKaigiのアプリのアーキテクチャ", "DroidKaigi App Architecture"),
@@ -122,7 +122,10 @@ fun TimetableItem.Session.Companion.fake(): Session {
             ),
         ).toPersistentList(),
         description = "これはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。\nこれはディスクリプションです。",
-        message = null,
+        message = MultiLangText(
+            jaTitle = "このセッションは事情により中止となりました",
+            enTitle = "This session has been cancelled due to circumstances."
+        ),
         levels = listOf(
             "INTERMEDIATE",
         ).toPersistentList(),

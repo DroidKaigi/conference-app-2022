@@ -18,16 +18,16 @@ import kotlinx.serialization.encoding.Encoder
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentList::class)
-class PersistentListSerializer(
+public class PersistentListSerializer(
     private val dataSerializer: KSerializer<String>
 ) :
     KSerializer<PersistentList<String>> {
-    class PersistentListDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
+    public class PersistentListDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
         @ExperimentalSerializationApi override val serialName: String =
             "kotlinx.serialization.immutable.persistentList"
     }
 
-    override val descriptor = PersistentListDescriptor()
+    override val descriptor: PersistentListDescriptor = PersistentListDescriptor()
     override fun serialize(encoder: Encoder, value: PersistentList<String>) {
         return ListSerializer(dataSerializer).serialize(encoder, value.toList())
     }
@@ -39,16 +39,16 @@ class PersistentListSerializer(
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentSet::class)
-class PersistentSetSerializer(
+public class PersistentSetSerializer(
     private val dataSerializer: KSerializer<String>
 ) :
     KSerializer<PersistentSet<String>> {
-    class PersistentSetDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
+    public class PersistentSetDescriptor : SerialDescriptor by serialDescriptor<List<String>>() {
         @ExperimentalSerializationApi override val serialName: String =
             "kotlinx.serialization.immutable.persistentList"
     }
 
-    override val descriptor = PersistentSetDescriptor()
+    override val descriptor: PersistentSetDescriptor = PersistentSetDescriptor()
     override fun serialize(encoder: Encoder, value: PersistentSet<String>) {
         return ListSerializer(dataSerializer).serialize(encoder, value.toList())
     }
@@ -60,17 +60,18 @@ class PersistentSetSerializer(
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = PersistentMap::class)
-class PersistentMapSerializer(
+public class PersistentMapSerializer(
     private val data1Serializer: KSerializer<String>,
     private val data2Serializer: KSerializer<String>
 ) :
     KSerializer<PersistentMap<String, String>> {
-    class PersistentMapDescriptor : SerialDescriptor by serialDescriptor<Map<String, String>>() {
+    public class PersistentMapDescriptor :
+        SerialDescriptor by serialDescriptor<Map<String, String>>() {
         @ExperimentalSerializationApi override val serialName: String =
             "kotlinx.serialization.immutable.persistentList"
     }
 
-    override val descriptor = PersistentMapDescriptor()
+    override val descriptor: PersistentMapDescriptor = PersistentMapDescriptor()
     override fun serialize(encoder: Encoder, value: PersistentMap<String, String>) {
         return MapSerializer(data1Serializer, data2Serializer).serialize(encoder, value.toMap())
     }

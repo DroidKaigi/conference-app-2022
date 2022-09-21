@@ -1,5 +1,3 @@
-import appioscombined
-
 public extension TimetableItem {
     var minute: Int {
         let startMinute = Int(startsAt.epochSeconds)  / 60

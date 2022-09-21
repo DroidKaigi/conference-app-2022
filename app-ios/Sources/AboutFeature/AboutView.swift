@@ -1,29 +1,27 @@
+import appioscombined
 import ComposableArchitecture
-import Strings
+import LicenseList
+import StaffFeature
 import SwiftUI
 import Theme
 
+public enum AboutDestination {
+    case none
+    case access
+    case staffs
+    case privacyPolicy
+    case license
+}
+
 public struct AboutState: Equatable {
-    public enum NavigationDestination {
-        case none
-        case license
-
-        @ViewBuilder
-        public var destination: some View {
-            switch self {
-            case .license:
-                AboutLicenseView()
-            default:
-                EmptyView()
-            }
-        }
-    }
-
-    public var navigationDestination: NavigationDestination
+    public var staffState: StaffState
+    public var navigationDestination: AboutDestination
 
     public init(
-        navigationDestination: NavigationDestination = .none
+        staffState: StaffState = .init(),
+        navigationDestination: AboutDestination = .none
     ) {
+        self.staffState = staffState
         self.navigationDestination = navigationDestination
     }
 }
@@ -34,24 +32,42 @@ public enum AboutAction {
     case openStaffs
     case openPrivacyPolicy
     case openLicense
+    case staff(StaffAction)
+    case setSheet(isPresented: Bool)
 }
 
 public struct AboutEnvironment {
     public init() {}
 }
 
-public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { state, action, _ in
-    switch action {
-    case .backToTop:
-        state.navigationDestination = .none
-        return .none
-    case .openLicense:
-        state.navigationDestination = .license
-        return .none
-    default:
-        return .none
+public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.combine(
+    staffReducer.pullback(
+        state: \.staffState,
+        action: /AboutAction.staff,
+        environment: { _ in .init() }
+    ),
+    .init { state, action, _ in
+        switch action {
+        case .backToTop:
+            state.navigationDestination = .none
+            return .none
+        case .openLicense:
+            state.navigationDestination = .license
+            return .none
+        case .openStaffs:
+            state.navigationDestination = .staffs
+            return .none
+        case .openAccess:
+            state.navigationDestination = .access
+            return .none
+        case .openPrivacyPolicy:
+            state.navigationDestination = .privacyPolicy
+            return .none
+        default:
+            return .none
+        }
     }
-}
+)
 
 public struct AboutView: View {
     private let store: Store<AboutState, AboutAction>
@@ -66,9 +82,9 @@ public struct AboutView: View {
                 ScrollView {
                     AboutViewAssets.logoCharacter.swiftUIImage
                     VStack(alignment: .leading, spacing: 24) {
-                        Text(L10n.About.whatIsDroidKaigi)
+                        Text(StringsKt.shared.about_title.desc().localized())
                             .font(Font.system(size: 32, weight: .medium))
-                        Text(L10n.About.description)
+                        Text(StringsKt.shared.about_description.desc().localized())
                         HStack(spacing: 16) {
                             LinkImage(
                                 image: AboutViewAssets.twitter.swiftUIImage,
@@ -123,18 +139,30 @@ public struct AboutView: View {
 
                     Spacer()
                         .frame(height: 32)
-
-                    NavigationLink(
-                        destination: viewStore.navigationDestination.destination,
-                        isActive: Binding<Bool>(
-                            get: {
-                                viewStore.navigationDestination != .none
-                            }, set: { newValue in
-                                if !newValue {
-                                    viewStore.send(.backToTop)
-                                }
-                            }),
-                        label: {
+                    
+                    NavigationLink(isActive: Binding<Bool>(
+                        get: {
+                            viewStore.navigationDestination != .none
+                        }, set: { newValue in
+                            if !newValue {
+                                viewStore.send(.backToTop)
+                            }
+                        }), destination: {
+                            switch viewStore.state.navigationDestination {
+                            case .none:
+                                EmptyView()
+                            case .staffs:
+                                StaffView(
+                                    store: store.scope(state: \.staffState, action: AboutAction.staff)
+                                )
+                            case .access:
+                                Text("TODO: Access")
+                            case .privacyPolicy:
+                                Text("TODO: Privacy Policy")
+                            case .license:
+                                AboutLicenseView()
+                            }
+                        }, label: {
                             EmptyView()
                         }
                     )

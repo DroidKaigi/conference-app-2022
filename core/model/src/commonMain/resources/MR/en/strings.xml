@@ -38,6 +38,7 @@
     <string name="session_movie">MOVIE</string>
     <string name="session_slide">SLIDE</string>
     <string name="session_language_interpretation">(interpretation)</string>
+    <string name="session_cancel">このセッションは事情により中止となりました</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
@@ -52,4 +53,8 @@
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">Staff</string>
+
+    <!-- Search -->
+    <string name="search_placeholder">Search Session</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
 </resources>

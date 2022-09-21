@@ -3,16 +3,16 @@ package io.github.droidkaigi.confsched2022.model
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-data class Staff(
+public data class Staff(
     val id: Int,
     val username: String,
     val profileUrl: String,
     val iconUrl: String
 ) {
-    companion object
+    public companion object
 }
 
-fun Staff.Companion.fakes(): PersistentList<Staff> = persistentListOf(
+public fun Staff.Companion.fakes(): PersistentList<Staff> = persistentListOf(
     Staff(
         id = 1,
         username = "staffA",

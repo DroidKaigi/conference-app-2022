@@ -224,20 +224,22 @@ fun Timetable(
             )
         ) {
             Hours(
-                modifier = modifier.transformable(
+                modifier = Modifier.transformable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
-            ) { modifier, hour ->
-                HoursItem(hour = hour, modifier = modifier)
+                coroutineScope = coroutineScope,
+            ) { hour ->
+                HoursItem(hour = hour)
             }
 
             Column(modifier = Modifier.weight(1f)) {
                 Rooms(
                     rooms = timetable.rooms,
-                    timetableState = timetableState
-                ) { modifier, room ->
-                    RoomItem(modifier = modifier, room = room)
+                    timetableState = timetableState,
+                    coroutineScope = coroutineScope,
+                ) { room ->
+                    RoomItem(room = room)
                 }
 
                 Timetable(

@@ -37,6 +37,7 @@
     <string name="session_slide">发表资料</string>
     <!-- TODO:Translation into Chinese -->
     <string name="session_language_interpretation">(interpretation)</string>
+    <string name="session_cancel">このセッションは事情により中止となりました</string>
 
     <!-- Setting -->
     <string name="setting_title">设置</string>
@@ -48,4 +49,9 @@
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">工作人员</string>
+
+    <!-- Search -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="search_placeholder">Search Session</string>
+    <string name="search_empty_result">この検索条件に一致する結果はありません</string>
 </resources>

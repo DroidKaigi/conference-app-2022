@@ -3,13 +3,13 @@ package io.github.droidkaigi.confsched2022.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MultiLangText(
+public data class MultiLangText(
     val jaTitle: String,
     val enTitle: String,
 ) {
-    val currentLangTitle get() = getByLang(defaultLang())
+    val currentLangTitle: String get() = getByLang(defaultLang())
 
-    fun getByLang(lang: Lang): String {
+    private fun getByLang(lang: Lang): String {
         return if (lang == Lang.JAPANESE) {
             jaTitle
         } else {
@@ -17,5 +17,5 @@ data class MultiLangText(
         }
     }
 
-    companion object
+    public companion object
 }

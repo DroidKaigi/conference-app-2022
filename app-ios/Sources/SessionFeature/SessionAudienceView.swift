@@ -1,4 +1,4 @@
-import Strings
+import appioscombined
 import SwiftUI
 
 struct SessionAudienceView: View {
@@ -7,7 +7,7 @@ struct SessionAudienceView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(L10n.Session.targetAudience)
+            Text(StringsKt.shared.session_target_audience.desc().localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
             Text(self.targetAudience)

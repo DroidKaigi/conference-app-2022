@@ -1,4 +1,6 @@
+import appioscombined
 import Assets
+import CommonComponents
 import ComposableArchitecture
 import Model
 import Strings
@@ -77,7 +79,7 @@ public struct ContributorView: View {
                 await viewStore.send(.refresh).finish()
             }
             .listStyle(PlainListStyle())
-            .navigationTitle(L10n.Contributors.title)
+            .navigationTitle(StringsKt.shared.title_contributors.desc().localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -91,10 +93,8 @@ struct ContributorItemView: View {
     var body: some View {
         ZStack {
             HStack(spacing: 16) {
-                AsyncImage(url: URL(string: contributor.iconUrl)) { image in
-                    image.resizable()
-                } placeholder: {
-                    Color(.systemGray4)
+                NetworkImage(url: URL(string: contributor.iconUrl)) {
+                    AnyView(Color(.systemGray4))
                 }
                 .frame(width: 60, height: 60)
                 .clipShape(Circle())

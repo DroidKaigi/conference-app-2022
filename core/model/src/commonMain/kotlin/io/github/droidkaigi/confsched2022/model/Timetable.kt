@@ -18,21 +18,21 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
-data class Timetable(
+public data class Timetable(
     val timetableItems: TimetableItemList = TimetableItemList(),
     val favorites: PersistentSet<TimetableItemId> = persistentSetOf(),
 ) {
-    val contents by lazy {
+    val contents: List<TimetableItemWithFavorite> by lazy {
         timetableItems.map {
             TimetableItemWithFavorite(it, favorites.contains(it.id))
         }
     }
 
-    val rooms by lazy {
+    val rooms: List<TimetableRoom> by lazy {
         timetableItems.map { it.room }.toSet().sortedBy { it.sort }
     }
 
-    fun dayTimetable(droidKaigi2022Day: DroidKaigi2022Day): Timetable {
+    public fun dayTimetable(droidKaigi2022Day: DroidKaigi2022Day): Timetable {
         var timetableItems = timetableItems.toList()
         timetableItems = timetableItems.filter { timetableItem ->
             timetableItem.day == droidKaigi2022Day
@@ -40,7 +40,7 @@ data class Timetable(
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
-    fun filtered(filters: Filters): Timetable {
+    public fun filtered(filters: Filters): Timetable {
         var timetableItems = timetableItems.toList()
         if (filters.filterFavorite) {
             timetableItems = timetableItems.filter { timetableItem ->
@@ -58,16 +58,16 @@ data class Timetable(
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
     }
 
-    fun isEmpty(): Boolean {
+    public fun isEmpty(): Boolean {
         return timetableItems.isEmpty()
     }
 
-    companion object
+    public companion object
 }
 
-fun Timetable?.orEmptyContents(): Timetable = this ?: Timetable()
+public fun Timetable?.orEmptyContents(): Timetable = this ?: Timetable()
 
-fun Timetable.Companion.fake(): Timetable {
+public fun Timetable.Companion.fake(): Timetable {
     var rooms = listOf(
         TimetableRoom(0, MultiLangText("App Bar", "App Bar"), 0),
         TimetableRoom(1, MultiLangText("Backdrop", "Backdrop"), 1),

@@ -1,4 +1,4 @@
-import Strings
+import appioscombined
 
 struct AboutNavigationItem {
     let image: ImageAsset
@@ -9,22 +9,22 @@ struct AboutNavigationItem {
         [
             AboutNavigationItem(
                 image: AboutViewAssets.train,
-                title: L10n.About.access,
+                title: StringsKt.shared.about_access.desc().localized(),
                 action: .openAccess
             ),
             AboutNavigationItem(
                 image: AboutViewAssets.person,
-                title: L10n.About.staffs,
+                title: StringsKt.shared.about_staff.desc().localized(),
                 action: .openStaffs
             ),
             AboutNavigationItem(
                 image: AboutViewAssets.shield,
-                title: L10n.About.privacyPolicy,
+                title: StringsKt.shared.about_privacy.desc().localized(),
                 action: .openPrivacyPolicy
             ),
             AboutNavigationItem(
                 image: AboutViewAssets.folder,
-                title: L10n.About.license,
+                title: StringsKt.shared.about_license.desc().localized(),
                 action: .openLicense
             ),
         ]
