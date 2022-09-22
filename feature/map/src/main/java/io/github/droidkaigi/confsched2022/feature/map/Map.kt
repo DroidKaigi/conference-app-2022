@@ -26,7 +26,7 @@ import io.github.droidkaigi.confsched2022.feature.map.R.drawable
 import io.github.droidkaigi.confsched2022.strings.Strings
 
 // FIXME: This is a temporary image.
-private const val MAP_IMAGE_URL = "https://user-images.githubusercontent.com" +
+private const val MapImageUrl = "https://user-images.githubusercontent.com" +
     "/5885032/191032572-b128660f-bff2-4cd4-8228-27cc8f8974a9.png"
 
 @Composable
@@ -76,7 +76,7 @@ fun Map(
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
-                model = MAP_IMAGE_URL,
+                model = MapImageUrl,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
