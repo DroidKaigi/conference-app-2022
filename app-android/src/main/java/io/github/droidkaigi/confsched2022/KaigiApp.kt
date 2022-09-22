@@ -142,7 +142,10 @@ fun KaigiApp(
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                         onLinkClick = kaigiExternalNavigationController::navigate,
                     )
-                    mapGraph()
+                    mapGraph(
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    )
                     announcementGraph(
                         showNavigationIcon = showNavigationIcon,
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,

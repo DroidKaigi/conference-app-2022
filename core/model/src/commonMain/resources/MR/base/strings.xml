@@ -35,6 +35,7 @@
     <string name="search_filter_favorites">お気に入り済み</string>
 
     <!-- Map -->
+    <string name="map_top_app_bar_title">フロアマップ</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">続きを見る</string>

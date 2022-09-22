@@ -37,6 +37,7 @@
     <string name="search_filter_favorites">Favorites</string>
 
     <!-- Map -->
+    <string name="map_top_app_bar_title">地图</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">展开更多</string>
