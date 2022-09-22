@@ -13,6 +13,7 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +31,12 @@ class AnnouncementsViewModel @Inject constructor(
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
             val data by dataFlow.collectAsState(initial = UiLoadState.Loading)
             AnnouncementsUiModel(data)
+        }
+    }
+
+    fun onRetryButtonClick() {
+        viewModelScope.launch {
+            // TODO: Re-acquire data.
         }
     }
 }

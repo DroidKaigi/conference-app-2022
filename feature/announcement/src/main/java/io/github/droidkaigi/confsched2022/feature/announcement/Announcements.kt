@@ -67,6 +67,7 @@ fun AnnouncementsScreenRoot(
     Announcements(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
@@ -76,6 +77,7 @@ fun AnnouncementsScreenRoot(
 fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
+    onRetryButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
@@ -96,7 +98,15 @@ fun Announcements(
         },
         snackBarHost = {
             SnackbarHost(snackBarHostState) { snackBarData ->
-                SnackBarWithError(snackBarData)
+                SnackBarWithError(object : SnackbarData {
+                    override val visuals = snackBarData.visuals
+
+                    override fun dismiss() {}
+
+                    override fun performAction() {
+                        onRetryButtonClick()
+                    }
+                })
             }
         }
     ) { innerPadding ->
@@ -105,20 +115,14 @@ fun Announcements(
                 uiModel.state.value?.printStackTrace()
                 val errorMessage = stringResource(Strings.error_common_message)
                 val retryMessage = stringResource(Strings.error_common_retry)
-                val snackBarData = object : SnackbarData {
-                    override val visuals = object : SnackbarVisuals {
-                        override val actionLabel: String = retryMessage
-                        override val duration: SnackbarDuration = SnackbarDuration.Indefinite
-                        override val message: String = errorMessage
-                        override val withDismissAction: Boolean = false
-                    }
-
-                    override fun dismiss() {}
-                    override fun performAction() {}
-                }
 
                 LaunchedEffect(Unit) {
-                    snackBarHostState.showSnackbar(snackBarData.visuals)
+                    snackBarHostState.showSnackbar(object : SnackbarVisuals {
+                        override val actionLabel: String = retryMessage
+                        override val duration: SnackbarDuration = SnackbarDuration.Long
+                        override val message: String = errorMessage
+                        override val withDismissAction: Boolean = false
+                    })
                 }
             }
             is Success -> {
@@ -257,6 +261,7 @@ fun FullScreenLoading(
 fun SnackBarWithError(
     snackBarData: SnackbarData
 ) {
+
     Snackbar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         actionColor = MaterialTheme.colorScheme.primary,
@@ -291,6 +296,7 @@ fun AnnouncementsPreview() {
                 )
             ),
             showNavigationIcon = true,
+            onRetryButtonClick = {},
             onNavigationIconClick = {},
         )
     }
