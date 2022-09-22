@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -31,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -284,68 +282,31 @@ fun SessionsList(
         val day = days[dayIndex]
         val timetable = schedule.dayToTimetable[day].orEmptyContents()
         val timeHeaderAndTimetableItems = remember(timetable) {
-            var currentStartTime = ""
-            val list = mutableListOf<Pair<DurationTime?, TimetableItemWithFavorite>>()
-            timetable.contents.forEachIndexed { index, timetableItemWithFavorite ->
+            val list = mutableListOf<Pair<DurationTime, TimetableItemWithFavorite>>()
+            timetable.contents.forEach { timetableItemWithFavorite ->
                 val startLocalDateTime = timetableItemWithFavorite.timetableItem.startsAt
                     .toLocalDateTime(TimeZone.of("UTC+9"))
                 val endLocalDateTime = timetableItemWithFavorite.timetableItem.endsAt
                     .toLocalDateTime(TimeZone.of("UTC+9"))
                 val startTime = startLocalDateTime.time.toString()
                 val endTime = endLocalDateTime.time.toString()
-                if (index > 0 && startTime == currentStartTime) {
-                    list.add(Pair(null, timetableItemWithFavorite))
-                } else {
-                    currentStartTime = startTime
-                    list.add(Pair(DurationTime(startTime, endTime), timetableItemWithFavorite))
-                }
+                list.add(Pair(DurationTime(startTime, endTime), timetableItemWithFavorite))
             }
             list.toList()
         }
         SessionList(
             timetable = timeHeaderAndTimetableItems,
             sessionsListListState = sessionsListListStates[dayIndex],
-            contentPadding = contentPadding
-        ) { (timeHeader, timetableItemWithFavorite) ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
-                    .padding(12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Box(
-                        modifier = Modifier.width(85.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            timeHeader?.let {
-                                Text(
-                                    text = it.startAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(1.dp, 2.dp)
-                                        .background(MaterialTheme.colorScheme.onBackground)
-                                ) { }
-                                Text(
-                                    text = it.endAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                        }
-                    }
-                    SessionListItem(
-                        timetableItem = timetableItemWithFavorite.timetableItem,
-                        isFavorited = timetableItemWithFavorite.isFavorited,
-                        onFavoriteClick = onFavoriteClick
-                    )
-                }
-            }
+            onTimetableClick = onTimetableClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+        ) { (_, timetableItemWithFavorite) ->
+            SessionListItem(
+                timetableItem = timetableItemWithFavorite.timetableItem,
+                isFavorited = timetableItemWithFavorite.isFavorited,
+                onFavoriteClick = onFavoriteClick,
+            )
         }
     }
 }
