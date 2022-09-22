@@ -140,7 +140,7 @@ public struct AboutView: View {
 
                     Spacer()
                         .frame(height: 32)
-                    
+
                     NavigationLink(isActive: Binding<Bool>(
                         get: {
                             viewStore.navigationDestination != .none
