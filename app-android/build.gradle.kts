@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.androidxStartup)
+    implementation(libs.androidxAppCompat)
     implementation(libs.hiltNavigationCompose)
     implementation(libs.material3)
     implementation(libs.firebaseCommon)

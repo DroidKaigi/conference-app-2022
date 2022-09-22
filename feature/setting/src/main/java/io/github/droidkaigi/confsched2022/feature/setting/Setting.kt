@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.setting
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,14 +24,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.StringResource
+import androidx.core.os.LocaleListCompat
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.setting.LanguageItems.SYSTEM_DEFAULT
 import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
@@ -128,12 +129,24 @@ private fun LanguageSetting() {
 
 @Composable
 private fun LanguageSettingDialog(onClickConfirm: () -> Unit) {
+    val (selectedLocale, onLocaleSelected) =
+        remember { mutableStateOf(AppCompatDelegate.getApplicationLocales()) }
     AlertDialog(
         onDismissRequest = onClickConfirm,
         title = { Text(text = stringResource(resource = Strings.setting_item_language)) },
-        text = { LanguageSelector() },
+        text = {
+               LanguageSelector(
+                   currentLocale = selectedLocale,
+                   onLocaleSelected = onLocaleSelected
+               )
+        },
         confirmButton = {
-            Button(onClick = onClickConfirm) {
+            Button(
+                onClick = {
+                    AppCompatDelegate.setApplicationLocales(selectedLocale)
+                    onClickConfirm()
+                }
+            ) {
                 Text(text = stringResource(resource = Strings.setting_dialog_confirm))
             }
         }
@@ -141,9 +154,11 @@ private fun LanguageSettingDialog(onClickConfirm: () -> Unit) {
 }
 
 @Composable
-fun LanguageSelector() {
+private fun LanguageSelector(
+    currentLocale: LocaleListCompat,
+    onLocaleSelected: (LocaleListCompat) -> Unit
+) {
     val languages = LanguageItems.values().toList()
-    val tags = remember { mutableStateOf("zh-CN") }
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,18 +168,14 @@ fun LanguageSelector() {
                 Modifier
                     .fillMaxWidth()
                     .selectable(
-                        selected = tags.value.contains(it.tag),
-                        onClick = {
-                            tags.value = it.tag
-                        }
+                        selected = it.selected(currentLocale),
+                        onClick = { onLocaleSelected(LocaleListCompat.forLanguageTags(it.tag)) }
                     ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = tags.value.contains(it.tag),
-                    onClick = {
-                        tags.value = it.tag
-                    }
+                    selected = it.selected(currentLocale),
+                    onClick = { onLocaleSelected(LocaleListCompat.forLanguageTags(it.tag)) }
                 )
                 Text(text = it.title)
             }
@@ -188,8 +199,16 @@ private fun LanguageSettingPreview() {
     }
 }
 
-enum class LanguageItems(val tag: String, val title: String) {
-    SIMPLIFIED_CHINESE("zh-CN", "简体中文"),
+internal enum class LanguageItems(
+    val tag: String,
+    val title: String
+) {
+    SYSTEM_DEFAULT("", "System Default"),
     ENGLISH("en", "English"),
     JAPANESE("ja", "日本語"),
+    SIMPLIFIED_CHINESE("zh-CN", "简体中文")
+}
+private fun LanguageItems.selected(it: LocaleListCompat): Boolean = when (this) {
+    SYSTEM_DEFAULT -> it.isEmpty
+    else -> it.toLanguageTags().contains(tag)
 }
