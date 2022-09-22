@@ -181,7 +181,7 @@ struct SponsorItemView: View {
             }
         }
         .frame(height: height(of: sponsor.plan))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
     private func height(of plan: Plan) -> CGFloat {
