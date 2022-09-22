@@ -1,12 +1,12 @@
-import appioscombined
 import AboutFeature
+import AnnouncementFeature
+import appioscombined
 import Assets
 import Auth
 import ComposableArchitecture
 import Container
 import ContributorFeature
 import MapFeature
-import NotificationFeature
 import SearchFeature
 import SessionFeature
 import SettingFeature
@@ -18,7 +18,7 @@ import TimetableFeature
 public enum AppTab {
     case timetable
     case about
-    case notification
+    case announcement
     case map
     case sponsor
     case contributor
@@ -28,7 +28,7 @@ public enum AppTab {
 public struct AppState: Equatable {
     public var timetableState: TimetableState
     public var aboutState: AboutState
-    public var notificationState: NotificationState
+    public var announcementState: AnnouncementState
     public var mapState: MapState
     public var sponsorState: SponsorState
     public var contributorState: ContributorState
@@ -40,7 +40,7 @@ public struct AppState: Equatable {
     public init(
         timetableState: TimetableState = .init(),
         aboutState: AboutState = .init(),
-        notificationState: NotificationState = .init(),
+        announcementState: AnnouncementState = .init(),
         mapState: MapState = .init(),
         sponsorState: SponsorState = .init(),
         contributorState: ContributorState = .init(),
@@ -51,7 +51,7 @@ public struct AppState: Equatable {
     ) {
         self.timetableState = timetableState
         self.aboutState = aboutState
-        self.notificationState = notificationState
+        self.announcementState = announcementState
         self.mapState = mapState
         self.sponsorState = sponsorState
         self.contributorState = contributorState
@@ -65,7 +65,7 @@ public struct AppState: Equatable {
 public enum AppAction {
     case timetable(TimetableAction)
     case about(AboutAction)
-    case notification(NotificationAction)
+    case announcement(AnnouncementAction)
     case map(MapAction)
     case sponsor(SponsorAction)
     case contributor(ContributorAction)
@@ -81,15 +81,18 @@ public struct AppEnvironment {
     public let contributorsRepository: ContributorsRepository
     public let sponsorsRepository: SponsorsRepository
     public let sessionsRepository: SessionsRepository
+    public let announcementsRepository: AnnouncementsRepository
 
     public init(
         contributorsRepository: ContributorsRepository,
         sponsorsRepository: SponsorsRepository,
-        sessionsRepository: SessionsRepository
+        sessionsRepository: SessionsRepository,
+        announcementsRepository: AnnouncementsRepository
     ) {
         self.contributorsRepository = contributorsRepository
         self.sponsorsRepository = sponsorsRepository
         self.sessionsRepository = sessionsRepository
+        self.announcementsRepository = announcementsRepository
     }
 }
 
@@ -100,7 +103,8 @@ public extension AppEnvironment {
         return .init(
             contributorsRepository: container.get(type: ContributorsRepository.self),
             sponsorsRepository: container.get(type: SponsorsRepository.self),
-            sessionsRepository: container.get(type: SessionsRepository.self)
+            sessionsRepository: container.get(type: SessionsRepository.self),
+            announcementsRepository: container.get(type: AnnouncementsRepository.self)
         )
     }
 
@@ -108,7 +112,8 @@ public extension AppEnvironment {
         return .init(
             contributorsRepository: FakeContributorsRepository(),
             sponsorsRepository: FakeSponsorsRepository(),
-            sessionsRepository: FakeSessionsRepository()
+            sessionsRepository: FakeSessionsRepository(),
+            announcementsRepository: FakeAnnouncementsRepository()
         )
     }
 }
@@ -130,11 +135,13 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             .init()
         }
     ),
-    notificationReducer.pullback(
-        state: \.notificationState,
-        action: /AppAction.notification,
-        environment: { _ in
-            .init()
+    announcementReducer.pullback(
+        state: \.announcementState,
+        action: /AppAction.announcement,
+        environment: {
+            .init(
+                repository: $0.announcementsRepository
+            )
         }
     ),
     mapReducer.pullback(
@@ -199,7 +206,7 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             return .none
         case .about:
             return .none
-        case .notification:
+        case .announcement:
             return .none
         case .map:
             return .none
@@ -286,18 +293,18 @@ public struct AppView: View {
                     Text(StringsKt.shared.title_about.localized())
                 }
                 .tag(AppTab.about)
-                NotificationView(
+                AnnouncementView(
                     store: store.scope(
-                        state: \.notificationState,
-                        action: AppAction.notification
+                        state: \.announcementState,
+                        action: AppAction.announcement
                     )
                 )
                 .tabItem {
-                    Assets.notification.swiftUIImage
+                    Assets.announcement.swiftUIImage
                         .renderingMode(.template)
                     Text(StringsKt.shared.title_announcement.localized())
                 }
-                .tag(AppTab.notification)
+                .tag(AppTab.announcement)
                 MapView(
                     store: store.scope(
                         state: \.mapState,
