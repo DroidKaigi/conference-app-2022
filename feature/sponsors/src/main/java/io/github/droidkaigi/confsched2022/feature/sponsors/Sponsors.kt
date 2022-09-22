@@ -61,10 +61,10 @@ fun SponsorsScreenRoot(
 
 @Composable
 fun Sponsors(
-    modifier: Modifier = Modifier,
     uiModel: SponsorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onItemClick: (url: String) -> Unit = { _ -> },
 ) {
     KaigiScaffold(
