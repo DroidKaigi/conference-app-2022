@@ -31,8 +31,6 @@ public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, 
                 return
             }
             subscriber.send(.fetched(response))
-        } catch: { error, _ in
-            print(error)
         }
     case .fetched(let list):
         state.announcements = list

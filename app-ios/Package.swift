@@ -126,7 +126,7 @@ var package = Package(
         .target(
             name: "MapFeature",
             dependencies: [
-                .target(name: "Assets"),                
+                .target(name: "Assets"),            
                 .target(name: "CommonComponents"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "Model"),
