@@ -119,7 +119,7 @@ fun Announcements(
                 LaunchedEffect(Unit) {
                     snackBarHostState.showSnackbar(object : SnackbarVisuals {
                         override val actionLabel: String = retryMessage
-                        override val duration: SnackbarDuration = SnackbarDuration.Long
+                        override val duration: SnackbarDuration = SnackbarDuration.Indefinite
                         override val message: String = errorMessage
                         override val withDismissAction: Boolean = false
                     })
