@@ -1,8 +1,8 @@
+import appioscombined
 import CommonComponents
 import ComposableArchitecture
 import Model
 import SafariView
-import Strings
 import SwiftUI
 import Theme
 
@@ -135,7 +135,7 @@ public struct SponsorView: View {
             .frame(minHeight: 0, maxHeight: .infinity)
             .background(AssetColors.background.swiftUIColor)
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            .navigationTitle(L10n.Sponsor.title)
+            .navigationTitle(StringsKt.shared.title_sponsors.desc().localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }

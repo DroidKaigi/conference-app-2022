@@ -26,11 +26,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Build KMM Module
         run: ./gradlew appioscombined:assembleAppioscombinedDebugXCFramework
+      - name: Zip xcframework artifact
+        run: |
+          ditto -c -k -v app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework/ appioscombined.xcframework.zip
       - name: Upload xcframework artifact
         uses: actions/upload-artifact@v3
         with:
           name: XCFrameworks
-          path: app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework/
+          path: appioscombined.xcframework.zip
       - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
         working-directory: app-ios
         run: |

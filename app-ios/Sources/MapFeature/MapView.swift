@@ -1,6 +1,6 @@
+import appioscombined
 import Assets
 import ComposableArchitecture
-import Strings
 import SwiftUI
 import Theme
 
@@ -40,7 +40,7 @@ public struct MapView: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(8)
                 }
-                .navigationTitle(L10n.Map.title)
+                .navigationTitle(StringsKt.shared.title_map.desc().localized())
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {

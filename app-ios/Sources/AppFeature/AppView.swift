@@ -1,5 +1,5 @@
-import AboutFeature
 import appioscombined
+import AboutFeature
 import Assets
 import Auth
 import ComposableArchitecture
@@ -11,7 +11,6 @@ import SearchFeature
 import SessionFeature
 import SettingFeature
 import SponsorFeature
-import Strings
 import SwiftUI
 import Theme
 import TimetableFeature
@@ -269,7 +268,7 @@ public struct AppView: View {
                 )
                 .tabItem {
                     Label {
-                        Text(L10n.Timetable.title)
+                        Text(StringsKt.shared.title_sessions.desc().localized())
                     } icon: {
                         Assets.calendar.swiftUIImage
                             .renderingMode(.template)
@@ -284,7 +283,7 @@ public struct AppView: View {
                 )
                 .tabItem {
                     Image(systemName: "questionmark.circle")
-                    Text(L10n.About.title)
+                    Text(StringsKt.shared.title_about.desc().localized())
                 }
                 .tag(AppTab.about)
                 NotificationView(
@@ -296,7 +295,7 @@ public struct AppView: View {
                 .tabItem {
                     Assets.notification.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Notification.title)
+                    Text(StringsKt.shared.title_announcement.desc().localized())
                 }
                 .tag(AppTab.notification)
                 MapView(
@@ -308,7 +307,7 @@ public struct AppView: View {
                 .tabItem {
                     Assets.map.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Map.title)
+                    Text(StringsKt.shared.title_map.desc().localized())
                 }
                 .tag(AppTab.map)
                 SponsorView(
@@ -320,7 +319,7 @@ public struct AppView: View {
                 .tabItem {
                     Assets.company.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Sponsor.title)
+                    Text(StringsKt.shared.title_sponsors.desc().localized())
                 }
                 .tag(AppTab.sponsor)
                 ContributorView(
@@ -332,7 +331,7 @@ public struct AppView: View {
                 .tabItem {
                     Assets.people.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Contributors.title)
+                    Text(StringsKt.shared.title_contributors.desc().localized())
                 }
                 .tag(AppTab.contributor)
                 SettingView(
@@ -344,7 +343,7 @@ public struct AppView: View {
                 .tabItem {
                     Assets.gear.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Setting.title)
+                    Text(StringsKt.shared.title_setting.desc().localized())
                 }
                 .tag(AppTab.setting)
             }
