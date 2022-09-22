@@ -131,4 +131,8 @@ class SearchViewModel @Inject constructor(
     fun onFilterSheetDismissed() {
         filterSheetState.value = SearchFilterSheetState.Hide
     }
+
+    fun onSearchTextAreaClicked() {
+        onFilterSheetDismissed()
+    }
 }
