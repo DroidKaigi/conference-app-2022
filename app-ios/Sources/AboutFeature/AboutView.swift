@@ -1,7 +1,6 @@
 import appioscombined
 import ComposableArchitecture
 import LicenseList
-import SafariView
 import StaffFeature
 import SwiftUI
 import Theme
