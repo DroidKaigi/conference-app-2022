@@ -7,7 +7,6 @@ import Theme
 
 public enum AboutDestination {
     case none
-    case access
     case staffs
     case privacyPolicy
     case license
@@ -37,6 +36,7 @@ public enum AboutAction {
 }
 
 public struct AboutEnvironment {
+    @Environment(\.openURL) var openURL
     public init() {}
 }
 
@@ -46,7 +46,7 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
         action: /AboutAction.staff,
         environment: { _ in .init() }
     ),
-    .init { state, action, _ in
+    .init { state, action, environment in
         switch action {
         case .backToTop:
             state.navigationDestination = .none
@@ -58,7 +58,7 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
             state.navigationDestination = .staffs
             return .none
         case .openAccess:
-            state.navigationDestination = .access
+            environment.openURL(URL(string: StaticURLs.access)!)
             return .none
         case .openPrivacyPolicy:
             state.navigationDestination = .privacyPolicy
@@ -139,7 +139,7 @@ public struct AboutView: View {
 
                     Spacer()
                         .frame(height: 32)
-                    
+
                     NavigationLink(isActive: Binding<Bool>(
                         get: {
                             viewStore.navigationDestination != .none
@@ -155,8 +155,6 @@ public struct AboutView: View {
                                 StaffView(
                                     store: store.scope(state: \.staffState, action: AboutAction.staff)
                                 )
-                            case .access:
-                                Text("TODO: Access")
                             case .privacyPolicy:
                                 Text("TODO: Privacy Policy")
                             case .license:
