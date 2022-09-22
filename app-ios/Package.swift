@@ -26,7 +26,6 @@ var package = Package(
         .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
         .library(name: "StaffFeature", targets: ["StaffFeature"]),
-        .library(name: "Strings", targets: ["Strings"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
         .library(name: "Theme", targets: ["Theme"]),
         .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
@@ -42,7 +41,7 @@ var package = Package(
             name: "AboutFeature",
             dependencies: [
                 .target(name: "appioscombined"),
-                .target(name: "Strings"),
+                .target(name: "Model"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
                 .target(name: "StaffFeature"),
@@ -71,7 +70,6 @@ var package = Package(
                 .target(name: "MapFeature"),
                 .target(name: "NotificationFeature"),
                 .target(name: "SponsorFeature"),
-                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
@@ -128,6 +126,7 @@ var package = Package(
         .target(
             name: "MapFeature",
             dependencies: [
+                .target(name: "CommonComponents"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -150,10 +149,7 @@ var package = Package(
         .target(
             name: "SearchFeature",
             dependencies: [
-                .target(name: "Assets"),
                 .target(name: "CommonComponents"),
-                .target(name: "Model"),
-                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -181,7 +177,6 @@ var package = Package(
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "SafariView"),
-                .target(name: "Strings"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -190,18 +185,7 @@ var package = Package(
             name: "StaffFeature",
             dependencies: [
                 .target(name: "Model"),
-                .target(name: "Strings"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]
-        ),
-        .target(
-            name: "Strings",
-            resources: [
-                .process("swiftgen.yml"),
-                .process("Resources"),
-            ],
-            plugins: [
-                .plugin(name: "SwiftGenPlugin"),
             ]
         ),
         .target(

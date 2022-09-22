@@ -12,7 +12,7 @@ public struct EmptyResultView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 80, height: 80)
-            Text(StringsKt.shared.search_empty_result.desc().localized())
+            Text(StringsKt.shared.search_empty_result.localized())
         }
     }
 }

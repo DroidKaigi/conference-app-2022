@@ -7,7 +7,7 @@ struct SessionCancelView: View {
     var body: some View {
         HStack(spacing: 6) {
             Assets.error.swiftUIImage
-            Text(StringsKt.shared.session_cancel.desc().localized())
+            Text(StringsKt.shared.session_cancel.localized())
                 .foregroundColor(AssetColors.error.swiftUIColor)
                 .font(Font.system(size: 12, weight: .regular, design: .default))
         }

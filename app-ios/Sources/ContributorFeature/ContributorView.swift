@@ -3,7 +3,6 @@ import Assets
 import CommonComponents
 import ComposableArchitecture
 import Model
-import Strings
 import SwiftUI
 import Theme
 
@@ -79,7 +78,7 @@ public struct ContributorView: View {
                 await viewStore.send(.refresh).finish()
             }
             .listStyle(PlainListStyle())
-            .navigationTitle(StringsKt.shared.title_contributors.desc().localized())
+            .navigationTitle(StringsKt.shared.title_contributors.localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }

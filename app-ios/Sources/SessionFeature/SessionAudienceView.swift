@@ -7,7 +7,7 @@ struct SessionAudienceView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(StringsKt.shared.session_target_audience.desc().localized())
+            Text(StringsKt.shared.session_target_audience.localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
             Text(self.targetAudience)
