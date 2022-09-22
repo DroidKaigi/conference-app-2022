@@ -80,10 +80,12 @@ fun Setting(
 }
 
 @Composable
-fun DarkModeSetting() {
+fun DarkModeSetting(
+    modifier: Modifier = Modifier
+) {
     val checkedState = remember { mutableStateOf(true) }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -93,7 +95,7 @@ fun DarkModeSetting() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(imageVector = Icons.Default.DarkMode, contentDescription = null)
-            Spacer(modifier = Modifier.width(28.dp))
+            Spacer(modifier = modifier.width(28.dp))
             Text(text = stringResource(resource = Strings.setting_item_dark_mode))
         }
         Switch(
@@ -104,11 +106,13 @@ fun DarkModeSetting() {
 }
 
 @Composable
-private fun LanguageSetting() {
+private fun LanguageSetting(
+    modifier: Modifier = Modifier
+) {
     val openDialog = remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth()
             .clickable { openDialog.value = true },
@@ -119,7 +123,7 @@ private fun LanguageSetting() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(imageVector = Icons.Default.Language, contentDescription = null)
-            Spacer(modifier = Modifier.width(28.dp))
+            Spacer(modifier = modifier.width(28.dp))
             Text(text = stringResource(resource = Strings.setting_item_language))
         }
     }
@@ -136,10 +140,10 @@ private fun LanguageSettingDialog(onClickConfirm: () -> Unit) {
         onDismissRequest = onClickConfirm,
         title = { Text(text = stringResource(resource = Strings.setting_item_language)) },
         text = {
-               LanguageSelector(
-                   currentLocale = selectedLocale,
-                   onLocaleSelected = onLocaleSelected
-               )
+            LanguageSelector(
+                currentLocale = selectedLocale,
+                onLocaleSelected = onLocaleSelected
+            )
         },
         confirmButton = {
             Button(
@@ -209,6 +213,7 @@ internal enum class LanguageItems(
     JAPANESE("ja", Strings.setting_language_japanese),
     SIMPLIFIED_CHINESE("zh-CN", Strings.setting_language_simplified_chinese)
 }
+
 private fun LanguageItems.selected(it: LocaleListCompat): Boolean = when (this) {
     SYSTEM_DEFAULT -> it.isEmpty
     else -> it.toLanguageTags().contains(tag)
