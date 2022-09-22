@@ -58,4 +58,9 @@
     <!-- TODO:Translation into Chinese -->
     <string name="search_placeholder">Search Session</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- Error -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="error_common_message">Failed to retrieve information.</string>
+    <string name="error_common_retry">Retry</string>
 </resources>

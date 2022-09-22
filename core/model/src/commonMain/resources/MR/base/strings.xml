@@ -55,4 +55,8 @@
     <!-- Search -->
     <string name="search_placeholder">検索する</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- Error -->
+    <string name="error_common_message">情報の取得に失敗しました</string>
+    <string name="error_common_retry">再取得</string>
 </resources>
