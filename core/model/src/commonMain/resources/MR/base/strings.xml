@@ -54,6 +54,9 @@
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">スポンサー</string>
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">スタッフリスト</string>

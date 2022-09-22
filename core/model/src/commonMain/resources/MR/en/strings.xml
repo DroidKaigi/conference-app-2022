@@ -12,7 +12,9 @@
     <!-- About -->
     <string name="about_top_app_bar_title">About DroidKaigi</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigi is a conference tailored for Android developers. It\'s scheduled to take place on the 5 to 7 of October 2022.</string>
+    <string name="about_description">DroidKaigi is a conference tailored for Android developers.
+        It\'s scheduled to take place on the 5 to 7 of October 2022.
+    </string>
     <string name="about_access">Access</string>
     <string name="about_staff">Staff List</string>
     <string name="about_privacy">Privacy Policy</string>
@@ -54,6 +56,9 @@
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">Sponsors</string>
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">Staff</string>
