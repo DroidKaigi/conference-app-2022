@@ -12,7 +12,8 @@
     <!-- About -->
     <string name="about_top_app_bar_title">关于 DroidKaigi</string>
     <string name="about_title">DroidKaigi 是什么？</string>
-    <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。</string>
+    <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。
+    </string>
     <string name="about_access">怎么走？</string>
     <string name="about_staff">工作人员</string>
     <string name="about_privacy">隐私政策</string>
@@ -55,6 +56,10 @@
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">赞助者</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">工作人员</string>

@@ -152,8 +152,9 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onNavigationClick
                     )
                     sponsorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onItemClick = kaigiExternalNavigationController::navigate
                     )
                 }
             }

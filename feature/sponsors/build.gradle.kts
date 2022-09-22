@@ -11,4 +11,6 @@ dependencies {
 
     implementation(libs.hiltNavigationCompose)
     implementation(libs.kermit)
+    implementation(libs.accompanistFlowlayout)
+    implementation(libs.coilCompose)
 }
