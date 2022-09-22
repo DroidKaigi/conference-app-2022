@@ -23,10 +23,11 @@ fun UsernameRow(
     username: String,
     profileUrl: String?,
     iconUrl: String,
-    onLinkClick: (url: String, packageName: String?) -> Unit
+    onLinkClick: (url: String, packageName: String?) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable {
                 profileUrl?.let { url ->

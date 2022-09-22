@@ -21,7 +21,7 @@ class AnnouncementScreenRobot @Inject constructor() {
         function: context(RobotTestRule) AnnouncementScreenRobot.() -> Unit
     ) {
         robotTestRule.composeTestRule.setContent {
-            AnnouncementScreenRoot(
+            AnnouncementsScreenRoot(
                 onNavigationIconClick = {}
             )
         }

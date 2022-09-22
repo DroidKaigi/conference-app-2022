@@ -5,14 +5,14 @@ molecule = "0.4.0"
 buildkonfig = "0.13.3"
 
 androidxCore = "1.9.0"
-androidDesugarJdkLibs = "1.2.2"
-compose = "1.3.0-beta02"
+androidDesugarJdkLibs = "2.0.0"
+compose = "1.3.0-beta03"
 composeCompiler = "1.3.1"
-composeMaterial3WindowSizeClass = "1.0.0-beta02"
-composeMaterial3 = "1.0.0-beta02"
-androidxFragment = "1.5.2"
+composeMaterial3WindowSizeClass = "1.0.0-beta03"
+composeMaterial3 = "1.0.0-beta03"
+androidxFragment = "1.5.3"
 androidxLifecycle = "2.5.1"
-androidxActivity = "1.6.0-rc02"
+androidxActivity = "1.6.0"
 androidxNavigationCompose = "2.5.2"
 androidxDatastore = "1.0.0"
 hiltNavigationCompose = "1.0.0"
@@ -50,7 +50,8 @@ showkase = "1.0.0-beta13"
 testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
-twitterComposeRulesDetekt = "0.0.12"
+androidxSplashScreen = "1.0.0"
+twitterComposeRulesDetekt = "0.0.13"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -72,6 +73,8 @@ paparazziGradlePlugin = { module = "app.cash.paparazzi:paparazzi-gradle-plugin",
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+composeUiGoogleFonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "compose" }
+composeMaterial = { module = "androidx.compose.material:material", version.ref = "compose" }
 composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
@@ -95,6 +98,7 @@ androidxFragment = { module = "androidx.fragment:fragment", version.ref = "andro
 androidxDatastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 androidxStartup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
 androidXChromeCustomTabs = { module = "androidx.browser:browser", version.ref = "androidXChromeCustomTabs" }
+androidxSplashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
 
 multiplatformSettingsCoroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
 multiplatformSettingsDatastore = { module = "com.russhwolf:multiplatform-settings-datastore", version.ref = "multiplatformSettings" }

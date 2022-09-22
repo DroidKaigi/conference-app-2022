@@ -11,8 +11,8 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaigiScaffold(
-    modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {

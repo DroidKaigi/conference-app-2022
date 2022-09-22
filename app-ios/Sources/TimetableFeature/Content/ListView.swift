@@ -75,6 +75,9 @@ struct TimetableListView: View, ScrollDetectable {
                                             viewStore.send(.setFavorite(id, currentIsFavorite))
                                         }
                                     )
+                                    .onTapGesture {
+                                        viewStore.send(.selectItem(timetableItemWithFavorite))
+                                    }
                                 }
                             }
                         }

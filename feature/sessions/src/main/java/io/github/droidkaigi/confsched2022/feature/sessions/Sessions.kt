@@ -228,6 +228,7 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
             }
@@ -235,7 +236,8 @@ fun Timetable(
             Column(modifier = Modifier.weight(1f)) {
                 Rooms(
                     rooms = timetable.rooms,
-                    timetableState = timetableState
+                    timetableState = timetableState,
+                    coroutineScope = coroutineScope,
                 ) { room ->
                     RoomItem(room = room)
                 }
@@ -253,7 +255,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
-                            .padding(horizontal = 0.5.dp)
+                            .padding(end = 4.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),

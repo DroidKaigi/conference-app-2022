@@ -1,11 +1,21 @@
 import SwiftUI
 
-struct CapsuleText: View {
+public struct CapsuleText: View {
     let text: String
     let foregroundColor: Color
     let backgroundColor: Color
 
-    var body: some View {
+    public init(
+        text: String,
+        foregroundColor: Color,
+        backgroundColor: Color
+    ) {
+        self.text = text
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+    }
+
+    public var body: some View {
         Text(text)
             .font(Font.system(size: 12, weight: .medium, design: .default))
             .padding(.vertical, 4)
