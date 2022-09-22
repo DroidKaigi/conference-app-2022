@@ -1,4 +1,5 @@
 import SwiftUI
+import Theme
 
 public struct LoadingView: View {
 
@@ -6,7 +7,7 @@ public struct LoadingView: View {
 
     public var body: some View {
         ZStack {
-            Color.black
+            AssetColors.black.swiftUIColor
                 .opacity(0.5)
             ProgressView()
         }
