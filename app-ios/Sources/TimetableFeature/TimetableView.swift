@@ -11,20 +11,20 @@ public struct TimetableState: Equatable {
     public var selectedDay: DroidKaigi2022Day
     public var showDate: Bool
     public var showSheet: Bool
-    public var showLoading: Bool
+    public var isLoading: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1,
         showDate: Bool = true,
         showSheet: Bool = true,
-        showLoading: Bool = true
+        isLoading: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
         self.showDate = showDate
         self.showSheet = showSheet
-        self.showLoading = showLoading
+        self.isLoading = isLoading
     }
 }
 
@@ -50,7 +50,7 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
-        state.showLoading = true
+        state.isLoading = true
         return .run { @MainActor subscriber in
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
@@ -66,10 +66,10 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .eraseToEffect()
     case let .refreshResponse(.success(droidKaigiSchedule)):
         state.dayToTimetable = droidKaigiSchedule.dayToTimetable
-        state.showLoading = false
+        state.isLoading = false
         return .none
     case .refreshResponse(.failure):
-        state.showLoading = false
+        state.isLoading = false
         return .none
     case let .selectDay(day):
         state.selectedDay = day
@@ -121,7 +121,7 @@ public struct TimetableView: View {
                                     viewStore.send(.scroll($0))
                                 }
                         }
-                        if viewStore.state.showLoading {
+                        if viewStore.state.isLoading {
                             LoadingView()
                         }
                     }
