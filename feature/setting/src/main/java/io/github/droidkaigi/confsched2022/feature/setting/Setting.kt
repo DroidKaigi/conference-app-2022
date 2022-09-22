@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
+import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
@@ -177,7 +178,7 @@ private fun LanguageSelector(
                     selected = it.selected(currentLocale),
                     onClick = { onLocaleSelected(LocaleListCompat.forLanguageTags(it.tag)) }
                 )
-                Text(text = it.title)
+                Text(text = stringResource(resource = it.titleStringRes))
             }
         }
     }
@@ -201,12 +202,12 @@ private fun LanguageSettingPreview() {
 
 internal enum class LanguageItems(
     val tag: String,
-    val title: String
+    val titleStringRes: StringResource
 ) {
-    SYSTEM_DEFAULT("", "System Default"),
-    ENGLISH("en", "English"),
-    JAPANESE("ja", "日本語"),
-    SIMPLIFIED_CHINESE("zh-CN", "简体中文")
+    SYSTEM_DEFAULT("", Strings.setting_language_system),
+    ENGLISH("en", Strings.setting_language_english),
+    JAPANESE("ja", Strings.setting_language_japanese),
+    SIMPLIFIED_CHINESE("zh-CN", Strings.setting_language_simplified_chinese)
 }
 private fun LanguageItems.selected(it: LocaleListCompat): Boolean = when (this) {
     SYSTEM_DEFAULT -> it.isEmpty
