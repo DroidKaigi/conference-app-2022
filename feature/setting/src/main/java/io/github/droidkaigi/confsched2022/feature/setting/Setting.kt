@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -73,35 +71,8 @@ fun Setting(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            DarkModeSetting()
             LanguageSetting()
         }
-    }
-}
-
-@Composable
-fun DarkModeSetting(
-    modifier: Modifier = Modifier
-) {
-    val checkedState = remember { mutableStateOf(true) }
-    Row(
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(imageVector = Icons.Default.DarkMode, contentDescription = null)
-            Spacer(modifier = modifier.width(28.dp))
-            Text(text = stringResource(resource = Strings.setting_item_dark_mode))
-        }
-        Switch(
-            checked = checkedState.value,
-            onCheckedChange = { checkedState.value = it }
-        )
     }
 }
 
