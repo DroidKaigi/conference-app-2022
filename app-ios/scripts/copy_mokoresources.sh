@@ -17,7 +17,7 @@ function prop {
     grep "${1}" ${file} | cut -d'=' -f2
 }
 
-if [ "$CI" = true ] ; then
+if [ "$CI" = true -o "$CI" = TRUE ] ; then
     export PATH="/usr/local/opt/openjdk/bin:$PATH"
 else
     export JAVA_HOME=$(prop 'org.gradle.java.home')
