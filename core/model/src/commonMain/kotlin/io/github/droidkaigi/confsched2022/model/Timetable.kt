@@ -42,6 +42,16 @@ public data class Timetable(
 
     public fun filtered(filters: Filters): Timetable {
         var timetableItems = timetableItems.toList()
+        if (filters.day != null) {
+            timetableItems = timetableItems.filter { timetableItem ->
+                timetableItem.day == filters.day
+            }
+        }
+        if (filters.categories.isNotEmpty()) {
+            timetableItems = timetableItems.filter { timetableItem ->
+                filters.categories.contains(timetableItem.category)
+            }
+        }
         if (filters.filterFavorite) {
             timetableItems = timetableItems.filter { timetableItem ->
                 favorites.contains(timetableItem.id)

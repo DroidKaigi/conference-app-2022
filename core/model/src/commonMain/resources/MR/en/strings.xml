@@ -29,6 +29,11 @@
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">Contributors</string>
 
+    <!-- Search -->
+    <string name="search_filter_select_day">Day</string>
+    <string name="search_filter_select_category">Category</string>
+    <string name="search_filter_favorites">Favorites</string>
+
     <!-- Map -->
 
     <!-- Sessions -->
