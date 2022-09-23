@@ -26,11 +26,9 @@ public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, 
     switch action {
     case .refresh:
         return .run { @MainActor subscriber in
-            var iterator: AsyncThrowingStream<[AnnouncementsByDate], Error>.Iterator = repository.announcements().stream().makeAsyncIterator()
-            guard let response = try await iterator.next() else {
-                return
+            for try await response: [AnnouncementsByDate] in repository.announcements().stream() {
+                subscriber.send(.refreshResponse(response))
             }
-            subscriber.send(.refreshResponse(response))
         }
     case .refreshResponse(let list):
         state.announcements = list
