@@ -53,6 +53,11 @@
     <string name="setting_title">設定</string>
     <string name="setting_item_dark_mode">ダークモード</string>
     <string name="setting_item_language">言語設定</string>
+    <string name="setting_language_system">システムのデフォルト</string>
+    <string name="setting_language_english">English</string>
+    <string name="setting_language_japanese">日本語</string>
+    <string name="setting_language_simplified_chinese">简体中文</string>
+    <string name="setting_dialog_confirm">OK</string>
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">スポンサー</string>
