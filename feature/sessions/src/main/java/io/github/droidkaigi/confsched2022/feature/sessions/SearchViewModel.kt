@@ -99,8 +99,14 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    fun onDaySelected(day: DroidKaigi2022Day) {
-        filters.value = filters.value.copy(day = day)
+    fun onDaySelected(day: DroidKaigi2022Day, isDeselected: Boolean) {
+        filters.value = filters.value.copy(
+            day = if (isDeselected) {
+                null
+            } else {
+                day
+            }
+        )
         filterSheetState.value = SearchFilterSheetState.Hide
     }
 
