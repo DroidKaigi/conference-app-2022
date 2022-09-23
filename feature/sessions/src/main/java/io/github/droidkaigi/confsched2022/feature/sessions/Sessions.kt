@@ -313,44 +313,40 @@ fun SessionsList(
             sessionsListListState = sessionsListListStates[dayIndex],
             contentPadding = contentPadding
         ) { (timeHeader, timetableItemWithFavorite) ->
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
                     .padding(12.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
+                Box(
+                    modifier = Modifier.width(85.dp),
                 ) {
-                    Box(
-                        modifier = Modifier.width(85.dp),
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            timeHeader?.let {
-                                Text(
-                                    text = it.startAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(1.dp, 2.dp)
-                                        .background(MaterialTheme.colorScheme.onBackground)
-                                ) { }
-                                Text(
-                                    text = it.endAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
+                        timeHeader?.let {
+                            Text(
+                                text = it.startAt,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(1.dp, 2.dp)
+                                    .background(MaterialTheme.colorScheme.onBackground)
+                            ) { }
+                            Text(
+                                text = it.endAt,
+                                style = MaterialTheme.typography.titleMedium
+                            )
                         }
                     }
-                    SessionListItem(
-                        timetableItem = timetableItemWithFavorite.timetableItem,
-                        isFavorited = timetableItemWithFavorite.isFavorited,
-                        onFavoriteClick = onFavoriteClick
-                    )
                 }
+                SessionListItem(
+                    timetableItem = timetableItemWithFavorite.timetableItem,
+                    isFavorited = timetableItemWithFavorite.isFavorited,
+                    onFavoriteClick = onFavoriteClick
+                )
             }
         }
     }

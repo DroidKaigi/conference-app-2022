@@ -281,52 +281,48 @@ private fun SearchedItemListField(
                 SearchedHeader(day = dayToTimeTable)
             }
             items(sessions) { timetableItemWithFavorite ->
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onItemClick(timetableItemWithFavorite.timetableItem.id) }
                         .padding(16.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
+                    Box(
+                        modifier = Modifier.width(85.dp),
                     ) {
-                        Box(
-                            modifier = Modifier.width(85.dp),
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                val startLocalDateTime =
-                                    timetableItemWithFavorite.timetableItem.startsAt
-                                        .toLocalDateTime(TimeZone.of("UTC+9"))
-                                val endLocalDateTime =
-                                    timetableItemWithFavorite.timetableItem.endsAt
-                                        .toLocalDateTime(TimeZone.of("UTC+9"))
-                                val startTimeString = startLocalDateTime.time.toString()
-                                val endTimeString = endLocalDateTime.time.toString()
+                            val startLocalDateTime =
+                                timetableItemWithFavorite.timetableItem.startsAt
+                                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                            val endLocalDateTime =
+                                timetableItemWithFavorite.timetableItem.endsAt
+                                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                            val startTimeString = startLocalDateTime.time.toString()
+                            val endTimeString = endLocalDateTime.time.toString()
 
-                                Text(
-                                    text = startTimeString,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(1.dp, 2.dp)
-                                        .background(MaterialTheme.colorScheme.onBackground)
-                                ) { }
-                                Text(
-                                    text = endTimeString,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
+                            Text(
+                                text = startTimeString,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(1.dp, 2.dp)
+                                    .background(MaterialTheme.colorScheme.onBackground)
+                            ) { }
+                            Text(
+                                text = endTimeString,
+                                style = MaterialTheme.typography.titleMedium
+                            )
                         }
-                        SessionListItem(
-                            timetableItem = timetableItemWithFavorite.timetableItem,
-                            isFavorited = timetableItemWithFavorite.isFavorited,
-                            onFavoriteClick = onBookMarkClick,
-                            searchWord = searchWord,
-                        )
                     }
+                    SessionListItem(
+                        timetableItem = timetableItemWithFavorite.timetableItem,
+                        isFavorited = timetableItemWithFavorite.isFavorited,
+                        onFavoriteClick = onBookMarkClick,
+                        searchWord = searchWord,
+                    )
                 }
             }
         }
