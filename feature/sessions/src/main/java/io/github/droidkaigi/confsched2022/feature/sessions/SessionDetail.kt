@@ -242,7 +242,7 @@ fun SessionDetailBottomAppBar(
                 }
                 IconButton(onClick = onNavigateFloorMapClick) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_02),
+                        painter = painterResource(id = R.drawable.ic_map),
                         contentDescription = "go to floor map",
                     )
                 }
