@@ -25,6 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -44,6 +46,9 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.secondLang
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+
+internal val inFavoriteKey = SemanticsPropertyKey<Boolean>("inFavorite")
+internal var SemanticsPropertyReceiver.inFavorite by inFavoriteKey
 
 @Composable
 fun SessionListItem(
@@ -182,7 +187,9 @@ fun SessionListItem(
             modifier = Modifier
                 .testTag("favorite")
                 // Remove button semantics so action can be handled at row level
-                .clearAndSetSemantics { },
+                .clearAndSetSemantics {
+                    inFavorite = isFavorited
+                },
             onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
         ) {
             Icon(
