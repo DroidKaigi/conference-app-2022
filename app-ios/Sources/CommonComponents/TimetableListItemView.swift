@@ -32,18 +32,20 @@ public struct TimetableListItemView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if let session = item as? TimetableItem.Session,
                    session.speakers.isEmpty == false {
-                    HStack(spacing: 8) {
-                        ForEach(session.speakers, id: \.self) { speaker in
-                            PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
+                    VStack(spacing: 0) {
+                        HStack(spacing: 8) {
+                            ForEach(session.speakers, id: \.self) { speaker in
+                                PersonLabel(name: speaker.name, iconUrl: speaker.iconUrl)
+                            }
                         }
-                    }
-                }
-                if item.asSession()?.message != nil {
-                    HStack(spacing: 4) {
-                        Assets.error.swiftUIImage
-                        Text(StringsKt.shared.session_cancel.desc().localized())
-                            .foregroundColor(AssetColors.error.swiftUIColor)
-                            .font(Font.system(size: 12, weight: .regular, design: .default))
+                        if let message = session.message {
+                            HStack(spacing: 4) {
+                                Assets.error.swiftUIImage
+                                Text(message.jaTitle)
+                                    .foregroundColor(AssetColors.error.swiftUIColor)
+                                    .font(Font.system(size: 12, weight: .regular, design: .default))
+                            }
+                        }
                     }
                 }
                 HStack(spacing: 8) {
