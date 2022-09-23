@@ -78,8 +78,8 @@ fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
     onRetryButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
     onRetryShown: () -> Unit,
+    modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
