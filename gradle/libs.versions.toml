@@ -55,6 +55,8 @@ mokoResources = "0.20.1"
 detekt = '1.21.0'
 androidxSplashScreen = "1.0.0"
 twitterComposeRulesDetekt = "0.0.14"
+playOssLicenses = "17.0.0"
+playOssLicensesPlugin = "0.10.5"
 
 [libraries]
 androidGradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -73,6 +75,7 @@ androidDesugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs"
 detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 kspGradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 paparazziGradlePlugin = { module = "app.cash.paparazzi:paparazzi-gradle-plugin", version.ref = "paparazzi" }
+playOssLicensesPlugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "playOssLicensesPlugin" }
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -135,6 +138,7 @@ firebaseAuth = { module = "com.google.firebase:firebase-auth", version.ref = "fi
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
 mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
+playOssLicenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref="playOssLicenses" }
 
 twitterComposeRulesDetekt = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRulesDetekt" }
 

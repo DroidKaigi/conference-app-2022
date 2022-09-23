@@ -7,6 +7,7 @@ plugins {
     id("droidkaigi.primitive.android.hilt")
     id("droidkaigi.primitive.android.firebase")
     id("droidkaigi.primitive.spotless")
+    id("droidkaigi.primitive.android.ossLicense")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022"
