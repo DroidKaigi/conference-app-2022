@@ -256,7 +256,9 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 
     fun onNavigateFloorMapClick() {
-        TODO("Floor map is not yet implemented.")
+        navController.navigate(
+            route = MapNavGraph.mapRoute
+        )
     }
 
     fun onNavigationClick() {
