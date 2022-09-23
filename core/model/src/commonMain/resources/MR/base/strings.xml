@@ -78,4 +78,8 @@
     <string name="session_appearance_to_list_button_description">セッションをリスト表示にする</string>
     <string name="session_appearance_to_table_button_description">セッションをテーブル表示にする</string>
 
+
+    <!-- Error -->
+    <string name="error_common_message">情報の取得に失敗しました</string>
+    <string name="error_common_retry">再取得</string>
 </resources>

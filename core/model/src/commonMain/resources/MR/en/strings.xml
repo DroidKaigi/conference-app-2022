@@ -78,4 +78,8 @@
     <string name="session_appearance_to_list_button_description">Change sessions to list view</string>
     <string name="session_appearance_to_table_button_description">Change sessions to table view</string>
 
+
+    <!-- Error -->
+    <string name="error_common_message">Failed to retrieve information.</string>
+    <string name="error_common_retry">Retry</string>
 </resources>
