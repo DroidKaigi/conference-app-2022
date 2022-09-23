@@ -12,7 +12,9 @@
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
+    <string name="about_description">
+        DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。
+    </string>
     <string name="about_access">会場アクセス</string>
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
@@ -51,6 +53,11 @@
     <string name="setting_title">設定</string>
     <string name="setting_item_dark_mode">ダークモード</string>
     <string name="setting_item_language">言語設定</string>
+    <string name="setting_language_system">システムのデフォルト</string>
+    <string name="setting_language_english">English</string>
+    <string name="setting_language_japanese">日本語</string>
+    <string name="setting_language_simplified_chinese">简体中文</string>
+    <string name="setting_dialog_confirm">OK</string>
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">スポンサー</string>
@@ -64,4 +71,11 @@
     <!-- Search -->
     <string name="search_placeholder">検索する</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- ContentDescriptions -->
+    <string name="nav_drawer_menu_button_description">NavigationDrawerを開く</string>
+    <string name="search_button_description">検索</string>
+    <string name="session_appearance_to_list_button_description">セッションをリスト表示にする</string>
+    <string name="session_appearance_to_table_button_description">セッションをテーブル表示にする</string>
+
 </resources>

@@ -1,6 +1,6 @@
 import appioscombined
-import Model
 import LicenseList
+import Model
 import SwiftUI
 
 struct AboutLicenseView: View {

@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.kermit)
     implementation(libs.hiltNavigationCompose)
     implementation(libs.androidxCoreKtx)
+    implementation(libs.androidxAppCompat)
     implementation(libs.composeUi)
     implementation(libs.composeMaterial3)
     implementation(libs.composeMaterialIcons)
