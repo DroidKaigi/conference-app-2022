@@ -35,12 +35,10 @@ public struct MapView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack(alignment: .center) {
-                    Image(asset: Assets.floorMap)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(14)
-                }
+                Image(asset: Assets.floorMap)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(14)
                 .navigationTitle(StringsKt.shared.title_map.localized())
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
