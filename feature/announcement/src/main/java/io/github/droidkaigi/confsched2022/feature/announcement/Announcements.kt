@@ -149,28 +149,32 @@ fun AnnouncementContentList(
     innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        contentPadding = innerPadding,
+    Box(
+        modifier = Modifier.padding(innerPadding)
     ) {
-        announcements.forEach {
-            // TODO: Need to fix stickyHeader to make it work.
-            stickyHeader {
-                AnnouncementsHeader(dayString = it.publishedAt.convertString())
-            }
-            itemsIndexed(it.announcements) { index, announcement ->
-                AnnouncementContent(
-                    type = AnnouncementType.valueOf(announcement.type),
-                    title = announcement.title,
-                    content = announcement.content
-                )
-                if (index >= announcements.lastIndex) {
-                    Divider(
-                        modifier = modifier
-                            .padding(start = 16.dp, end = 16.dp),
-                        thickness = 1.dp,
-                        color = Color(KaigiColors.neutralVariantKeyColor60)
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            announcements.forEach {
+                stickyHeader {
+                    AnnouncementsHeader(
+                        dayString = it.publishedAt.convertString()
                     )
+                }
+                itemsIndexed(it.announcements) { index, announcement ->
+                    AnnouncementContent(
+                        type = AnnouncementType.valueOf(announcement.type),
+                        title = announcement.title,
+                        content = announcement.content
+                    )
+                    if (index >= announcements.lastIndex) {
+                        Divider(
+                            modifier = modifier
+                                .padding(start = 16.dp, end = 16.dp),
+                            thickness = 1.dp,
+                            color = Color(KaigiColors.neutralVariantKeyColor60)
+                        )
+                    }
                 }
             }
         }

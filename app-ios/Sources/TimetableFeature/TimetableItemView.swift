@@ -28,9 +28,9 @@ public struct TimetableItemView: View {
         .padding(8)
         .frame(maxHeight: .infinity, alignment: .top)
         .background(item.isFavorited ? item.timetableItem.room.roomColor : item.timetableItem.room.roomColor.opacity(0.2))
-        .cornerRadius(16)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .strokeBorder(item.timetableItem.room.roomColor, lineWidth: 2)
         )
     }

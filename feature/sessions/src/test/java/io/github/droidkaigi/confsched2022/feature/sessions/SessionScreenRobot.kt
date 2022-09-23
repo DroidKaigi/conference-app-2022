@@ -7,7 +7,7 @@ import androidx.compose.ui.test.hasStateDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import io.github.droidkaigi.confsched2022.data.sessions.FakeSessionsRepository
@@ -49,7 +49,7 @@ class SessionScreenRobot @Inject constructor() {
     context(RobotTestRule)
     fun clickToggleTimetable() {
         composeTestRule
-            .onNodeWithContentDescription("Toggle timetable icon")
+            .onNodeWithTag("toggleTimetableButton", useUnmergedTree = true)
             .performClick()
     }
 

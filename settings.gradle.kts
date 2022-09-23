@@ -50,7 +50,8 @@ modules.forEach { filePath ->
 }
 include(
     ":app-android",
-    ":preview-screenshots"
+    ":preview-screenshots",
+    ":benchmark"
 )
 
 include(":appioscombined")

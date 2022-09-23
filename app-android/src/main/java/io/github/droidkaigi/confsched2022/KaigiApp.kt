@@ -142,7 +142,10 @@ fun KaigiApp(
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                         onLinkClick = kaigiExternalNavigationController::navigate,
                     )
-                    mapGraph()
+                    mapGraph(
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    )
                     announcementGraph(
                         showNavigationIcon = showNavigationIcon,
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
@@ -152,8 +155,9 @@ fun KaigiApp(
                         kaigiAppScaffoldState::onNavigationClick
                     )
                     sponsorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick
+                        showNavigationIcon = showNavigationIcon,
+                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                        onItemClick = kaigiExternalNavigationController::navigate
                     )
                 }
             }

@@ -135,7 +135,7 @@ public struct SponsorView: View {
             .frame(minHeight: 0, maxHeight: .infinity)
             .background(AssetColors.background.swiftUIColor)
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            .navigationTitle(StringsKt.shared.title_sponsors.desc().localized())
+            .navigationTitle(StringsKt.shared.title_sponsors.localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -181,7 +181,7 @@ struct SponsorItemView: View {
             }
         }
         .frame(height: height(of: sponsor.plan))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
     private func height(of plan: Plan) -> CGFloat {

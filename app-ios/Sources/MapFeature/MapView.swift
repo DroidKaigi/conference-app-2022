@@ -1,6 +1,7 @@
 import appioscombined
 import Assets
 import ComposableArchitecture
+import Model
 import SwiftUI
 import Theme
 
@@ -14,9 +15,11 @@ public struct MapState: Equatable {
 public enum MapAction {
     case tapPin
 }
+
 public struct MapEnvironment {
     public init() {}
 }
+
 public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, action, _ in
     switch action {
     case .tapPin:
@@ -40,7 +43,7 @@ public struct MapView: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(8)
                 }
-                .navigationTitle(StringsKt.shared.title_map.desc().localized())
+                .navigationTitle(StringsKt.shared.title_map.localized())
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .bottomBar) {

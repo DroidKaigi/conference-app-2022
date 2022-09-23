@@ -140,7 +140,6 @@ public struct TimetableView: View {
                                     : AssetColors.surface.swiftUIColor
                                 )
                                 .clipShape(Capsule())
-                                .animation(.linear(duration: 0.2), value: viewStore.showDate)
                             }
                         }
                     }
@@ -148,6 +147,7 @@ public struct TimetableView: View {
                     .padding(.vertical, 16)
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
+                    .animation(.linear(duration: 0.2), value: viewStore.showDate)
                 }
                 .task {
                     await viewStore.send(.refresh).finish()

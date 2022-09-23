@@ -13,6 +13,8 @@ public interface SessionsRepository {
             .map { it.findTimetableItem(timetableItemId) }
     }
 
+    public suspend fun getCategories(): List<TimetableCategory>
+
     public suspend fun refresh()
     public suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean)
 }
