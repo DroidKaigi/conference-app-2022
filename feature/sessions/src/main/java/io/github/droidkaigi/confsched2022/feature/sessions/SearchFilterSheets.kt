@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,7 @@ fun FilterDaySheet(
         kaigiDays.forEach { kaigiDay ->
             Row(
                 modifier = Modifier
+                    .clickable { onDaySelectedUpdated(kaigiDay) }
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -78,7 +80,7 @@ fun FilterDaySheet(
 
                 RadioButton(
                     selected = selectedDay == kaigiDay,
-                    onClick = { onDaySelectedUpdated(kaigiDay) },
+                    onClick = {},
                     colors = RadioButtonDefaults.colors(
                         selectedColor = MaterialTheme.colorScheme.primary,
                         unselectedColor = MaterialTheme.colorScheme.primary
@@ -105,7 +107,7 @@ fun FilterCategoriesSheet(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
-    val onDaySelectedUpdated by rememberUpdatedState(newValue = onCategoriesSelected)
+    val onCategoriesSelectedUpdated by rememberUpdatedState(newValue = onCategoriesSelected)
 
     Column(modifier = modifier) {
 
@@ -118,15 +120,21 @@ fun FilterCategoriesSheet(
             items(categories) { category ->
                 Row(
                     modifier = Modifier
+                        .clickable {
+                            onCategoriesSelectedUpdated(
+                                category,
+                                selectedCategories
+                                    .contains(category)
+                                    .not()
+                            )
+                        }
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
                         checked = selectedCategories.contains(category),
-                        onCheckedChange = { isChecked ->
-                            onDaySelectedUpdated(category, isChecked)
-                        },
+                        onCheckedChange = {},
                         colors = CheckboxDefaults.colors(
                             checkedColor = MaterialTheme.colorScheme.primary,
                             uncheckedColor = MaterialTheme.colorScheme.primary
