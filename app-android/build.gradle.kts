@@ -7,6 +7,7 @@ plugins {
     id("droidkaigi.primitive.android.hilt")
     id("droidkaigi.primitive.android.firebase")
     id("droidkaigi.primitive.spotless")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022"
@@ -102,4 +103,6 @@ dependencies {
     implementation(libs.firebaseCommon)
     implementation(libs.firebaseAuth)
     implementation(libs.androidxSplashScreen)
+
+    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
 }
