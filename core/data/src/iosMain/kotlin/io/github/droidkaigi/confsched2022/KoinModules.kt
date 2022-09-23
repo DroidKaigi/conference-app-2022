@@ -19,13 +19,13 @@ import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.github.droidkaigi.confsched2022.data.sponsors.DataSponsorsRepository
 import io.github.droidkaigi.confsched2022.data.sponsors.SponsorsApi
+import io.github.droidkaigi.confsched2022.data.staff.DataStaffRepository
+import io.github.droidkaigi.confsched2022.data.staff.StaffApi
 import io.github.droidkaigi.confsched2022.model.AnnouncementsRepository
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.SponsorsRepository
 import io.github.droidkaigi.confsched2022.model.StaffRepository
-import io.github.droidkaigi.confsched2022.data.staff.StaffApi
-import io.github.droidkaigi.confsched2022.data.staff.DataStaffRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.core.module.Module
