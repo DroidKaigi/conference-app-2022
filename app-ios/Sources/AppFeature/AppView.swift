@@ -140,7 +140,7 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         action: /AppAction.announcement,
         environment: {
             .init(
-                repository: $0.announcementsRepository
+                announcementsRepository: $0.announcementsRepository
             )
         }
     ),

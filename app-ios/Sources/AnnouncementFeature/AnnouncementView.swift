@@ -14,15 +14,15 @@ public enum AnnouncementAction {
 }
 
 public struct AnnouncementEnvironment {
-    public let repository: AnnouncementsRepository
+    public let announcementsRepository: AnnouncementsRepository
 
-    public init(repository: AnnouncementsRepository) {
+    public init(announcementsRepository: AnnouncementsRepository) {
         // TODO: Replace FakeRepository with DataRepository
-        self.repository = FakeAnnouncementsRepository()
+        self.announcementsRepository = FakeAnnouncementsRepository()
     }
 }
 public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, AnnouncementEnvironment> { state, action, environment in
-    let repository = environment.repository
+    let repository = environment.announcementsRepository
     switch action {
     case .load:
         return Effect.run { @MainActor subscriber in
@@ -73,7 +73,7 @@ struct AnnouncementView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AnnouncementEnvironment(repository: FakeAnnouncementsRepository())
+                environment: AnnouncementEnvironment(announcementsRepository: FakeAnnouncementsRepository())
             )
         )
     }
