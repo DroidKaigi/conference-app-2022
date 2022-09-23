@@ -75,9 +75,10 @@ fun Announcements(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             KaigiTopAppBar(
@@ -91,10 +92,9 @@ fun Announcements(
             )
         }
     ) { innerPadding ->
-        val retrySuggestion = uiModel.retrySuggestion
-        RetrySnackbarEffect(
-            retrySuggestion = retrySuggestion,
-            snackBarHostState = snackBarHostState,
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
             onRetryDismissed = onRetryDismissed,
             onRetryButtonClick = onRetryButtonClick
         )
@@ -262,7 +262,7 @@ fun AnnouncementsPreview() {
                 state = Success(
                     AnnouncementsByDate.fakes()
                 ),
-                retrySuggestion = false
+                appError = null
             ),
             showNavigationIcon = true,
             onRetryButtonClick = {},

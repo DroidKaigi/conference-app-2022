@@ -1,6 +1,5 @@
 package io.github.droidkaigi.confsched2022.feature.announcement
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
-import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.AnnouncementsRepository
+import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
@@ -31,25 +30,15 @@ class AnnouncementsViewModel @Inject constructor(
         .announcements()
         .asLoadState()
 
-    private var retrySuggestion by mutableStateOf(false)
+    private var appError by mutableStateOf<AppError?>(null)
 
     val uiModel: State<AnnouncementsUiModel> = moleculeScope.moleculeComposeState(
         clock = ContextClock
     ) {
         val announcementLoadState by announcementsFlow.collectAsState(initial = UiLoadState.Loading)
-        LaunchedEffect(announcementLoadState.isError) {
-            if (announcementLoadState.isError) {
-                announcementLoadState.getThrowableOrNull()?.let {
-                    Logger.d(throwable = it) {
-                        "announcementLoadState error"
-                    }
-                }
-                retrySuggestion = true
-            }
-        }
         AnnouncementsUiModel(
             state = announcementLoadState,
-            retrySuggestion = retrySuggestion
+            appError = appError
         )
     }
 
@@ -65,13 +54,13 @@ class AnnouncementsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 announcementsRepository.refresh()
-            } catch (e: Exception) {
-                retrySuggestion = true
+            } catch (e: AppError) {
+                appError = e
             }
         }
     }
 
     fun onRetryShown() {
-        retrySuggestion = false
+        appError = null
     }
 }
