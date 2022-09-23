@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.data.sessions
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.Timetable
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.collections.immutable.PersistentSet
@@ -25,6 +26,10 @@ public class FakeSessionsRepository : SessionsRepository {
     }
 
     override suspend fun refresh() {
+    }
+
+    override suspend fun getCategories(): List<TimetableCategory> {
+        return emptyList()
     }
 
     override suspend fun setFavorite(sessionId: TimetableItemId, favorite: Boolean) {

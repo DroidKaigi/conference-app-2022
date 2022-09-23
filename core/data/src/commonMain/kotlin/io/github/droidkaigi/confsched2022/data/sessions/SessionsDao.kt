@@ -104,6 +104,18 @@ public class SessionsDao(
         timetableItemSessionSpeakersQueries.deleteAll()
     }
 
+    public fun selectAllCategories(): List<TimetableCategory> {
+        return timetableItemSessionQueries.selectAllCategories { id, titleJa, titleEn ->
+            TimetableCategory(
+                id = id,
+                title = MultiLangText(
+                    jaTitle = titleJa,
+                    enTitle = titleEn
+                )
+            )
+        }.executeAsList()
+    }
+
     private fun TimetableItem.Session.toModel(): TimetableItemSession {
         return TimetableItemSession(
             id = id.value,

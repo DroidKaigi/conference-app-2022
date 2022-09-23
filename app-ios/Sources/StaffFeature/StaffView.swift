@@ -33,7 +33,7 @@ public struct StaffView: View {
                 }
             }
         }
-        .navigationTitle(StringsKt.shared.about_staff.desc().localized())
+        .navigationTitle(StringsKt.shared.about_staff.localized())
     }
 }
 

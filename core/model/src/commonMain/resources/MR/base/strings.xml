@@ -12,7 +12,9 @@
     <!-- About -->
     <string name="about_top_app_bar_title">DroidKaigiとは</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。</string>
+    <string name="about_description">
+        DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。
+    </string>
     <string name="about_access">会場アクセス</string>
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
@@ -29,7 +31,13 @@
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">コントリビューター</string>
 
+    <!-- Search -->
+    <string name="search_filter_select_day">開催日</string>
+    <string name="search_filter_select_category">カテゴリ</string>
+    <string name="search_filter_favorites">お気に入り済み</string>
+
     <!-- Map -->
+    <string name="map_top_app_bar_title">フロアマップ</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">続きを見る</string>
@@ -48,6 +56,9 @@
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">スポンサー</string>
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">スタッフリスト</string>
@@ -55,4 +66,11 @@
     <!-- Search -->
     <string name="search_placeholder">検索する</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- ContentDescriptions -->
+    <string name="nav_drawer_menu_button_description">NavigationDrawerを開く</string>
+    <string name="search_button_description">検索</string>
+    <string name="session_appearance_to_list_button_description">セッションをリスト表示にする</string>
+    <string name="session_appearance_to_table_button_description">セッションをテーブル表示にする</string>
+
 </resources>

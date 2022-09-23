@@ -12,7 +12,8 @@
     <!-- About -->
     <string name="about_top_app_bar_title">关于 DroidKaigi</string>
     <string name="about_title">DroidKaigi 是什么？</string>
-    <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。</string>
+    <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。
+    </string>
     <string name="about_access">怎么走？</string>
     <string name="about_staff">工作人员</string>
     <string name="about_privacy">隐私政策</string>
@@ -30,7 +31,13 @@
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">贡献者</string>
 
+    <!-- Search -->
+    <string name="search_filter_select_day">Day</string>
+    <string name="search_filter_select_category">Category</string>
+    <string name="search_filter_favorites">Favorites</string>
+
     <!-- Map -->
+    <string name="map_top_app_bar_title">地图</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">展开更多</string>
@@ -50,6 +57,10 @@
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">赞助者</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">工作人员</string>
@@ -58,4 +69,12 @@
     <!-- TODO:Translation into Chinese -->
     <string name="search_placeholder">Search Session</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- ContentDescriptions -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="nav_drawer_menu_button_description">Open NavigationDrawer</string>
+    <string name="search_button_description">Search</string>
+    <string name="session_appearance_to_list_button_description">Change sessions to list view</string>
+    <string name="session_appearance_to_table_button_description">Change sessions to table view</string>
+
 </resources>

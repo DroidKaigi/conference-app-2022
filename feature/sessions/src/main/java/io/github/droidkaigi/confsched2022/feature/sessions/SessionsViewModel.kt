@@ -66,7 +66,7 @@ class SessionsViewModel @Inject constructor(
     }
 
     fun onToggleFilter() {
-        filters.value = filters.value.copy(!filters.value.filterFavorite)
+        filters.value = filters.value.copy(filterFavorite = !filters.value.filterFavorite)
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
