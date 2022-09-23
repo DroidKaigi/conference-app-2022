@@ -21,8 +21,7 @@ public struct AnnouncementEnvironment {
     public let announcementsRepository: AnnouncementsRepository
 
     public init(announcementsRepository: AnnouncementsRepository) {
-        // TODO: Replace FakeRepository with DataRepository
-        self.announcementsRepository = FakeAnnouncementsRepository()
+        self.announcementsRepository = announcementsRepository
     }
 }
 public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, AnnouncementEnvironment> { state, action, environment in
