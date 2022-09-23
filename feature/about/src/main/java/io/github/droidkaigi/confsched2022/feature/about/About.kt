@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
@@ -183,7 +185,7 @@ fun About(
                     imageVector = Icons.Filled.Folder,
                     textRes = Strings.about_license,
                     onClick = {
-                        // TODO: Implement license
+                        context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
                     }
                 )
 
