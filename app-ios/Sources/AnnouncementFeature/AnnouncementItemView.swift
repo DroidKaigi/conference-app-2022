@@ -12,10 +12,9 @@ struct AnnouncementItemView: View {
                 .resizable()
                 .frame(width: 16, height: 16)
             Spacer().frame(width: 8)
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(announcement.title)
                     .font(.system(size: 16, weight: .semibold))
-                Spacer().frame(height: 8)
                 Text(announcement.content)
                     .font(.system(size: 16, weight: .regular))
             }
