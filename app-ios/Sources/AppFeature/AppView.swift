@@ -1,5 +1,6 @@
-import appioscombined
+// swiftlint:disable file_length
 import AboutFeature
+import appioscombined
 import Assets
 import Auth
 import ComposableArchitecture
