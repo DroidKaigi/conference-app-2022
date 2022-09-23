@@ -26,6 +26,4 @@ dependencies {
     androidTestImplementation(libs.composeUiTestJunit4)
     debugImplementation(libs.composeUiTooling)
     debugImplementation(libs.composeUiTestManifest)
-
-    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
 }

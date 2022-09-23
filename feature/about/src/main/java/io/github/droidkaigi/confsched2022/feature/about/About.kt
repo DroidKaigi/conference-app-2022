@@ -1,7 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
@@ -45,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
@@ -61,6 +59,7 @@ fun AboutScreenRoot(
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
     onStaffListClick: () -> Unit = {},
+    onLicenseClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
     About(
@@ -68,6 +67,7 @@ fun AboutScreenRoot(
         onNavigationIconClick,
         onLinkClick,
         onStaffListClick,
+        onLicenseClick,
         versionName,
         modifier,
     )
@@ -79,6 +79,7 @@ fun About(
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
     onStaffListClick: () -> Unit,
+    onLicenseClick: () -> Unit,
     versionName: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -184,9 +185,7 @@ fun About(
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
                     textRes = Strings.about_license,
-                    onClick = {
-                        context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
-                    }
+                    onClick = onLicenseClick
                 )
 
                 AuxiliaryInformationRow(
