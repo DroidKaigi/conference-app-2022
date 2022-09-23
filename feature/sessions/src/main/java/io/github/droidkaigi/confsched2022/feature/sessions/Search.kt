@@ -186,7 +186,7 @@ private fun SearchScreen(
             if (uiModel.state is Success) {
                 SearchTextFieldTopAppBar(
                     searchWord = searchWord.value,
-                    onSearchWordChange = {searchWord.value = it},
+                    onSearchWordChange = { searchWord.value = it },
                     onSearchTextAreaClicked = onSearchTextAreaClicked,
                     onBackClick = onBackIconClick
                 )
