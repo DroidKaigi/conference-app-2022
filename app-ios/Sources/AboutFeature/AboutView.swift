@@ -62,6 +62,7 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
             return .none
         case .openPrivacyPolicy:
             state.navigationDestination = .privacyPolicy
+            environment.openURL(URL(string: StaticURLs.privacyPolicy)!)
             return .none
         default:
             return .none

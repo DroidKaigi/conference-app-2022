@@ -53,6 +53,7 @@ public struct MapView: View {
                     }
                 }
             }
+            .navigationViewStyle(.stack)
         }
     }
 }
