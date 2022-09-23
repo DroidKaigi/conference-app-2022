@@ -38,11 +38,6 @@ struct TimetableListView: View, ScrollDetectable {
         }
     }
 
-    private let dateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        return formatter
-    }()
-
     let store: Store<TimetableState, TimetableAction>
 
     var body: some View {
@@ -56,12 +51,10 @@ struct TimetableListView: View, ScrollDetectable {
                     ForEach(viewStore.timeGroupTimetableItems) { timetableTimeGroupItems in
                         HStack(alignment: .top, spacing: 28) {
                             VStack(alignment: .center, spacing: 0) {
-                                Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.startsAt))!)
-                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
-                                Rectangle()
-                                    .frame(width: 1, height: 4)
-                                Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.endsAt))!)
-                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
+                                SessionTimeView(
+                                    startsAt: timetableTimeGroupItems.startsAt,
+                                    endsAt: timetableTimeGroupItems.endsAt
+                                )
                             }
                             .foregroundColor(AssetColors.onBackground.swiftUIColor)
                             VStack(spacing: 32) {
@@ -94,11 +87,6 @@ struct TimetableListView: View, ScrollDetectable {
             }
             .coordinateSpace(name: "TimetableListView")
         }
-    }
-
-    /// convert `Date` to `DateComponents` with hour and minute
-    private func convertToDateComponents(_ date: Date) -> DateComponents {
-        Calendar.current.dateComponents([.hour, .minute], from: date)
     }
 }
 
