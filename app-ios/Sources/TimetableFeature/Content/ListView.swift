@@ -38,11 +38,6 @@ struct TimetableListView: View, ScrollDetectable {
         }
     }
 
-    private let dateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        return formatter
-    }()
-
     let store: Store<TimetableState, TimetableAction>
 
     var body: some View {
@@ -92,11 +87,6 @@ struct TimetableListView: View, ScrollDetectable {
             }
             .coordinateSpace(name: "TimetableListView")
         }
-    }
-
-    /// convert `Date` to `DateComponents` with hour and minute
-    private func convertToDateComponents(_ date: Date) -> DateComponents {
-        Calendar.current.dateComponents([.hour, .minute], from: date)
     }
 }
 
