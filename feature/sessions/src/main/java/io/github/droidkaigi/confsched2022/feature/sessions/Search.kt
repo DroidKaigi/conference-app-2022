@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -154,6 +156,9 @@ fun SearchRoot(
                 viewModel.onFilterFavoritesToggle()
             },
             onBackIconClick = onBackIconClick,
+            onSearchTextAreaClicked = {
+                viewModel.onSearchTextAreaClicked()
+            }
         )
     }
 }
@@ -166,6 +171,7 @@ private fun SearchScreen(
     onDayFilterClicked: () -> Unit,
     onCategoriesFilteredClicked: () -> Unit,
     onFavoritesToggleClicked: () -> Unit,
+    onSearchTextAreaClicked: () -> Unit,
     onBackIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -184,7 +190,8 @@ private fun SearchScreen(
                     is Success -> {
                         SearchTextField(
                             searchWord = searchWord.value,
-                            onSearchWordChange = { searchWord.value = it }
+                            onSearchWordChange = { searchWord.value = it },
+                            onSearchTextAreaClicked = onSearchTextAreaClicked,
                         ) {
                             onBackIconClick()
                         }
@@ -219,13 +226,23 @@ private fun SearchScreen(
 private fun SearchTextField(
     searchWord: String,
     onSearchWordChange: (String) -> Unit,
+    onSearchTextAreaClicked: () -> Unit,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
+
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            if (it is PressInteraction.Release) {
+                onSearchTextAreaClicked()
+            }
+        }
     }
     TextField(
         value = searchWord,
@@ -258,6 +275,7 @@ private fun SearchTextField(
         onValueChange = {
             onSearchWordChange(it)
         },
+        interactionSource = interactionSource,
     )
 }
 
@@ -413,7 +431,8 @@ fun SearchScreenPreview() {
             onBackIconClick = {},
             onFavoritesToggleClicked = {},
             onDayFilterClicked = {},
-            onCategoriesFilteredClicked = {}
+            onCategoriesFilteredClicked = {},
+            onSearchTextAreaClicked = {},
         )
     }
 }
