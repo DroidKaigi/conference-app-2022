@@ -5,6 +5,7 @@ import io.github.droidkaigi.confsched2022.model.AppError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -55,7 +56,9 @@ public fun Throwable.toAppError(): AppError {
             return AppError.ApiException.ServerException(this)
         is ChannelReadException ->
             return AppError.ApiException.NetworkException(this)
-        is TimeoutCancellationException, is SocketTimeoutException -> {
+        is TimeoutCancellationException,
+        is HttpRequestTimeoutException,
+        is SocketTimeoutException -> {
             AppError.ApiException
                 .TimeoutException(this)
         }

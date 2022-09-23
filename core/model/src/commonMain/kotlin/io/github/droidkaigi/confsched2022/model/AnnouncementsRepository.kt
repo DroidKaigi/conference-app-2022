@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 public interface AnnouncementsRepository {
     public fun announcements(): Flow<PersistentList<AnnouncementsByDate>>
+    public suspend fun refresh()
 }

@@ -18,17 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -68,22 +61,24 @@ fun AnnouncementsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onRetryDismissed = { viewModel.onRetryShown() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
     onRetryButtonClick: () -> Unit,
+    onRetryDismissed: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             KaigiTopAppBar(
@@ -95,35 +90,17 @@ fun Announcements(
                     )
                 },
             )
-        },
-        snackBarHost = {
-            SnackbarHost(snackBarHostState) { snackBarData ->
-                SnackBarWithError(object : SnackbarData {
-                    override val visuals = snackBarData.visuals
-
-                    override fun dismiss() {}
-
-                    override fun performAction() {
-                        onRetryButtonClick()
-                    }
-                })
-            }
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onRetryDismissed = onRetryDismissed,
+            onRetryButtonClick = onRetryButtonClick
+        )
         when (uiModel.state) {
             is Error -> {
-                uiModel.state.value?.printStackTrace()
-                val errorMessage = stringResource(Strings.error_common_message)
-                val retryMessage = stringResource(Strings.error_common_retry)
-
-                LaunchedEffect(Unit) {
-                    snackBarHostState.showSnackbar(object : SnackbarVisuals {
-                        override val actionLabel: String = retryMessage
-                        override val duration: SnackbarDuration = SnackbarDuration.Indefinite
-                        override val message: String = errorMessage
-                        override val withDismissAction: Boolean = false
-                    })
-                }
+                // Do nothing
             }
             is Success -> {
                 if (uiModel.state.value.isNotEmpty()) {
@@ -262,19 +239,6 @@ fun FullScreenLoading(
 }
 
 @Composable
-fun SnackBarWithError(
-    snackBarData: SnackbarData
-) {
-
-    Snackbar(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        actionColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        snackbarData = snackBarData
-    )
-}
-
-@Composable
 private fun LocalDate.convertString(): String {
     val systemTZ = TimeZone.currentSystemDefault()
     val today = Clock.System.todayIn(systemTZ)
@@ -297,11 +261,12 @@ fun AnnouncementsPreview() {
             uiModel = AnnouncementsUiModel(
                 state = Success(
                     AnnouncementsByDate.fakes()
-                )
+                ),
+                appError = null
             ),
             showNavigationIcon = true,
             onRetryButtonClick = {},
-            onNavigationIconClick = {},
-        )
+            onRetryDismissed = {},
+        ) {}
     }
 }

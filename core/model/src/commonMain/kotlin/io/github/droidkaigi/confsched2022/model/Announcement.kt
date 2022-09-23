@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 public data class Announcement(
-    val id: Int,
+    val id: String,
     val title: String,
     val content: String,
     val type: String,

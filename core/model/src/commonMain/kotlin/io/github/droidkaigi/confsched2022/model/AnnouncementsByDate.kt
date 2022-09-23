@@ -29,21 +29,21 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
             publishedAt = today,
             persistentListOf(
                 Announcement(
-                    id = 1,
+                    id = "1",
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 2,
+                    id = "2",
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 3,
+                    id = "3",
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Notification",
@@ -55,21 +55,21 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
             publishedAt = yesterday,
             persistentListOf(
                 Announcement(
-                    id = 4,
+                    id = "4",
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 5,
+                    id = "5",
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 6,
+                    id = "6",
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Notification",
@@ -81,21 +81,21 @@ public fun AnnouncementsByDate.Companion.fakes(): PersistentList<AnnouncementsBy
             publishedAt = beforeYesterday,
             persistentListOf(
                 Announcement(
-                    id = 7,
+                    id = "7",
                     title = "ALERTお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Alert",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 8,
+                    id = "8",
                     title = "FEEDBACKお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Feedback",
                     language = "japanese"
                 ),
                 Announcement(
-                    id = 9,
+                    id = "9",
                     title = "NOTIFICATIONお知らせタイトル",
                     content = "お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文お知らせ本文",
                     type = "Notification",
