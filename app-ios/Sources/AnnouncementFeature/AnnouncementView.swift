@@ -8,7 +8,7 @@ public struct AnnouncementState: Equatable {
         self.announcements = announcements
     }
 
-    public var announcements: [AnnouncementsByDate] = []
+    public var announcements: [AnnouncementsByDate]
 
 
 }
