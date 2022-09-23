@@ -1,6 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.announcement
 
-import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarDuration.Long
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.runtime.Composable
@@ -23,7 +23,7 @@ public fun AppErrorSnackbarEffect(
             val snackbarResult = snackBarHostState.showSnackbar(
                 message = errorMessage,
                 actionLabel = retryMessage,
-                duration = Indefinite
+                duration = Long
             )
             onRetryDismissed()
             if (snackbarResult == ActionPerformed) onRetryButtonClick()

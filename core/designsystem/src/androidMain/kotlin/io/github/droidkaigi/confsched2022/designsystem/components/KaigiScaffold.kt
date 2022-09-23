@@ -17,11 +17,11 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaigiScaffold(
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     topBar: @Composable () -> Unit,
-    bottomBar: @Composable () -> Unit = {},
     modifier: Modifier = Modifier,
-    content: @Composable (PaddingValues) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    bottomBar: @Composable () -> Unit = {},
+    content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -31,7 +31,8 @@ fun KaigiScaffold(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                snackbar = { snackBarData -> KaigiSnackBar(snackBarData) })
+                snackbar = { snackBarData -> KaigiSnackBar(snackBarData) }
+            )
         },
         bottomBar = {
             bottomBar()
