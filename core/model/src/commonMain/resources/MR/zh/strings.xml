@@ -69,4 +69,12 @@
     <!-- TODO:Translation into Chinese -->
     <string name="search_placeholder">Search Session</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- ContentDescriptions -->
+    <!-- TODO:Translation into Chinese -->
+    <string name="nav_drawer_menu_button_description">Open NavigationDrawer</string>
+    <string name="search_button_description">Search</string>
+    <string name="session_appearance_to_list_button_description">Change sessions to list view</string>
+    <string name="session_appearance_to_table_button_description">Change sessions to table view</string>
+
 </resources>
