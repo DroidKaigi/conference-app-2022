@@ -191,6 +191,7 @@ var package = Package(
             name: "StaffFeature",
             dependencies: [
                 .target(name: "Model"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),

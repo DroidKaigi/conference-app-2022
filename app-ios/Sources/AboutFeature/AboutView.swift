@@ -37,14 +37,22 @@ public enum AboutAction {
 
 public struct AboutEnvironment {
     @Environment(\.openURL) var openURL
-    public init() {}
+    public let staffRepository: StaffRepository
+
+    public init(staffRepository: StaffRepository) {
+        self.staffRepository = staffRepository
+    }
 }
 
 public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.combine(
     staffReducer.pullback(
         state: \.staffState,
         action: /AboutAction.staff,
-        environment: { _ in .init() }
+        environment: {
+            .init(
+                staffRepository: $0.staffRepository
+            )
+        }
     ),
     .init { state, action, environment in
         switch action {
@@ -181,7 +189,9 @@ struct AboutView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AboutEnvironment()
+                environment: AboutEnvironment(
+                    staffRepository: FakeStaffRepository()
+                )
             )
         )
         .preferredColorScheme(.dark)

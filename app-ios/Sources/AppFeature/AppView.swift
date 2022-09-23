@@ -82,17 +82,20 @@ public struct AppEnvironment {
     public let sponsorsRepository: SponsorsRepository
     public let sessionsRepository: SessionsRepository
     public let announcementsRepository: AnnouncementsRepository
+    public let staffRepository: StaffRepository
 
     public init(
         contributorsRepository: ContributorsRepository,
         sponsorsRepository: SponsorsRepository,
         sessionsRepository: SessionsRepository,
-        announcementsRepository: AnnouncementsRepository
+        announcementsRepository: AnnouncementsRepository,
+        staffRepository: StaffRepository
     ) {
         self.contributorsRepository = contributorsRepository
         self.sponsorsRepository = sponsorsRepository
         self.sessionsRepository = sessionsRepository
         self.announcementsRepository = announcementsRepository
+        self.staffRepository = staffRepository
     }
 }
 
@@ -104,7 +107,8 @@ public extension AppEnvironment {
             contributorsRepository: container.get(type: ContributorsRepository.self),
             sponsorsRepository: container.get(type: SponsorsRepository.self),
             sessionsRepository: container.get(type: SessionsRepository.self),
-            announcementsRepository: container.get(type: AnnouncementsRepository.self)
+            announcementsRepository: container.get(type: AnnouncementsRepository.self),
+            staffRepository: container.get(type: StaffRepository.self)
         )
     }
 
@@ -113,7 +117,8 @@ public extension AppEnvironment {
             contributorsRepository: FakeContributorsRepository(),
             sponsorsRepository: FakeSponsorsRepository(),
             sessionsRepository: FakeSessionsRepository(),
-            announcementsRepository: FakeAnnouncementsRepository()
+            announcementsRepository: FakeAnnouncementsRepository(),
+            staffRepository: FakeStaffRepository()
         )
     }
 }
@@ -131,8 +136,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     aboutReducer.pullback(
         state: \.aboutState,
         action: /AppAction.about,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                staffRepository: $0.staffRepository
+            )
         }
     ),
     announcementReducer.pullback(
