@@ -4,9 +4,13 @@ import Model
 import SwiftUI
 
 public struct AnnouncementState: Equatable {
+    public init(announcements: [AnnouncementsByDate] = []) {
+        self.announcements = announcements
+    }
+
     public var announcements: [AnnouncementsByDate] = []
 
-    public init() {}
+
 }
 public enum AnnouncementAction {
     case refresh
@@ -46,11 +50,11 @@ public struct AnnouncementView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(viewStore.announcements, id: \.publishedAt) { announcementsByDate in
-                            AnnouncementsByDateView(announcementsByDate: announcementsByDate)
-                        }
+                Group {
+                    if viewStore.announcements.isEmpty {
+                        empty()
+                    } else {
+                        fulfill(viewStore)
                     }
                 }
                 .navigationTitle(StringsKt.shared.announcement_top_app_bar_title.desc().localized())
@@ -61,6 +65,24 @@ public struct AnnouncementView: View {
             }
         }
     }
+
+    func fulfill(_ viewStore: ViewStore<AnnouncementState, AnnouncementAction>) -> some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(viewStore.announcements, id: \.publishedAt) { announcementsByDate in
+                    AnnouncementsByDateView(announcementsByDate: announcementsByDate)
+                }
+            }
+        }
+    }
+
+    func empty() -> some View {
+        VStack<Text> {
+            Text(StringsKt.shared.announcement_content_empty.desc().localized())
+                .font(.system(size: 16, weight: .semibold))
+
+        }
+    }
 }
 
 #if DEBUG
@@ -68,7 +90,9 @@ struct AnnouncementView_Previews: PreviewProvider {
     static var previews: some View {
         AnnouncementView(
             store: .init(
-                initialState: .init(),
+                initialState: .init(
+                    announcements: AnnouncementsByDate.companion.fakes()
+                ),
                 reducer: .empty,
                 environment: AnnouncementEnvironment(announcementsRepository: FakeAnnouncementsRepository())
             )
