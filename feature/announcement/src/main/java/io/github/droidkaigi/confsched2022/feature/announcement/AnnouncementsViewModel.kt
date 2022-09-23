@@ -36,24 +36,32 @@ class AnnouncementsViewModel @Inject constructor(
     val uiModel: State<AnnouncementsUiModel> = moleculeScope.moleculeComposeState(
         clock = ContextClock
     ) {
-        val uiState by announcementsFlow.collectAsState(initial = UiLoadState.Loading)
-        LaunchedEffect(uiState.isError) {
-            if (uiState.isError) {
-                uiState.getThrowableOrNull()?.let {
+        val announcementLoadState by announcementsFlow.collectAsState(initial = UiLoadState.Loading)
+        LaunchedEffect(announcementLoadState.isError) {
+            if (announcementLoadState.isError) {
+                announcementLoadState.getThrowableOrNull()?.let {
                     Logger.d(throwable = it) {
-                        "announcementsFlow error"
+                        "announcementLoadState error"
                     }
                 }
                 retrySuggestion = true
             }
         }
         AnnouncementsUiModel(
-            state = uiState,
+            state = announcementLoadState,
             retrySuggestion = retrySuggestion
         )
     }
 
+    init {
+        refresh()
+    }
+
     fun onRetryButtonClick() {
+        refresh()
+    }
+
+    private fun refresh() {
         viewModelScope.launch {
             try {
                 announcementsRepository.refresh()

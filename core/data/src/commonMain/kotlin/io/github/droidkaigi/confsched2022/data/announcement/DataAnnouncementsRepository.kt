@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
 
 public class DataAnnouncementsRepository(
     private val announcementsApi: AnnouncementsApi
@@ -18,7 +17,6 @@ public class DataAnnouncementsRepository(
 
     override fun announcements(): Flow<PersistentList<AnnouncementsByDate>> {
         return callbackFlow {
-            launch { refresh() }
             announcementStateFlow.filterNotNull().collect {
                 send(it)
             }
