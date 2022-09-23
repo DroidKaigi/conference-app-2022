@@ -25,8 +25,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,6 +42,8 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.secondLang
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun SessionListItem(
@@ -61,20 +64,34 @@ fun SessionListItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1F)) {
+            val titleModifier = Modifier.semantics {
+                contentDescription = buildString {
+                    val startLocalDateTime = timetableItem.startsAt
+                        .toLocalDateTime(TimeZone.of("UTC+9"))
+                    val endLocalDateTime = timetableItem.endsAt
+                        .toLocalDateTime(TimeZone.of("UTC+9"))
+                    val startTime = startLocalDateTime.time.toString()
+                    val endTime = endLocalDateTime.time.toString()
+
+                    appendLine(timetableItem.title.currentLangTitle)
+                    append("$startTime ~ $endTime")
+                }
+            }
             if (searchWord.isNullOrEmpty()) {
                 Text(
                     text = timetableItem.title.currentLangTitle,
                     color = Color.White,
-                    modifier = Modifier,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = maxTitleLines,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = titleModifier
                 )
             } else {
                 HighlightedText(
                     text = timetableItem.title.currentLangTitle,
                     keyword = searchWord,
                     maxTitleLines = maxTitleLines,
+                    modifier = titleModifier
                 )
             }
 
@@ -89,7 +106,7 @@ fun SessionListItem(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,
-                            contentDescription = "message by the session",
+                            contentDescription = null,
                             modifier = Modifier.size(16.dp),
                             tint = infoColor
                         )
@@ -116,7 +133,7 @@ fun SessionListItem(
                         error = painterResource(drawable.ic_baseline_person_24),
                         contentScale = ContentScale.Fit,
                         alignment = Alignment.Center,
-                        contentDescription = "Speaker Icon",
+                        contentDescription = null,
                     )
                     Text(
                         modifier = Modifier,
@@ -131,7 +148,14 @@ fun SessionListItem(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                KaigiTag(backgroundColor = roomColor) { Text(roomName.enTitle) }
+                KaigiTag(backgroundColor = roomColor) {
+                    Text(
+                        roomName.enTitle,
+                        modifier = Modifier.semantics {
+                            contentDescription = "Room:${roomName.enTitle}"
+                        }
+                    )
+                }
                 KaigiTag(
                     labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     backgroundColor = MaterialTheme.colorScheme.secondaryContainer
@@ -157,9 +181,8 @@ fun SessionListItem(
         IconButton(
             modifier = Modifier
                 .testTag("favorite")
-                .semantics {
-                    stateDescription = if (isFavorited) "ON" else "OFF"
-                },
+                // Remove button semantics so action can be handled at row level
+                .clearAndSetSemantics { },
             onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
         ) {
             Icon(
@@ -170,7 +193,7 @@ fun SessionListItem(
                         drawable.ic_bookmark
                     }
                 ),
-                contentDescription = "favorite",
+                contentDescription = null,
             )
         }
     }

@@ -82,5 +82,7 @@
     <string name="search_button_description">Search</string>
     <string name="session_appearance_to_list_button_description">Change sessions to list view</string>
     <string name="session_appearance_to_table_button_description">Change sessions to table view</string>
+    <string name="register_favorite_action_label">Register favorite</string>
+    <string name="unregister_favorite_action_label">Unregister favorite</string>
 
 </resources>

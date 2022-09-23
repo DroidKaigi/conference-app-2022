@@ -77,5 +77,7 @@
     <string name="search_button_description">検索</string>
     <string name="session_appearance_to_list_button_description">セッションをリスト表示にする</string>
     <string name="session_appearance_to_table_button_description">セッションをテーブル表示にする</string>
+    <string name="register_favorite_action_label">お気に入りの登録</string>
+    <string name="unregister_favorite_action_label">お気に入りの解除</string>
 
 </resources>

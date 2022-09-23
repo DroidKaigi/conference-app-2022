@@ -47,6 +47,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
@@ -313,14 +316,38 @@ fun SessionsList(
             sessionsListListState = sessionsListListStates[dayIndex],
             contentPadding = contentPadding
         ) { (timeHeader, timetableItemWithFavorite) ->
+            val actionLabel = stringResource(
+                if (timetableItemWithFavorite.isFavorited) {
+                    Strings.unregister_favorite_action_label
+                } else {
+                    Strings.register_favorite_action_label
+                }
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
                     .padding(12.dp)
+                    .semantics(mergeDescendants = true) {
+                        customActions = listOf(
+                            CustomAccessibilityAction(
+                                label = actionLabel,
+                                action = {
+                                    onFavoriteClick(
+                                        timetableItemWithFavorite.timetableItem.id,
+                                        timetableItemWithFavorite.isFavorited
+                                    )
+                                    true
+                                }
+                            )
+                        )
+                    }
             ) {
                 Box(
-                    modifier = Modifier.width(85.dp),
+                    modifier = Modifier
+                        .width(85.dp)
+                        // Remove time semantics so description is set in SessionListItem
+                        .clearAndSetSemantics { },
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
