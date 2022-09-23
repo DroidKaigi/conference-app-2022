@@ -56,6 +56,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
@@ -65,6 +66,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
@@ -377,7 +379,7 @@ fun SessionsTopBar(
                 Image(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
-                    contentDescription = "logo in toolbar"
+                    contentDescription = null
                 )
             },
             trailingIcons = {
@@ -388,7 +390,7 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_search
                         ),
-                        contentDescription = "Search icon"
+                        contentDescription = stringResource(Strings.search_button_description)
                     )
                 }
                 IconButton(
@@ -398,7 +400,13 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_today
                         ),
-                        contentDescription = "Toggle timetable icon"
+                        contentDescription = stringResource(
+                            if (isTimetable) {
+                                Strings.session_appearance_to_list_button_description
+                            } else {
+                                Strings.session_appearance_to_table_button_description
+                            }
+                        )
                     )
                 }
             }
