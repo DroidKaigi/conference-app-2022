@@ -150,7 +150,7 @@ fun Sessions(
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
-                    TODO()
+                    // Do nothing
                 }
                 Loading -> Box(
                     modifier = modifier

@@ -11,4 +11,7 @@ public class FakeAnnouncementsRepository : AnnouncementsRepository {
     override fun announcements(): Flow<PersistentList<AnnouncementsByDate>> {
         return flowOf(AnnouncementsByDate.fakes())
     }
+
+    override suspend fun refresh() {
+    }
 }

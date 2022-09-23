@@ -10,7 +10,7 @@ public data class AnnouncementsResponse(
 
 @Serializable
 public data class AnnouncementResponse(
-    val id: Int,
+    val id: String,
     val title: String,
     val content: String,
     val type: String,

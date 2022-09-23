@@ -22,10 +22,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -68,6 +67,7 @@ fun AnnouncementsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onRetryShown = { viewModel.onRetryShown() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
@@ -79,6 +79,7 @@ fun Announcements(
     showNavigationIcon: Boolean,
     onRetryButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onRetryShown: () -> Unit,
     onNavigationIconClick: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -101,7 +102,9 @@ fun Announcements(
                 SnackBarWithError(object : SnackbarData {
                     override val visuals = snackBarData.visuals
 
-                    override fun dismiss() {}
+                    override fun dismiss() {
+                        onRetryShown()
+                    }
 
                     override fun performAction() {
                         onRetryButtonClick()
@@ -110,20 +113,21 @@ fun Announcements(
             }
         }
     ) { innerPadding ->
+        val errorMessage = stringResource(Strings.error_common_message)
+        val retryMessage = stringResource(Strings.error_common_retry)
+
+        LaunchedEffect(uiModel.retrySuggestion) {
+            if (uiModel.retrySuggestion) {
+                snackBarHostState.showSnackbar(
+                    message = errorMessage,
+                    actionLabel = retryMessage,
+                    duration = Indefinite
+                )
+            }
+        }
         when (uiModel.state) {
             is Error -> {
-                uiModel.state.value?.printStackTrace()
-                val errorMessage = stringResource(Strings.error_common_message)
-                val retryMessage = stringResource(Strings.error_common_retry)
-
-                LaunchedEffect(Unit) {
-                    snackBarHostState.showSnackbar(object : SnackbarVisuals {
-                        override val actionLabel: String = retryMessage
-                        override val duration: SnackbarDuration = SnackbarDuration.Indefinite
-                        override val message: String = errorMessage
-                        override val withDismissAction: Boolean = false
-                    })
-                }
+                // Do nothing
             }
             is Success -> {
                 if (uiModel.state.value.isNotEmpty()) {
@@ -297,11 +301,12 @@ fun AnnouncementsPreview() {
             uiModel = AnnouncementsUiModel(
                 state = Success(
                     AnnouncementsByDate.fakes()
-                )
+                ),
+                retrySuggestion = false
             ),
             showNavigationIcon = true,
             onRetryButtonClick = {},
-            onNavigationIconClick = {},
-        )
+            onRetryShown = {},
+        ) {}
     }
 }
