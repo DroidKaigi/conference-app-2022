@@ -97,7 +97,7 @@ public struct SearchView: View {
                                 Section(header: Text("\(day)")) {
                                     ForEach(viewStore.searchResult[day]?.contents ?? [], id: \.timetableItem.id.value) { timetableItem in
                                         HStack(alignment: .top, spacing: 33) {
-                                            SearchedSessionTimeView(
+                                            SessionTimeView(
                                                 startsAt: timetableItem.timetableItem.startsAt.toDate(),
                                                 endsAt: timetableItem.timetableItem.endsAt.toDate()
                                             )

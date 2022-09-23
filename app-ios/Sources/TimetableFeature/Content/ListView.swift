@@ -56,12 +56,10 @@ struct TimetableListView: View, ScrollDetectable {
                     ForEach(viewStore.timeGroupTimetableItems) { timetableTimeGroupItems in
                         HStack(alignment: .top, spacing: 28) {
                             VStack(alignment: .center, spacing: 0) {
-                                Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.startsAt))!)
-                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
-                                Rectangle()
-                                    .frame(width: 1, height: 4)
-                                Text(dateComponentsFormatter.string(from: convertToDateComponents(timetableTimeGroupItems.endsAt))!)
-                                    .singleLineFont(size: 16, weight: .bold, lineHeight: 24)
+                                SessionTimeView(
+                                    startsAt: timetableTimeGroupItems.startsAt,
+                                    endsAt: timetableTimeGroupItems.endsAt
+                                )
                             }
                             .foregroundColor(AssetColors.onBackground.swiftUIColor)
                             VStack(spacing: 32) {
