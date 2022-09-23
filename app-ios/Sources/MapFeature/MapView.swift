@@ -6,9 +6,6 @@ import SwiftUI
 import Theme
 
 public struct MapState: Equatable {
-    // FIXME: This is a temporary image.
-    let mapURL = URL(string: "https://user-images.githubusercontent.com/5885032/191032572-b128660f-bff2-4cd4-8228-27cc8f8974a9.png")
-
     public init() {}
 }
 
@@ -38,11 +35,10 @@ public struct MapView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack(alignment: .center) {
-                    AsyncImage(url: viewStore.mapURL)
-                        .aspectRatio(contentMode: .fit)
-                        .padding(8)
-                }
+                Image(asset: Assets.floorMap)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(14)
                 .navigationTitle(StringsKt.shared.title_map.localized())
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
