@@ -14,7 +14,6 @@ fun KaigiScaffold(
     topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     bottomBar: @Composable () -> Unit = {},
-    snackBarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
 
@@ -26,7 +25,6 @@ fun KaigiScaffold(
         bottomBar = {
             bottomBar()
         },
-        snackbarHost = snackBarHost,
     ) { insetPadding ->
         content(insetPadding)
     }
