@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -245,13 +246,14 @@ private fun SearchTextField(
             )
         },
         trailingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_delete),
-                contentDescription = "search_word_delete_icon",
-                modifier = Modifier.clickable {
-                    onSearchWordChange("")
-                }
-            )
+            IconButton(
+                onClick = { onSearchWordChange("") }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = "search_word_delete_icon",
+                )
+            }
         },
         onValueChange = {
             onSearchWordChange(it)
