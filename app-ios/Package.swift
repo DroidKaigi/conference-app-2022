@@ -19,7 +19,7 @@ var package = Package(
         .library(name: "Assets", targets: ["Assets"]),
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
-        .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
+        .library(name: "AnnouncementFeature", targets: ["AnnouncementFeature"]),
         .library(name: "SafariView", targets: ["SafariView"]),
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
@@ -63,12 +63,12 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
+                .target(name: "AnnouncementFeature"),
                 .target(name: "Assets"),
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
                 .target(name: "MapFeature"),
-                .target(name: "NotificationFeature"),
                 .target(name: "SponsorFeature"),
                 .target(name: "Theme"),
                 .target(name: "SearchFeature"),
@@ -77,6 +77,16 @@ var package = Package(
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "AnnouncementFeature",
+            dependencies: [
+                .target(name: "appioscombined"),
+                .target(name: "Assets"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
             ]
         ),
         .target(
@@ -126,20 +136,16 @@ var package = Package(
         .target(
             name: "MapFeature",
             dependencies: [
+                .target(name: "Assets"),            
                 .target(name: "CommonComponents"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Model"),
             ]
         ),
         .target(
             name: "Model",
             dependencies: [
                 .target(name: "appioscombined"),
-            ]
-        ),
-        .target(
-            name: "NotificationFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .target(

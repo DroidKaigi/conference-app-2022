@@ -148,7 +148,7 @@ public struct TimetableView: View {
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
                     .animation(.linear(duration: 0.2), value: viewStore.showDate)
-                }
+                }.animation(Animation.easeInOut(duration: 0.3), value: viewStore.state.showSheet)
                 .task {
                     await viewStore.send(.refresh).finish()
                 }

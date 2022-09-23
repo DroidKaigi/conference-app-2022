@@ -87,11 +87,11 @@ fun Sponsors(
                 LazyVerticalGrid(
                     modifier = modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .padding(innerPadding),
+                        .padding(horizontal = 16.dp),
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = innerPadding
                 ) {
                     sponsorsSection(
                         sponsorItemList = uiModel.state.value,

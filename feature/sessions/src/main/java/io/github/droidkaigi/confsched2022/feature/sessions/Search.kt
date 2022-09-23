@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +54,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -154,6 +160,9 @@ fun SearchRoot(
                 viewModel.onFilterFavoritesToggle()
             },
             onBackIconClick = onBackIconClick,
+            onSearchTextAreaClicked = {
+                viewModel.onSearchTextAreaClicked()
+            }
         )
     }
 }
@@ -166,6 +175,7 @@ private fun SearchScreen(
     onDayFilterClicked: () -> Unit,
     onCategoriesFilteredClicked: () -> Unit,
     onFavoritesToggleClicked: () -> Unit,
+    onSearchTextAreaClicked: () -> Unit,
     onBackIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -184,7 +194,8 @@ private fun SearchScreen(
                     is Success -> {
                         SearchTextField(
                             searchWord = searchWord.value,
-                            onSearchWordChange = { searchWord.value = it }
+                            onSearchWordChange = { searchWord.value = it },
+                            onSearchTextAreaClicked = onSearchTextAreaClicked,
                         ) {
                             onBackIconClick()
                         }
@@ -219,13 +230,23 @@ private fun SearchScreen(
 private fun SearchTextField(
     searchWord: String,
     onSearchWordChange: (String) -> Unit,
+    onSearchTextAreaClicked: () -> Unit,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
+
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            if (it is PressInteraction.Release) {
+                onSearchTextAreaClicked()
+            }
+        }
     }
     TextField(
         value = searchWord,
@@ -258,6 +279,7 @@ private fun SearchTextField(
         onValueChange = {
             onSearchWordChange(it)
         },
+        interactionSource = interactionSource,
     )
 }
 
@@ -281,52 +303,72 @@ private fun SearchedItemListField(
                 SearchedHeader(day = dayToTimeTable)
             }
             items(sessions) { timetableItemWithFavorite ->
-                Box(
+                val actionLabel = stringResource(
+                    if (timetableItemWithFavorite.isFavorited) {
+                        Strings.unregister_favorite_action_label
+                    } else {
+                        Strings.register_favorite_action_label
+                    }
+                )
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onItemClick(timetableItemWithFavorite.timetableItem.id) }
                         .padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Box(
-                            modifier = Modifier.width(85.dp),
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                val startLocalDateTime =
-                                    timetableItemWithFavorite.timetableItem.startsAt
-                                        .toLocalDateTime(TimeZone.of("UTC+9"))
-                                val endLocalDateTime =
-                                    timetableItemWithFavorite.timetableItem.endsAt
-                                        .toLocalDateTime(TimeZone.of("UTC+9"))
-                                val startTimeString = startLocalDateTime.time.toString()
-                                val endTimeString = endLocalDateTime.time.toString()
-
-                                Text(
-                                    text = startTimeString,
-                                    style = MaterialTheme.typography.titleMedium
+                        .semantics(mergeDescendants = true) {
+                            customActions = listOf(
+                                CustomAccessibilityAction(
+                                    label = actionLabel,
+                                    action = {
+                                        onBookMarkClick(
+                                            timetableItemWithFavorite.timetableItem.id,
+                                            timetableItemWithFavorite.isFavorited
+                                        )
+                                        true
+                                    }
                                 )
-                                Box(
-                                    modifier = Modifier
-                                        .size(1.dp, 2.dp)
-                                        .background(MaterialTheme.colorScheme.onBackground)
-                                ) { }
-                                Text(
-                                    text = endTimeString,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
+                            )
                         }
-                        SessionListItem(
-                            timetableItem = timetableItemWithFavorite.timetableItem,
-                            isFavorited = timetableItemWithFavorite.isFavorited,
-                            onFavoriteClick = onBookMarkClick,
-                            searchWord = searchWord,
-                        )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(85.dp)
+                            // Remove time semantics so description is set in SessionListItem
+                            .clearAndSetSemantics { },
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val startLocalDateTime =
+                                timetableItemWithFavorite.timetableItem.startsAt
+                                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                            val endLocalDateTime =
+                                timetableItemWithFavorite.timetableItem.endsAt
+                                    .toLocalDateTime(TimeZone.of("UTC+9"))
+                            val startTimeString = startLocalDateTime.time.toString()
+                            val endTimeString = endLocalDateTime.time.toString()
+
+                            Text(
+                                text = startTimeString,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(1.dp, 2.dp)
+                                    .background(MaterialTheme.colorScheme.onBackground)
+                            ) { }
+                            Text(
+                                text = endTimeString,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                     }
+                    SessionListItem(
+                        timetableItem = timetableItemWithFavorite.timetableItem,
+                        isFavorited = timetableItemWithFavorite.isFavorited,
+                        onFavoriteClick = onBookMarkClick,
+                        searchWord = searchWord,
+                    )
                 }
             }
         }
@@ -413,7 +455,8 @@ fun SearchScreenPreview() {
             onBackIconClick = {},
             onFavoritesToggleClicked = {},
             onDayFilterClicked = {},
-            onCategoriesFilteredClicked = {}
+            onCategoriesFilteredClicked = {},
+            onSearchTextAreaClicked = {},
         )
     }
 }
