@@ -9,8 +9,8 @@ public struct AnnouncementState: Equatable {
     public init() {}
 }
 public enum AnnouncementAction {
-    case load
-    case fetched([AnnouncementsByDate])
+    case refresh
+    case refreshResponse([AnnouncementsByDate])
 }
 
 public struct AnnouncementEnvironment {
@@ -24,15 +24,15 @@ public struct AnnouncementEnvironment {
 public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, AnnouncementEnvironment> { state, action, environment in
     let repository = environment.announcementsRepository
     switch action {
-    case .load:
+    case .refresh:
         return Effect.run { @MainActor subscriber in
             var iterator: AsyncThrowingStream<[AnnouncementsByDate], Error>.Iterator = repository.announcements().stream().makeAsyncIterator()
             guard let response = try await iterator.next() else {
                 return
             }
-            subscriber.send(.fetched(response))
+            subscriber.send(.refreshResponse(response))
         }
-    case .fetched(let list):
+    case .refreshResponse(let list):
         state.announcements = list
         return .none
     }
@@ -50,8 +50,7 @@ public struct AnnouncementView: View {
             NavigationView {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        ForEach(viewStore.announcements.indices, id: \.self) { index in
-                            let announcementsByDate = viewStore.announcements[index]
+                        ForEach(viewStore.announcements, id: \.publishedAt) { announcementsByDate in
                             AnnouncementsByDateView(announcementsByDate: announcementsByDate)
                         }
                     }
@@ -60,7 +59,7 @@ public struct AnnouncementView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .onAppear {
-                viewStore.send(.load)
+                viewStore.send(.refresh)
             }
         }
     }
