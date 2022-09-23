@@ -63,12 +63,12 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
+                .target(name: "AnnouncementFeature"),
                 .target(name: "Assets"),
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
                 .target(name: "MapFeature"),
-                .target(name: "AnnouncementFeature"),
                 .target(name: "SponsorFeature"),
                 .target(name: "Theme"),
                 .target(name: "SearchFeature"),
@@ -77,6 +77,16 @@ var package = Package(
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "AnnouncementFeature",
+            dependencies: [
+                .target(name: "appioscombined"),
+                .target(name: "Assets"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
             ]
         ),
         .target(
@@ -136,12 +146,6 @@ var package = Package(
             name: "Model",
             dependencies: [
                 .target(name: "appioscombined"),
-            ]
-        ),
-        .target(
-            name: "AnnouncementFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .target(
