@@ -18,16 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration.Indefinite
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -67,18 +61,17 @@ fun AnnouncementsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
-        onRetryShown = { viewModel.onRetryShown() },
+        onRetryDismissed = { viewModel.onRetryShown() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
     onRetryButtonClick: () -> Unit,
-    onRetryShown: () -> Unit,
+    onRetryDismissed: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
@@ -96,35 +89,15 @@ fun Announcements(
                     )
                 },
             )
-        },
-        snackBarHost = {
-            SnackbarHost(snackBarHostState) { snackBarData ->
-                SnackBarWithError(object : SnackbarData {
-                    override val visuals = snackBarData.visuals
-
-                    override fun dismiss() {
-                        onRetryShown()
-                    }
-
-                    override fun performAction() {
-                        onRetryButtonClick()
-                    }
-                })
-            }
         }
     ) { innerPadding ->
-        val errorMessage = stringResource(Strings.error_common_message)
-        val retryMessage = stringResource(Strings.error_common_retry)
-
-        LaunchedEffect(uiModel.retrySuggestion) {
-            if (uiModel.retrySuggestion) {
-                snackBarHostState.showSnackbar(
-                    message = errorMessage,
-                    actionLabel = retryMessage,
-                    duration = Indefinite
-                )
-            }
-        }
+        val retrySuggestion = uiModel.retrySuggestion
+        RetrySnackbarEffect(
+            retrySuggestion = retrySuggestion,
+            snackBarHostState = snackBarHostState,
+            onRetryDismissed = onRetryDismissed,
+            onRetryButtonClick = onRetryButtonClick
+        )
         when (uiModel.state) {
             is Error -> {
                 // Do nothing
@@ -266,19 +239,6 @@ fun FullScreenLoading(
 }
 
 @Composable
-fun SnackBarWithError(
-    snackBarData: SnackbarData
-) {
-
-    Snackbar(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        actionColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        snackbarData = snackBarData
-    )
-}
-
-@Composable
 private fun LocalDate.convertString(): String {
     val systemTZ = TimeZone.currentSystemDefault()
     val today = Clock.System.todayIn(systemTZ)
@@ -306,7 +266,7 @@ fun AnnouncementsPreview() {
             ),
             showNavigationIcon = true,
             onRetryButtonClick = {},
-            onRetryShown = {},
+            onRetryDismissed = {},
         ) {}
     }
 }

@@ -2,8 +2,13 @@ package io.github.droidkaigi.confsched2022.designsystem.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
@@ -17,6 +22,7 @@ fun KaigiScaffold(
     snackBarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
+
     Scaffold(
         modifier = modifier,
         topBar = {
