@@ -25,7 +25,7 @@ public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, 
     let repository = environment.announcementsRepository
     switch action {
     case .refresh:
-        return Effect.run { @MainActor subscriber in
+        return .run { @MainActor subscriber in
             var iterator: AsyncThrowingStream<[AnnouncementsByDate], Error>.Iterator = repository.announcements().stream().makeAsyncIterator()
             guard let response = try await iterator.next() else {
                 return
