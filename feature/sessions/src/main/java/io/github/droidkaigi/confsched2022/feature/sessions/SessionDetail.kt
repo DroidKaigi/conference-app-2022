@@ -46,6 +46,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -412,6 +413,7 @@ fun SessionDetailSessionInfo(
             modifier = Modifier,
             text = item.title.currentLangTitle,
             style = MaterialTheme.typography.headlineLarge,
+            fontStyle = FontStyle.Italic,
         )
 
         Spacer(modifier = Modifier.padding(24.dp))
