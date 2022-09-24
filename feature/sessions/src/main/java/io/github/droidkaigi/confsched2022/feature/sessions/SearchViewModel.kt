@@ -72,7 +72,7 @@ class SearchViewModel @Inject constructor(
             SearchUiModel(
                 filter = SearchFilterUiModel(
                     selectedCategories = filters.value.categories,
-                    selectedDay = filters.value.day,
+                    selectedDays = filters.value.days,
                     isFavoritesOn = filters.value.filterFavorite
                 ),
                 filterSheetState = filterSheetState.value,
@@ -99,15 +99,16 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    fun onDaySelected(day: DroidKaigi2022Day, isDeselected: Boolean) {
+    fun onDaySelected(day: DroidKaigi2022Day, isSelected: Boolean) {
+        val selectedDays = filters.value.days.toMutableList()
         filters.value = filters.value.copy(
-            day = if (isDeselected) {
-                null
-            } else {
-                day
-            }
+            days = selectedDays.apply {
+                if (isSelected)
+                    add(day)
+                else
+                    remove(day)
+            }.sortedBy(DroidKaigi2022Day::start)
         )
-        filterSheetState.value = SearchFilterSheetState.Hide
     }
 
     fun onFilterFavoritesToggle() {

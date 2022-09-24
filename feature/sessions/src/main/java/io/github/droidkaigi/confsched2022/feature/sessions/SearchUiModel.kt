@@ -13,11 +13,14 @@ data class SearchUiModel(
 
 data class SearchFilterUiModel(
     val selectedCategories: List<TimetableCategory> = emptyList(),
-    val selectedDay: DroidKaigi2022Day? = null,
+    val selectedDays: List<DroidKaigi2022Day> = emptyList(),
     val isFavoritesOn: Boolean = false,
 ) {
+    val selectedDaysValues: String
+        get() = selectedDays.joinToString { it.name }
+
     val isDaySelected: Boolean
-        get() = selectedDay != null
+        get() = selectedDays.isNotEmpty()
 
     val selectedCategoriesValue: String
         get() = selectedCategories.joinToString { it.title.currentLangTitle }
@@ -30,8 +33,10 @@ sealed interface SearchFilterSheetState {
     data class ShowDayFilter(
         val days: List<DroidKaigi2022Day>
     ) : SearchFilterSheetState
+
     data class ShowCategoriesFilterSheet(
         val categories: List<TimetableCategory>
     ) : SearchFilterSheetState
+
     object Hide : SearchFilterSheetState
 }

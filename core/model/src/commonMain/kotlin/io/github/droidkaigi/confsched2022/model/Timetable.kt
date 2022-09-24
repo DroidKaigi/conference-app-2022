@@ -42,9 +42,9 @@ public data class Timetable(
 
     public fun filtered(filters: Filters): Timetable {
         var timetableItems = timetableItems.toList()
-        if (filters.day != null) {
+        if (filters.days.isNotEmpty()) {
             timetableItems = timetableItems.filter { timetableItem ->
-                timetableItem.day == filters.day
+                filters.days.contains(timetableItem.day)
             }
         }
         if (filters.categories.isNotEmpty()) {
