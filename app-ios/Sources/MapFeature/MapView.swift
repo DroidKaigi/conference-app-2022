@@ -35,22 +35,25 @@ public struct MapView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                Image(asset: Assets.floorMap)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(14)
-                .navigationTitle(StringsKt.shared.title_map.localized())
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button(
-                            action: { viewStore.send(.tapPin) },
-                            label: { Image(asset: Assets.pin) }
-                        )
-                    }
-                    ToolbarItem(placement: .bottomBar) {
-                        Spacer()
-                    }
+                ZStack {
+                    AssetColors.background.swiftUIColor
+                    Image(asset: Assets.floorMap)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(14)
+                        .navigationTitle(StringsKt.shared.title_map.localized())
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .bottomBar) {
+                                Button(
+                                    action: { viewStore.send(.tapPin) },
+                                    label: { Image(asset: Assets.pin) }
+                                )
+                            }
+                            ToolbarItem(placement: .bottomBar) {
+                                Spacer()
+                            }
+                        }
                 }
             }
             .navigationViewStyle(.stack)

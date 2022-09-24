@@ -23,7 +23,6 @@ var package = Package(
         .library(name: "SafariView", targets: ["SafariView"]),
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
-        .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
         .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
@@ -41,10 +40,12 @@ var package = Package(
             name: "AboutFeature",
             dependencies: [
                 .target(name: "appioscombined"),
+                .target(name: "ContributorFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
                 .target(name: "StaffFeature"),
+                .target(name: "SponsorFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "LicenseList", package: "LicenseList")
             ],
@@ -73,7 +74,6 @@ var package = Package(
                 .target(name: "Theme"),
                 .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
-                .target(name: "SettingFeature"),
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -156,6 +156,7 @@ var package = Package(
             name: "SearchFeature",
             dependencies: [
                 .target(name: "CommonComponents"),
+                .target(name: "SessionFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -167,12 +168,6 @@ var package = Package(
                 .target(name: "CommonComponents"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]
-        ),
-        .target(
-            name: "SettingFeature",
-            dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),

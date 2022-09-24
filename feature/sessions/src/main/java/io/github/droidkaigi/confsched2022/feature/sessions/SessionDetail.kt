@@ -20,6 +20,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -257,6 +258,7 @@ fun SessionDetailBottomAppBar(
             Spacer(modifier = Modifier.weight(1F))
 
             FloatingActionButton(
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                 onClick = {
                     onFavoriteClick(isFavorite)
                 }
