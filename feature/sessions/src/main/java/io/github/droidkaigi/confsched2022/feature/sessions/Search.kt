@@ -25,7 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -308,32 +307,34 @@ private fun SearchTextField(
         singleLine = true,
         keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
         interactionSource = interactionSource,
-        decorationBox = @Composable { innerTextField -> TextFieldDefaults.TextFieldDecorationBox(
-            value = searchWord,
-            visualTransformation = VisualTransformation.None,
-            innerTextField = innerTextField,
-            placeholder = { Text(stringResource(Strings.search_placeholder)) },
-            trailingIcon = {
-                IconButton(
-                    onClick = { onSearchWordChange("") }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = "search_word_delete_icon",
-                    )
-                }
-            },
-            singleLine = true,
-            enabled = true,
-            colors = TextFieldDefaults.textFieldColors(),
-            interactionSource = remember { MutableInteractionSource() },
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                bottom = 16.dp,
-                start = 0.dp,
-                end = 16.dp
+        decorationBox = @Composable { innerTextField ->
+            TextFieldDefaults.TextFieldDecorationBox(
+                value = searchWord,
+                visualTransformation = VisualTransformation.None,
+                innerTextField = innerTextField,
+                placeholder = { Text(stringResource(Strings.search_placeholder)) },
+                trailingIcon = {
+                    IconButton(
+                        onClick = { onSearchWordChange("") }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "search_word_delete_icon",
+                        )
+                    }
+                },
+                singleLine = true,
+                enabled = true,
+                colors = TextFieldDefaults.textFieldColors(),
+                interactionSource = remember { MutableInteractionSource() },
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    bottom = 16.dp,
+                    start = 0.dp,
+                    end = 16.dp
+                )
             )
-        )}
+        }
     )
 }
 
