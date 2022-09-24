@@ -3,6 +3,8 @@ package io.github.droidkaigi.confsched2022.feature.sponsors
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
@@ -13,6 +15,7 @@ import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorItem.Title
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Gold
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Platinum
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Supporter
+import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.Plan
 import io.github.droidkaigi.confsched2022.model.Plan.GOLD
 import io.github.droidkaigi.confsched2022.model.Plan.PLATINUM
@@ -26,26 +29,35 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SponsorsViewModel @Inject constructor(
-    sponsorsRepository: SponsorsRepository
+    private val sponsorsRepository: SponsorsRepository
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    val uiModel: State<SponsorsUiModel>
+    private val sponsorsFlow = sponsorsRepository
+        .sponsors()
+        .map { it.mapToSponsorItems() }
+        .asLoadState()
+
+    private var appError by mutableStateOf<AppError?>(null)
+
+    val uiModel: State<SponsorsUiModel> = moleculeScope.moleculeComposeState(
+        clock = ContextClock
+    ) {
+        val sponsorLoadState by sponsorsFlow.collectAsState(initial = UiLoadState.Loading)
+        SponsorsUiModel(
+            state = sponsorLoadState,
+            appError = appError
+        )
+    }
 
     init {
-        val sponsorsFlow = sponsorsRepository.sponsors()
-            .map { it.mapToSponsorItems() }
-            .asLoadState()
-
-        uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            val sponsors by sponsorsFlow.collectAsState(initial = UiLoadState.Loading)
-            SponsorsUiModel(sponsors)
-        }
+        refresh()
     }
 
     private fun PersistentList<Sponsor>.mapToSponsorItems(): PersistentList<SponsorItem> {
@@ -86,5 +98,23 @@ class SponsorsViewModel @Inject constructor(
             plan = plan.mapToSponsorPlan(),
             link = link
         )
+    }
+
+    fun onRetryButtonClick() {
+        refresh()
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            try {
+                sponsorsRepository.refresh()
+            } catch (e: AppError) {
+                appError = e
+            }
+        }
+    }
+
+    fun onAppErrorNotified() {
+        appError = null
     }
 }
