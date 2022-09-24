@@ -327,7 +327,12 @@ private fun SearchTextField(
             enabled = true,
             colors = TextFieldDefaults.textFieldColors(),
             interactionSource = remember { MutableInteractionSource() },
-            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp, start = 0.dp, end = 16.dp)
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                bottom = 16.dp,
+                start = 0.dp,
+                end = 16.dp
+            )
         )}
     )
 }
