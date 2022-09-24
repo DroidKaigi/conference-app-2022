@@ -1,5 +1,3 @@
-import appioscombined
-
 public struct TimetableTimeGroupItems: Identifiable, Equatable, Hashable {
     public struct Duration: Hashable {
         public let startsAt: Kotlinx_datetimeInstant

@@ -1,5 +1,3 @@
-import appioscombined
-
 extension Timetable {
     public var hours: [Int] {
         let hours = timetableItems.flatMap { item in

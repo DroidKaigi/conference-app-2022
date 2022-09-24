@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.mokoResourcesPlugin)
     implementation(libs.kspGradlePlugin)
     implementation(libs.paparazziGradlePlugin)
+    implementation(libs.playOssLicensesPlugin)
 }
 
 gradlePlugin {
@@ -57,6 +58,10 @@ gradlePlugin {
         register("androidHilt") {
             id = "droidkaigi.primitive.android.hilt"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidHiltPlugin"
+        }
+        register("androidOssLicense") {
+            id = "droidkaigi.primitive.android.ossLicense"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidOssLicensePlugin"
         }
         register("dependencyGraph") {
             id = "droidkaigi.primitive.dependencygraph"

@@ -1,16 +1,28 @@
+import appioscombined
+import Assets
 import ComposableArchitecture
+import Model
 import SwiftUI
+import Theme
 
 public struct MapState: Equatable {
     public init() {}
 }
 
-public enum MapAction {}
+public enum MapAction {
+    case tapPin
+}
+
 public struct MapEnvironment {
     public init() {}
 }
-public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, _, _ in
-    return .none
+
+public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, action, _ in
+    switch action {
+    case .tapPin:
+        print("TODO: Pin is not implemented yet!")
+        return .none
+    }
 }
 
 public struct MapView: View {
@@ -21,7 +33,28 @@ public struct MapView: View {
     }
 
     public var body: some View {
-        Text("TODO: Map")
+        WithViewStore(store) { viewStore in
+            NavigationView {
+                Image(asset: Assets.floorMap)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(14)
+                .navigationTitle(StringsKt.shared.title_map.localized())
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(
+                            action: { viewStore.send(.tapPin) },
+                            label: { Image(asset: Assets.pin) }
+                        )
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        Spacer()
+                    }
+                }
+            }
+            .navigationViewStyle(.stack)
+        }
     }
 }
 

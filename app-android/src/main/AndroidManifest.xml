@@ -13,20 +13,26 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DroidKaigi"
+        android:theme="@style/Theme.DroidKaigi.SplashTheme"
         android:usesCleartextTraffic="true"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="33">
         <activity
             android:name="io.github.droidkaigi.confsched2022.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.DroidKaigi.NoActionBar">
+            android:theme="@style/Theme.DroidKaigi.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.App" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.App" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

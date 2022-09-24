@@ -26,28 +26,28 @@ naming:
 
 TwitterCompose:
   ContentEmitterReturningValues:
-    active: false
+    active: true
   ModifierComposable:
-    active: false
+    active: true
   ModifierMissing:
-    active: false
+    active: true
   ModifierReused:
-    active: false
+    active: true
   ModifierWithoutDefault:
-    active: false
+    active: true
   MultipleEmitters:
-    active: false
+    active: true
   MutableParams:
-    active: false
+    active: true
   ComposableNaming:
-    active: false
+    active: true
   ComposableParamOrder:
-    active: false
+    active: true
   PreviewPublic:
-    active: false
+    active: true
   RememberMissing:
-    active: false
+    active: true
   ViewModelForwarding:
-    active: false
+    active: true
   ViewModelInjection:
     active: true

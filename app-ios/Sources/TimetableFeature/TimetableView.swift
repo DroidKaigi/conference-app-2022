@@ -8,13 +8,19 @@ import Theme
 public struct TimetableState: Equatable {
     public var dayToTimetable: [DroidKaigi2022Day: Timetable]
     public var selectedDay: DroidKaigi2022Day
+    public var showDate: Bool
+    public var showSheet: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
-        selectedDay: DroidKaigi2022Day = .day1
+        selectedDay: DroidKaigi2022Day = .day1,
+        showDate: Bool = true,
+        showSheet: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
+        self.showDate = showDate
+        self.showSheet = showSheet
     }
 }
 
@@ -22,8 +28,11 @@ public enum TimetableAction {
     case refresh
     case refreshResponse(TaskResult<DroidKaigiSchedule>)
     case selectDay(DroidKaigi2022Day)
-    case selectItem(TimetableItem)
+    case selectItem(TimetableItemWithFavorite)
     case setFavorite(TimetableItemId, Bool)
+    case scroll(CGPoint)
+    case search
+    case switchContent
 }
 
 public struct TimetableEnvironment {
@@ -58,14 +67,22 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     case let .selectDay(day):
         state.selectedDay = day
         return .init(value: .refresh)
-    case .selectItem:
-        return .none
     case let .setFavorite(id, currentIsFavorite):
         return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
+    case let .scroll(position):
+        state.showDate = position.y >= TimetableView.scrollThreshold
+        return .none
+    case .selectItem:
+        return .none
+    case .search:
+        return .none
+    case .switchContent:
+        state.showSheet.toggle()
+        return .none
     }
 }
 
@@ -76,10 +93,27 @@ public struct TimetableView: View {
         self.store = store
     }
 
+    static let scrollThreshold: CGFloat = 88
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+
+                    if viewStore.state.showSheet {
+                        TimetableSheetView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    } else {
+                        TimetableListView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    }
+
                     HStack(spacing: 8) {
                         ForEach(
                             [DroidKaigi2022Day].fromKotlinArray(DroidKaigi2022Day.values())
@@ -91,9 +125,12 @@ public struct TimetableView: View {
                                 VStack(spacing: 0) {
                                     Text(day.name)
                                         .font(Font.system(size: 12, weight: .semibold))
-                                    Text("\(startDay)")
-                                        .font(Font.system(size: 24, weight: .semibold))
-                                        .frame(height: 32)
+                                    if viewStore.showDate {
+                                        Text("\(startDay)")
+                                            .font(Font.system(size: 24, weight: .semibold))
+                                            .frame(height: 32)
+                                            .transition(.move(edge: .top).combined(with: .opacity))
+                                    }
                                 }
                                 .padding(4)
                                 .frame(maxWidth: .infinity)
@@ -110,9 +147,8 @@ public struct TimetableView: View {
                     .padding(.vertical, 16)
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
-
-                    TimetableSheetView(store: store)
-                }
+                    .animation(.linear(duration: 0.2), value: viewStore.showDate)
+                }.animation(Animation.easeInOut(duration: 0.3), value: viewStore.state.showSheet)
                 .task {
                     await viewStore.send(.refresh).finish()
                 }
@@ -125,13 +161,13 @@ public struct TimetableView: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Group {
                             Button {
-                                // TODO: search
+                                viewStore.send(.search)
                             } label: {
                                 Assets.search.swiftUIImage
                                     .renderingMode(.template)
                             }
                             Button {
-                                // TODO: switch TimetableView
+                                viewStore.send(.switchContent)
                             } label: {
                                 Assets.calendar.swiftUIImage
                                     .renderingMode(.template)

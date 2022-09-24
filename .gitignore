@@ -56,5 +56,5 @@ Footer
 # Zipline
 kotlin-js-store/
 
-# Screenshot
-preview-screenshots/
+# Moko resource
+**/moko-resources-generated.js
