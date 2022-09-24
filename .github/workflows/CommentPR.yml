@@ -55,6 +55,7 @@ jobs:
           mkdir -p docs/screenshots/
           cp -a ../preview-screenshots/out/failures/delta* docs/screenshots/
           git add .
+          git config --global user.name ScreenshotBot
           git config --global push.default current
           git config --global remote.pushDefault origin
           git commit -m "Upload screenshots to github page."
@@ -62,6 +63,7 @@ jobs:
           cd ..
           cd preview-screenshots/out/failures
           echo ::set-output name=images::$(ls -d delta* | jq -R -s -c 'split("\n")[:-1]' | jq -r --arg IMAGE_PATH "https://raw.githubusercontent.com/droidkaigi/conference-app-2022/$BRANCH_NAME/docs/screenshots/" '.[] |= $IMAGE_PATH + .')
+          cd ../../../
 
       - name: Build PR Comment with Preview
         id: pr_comment
@@ -85,7 +87,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var fs = require('fs');
-            var issue_number = Number(fs.readFileSync('./NR'));
+            var issue_number = Number(fs.readFileSync('./preview-screenshots/out/failures/NR'));
             await github.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
