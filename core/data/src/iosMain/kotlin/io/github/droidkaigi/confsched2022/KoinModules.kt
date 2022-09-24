@@ -19,10 +19,13 @@ import io.github.droidkaigi.confsched2022.data.sessions.SessionsDao
 import io.github.droidkaigi.confsched2022.data.sessions.defaultKtorConfig
 import io.github.droidkaigi.confsched2022.data.sponsors.DataSponsorsRepository
 import io.github.droidkaigi.confsched2022.data.sponsors.SponsorsApi
+import io.github.droidkaigi.confsched2022.data.staff.DataStaffRepository
+import io.github.droidkaigi.confsched2022.data.staff.StaffApi
 import io.github.droidkaigi.confsched2022.model.AnnouncementsRepository
 import io.github.droidkaigi.confsched2022.model.ContributorsRepository
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.SponsorsRepository
+import io.github.droidkaigi.confsched2022.model.StaffRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.core.module.Module
@@ -48,6 +51,7 @@ public val dataModule: Module = module {
     singleOf(::ContributorsApi)
     singleOf(::AnnouncementsApi)
     singleOf(::SponsorsApi)
+    singleOf(::StaffApi)
     singleOf<DriverFactory>(::NativeDriverFactory)
     singleOf(::DatabaseService)
     singleOf(::SessionsDao)
@@ -55,4 +59,5 @@ public val dataModule: Module = module {
     singleOf(::DataSessionsRepository) bind SessionsRepository::class
     singleOf(::DataSponsorsRepository) bind SponsorsRepository::class
     singleOf(::DataAnnouncementsRepository) bind AnnouncementsRepository::class
+    singleOf(::DataStaffRepository) bind StaffRepository::class
 }

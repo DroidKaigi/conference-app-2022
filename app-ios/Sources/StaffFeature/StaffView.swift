@@ -2,20 +2,57 @@ import appioscombined
 import ComposableArchitecture
 import Model
 import SwiftUI
+import Theme
 
 public struct StaffState: Equatable {
     public var staffs: [Staff]
+
     public init(staffs: [Staff] = []) {
         self.staffs = staffs
     }
 }
 
-public enum StaffAction {}
-public struct StaffEnvironment {
-    public init() {}
+public enum StaffAction {
+    case refresh
+    case refreshResponse(TaskResult<[Staff]>)
+    case selectStaff(Staff)
 }
-public let staffReducer = Reducer<StaffState, StaffAction, StaffEnvironment> { _, _, _ in
-    return .none
+public struct StaffEnvironment {
+    @Environment(\.openURL) var openURL
+    public let staffRepository: StaffRepository
+
+    public init(
+        staffRepository: StaffRepository
+    ) {
+        self.staffRepository = staffRepository
+    }
+}
+
+public let staffReducer = Reducer<StaffState, StaffAction, StaffEnvironment> { state, action, environment in
+    switch action {
+    case .refresh:
+        return .run { @MainActor subscriber in
+            for try await result: [Staff] in environment.staffRepository.staff().stream() {
+                await subscriber.send(
+                    .refreshResponse(
+                        TaskResult {
+                            result
+                        }
+                    )
+                )
+            }
+        }
+    case .refreshResponse(.success(let staffs)):
+        state.staffs = staffs
+        return .none
+    case .refreshResponse(.failure):
+        return .none
+    case .selectStaff(let staff):
+        if let url = URL(string: staff.profileUrl) {
+            environment.openURL(url)
+        }
+        return .none
+    }
 }
 
 public struct StaffView: View {
@@ -29,11 +66,18 @@ public struct StaffView: View {
         WithViewStore(store) { viewStore in
             ScrollView {
                 ForEach(viewStore.staffs, id: \.self) { staff in
-                    StaffRowView(staff: staff)
+                    StaffRowView(staff: staff) {
+                        viewStore.send(.selectStaff(staff))
+                    }
                 }
             }
+            .task {
+                await viewStore.send(.refresh).finish()
+            }
         }
+        .background(AssetColors.background.swiftUIColor)
         .navigationTitle(StringsKt.shared.about_staff.localized())
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -46,7 +90,9 @@ struct StaffView_Previews: PreviewProvider {
                     staffs: Staff.companion.fakes()
                 ),
                 reducer: .empty,
-                environment: StaffEnvironment()
+                environment: StaffEnvironment(
+                    staffRepository: FakeStaffRepository()
+                )
             )
         )
     }
