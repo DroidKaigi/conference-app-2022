@@ -39,6 +39,11 @@ jobs:
         continue-on-error: true
         run: ./gradlew preview-screenshots:verifyPaparazziDebug
 
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+
       - name: Error Screenshot tests
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
         uses: actions/upload-artifact@v3
