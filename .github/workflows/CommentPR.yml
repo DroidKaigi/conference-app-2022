@@ -102,6 +102,7 @@ jobs:
           TARGET_BRANCH_PREFIX: companion_
           DATE_FORMAT: '%Y%m%d'
         run: |
+          cd temp_docs/
           expired_date=`date --date="$EXPIRED_TERM" "+${DATE_FORMAT}"` 
           git fetch --all
           git branch -r | grep "[^* ]+" -Eo | grep "${REMOTE_REPO}/${TARGET_BRANCH_PREFIX}.+" -Eo |
