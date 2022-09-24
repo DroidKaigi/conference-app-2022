@@ -14,8 +14,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +34,7 @@ import java.util.Locale
 fun FilterDaySheet(
     selectedDay: DroidKaigi2022Day?,
     kaigiDays: List<DroidKaigi2022Day>,
-    onDaySelected: (DroidKaigi2022Day) -> Unit,
+    onDaySelected: (DroidKaigi2022Day, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit
 ) {
@@ -51,7 +49,7 @@ fun FilterDaySheet(
         kaigiDays.forEach { kaigiDay ->
             Row(
                 modifier = Modifier
-                    .clickable { onDaySelectedUpdated(kaigiDay) }
+                    .clickable { onDaySelectedUpdated(kaigiDay, selectedDay == kaigiDay) }
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -78,12 +76,12 @@ fun FilterDaySheet(
                     "${date.dayOfMonth}th"
                 }
 
-                RadioButton(
-                    selected = selectedDay == kaigiDay,
-                    onClick = {},
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary,
-                        unselectedColor = MaterialTheme.colorScheme.primary
+                Checkbox(
+                    checked = selectedDay == kaigiDay,
+                    onCheckedChange = {},
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = MaterialTheme.colorScheme.primary,
+                        uncheckedColor = MaterialTheme.colorScheme.primary
                     )
                 )
 
