@@ -32,7 +32,7 @@ import java.util.Locale
 
 @Composable
 fun FilterDaySheet(
-    selectedDay: DroidKaigi2022Day?,
+    selectedDays: List<DroidKaigi2022Day>,
     kaigiDays: List<DroidKaigi2022Day>,
     onDaySelected: (DroidKaigi2022Day, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -49,7 +49,14 @@ fun FilterDaySheet(
         kaigiDays.forEach { kaigiDay ->
             Row(
                 modifier = Modifier
-                    .clickable { onDaySelectedUpdated(kaigiDay, selectedDay == kaigiDay) }
+                    .clickable {
+                        onDaySelectedUpdated(
+                            kaigiDay,
+                            selectedDays
+                                .contains(kaigiDay)
+                                .not()
+                        )
+                    }
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -77,7 +84,7 @@ fun FilterDaySheet(
                 }
 
                 Checkbox(
-                    checked = selectedDay == kaigiDay,
+                    checked = selectedDays.contains(kaigiDay),
                     onCheckedChange = {},
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialTheme.colorScheme.primary,

@@ -117,7 +117,7 @@ fun SearchRoot(
             when (val sheetState = state.filterSheetState) {
                 is SearchFilterSheetState.ShowDayFilter -> {
                     FilterDaySheet(
-                        selectedDay = state.filter.selectedDay,
+                        selectedDays = state.filter.selectedDays,
                         kaigiDays = sheetState.days,
                         onDaySelected = viewModel::onDaySelected,
                         onDismiss = viewModel::onFilterSheetDismissed
@@ -447,8 +447,9 @@ fun SearchFilter(
         FilterButton(
             isSelected = model.isDaySelected,
             isDropDown = true,
-            text = model.selectedDay?.name
-                ?: stringResource(id = Strings.search_filter_select_day.resourceId),
+            text = model.selectedDaysValues.ifEmpty {
+                stringResource(id = Strings.search_filter_select_day.resourceId)
+            },
             onClicked = onDayClicked
         )
 
