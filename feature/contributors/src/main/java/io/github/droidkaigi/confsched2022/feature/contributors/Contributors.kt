@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.components.UsernameRow
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.Contributor
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.strings.Strings
@@ -38,6 +41,8 @@ fun ContributorsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onLinkClick = onLinkClick
     )
 }
@@ -47,10 +52,15 @@ fun Contributors(
     uiModel: ContributorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             KaigiTopAppBar(
@@ -64,9 +74,17 @@ fun Contributors(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Box {
             when (uiModel.state) {
-                is Error -> TODO()
+                is Error -> {
+                    // Do nothing
+                }
                 Loading -> Box(
                     modifier = Modifier.padding(innerPadding).fillMaxSize(),
                     contentAlignment = Alignment.Center,
@@ -103,10 +121,13 @@ fun ContributorsPreview() {
             uiModel = ContributorsUiModel(
                 state = Success(
                     Contributor.fakes()
-                )
+                ),
+                appError = null,
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
             onLinkClick = { _, _ -> },
         )
     }
