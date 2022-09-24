@@ -61,7 +61,7 @@ fun AnnouncementsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
-        onRetryDismissed = { viewModel.onRetryShown() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
@@ -71,7 +71,7 @@ fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
     onRetryButtonClick: () -> Unit,
-    onRetryDismissed: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit,
 ) {
@@ -95,7 +95,7 @@ fun Announcements(
         AppErrorSnackbarEffect(
             appError = uiModel.appError,
             snackBarHostState = snackbarHostState,
-            onRetryDismissed = onRetryDismissed,
+            onAppErrorNotified = onAppErrorNotified,
             onRetryButtonClick = onRetryButtonClick
         )
         when (uiModel.state) {
@@ -266,7 +266,7 @@ fun AnnouncementsPreview() {
             ),
             showNavigationIcon = true,
             onRetryButtonClick = {},
-            onRetryDismissed = {},
+            onAppErrorNotified = {},
         ) {}
     }
 }
