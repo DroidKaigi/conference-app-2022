@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,7 +37,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,12 +61,15 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.Typography
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
@@ -272,6 +278,7 @@ private fun SearchTextField(
     onSearchWordChange: (String) -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = Typography.titleMedium,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -287,34 +294,41 @@ private fun SearchTextField(
             }
         }
     }
-    TextField(
+
+    BasicTextField(
         value = searchWord,
         modifier = modifier
             .fillMaxWidth(1.0f)
             .height(64.dp)
             .background(color = MaterialTheme.colorScheme.surfaceVariant)
             .focusRequester(focusRequester),
-        textStyle = MaterialTheme.typography.bodyLarge,
-        placeholder = { Text(stringResource(Strings.search_placeholder)) },
+        onValueChange = onSearchWordChange,
+        textStyle = textStyle.copy(color = MaterialTheme.colorScheme.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         singleLine = true,
         keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
-        trailingIcon = {
-            IconButton(
-                onClick = { onSearchWordChange("") }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "search_word_delete_icon",
-                )
-            }
-        },
-        onValueChange = onSearchWordChange,
         interactionSource = interactionSource,
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-        )
+        decorationBox = @Composable { innerTextField -> TextFieldDefaults.TextFieldDecorationBox(
+            value = searchWord,
+            visualTransformation = VisualTransformation.None,
+            innerTextField = innerTextField,
+            placeholder = { Text(stringResource(Strings.search_placeholder)) },
+            trailingIcon = {
+                IconButton(
+                    onClick = { onSearchWordChange("") }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete),
+                        contentDescription = "search_word_delete_icon",
+                    )
+                }
+            },
+            singleLine = true,
+            enabled = true,
+            colors = TextFieldDefaults.textFieldColors(),
+            interactionSource = remember { MutableInteractionSource() },
+            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp, start = 0.dp, end = 16.dp)
+        )}
     )
 }
 
