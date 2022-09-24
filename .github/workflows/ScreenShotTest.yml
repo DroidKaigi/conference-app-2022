@@ -41,8 +41,8 @@ jobs:
 
       - name: Save PR number
         run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
+          mkdir -p ./preview-screenshots/out/failures
+          echo ${{ github.event.number }} > ./preview-screenshots/out/failures/NR
 
       - name: Error Screenshot tests
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
