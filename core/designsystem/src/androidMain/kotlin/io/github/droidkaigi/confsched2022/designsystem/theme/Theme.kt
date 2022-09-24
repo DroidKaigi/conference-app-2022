@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColorScheme(
-    primary = Color(KaigiColors.primaryKeyColor80),
+    primary = Color(KaigiColors.primaryKeyColor40),
     onPrimary = Color(KaigiColors.primaryKeyColor20),
     primaryContainer = Color(KaigiColors.primaryKeyColor30),
     onPrimaryContainer = Color(KaigiColors.primaryKeyColor90),
