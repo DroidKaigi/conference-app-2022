@@ -33,7 +33,9 @@ jobs:
             });
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/screenshot-test-results.zip', Buffer.from(download.data));
-      - run: unzip screenshot-test-results.zip -d preview-screenshots/out/failures
+      - run: |
+          mkdir -p preview-screenshots/out/failures
+          unzip screenshot-test-results.zip -d preview-screenshots/out/failures
       - name: New checkout for the companion branch
         id: checkout_docs
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
@@ -46,7 +48,7 @@ jobs:
         if: steps.checkout_docs.outcome == 'success'
         continue-on-error: true # https://github.com/DroidKaigi/conference-app-2022/issues/497
         env:
-          BRANCH_NAME: companion_${{ github.head_ref || github.ref_name }}
+          BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         run: |
           cd temp_docs/
           git switch -C $BRANCH_NAME
@@ -76,22 +78,29 @@ jobs:
           done
           echo ::set-output name=comment::$(cat report.md)
 
-      - name: Comment PR
+      - name: 'Comment on PR'
         if: steps.pr_comment.outcome == 'success'
-        uses: thollander/actions-comment-pull-request@v1
+        uses: actions/github-script@v3
         with:
-          message: ${{ steps.pr_comment.outputs.comment }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var fs = require('fs');
+            var issue_number = Number(fs.readFileSync('./NR'));
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: `${{ steps.pr_comment.outputs.comment }}`
+            });
       - name: Delete old branch saving screenshots
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXPIRED_TERM: 2w # first letter of year, month, week and day
+          EXPIRED_TERM: 14 day ago
           REMOTE_REPO: origin
           TARGET_BRANCH_PREFIX: companion_
           DATE_FORMAT: '%Y%m%d'
         run: |
-          expired_date=`date -v-$EXPIRED_TERM "+${DATE_FORMAT}"` 
+          expired_date=`date --date="$EXPIRED_TERM" "+${DATE_FORMAT}"` 
           git fetch --all
           git branch -r | grep "[^* ]+" -Eo | grep "${REMOTE_REPO}/${TARGET_BRANCH_PREFIX}.+" -Eo |
           while read branch; do

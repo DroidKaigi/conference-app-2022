@@ -13,7 +13,7 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 public fun AppErrorSnackbarEffect(
     appError: AppError?,
     snackBarHostState: SnackbarHostState,
-    onRetryDismissed: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     onRetryButtonClick: () -> Unit
 ) {
     val errorMessage = stringResource(Strings.error_common_message)
@@ -25,7 +25,7 @@ public fun AppErrorSnackbarEffect(
                 actionLabel = retryMessage,
                 duration = Long
             )
-            onRetryDismissed()
+            onAppErrorNotified()
             if (snackbarResult == ActionPerformed) onRetryButtonClick()
         }
     }

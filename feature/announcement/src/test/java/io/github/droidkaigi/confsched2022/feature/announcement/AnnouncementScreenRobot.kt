@@ -22,7 +22,8 @@ class AnnouncementScreenRobot @Inject constructor() {
     ) {
         robotTestRule.composeTestRule.setContent {
             AnnouncementsScreenRoot(
-                onNavigationIconClick = {}
+                onNavigationIconClick = {},
+                onLinkClick = {},
             )
         }
         function(robotTestRule, this@AnnouncementScreenRobot)
