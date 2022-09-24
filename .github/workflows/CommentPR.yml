@@ -55,6 +55,7 @@ jobs:
           mkdir -p docs/screenshots/
           cp -a ../preview-screenshots/out/failures/delta* docs/screenshots/
           git add .
+          git config --global user.name ScreenshotBot
           git config --global push.default current
           git config --global remote.pushDefault origin
           git commit -m "Upload screenshots to github page."
