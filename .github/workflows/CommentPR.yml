@@ -33,7 +33,9 @@ jobs:
             });
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/screenshot-test-results.zip', Buffer.from(download.data));
-      - run: unzip screenshot-test-results.zip -d preview-screenshots/out/failures
+      - run: |
+          mkdir -p preview-screenshots/out/failures
+          unzip screenshot-test-results.zip -d preview-screenshots/out/failures
       - name: New checkout for the companion branch
         id: checkout_docs
         if: ${{ hashFiles('preview-screenshots/out/failures/*.png') != '' }}
