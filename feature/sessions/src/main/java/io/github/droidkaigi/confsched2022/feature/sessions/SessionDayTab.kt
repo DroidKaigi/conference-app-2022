@@ -21,10 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.theme.montserratFonts
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day2
 
 @Composable
 internal fun SessionDayTab(
@@ -38,7 +41,11 @@ internal fun SessionDayTab(
     Tab(
         selected = selected,
         onClick = { onTabClicked(index) },
-        modifier = Modifier.height(height).padding(end = 8.dp).clip(CircleShape)
+        modifier = Modifier.height(height).padding(end = 8.dp).clip(CircleShape).semantics {
+            if (day == Day2) {
+                testTag = "sessionDayTab"
+            }
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
