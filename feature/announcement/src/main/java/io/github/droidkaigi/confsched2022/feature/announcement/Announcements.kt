@@ -54,15 +54,15 @@ import kotlinx.datetime.todayIn
 @Composable
 fun AnnouncementsScreenRoot(
     onLinkClick: (url: String) -> Unit,
-    viewModel: AnnouncementsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
+    viewModel: AnnouncementsViewModel = hiltViewModel(),
     onNavigationIconClick: () -> Unit,
 ) {
     val uiModel by viewModel.uiModel
     Announcements(
         onLinkClick = onLinkClick,
-        uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
+        uiModel = uiModel,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
         onRetryDismissed = { viewModel.onRetryShown() },
         onNavigationIconClick = onNavigationIconClick
