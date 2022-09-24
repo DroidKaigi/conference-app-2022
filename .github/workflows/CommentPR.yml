@@ -90,17 +90,17 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue_number,
-              body: ${{ steps.pr_comment.outputs.comment }}
+              body: `${{ steps.pr_comment.outputs.comment }}`
             });
       - name: Delete old branch saving screenshots
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXPIRED_TERM: 2w # first letter of year, month, week and day
+          EXPIRED_TERM: 14 day ago
           REMOTE_REPO: origin
           TARGET_BRANCH_PREFIX: companion_
           DATE_FORMAT: '%Y%m%d'
         run: |
-          expired_date=`date -v-$EXPIRED_TERM "+${DATE_FORMAT}"` 
+          expired_date=`date --date="$EXPIRED_TERM" "+${DATE_FORMAT}"` 
           git fetch --all
           git branch -r | grep "[^* ]+" -Eo | grep "${REMOTE_REPO}/${TARGET_BRANCH_PREFIX}.+" -Eo |
           while read branch; do
