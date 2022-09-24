@@ -79,6 +79,7 @@ jobs:
           echo ::set-output name=comment::$(cat report.md)
 
       - name: 'Comment on PR'
+        if: steps.pr_comment.outcome == 'success'
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
