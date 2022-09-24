@@ -228,12 +228,12 @@ private fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTextFieldTopAppBar(
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     searchWord: String,
     onSearchWordChange: (String) -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
 ) {
     Column {
         TopAppBar(
@@ -313,7 +313,7 @@ private fun SearchTextField(
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            disabledIndicatorColor = Color.Transparent,
         )
     )
 }
