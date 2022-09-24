@@ -5,12 +5,9 @@ import Assets
 import Auth
 import ComposableArchitecture
 import Container
-import ContributorFeature
 import MapFeature
 import SearchFeature
 import SessionFeature
-import SettingFeature
-import SponsorFeature
 import SwiftUI
 import Theme
 import TimetableFeature
@@ -20,9 +17,6 @@ public enum AppTab {
     case about
     case announcement
     case map
-    case sponsor
-    case contributor
-    case setting
 }
 
 public struct AppState: Equatable {
@@ -30,9 +24,6 @@ public struct AppState: Equatable {
     public var aboutState: AboutState
     public var announcementState: AnnouncementState
     public var mapState: MapState
-    public var sponsorState: SponsorState
-    public var contributorState: ContributorState
-    public var settingState: SettingState
     public var sessionState: SessionState?
     public var searchState: SearchState?
     public var selectedTab: AppTab
@@ -42,9 +33,6 @@ public struct AppState: Equatable {
         aboutState: AboutState = .init(),
         announcementState: AnnouncementState = .init(),
         mapState: MapState = .init(),
-        sponsorState: SponsorState = .init(),
-        contributorState: ContributorState = .init(),
-        settingState: SettingState = .init(),
         sessionState: SessionState? = nil,
         searchState: SearchState? = nil,
         selectedTab: AppTab = .timetable
@@ -53,9 +41,6 @@ public struct AppState: Equatable {
         self.aboutState = aboutState
         self.announcementState = announcementState
         self.mapState = mapState
-        self.sponsorState = sponsorState
-        self.contributorState = contributorState
-        self.settingState = settingState
         self.searchState = searchState
         self.sessionState = sessionState
         self.selectedTab = selectedTab
@@ -67,9 +52,6 @@ public enum AppAction {
     case about(AboutAction)
     case announcement(AnnouncementAction)
     case map(MapAction)
-    case sponsor(SponsorAction)
-    case contributor(ContributorAction)
-    case setting(SettingAction)
     case search(SearchAction)
     case session(SessionAction)
     case selectTab(AppTab)
@@ -138,7 +120,9 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         action: /AppAction.about,
         environment: {
             .init(
-                staffRepository: $0.staffRepository
+                staffRepository: $0.staffRepository,
+                contributorsRepository: $0.contributorsRepository,
+                sponsorRepository: $0.sponsorsRepository
             )
         }
     ),
@@ -154,31 +138,6 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     mapReducer.pullback(
         state: \.mapState,
         action: /AppAction.map,
-        environment: { _ in
-            .init()
-        }
-    ),
-    sponsorReducer.pullback(
-        state: \.sponsorState,
-        action: /AppAction.sponsor,
-        environment: {
-            .init(
-                sponsorsRepository: $0.sponsorsRepository
-            )
-        }
-    ),
-    contributorReducer.pullback(
-        state: \.contributorState,
-        action: /AppAction.contributor,
-        environment: {
-            .init(
-                contributorsRepository: $0.contributorsRepository
-            )
-        }
-    ),
-    settingReducer.pullback(
-        state: \.settingState,
-        action: /AppAction.setting,
         environment: { _ in
             .init()
         }
@@ -216,12 +175,6 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         case .announcement:
             return .none
         case .map:
-            return .none
-        case .sponsor:
-            return .none
-        case .contributor:
-            return .none
-        case .setting:
             return .none
         case .search:
             return .none
@@ -324,42 +277,6 @@ public struct AppView: View {
                     Text(StringsKt.shared.title_map.localized())
                 }
                 .tag(AppTab.map)
-                SponsorView(
-                    store: store.scope(
-                        state: \.sponsorState,
-                        action: AppAction.sponsor
-                    )
-                )
-                .tabItem {
-                    Assets.company.swiftUIImage
-                        .renderingMode(.template)
-                    Text(StringsKt.shared.title_sponsors.localized())
-                }
-                .tag(AppTab.sponsor)
-                ContributorView(
-                    store: store.scope(
-                        state: \.contributorState,
-                        action: AppAction.contributor
-                    )
-                )
-                .tabItem {
-                    Assets.people.swiftUIImage
-                        .renderingMode(.template)
-                    Text(StringsKt.shared.title_contributors.localized())
-                }
-                .tag(AppTab.contributor)
-                SettingView(
-                    store: store.scope(
-                        state: \.settingState,
-                        action: AppAction.setting
-                    )
-                )
-                .tabItem {
-                    Assets.gear.swiftUIImage
-                        .renderingMode(.template)
-                    Text(StringsKt.shared.title_setting.localized())
-                }
-                .tag(AppTab.setting)
             }
             .accentColor(AssetColors.onSurface.swiftUIColor)
             .sheet(
