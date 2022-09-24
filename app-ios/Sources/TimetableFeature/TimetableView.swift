@@ -47,6 +47,7 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
     switch action {
     case .refresh:
         return .run { @MainActor subscriber in
+            try await environment.sessionsRepository.refresh()
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
                     .refreshResponse(

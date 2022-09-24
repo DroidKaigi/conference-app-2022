@@ -1,6 +1,8 @@
 import appioscombined
 import ComposableArchitecture
+import ContributorFeature
 import LicenseList
+import SponsorFeature
 import StaffFeature
 import SwiftUI
 import Theme
@@ -8,19 +10,26 @@ import Theme
 public enum AboutDestination {
     case none
     case staffs
-    case privacyPolicy
     case license
+    case contributor
+    case sponsor
 }
 
 public struct AboutState: Equatable {
     public var staffState: StaffState
+    public var contributorState: ContributorState
+    public var sponsorState: SponsorState
     public var navigationDestination: AboutDestination
 
     public init(
         staffState: StaffState = .init(),
+        contributorState: ContributorState = .init(),
+        sponsorState: SponsorState = .init(),
         navigationDestination: AboutDestination = .none
     ) {
         self.staffState = staffState
+        self.contributorState = contributorState
+        self.sponsorState = sponsorState
         self.navigationDestination = navigationDestination
     }
 }
@@ -29,18 +38,29 @@ public enum AboutAction {
     case backToTop
     case openAccess
     case openStaffs
+    case openContributors
+    case openSponsors
     case openPrivacyPolicy
     case openLicense
     case staff(StaffAction)
-    case setSheet(isPresented: Bool)
+    case contributor(ContributorAction)
+    case sponsor(SponsorAction)
 }
 
 public struct AboutEnvironment {
     @Environment(\.openURL) var openURL
     public let staffRepository: StaffRepository
+    public let contributorsRepository: ContributorsRepository
+    public let sponsorRepository: SponsorsRepository
 
-    public init(staffRepository: StaffRepository) {
+    public init(
+        staffRepository: StaffRepository,
+        contributorsRepository: ContributorsRepository,
+        sponsorRepository: SponsorsRepository
+    ) {
         self.staffRepository = staffRepository
+        self.contributorsRepository = contributorsRepository
+        self.sponsorRepository = sponsorRepository
     }
 }
 
@@ -51,6 +71,24 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
         environment: {
             .init(
                 staffRepository: $0.staffRepository
+            )
+        }
+    ),
+    contributorReducer.pullback(
+        state: \.contributorState,
+        action: /AboutAction.contributor,
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
+        }
+    ),
+    sponsorReducer.pullback(
+        state: \.sponsorState,
+        action: /AboutAction.sponsor,
+        environment: {
+            .init(
+                sponsorsRepository: $0.sponsorRepository
             )
         }
     ),
@@ -65,14 +103,23 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
         case .openStaffs:
             state.navigationDestination = .staffs
             return .none
+        case .openContributors:
+            state.navigationDestination = .contributor
+            return .none
+        case .openSponsors:
+            state.navigationDestination = .sponsor
+            return .none
         case .openAccess:
             environment.openURL(URL(string: StaticURLs.access)!)
             return .none
         case .openPrivacyPolicy:
-            state.navigationDestination = .privacyPolicy
             environment.openURL(URL(string: StaticURLs.privacyPolicy)!)
             return .none
-        default:
+        case .staff:
+            return .none
+        case .contributor:
+            return .none
+        case .sponsor:
             return .none
         }
     }
@@ -164,10 +211,22 @@ public struct AboutView: View {
                                 StaffView(
                                     store: store.scope(state: \.staffState, action: AboutAction.staff)
                                 )
-                            case .privacyPolicy:
-                                Text("TODO: Privacy Policy")
                             case .license:
                                 AboutLicenseView()
+                            case .contributor:
+                                ContributorView(
+                                    store: store.scope(
+                                        state: \.contributorState,
+                                        action: AboutAction.contributor
+                                    )
+                                )
+                            case .sponsor:
+                                SponsorView(
+                                    store: store.scope(
+                                        state: \.sponsorState,
+                                        action: AboutAction.sponsor
+                                    )
+                                )
                             }
                         }, label: {
                             EmptyView()
@@ -190,7 +249,9 @@ struct AboutView_Previews: PreviewProvider {
                 initialState: .init(),
                 reducer: .empty,
                 environment: AboutEnvironment(
-                    staffRepository: FakeStaffRepository()
+                    staffRepository: FakeStaffRepository(),
+                    contributorsRepository: FakeContributorsRepository(),
+                    sponsorRepository: FakeSponsorsRepository()
                 )
             )
         )

@@ -64,13 +64,13 @@ struct TimetableListView: View, ScrollDetectable {
                                     TimetableListItemView(
                                         item: item,
                                         isFavorite: isFavorite,
+                                        onTap: {
+                                            viewStore.send(.selectItem(timetableItemWithFavorite))
+                                        },
                                         onFavoriteToggle: { id, currentIsFavorite in
                                             viewStore.send(.setFavorite(id, currentIsFavorite))
                                         }
                                     )
-                                    .onTapGesture {
-                                        viewStore.send(.selectItem(timetableItemWithFavorite))
-                                    }
                                 }
                             }
                         }

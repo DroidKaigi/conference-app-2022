@@ -18,6 +18,16 @@ struct AboutNavigationItem {
                 action: .openStaffs
             ),
             AboutNavigationItem(
+                image: AboutViewAssets.people,
+                title: StringsKt.shared.title_contributors.localized(),
+                action: .openContributors
+            ),
+            AboutNavigationItem(
+                image: AboutViewAssets.company,
+                title: StringsKt.shared.title_sponsors.localized(),
+                action: .openSponsors
+            ),
+            AboutNavigationItem(
                 image: AboutViewAssets.shield,
                 title: StringsKt.shared.about_privacy.localized(),
                 action: .openPrivacyPolicy
