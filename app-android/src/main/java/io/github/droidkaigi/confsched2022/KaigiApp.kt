@@ -150,6 +150,7 @@ fun KaigiApp(
                     )
                     announcementGraph(
                         showNavigationIcon = showNavigationIcon,
+                        onLinkClick = kaigiExternalNavigationController::navigate,
                         onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     )
                     settingNavGraph(
