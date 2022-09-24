@@ -29,6 +29,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -65,6 +66,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -107,6 +109,8 @@ fun SessionsScreenRoot(
         onToggleTimetableClick = { isTimetable ->
             viewModel.onTimetableModeToggle(isTimetable)
         },
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
     )
 }
 
@@ -120,6 +124,8 @@ fun Sessions(
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scheduleState = uiModel.state
@@ -135,8 +141,10 @@ fun Sessions(
         timetableListStates,
         sessionsListListStates
     )
+    val snackbarHostState = remember { SnackbarHostState() }
     KaigiScaffold(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         topBar = {
             SessionsTopBar(
                 pagerContentsScrollState,
@@ -149,6 +157,12 @@ fun Sessions(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Column {
             when (scheduleState) {
                 is Error -> {
@@ -509,7 +523,8 @@ fun SessionsTimetablePreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -517,6 +532,8 @@ fun SessionsTimetablePreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -529,7 +546,8 @@ fun SessionsSessionListPreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = false
+                isTimetable = false,
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -537,6 +555,8 @@ fun SessionsSessionListPreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -549,14 +569,17 @@ fun SessionsLoadingPreview() {
             uiModel = SessionsUiModel(
                 state = Loading,
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                appError = null
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
-            showNavigationIcon = true
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }

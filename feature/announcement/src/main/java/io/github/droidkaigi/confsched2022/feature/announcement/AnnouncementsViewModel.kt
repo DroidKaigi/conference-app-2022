@@ -60,7 +60,7 @@ class AnnouncementsViewModel @Inject constructor(
         }
     }
 
-    fun onRetryShown() {
+    fun onAppErrorNotified() {
         appError = null
     }
 }

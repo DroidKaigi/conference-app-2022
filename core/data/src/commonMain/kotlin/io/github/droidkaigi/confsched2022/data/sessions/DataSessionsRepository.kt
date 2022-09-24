@@ -9,7 +9,6 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 public class DataSessionsRepository(
     private val sessionsApi: SessionsApi,
@@ -17,7 +16,6 @@ public class DataSessionsRepository(
     private val settingsDatastore: SettingsDatastore
 ) : SessionsRepository {
     override fun droidKaigiScheduleFlow(): Flow<DroidKaigiSchedule> = callbackFlow {
-        launch { refresh() }
         combine(
             sessionsDao.selectAll(),
             settingsDatastore.favoriteSessionIds(),
@@ -25,7 +23,7 @@ public class DataSessionsRepository(
         )
             .collect { (timetable, favoriteSessionIds) ->
                 val favorites = favoriteSessionIds.map { TimetableItemId(it) }.toPersistentSet()
-                trySend(
+                send(
                     DroidKaigiSchedule.of(timetable.copy(favorites = favorites))
                 )
             }
