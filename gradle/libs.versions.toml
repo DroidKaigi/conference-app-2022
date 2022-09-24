@@ -22,6 +22,7 @@ androidxTestExt = "1.1.3"
 androidxTestEspresso = "3.4.0"
 androidxTestUiAutomator = "2.2.0"
 androidxMacroBenchmark = "1.2.0-alpha04"
+androidxProfileinstaller = "1.2.0-beta01"
 dagger = "2.44"
 spotless = "6.7.0"
 ktlint = "0.45.2"
@@ -151,6 +152,7 @@ androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "andr
 androidxTestEspressoEspressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
 androidxTestUiAutomator = {module = "androidx.test.uiautomator:uiautomator", version.ref = "androidxTestUiAutomator"}
 androidxMacroBenchmark = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "androidxMacroBenchmark" }
+androidxProfileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "androidxProfileinstaller" }
 hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 kluentAndroid = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent" }
