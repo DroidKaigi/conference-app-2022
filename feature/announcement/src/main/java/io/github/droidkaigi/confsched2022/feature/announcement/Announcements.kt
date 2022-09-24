@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.announcement
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,12 +53,14 @@ import kotlinx.datetime.todayIn
 
 @Composable
 fun AnnouncementsScreenRoot(
+    onLinkClick: (url: String) -> Unit,
     viewModel: AnnouncementsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit,
 ) {
     val uiModel by viewModel.uiModel
     Announcements(
+        onLinkClick = onLinkClick,
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
@@ -73,6 +76,7 @@ fun Announcements(
     onRetryButtonClick: () -> Unit,
     onRetryDismissed: () -> Unit,
     modifier: Modifier = Modifier,
+    onLinkClick: (url: String) -> Unit = { _ -> },
     onNavigationIconClick: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -107,6 +111,7 @@ fun Announcements(
                     AnnouncementContentList(
                         announcements = uiModel.state.value,
                         innerPadding = innerPadding,
+                        onLinkClick = onLinkClick,
                     )
                 } else {
                     EmptyBody()
@@ -124,6 +129,7 @@ fun Announcements(
 fun AnnouncementContentList(
     announcements: PersistentList<AnnouncementsByDate>,
     innerPadding: PaddingValues,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -142,7 +148,8 @@ fun AnnouncementContentList(
                     AnnouncementContent(
                         type = AnnouncementType.valueOf(announcement.type),
                         title = announcement.title,
-                        content = announcement.content
+                        content = announcement.content,
+                        onLinkClick = onLinkClick,
                     )
                     if (index >= announcements.lastIndex) {
                         Divider(
@@ -179,9 +186,18 @@ fun AnnouncementContent(
     type: AnnouncementType,
     title: String,
     content: String,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column {
+    val regex = "(https)(:\\/\\/[\\w\\/:%#\\\$&\\?\\(\\)~\\.=\\+\\-]+)".toRegex()
+
+    Column(
+        modifier = Modifier.clickable {
+            regex.find(content)?.let {
+                onLinkClick(it.value)
+            }
+        },
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
