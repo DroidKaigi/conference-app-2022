@@ -5,7 +5,7 @@ SCHEME=${2}
 CONFIGURATION=${3}
 
 PROJECT=DroidKaigi2022/DroidKaigi2022.xcodeproj
-PLATFORM_IOS="iOS Simulator,name=iPhone 13 Pro,OS=15.5"
+PLATFORM_IOS="iOS Simulator,name=iPhone 14 Pro,OS=16.0"
 
 echo "⚙️  Building $SCHEME..."
 set -o pipefail && xcodebuild $TYPE \
