@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.androidxTestEspressoEspressoCore)
     implementation(libs.androidxTestUiAutomator)
     implementation(libs.androidxMacroBenchmark)
+    implementation(libs.androidxProfileinstaller)
 }
 
 androidComponents {
