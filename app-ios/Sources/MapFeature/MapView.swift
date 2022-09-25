@@ -9,7 +9,7 @@ public struct MapState: Equatable {
     public init() {}
 }
 
-public enum MapAction {
+public enum MapAction: Equatable {
     case tapPin
 }
 

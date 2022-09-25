@@ -172,6 +172,7 @@ var package = Package(
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
                 .target(name: "Event"),
+                .target(name: "MapFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
