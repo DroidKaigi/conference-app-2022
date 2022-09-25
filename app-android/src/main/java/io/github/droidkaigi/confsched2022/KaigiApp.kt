@@ -107,9 +107,7 @@ fun KaigiApp(
                 drawerSheetContent = {
                     DrawerSheetContent(
                         selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
-                        onClickDrawerItem = { drawerItem ->
-                            kaigiAppScaffoldState.navigate(drawerItem)
-                        }
+                        onClickDrawerItem = kaigiAppScaffoldState::navigate,
                     )
                 }
             ) {
