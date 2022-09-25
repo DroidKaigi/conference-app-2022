@@ -102,7 +102,7 @@ fun SessionListItem(
             if (timetableItem is Session) {
                 val message = timetableItem.message
                 if (message != null) {
-                    val infoColor = MaterialTheme.colorScheme.onError
+                    val infoColor = MaterialTheme.colorScheme.error
 
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
