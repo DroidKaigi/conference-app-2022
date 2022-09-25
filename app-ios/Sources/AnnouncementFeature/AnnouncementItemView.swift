@@ -47,11 +47,11 @@ private extension Announcement {
     var textColor: Color {
         switch AnnouncementType(rawValue: type) ?? .notification {
         case .alert:
-            return ColorsKt.shared.alert.color()
+            return ColorsKt.shared.announcement_alert.color()
         case .notification:
-            return ColorsKt.shared.notification.color()
+            return ColorsKt.shared.announcement_notification.color()
         case .feedback:
-            return ColorsKt.shared.feedback.color()
+            return ColorsKt.shared.announcement_feedback.color()
         }
     }
 }

@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.compose.stringResource
-import io.github.droidkaigi.confsched2022.core.model.R
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
@@ -107,6 +106,7 @@ fun Announcements(
             is Error -> {
                 // Do nothing
             }
+
             is Success -> {
                 if (uiModel.state.value.isNotEmpty()) {
                     AnnouncementContentList(
@@ -118,6 +118,7 @@ fun Announcements(
                     EmptyBody()
                 }
             }
+
             Loading -> {
                 FullScreenLoading()
             }
@@ -210,7 +211,7 @@ fun AnnouncementContent(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(type.titleTextColor),
+                color = colorResource(id = type.titleTextColorRes),
             )
         }
         Spacer(

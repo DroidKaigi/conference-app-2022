@@ -53,8 +53,8 @@
     <color name="onSurfaceVariant">#C0C9C1</color>
     <color name="outline">#8A938C</color>
 
-    <!-- Notification -->
-    <color name="alert">#FFB4AB</color>
-    <color name="feedback">#E1E3DF</color>
-    <color name="notification">#E1E3DF</color>
+    <!-- Announcement -->
+    <color name="announcement_alert">#FFB4AB</color>
+    <color name="announcement_feedback">#E1E3DF</color>
+    <color name="announcement_notification">#E1E3DF</color>
 </resources>
