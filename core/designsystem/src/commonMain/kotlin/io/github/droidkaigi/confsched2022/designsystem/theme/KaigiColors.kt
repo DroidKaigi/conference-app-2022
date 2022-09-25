@@ -1,8 +1,10 @@
 package io.github.droidkaigi.confsched2022.designsystem.theme
 
 // ref: https://www.figma.com/file/XsVzpDZSkEQANgCZLRTDDy/DroidKaigi-2022-Material-3-Design-Kit?node-id=49823%3A12142
-
-@Deprecated("Should use color that share between iOS & Android inside core/model/resources/MR/colors instead")
+@Deprecated(
+    "Should use color that share between iOS & Android inside " +
+        "core/model/resources/MR/colors instead"
+)
 object KaigiColors {
     const val primaryKeyColor = 0xFF48D597
     const val primaryKeyColor0 = 0xFF000000
