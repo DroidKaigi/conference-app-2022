@@ -5,6 +5,7 @@ import Assets
 import Auth
 import ComposableArchitecture
 import Container
+import Event
 import MapFeature
 import SearchFeature
 import SessionFeature
@@ -65,19 +66,22 @@ public struct AppEnvironment {
     public let sessionsRepository: SessionsRepository
     public let announcementsRepository: AnnouncementsRepository
     public let staffRepository: StaffRepository
+    public let eventKitClient: EventKitClientProtocol
 
     public init(
         contributorsRepository: ContributorsRepository,
         sponsorsRepository: SponsorsRepository,
         sessionsRepository: SessionsRepository,
         announcementsRepository: AnnouncementsRepository,
-        staffRepository: StaffRepository
+        staffRepository: StaffRepository,
+        eventKitClient: EventKitClientProtocol
     ) {
         self.contributorsRepository = contributorsRepository
         self.sponsorsRepository = sponsorsRepository
         self.sessionsRepository = sessionsRepository
         self.announcementsRepository = announcementsRepository
         self.staffRepository = staffRepository
+        self.eventKitClient = eventKitClient
     }
 }
 
@@ -90,7 +94,8 @@ public extension AppEnvironment {
             sponsorsRepository: container.get(type: SponsorsRepository.self),
             sessionsRepository: container.get(type: SessionsRepository.self),
             announcementsRepository: container.get(type: AnnouncementsRepository.self),
-            staffRepository: container.get(type: StaffRepository.self)
+            staffRepository: container.get(type: StaffRepository.self),
+            eventKitClient: EventKitClient()
         )
     }
 
@@ -100,7 +105,8 @@ public extension AppEnvironment {
             sponsorsRepository: FakeSponsorsRepository(),
             sessionsRepository: FakeSessionsRepository(),
             announcementsRepository: FakeAnnouncementsRepository(),
-            staffRepository: FakeStaffRepository()
+            staffRepository: FakeStaffRepository(),
+            eventKitClient: EventKitClientMock()
         )
     }
 }
@@ -147,7 +153,8 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         action: /AppAction.search,
         environment: {
             .init(
-                sessionsRepository: $0.sessionsRepository
+                sessionsRepository: $0.sessionsRepository,
+                eventKitClient: $0.eventKitClient
             )
         }
     ),
@@ -155,7 +162,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         state: \.sessionState,
         action: /AppAction.session,
         environment: {
-            .init(sessionsRepository: $0.sessionsRepository)
+            .init(
+                sessionsRepository: $0.sessionsRepository,
+                eventKitClient: $0.eventKitClient
+            )
         }
     ),
     .init { state, action, _ in

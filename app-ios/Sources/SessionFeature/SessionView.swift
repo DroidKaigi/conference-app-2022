@@ -1,6 +1,7 @@
 import appioscombined
 import Assets
 import ComposableArchitecture
+import Event
 import Model
 import SwiftUI
 import Theme
@@ -8,6 +9,7 @@ import Theme
 public struct SessionState: Equatable {
     public var timetableItemWithFavorite: TimetableItemWithFavorite
     public var isShareSheetShown: Bool = false
+    public var eventAddConfirmAlert: AlertState<SessionAction>?
 
     public init(timetableItemWithFavorite: TimetableItemWithFavorite) {
         self.timetableItemWithFavorite = timetableItemWithFavorite
@@ -20,13 +22,21 @@ public enum SessionAction {
     case tapFavorite
     case tapShare
     case hideShareSheet
+    case showEventAddConfirmAlert
+    case hideEventAddConfirmAlert
+    case addEvent
 }
 
 public struct SessionEnvironment {
     public let sessionsRepository: SessionsRepository
+    public let eventKitClient: EventKitClientProtocol
 
-    public init(sessionsRepository: SessionsRepository) {
+    public init(
+        sessionsRepository: SessionsRepository,
+        eventKitClient: EventKitClientProtocol
+    ) {
         self.sessionsRepository = sessionsRepository
+        self.eventKitClient = eventKitClient
     }
 }
 
@@ -34,8 +44,11 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
 
     switch action {
     case .tapCalendar:
-        return .run { @MainActor _ in
-            // TODO: Add event using EventKit
+        let timetableItem = state.timetableItemWithFavorite.timetableItem
+        return .run { @MainActor subscriber in
+            if try await environment.eventKitClient.requestAccessIfNeeded() {
+                subscriber.send(.showEventAddConfirmAlert)
+            }
         }
         .receive(on: DispatchQueue.main.eraseToAnyScheduler())
         .eraseToEffect()
@@ -59,6 +72,36 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
         return .none
     case .hideShareSheet:
         state.isShareSheetShown = false
+        return .none
+    case .showEventAddConfirmAlert:
+        state.eventAddConfirmAlert = .init(
+            title: .init(StringsKt.shared.session_event_add_confirm.localized()),
+            buttons: [
+                .cancel(
+                    .init(StringsKt.shared.session_event_add_confirm_cancel.localized()),
+                    action: .send(.hideEventAddConfirmAlert)
+                ),
+                .default(
+                    .init(StringsKt.shared.session_event_add_confirm_ok.localized()),
+                    action: .send(.addEvent)
+                ),
+            ]
+        )
+        return .none
+    case .hideEventAddConfirmAlert:
+        state.eventAddConfirmAlert = nil
+        return .none
+    case .addEvent:
+        let timetableItem = state.timetableItemWithFavorite.timetableItem
+        do {
+            try environment.eventKitClient.addEvent(
+                title: timetableItem.title.jaTitle,
+                startDate: timetableItem.startsAt.toDate(),
+                endDate: timetableItem.endsAt.toDate()
+            )
+        } catch let e {
+            print(e)
+        }
         return .none
     }
 }
@@ -162,6 +205,7 @@ public struct SessionView: View {
             .sheet(isPresented: viewStore.binding(get: { $0.isShareSheetShown }, send: .hideShareSheet)) {
                 ShareTextView(text: timetableItem.shareText)
             }
+            .alert(store.scope(state: \.eventAddConfirmAlert), dismiss: .hideEventAddConfirmAlert)
         }
     }
 }
@@ -173,7 +217,10 @@ struct SessionView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(timetableItemWithFavorite: TimetableItemWithFavorite.companion.fake()),
                 reducer: .empty,
-                environment: SessionEnvironment(sessionsRepository: FakeSessionsRepository())
+                environment: SessionEnvironment(
+                    sessionsRepository: FakeSessionsRepository(),
+                    eventKitClient: EventKitClientMock()
+                )
             )
         )
     }

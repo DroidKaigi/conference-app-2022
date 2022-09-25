@@ -48,6 +48,9 @@
     <string name="session_slide">SLIDE</string>
     <string name="session_language_interpretation">(interpretation)</string>
     <string name="session_cancel">このセッションは事情により中止となりました</string>
+    <string name="session_event_add_confirm">Add an event</string>
+    <string name="session_event_add_confirm_ok">OK</string>
+    <string name="session_event_add_confirm_cancel">Cancel</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
