@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.feature.announcement
+package io.github.droidkaigi.confsched2022.feature.common
 
 import androidx.compose.material3.SnackbarDuration.Long
 import androidx.compose.material3.SnackbarHostState
