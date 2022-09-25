@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,6 +26,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 
 @Composable
@@ -46,6 +51,7 @@ fun HoursItem(
 fun Hours(
     timetableState: TimetableState,
     coroutineScope: CoroutineScope,
+    currentTime: Instant,
     modifier: Modifier = Modifier,
     content: @Composable (String) -> Unit,
 ) {
@@ -66,6 +72,7 @@ fun Hours(
         HoursScreen(
             hoursLayout,
             scrollState,
+            currentTime,
             density
         )
     }
@@ -74,6 +81,9 @@ fun Hours(
     val linePxSize = with(timetableState.density) { lineStrokeSize.toPx() }
     val lineOffset = with(density) { 67.dp.roundToPx() }
     val lineEnd = with(density) { hoursWidth.roundToPx() }
+    val currentTimeLineColor = MaterialTheme.colorScheme.primary
+    val currentTimeCircleRadius =
+        with(timetableState.density) { TimetableSizes.currentTimeCircleRadius.toPx() }
     LazyLayout(
         modifier = modifier
             .width(hoursWidth)
@@ -87,6 +97,14 @@ fun Hours(
                         linePxSize
                     )
                 }
+            }
+            .drawWithContent {
+                drawContent()
+                drawCircle(
+                    currentTimeLineColor,
+                    currentTimeCircleRadius,
+                    Offset(lineEnd.toFloat(), hoursScreen.currentTimePositionY.value)
+                )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -199,6 +217,7 @@ private data class HoursItemLayout(
 private class HoursScreen(
     val hoursLayout: HoursLayout,
     val scrollState: ScreenScrollState,
+    currentTime: Instant,
     density: Density,
 ) {
     var width = 0
@@ -219,6 +238,13 @@ private class HoursScreen(
         (0..10).map {
             scrollState.scrollY + hoursLayout.minutePx * 60 * it + offset
         }
+    }
+    private val currentTimeSecondOfDay =
+        currentTime.toLocalDateTime(TimeZone.currentSystemDefault()).time.toSecondOfDay()
+    private val scheduleStartTimeSecondOfDay = LocalTime(hour = 10, minute = 0).toSecondOfDay()
+    private val diffMinutesOfDay = (currentTimeSecondOfDay - scheduleStartTimeSecondOfDay) / 60
+    val currentTimePositionY = derivedStateOf {
+        scrollState.scrollY + diffMinutesOfDay * hoursLayout.minutePx + offset
     }
 
     override fun toString(): String {

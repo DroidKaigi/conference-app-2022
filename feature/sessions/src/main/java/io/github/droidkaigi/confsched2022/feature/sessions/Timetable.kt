@@ -32,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.PointerInputScope
@@ -61,12 +62,15 @@ import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -75,6 +79,7 @@ fun Timetable(
     timetable: Timetable,
     timetableState: TimetableState,
     coroutineScope: CoroutineScope,
+    currentTime: Instant,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (TimetableItem, Boolean) -> Unit,
@@ -93,7 +98,8 @@ fun Timetable(
         TimetableScreen(
             timetableLayout,
             scrollState,
-            density
+            density,
+            currentTime
         )
     }
     val visibleItemLayouts by remember(timetableScreen) { timetableScreen.visibleItemLayouts }
@@ -101,6 +107,9 @@ fun Timetable(
     val linePxSize = with(timetableState.density) { TimetableSizes.lineStrokeSize.toPx() }
     val layoutDirection = LocalLayoutDirection.current
 
+    val currentTimeLineColor = MaterialTheme.colorScheme.primary
+    val currentTimeCircleRadius =
+        with(timetableState.density) { TimetableSizes.currentTimeCircleRadius.toPx() }
     LazyLayout(
         modifier = modifier
             .padding(
@@ -127,6 +136,23 @@ fun Timetable(
                         linePxSize
                     )
                 }
+            }
+            .drawWithContent {
+                drawContent()
+                drawLine(
+                    currentTimeLineColor,
+                    Offset(0F, timetableScreen.currentTimePositionY.value),
+                    Offset(
+                        timetableScreen.width.toFloat(),
+                        timetableScreen.currentTimePositionY.value
+                    ),
+                    linePxSize
+                )
+                drawCircle(
+                    currentTimeLineColor,
+                    currentTimeCircleRadius,
+                    Offset(0f, timetableScreen.currentTimePositionY.value)
+                )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -229,6 +255,7 @@ fun TimetablePreview() {
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake(),
         timetableState = timetableState,
+        currentTime = Clock.System.now(),
         coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
         TimetableItem(timetableItem, isFavorite, 1f)
@@ -514,6 +541,7 @@ private class TimetableScreen(
     val timetableLayout: TimetableLayout,
     val scrollState: ScreenScrollState,
     private val density: Density,
+    currentTime: Instant,
 ) {
     var width = 0
         private set
@@ -541,6 +569,14 @@ private class TimetableScreen(
         (0..rooms.lastIndex).map {
             scrollState.scrollX + width * it
         }
+    }
+
+    private val currentTimeSecondOfDay =
+        currentTime.toLocalDateTime(TimeZone.currentSystemDefault()).time.toSecondOfDay()
+    private val scheduleStartTimeSecondOfDay = LocalTime(hour = 10, minute = 0).toSecondOfDay()
+    private val diffMinutesOfDay = (currentTimeSecondOfDay - scheduleStartTimeSecondOfDay) / 60
+    val currentTimePositionY = derivedStateOf {
+        scrollState.scrollY + diffMinutesOfDay * timetableLayout.minutePx + topOffset
     }
 
     override fun toString(): String {
@@ -653,5 +689,6 @@ internal suspend fun PointerInputScope.detectDragGestures(
 object TimetableSizes {
     val columnWidth = 192.dp
     val lineStrokeSize = 1.dp
+    val currentTimeCircleRadius = 6.dp
     val minuteHeight = 4.dp
 }

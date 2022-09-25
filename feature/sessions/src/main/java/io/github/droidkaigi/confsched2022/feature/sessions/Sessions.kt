@@ -81,6 +81,8 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
@@ -90,6 +92,7 @@ fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: SessionsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
+    currentTime: Instant = Clock.System.now(),
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
@@ -99,6 +102,7 @@ fun SessionsScreenRoot(
     Sessions(
         uiModel = state,
         modifier = modifier,
+        currentTime = currentTime,
         onTimetableClick = { onTimetableClick(it) },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
@@ -119,6 +123,7 @@ fun SessionsScreenRoot(
 fun Sessions(
     uiModel: SessionsUiModel,
     showNavigationIcon: Boolean,
+    currentTime: Instant,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -186,6 +191,7 @@ fun Sessions(
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
                             days = days,
+                            currentTime = currentTime,
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
                         )
@@ -222,6 +228,7 @@ fun Timetable(
     timetableListStates: List<TimetableState>,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
+    currentTime: Instant,
     onTimetableClick: (TimetableItemId) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -249,6 +256,7 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                currentTime = currentTime,
                 coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
@@ -266,6 +274,7 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
+                    currentTime = currentTime,
                     coroutineScope = coroutineScope,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
@@ -526,6 +535,7 @@ fun SessionsTimetablePreview() {
                 isTimetable = true,
                 appError = null
             ),
+            currentTime = Clock.System.now(),
             showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
@@ -550,6 +560,7 @@ fun SessionsSessionListPreview() {
                 appError = null
             ),
             showNavigationIcon = true,
+            currentTime = Clock.System.now(),
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
@@ -572,6 +583,7 @@ fun SessionsLoadingPreview() {
                 isTimetable = true,
                 appError = null
             ),
+            currentTime = Clock.System.now(),
             showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
