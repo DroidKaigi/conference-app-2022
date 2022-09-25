@@ -1,6 +1,7 @@
 import appioscombined
 import CommonComponents
 import ComposableArchitecture
+import Kingfisher
 import Model
 import SafariView
 import SwiftUI
@@ -50,7 +51,8 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
                 await subscriber.send(
                     .refreshResponse(
                         TaskResult {
-                            result
+                            await prefetchImage(from: result.compactMap { URL(string: $0.logo) })
+                            return result
                         }
                     )
                 )
@@ -72,6 +74,15 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
         state.sheetItem = nil
         return .none
     }
+}
+
+private func prefetchImage(from urls: [URL]) async {
+    await withCheckedContinuation({ continuation in
+        let prefetcher = ImagePrefetcher(urls: urls, options: nil) { _, _, _ in
+            continuation.resume(returning: ())
+        }
+        prefetcher.start()
+    })
 }
 
 public struct SponsorView: View {
