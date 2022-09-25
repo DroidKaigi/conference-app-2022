@@ -1,7 +1,5 @@
 package io.github.droidkaigi.confsched2022.ui
 
-import androidx.compose.runtime.staticCompositionLocalOf
-
 /**
  * Platform calendar registration feature wrapper
  */
@@ -16,8 +14,4 @@ interface CalendarRegistration {
         title: String,
         location: String,
     )
-}
-
-val LocalCalendarRegistration = staticCompositionLocalOf<CalendarRegistration> {
-    error("CompositionLocal LocalCalendarRegistration not present")
 }
