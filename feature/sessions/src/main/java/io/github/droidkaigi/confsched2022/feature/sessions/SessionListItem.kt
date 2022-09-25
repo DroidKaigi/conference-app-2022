@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -36,7 +35,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import io.github.droidkaigi.confsched2022.core.model.R
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
 import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
@@ -104,8 +102,8 @@ fun SessionListItem(
             if (timetableItem is Session) {
                 val message = timetableItem.message
                 if (message != null) {
-                    val infoColor =
-                        colorResource(id = R.color.onError)
+                    val infoColor = MaterialTheme.colorScheme.onError
+
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),

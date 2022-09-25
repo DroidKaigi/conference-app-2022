@@ -157,7 +157,7 @@ fun AnnouncementContentList(
                             modifier = modifier
                                 .padding(start = 16.dp, end = 16.dp),
                             thickness = 1.dp,
-                            color = colorResource(id = R.color.outline)
+                            color = MaterialTheme.colorScheme.outline
                         )
                     }
                 }

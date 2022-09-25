@@ -163,7 +163,7 @@ fun About(
                         start = 33.dp,
                         end = 33.dp
                     ),
-                color = colorResource(id = color.outline)
+                color = MaterialTheme.colorScheme.outline
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
