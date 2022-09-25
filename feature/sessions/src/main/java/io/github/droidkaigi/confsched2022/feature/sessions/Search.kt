@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -73,6 +74,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.empty
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -214,12 +216,25 @@ private fun SearchScreen(
                             onCategoryClicked = onCategoriesFilteredClicked,
                             onFavoritesClicked = onFavoritesToggleClicked
                         )
-                        SearchedItemListField(
-                            schedule = uiModel.state.value,
-                            searchWord = searchWord.value,
-                            onItemClick = onItemClick,
-                            onBookMarkClick = onBookMarkClick,
-                        )
+                        val foundSomeResults =
+                            uiModel.state.value.dayToTimetable.any { (_, timeTable) ->
+                                timeTable
+                                    .filtered(
+                                        Filters(filterSession = true, searchWord = searchWord.value)
+                                    )
+                                    .isEmpty()
+                                    .not()
+                            }
+                        if (foundSomeResults) {
+                            SearchedItemListField(
+                                schedule = uiModel.state.value,
+                                searchWord = searchWord.value,
+                                onItemClick = onItemClick,
+                                onBookMarkClick = onBookMarkClick,
+                            )
+                        } else {
+                            SearchEmptyScreen()
+                        }
                     }
                     Loading -> {
                         FullScreenLoading()
@@ -496,6 +511,32 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun SearchEmptyScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier.wrapContentWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null,
+                modifier = Modifier.size(58.dp),
+                tint = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(Strings.search_empty_result.resourceId),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+    }
+}
+
 @Preview(showSystemUi = false)
 @Composable
 fun SearchScreenPreview() {
@@ -505,6 +546,27 @@ fun SearchScreenPreview() {
                 filter = SearchFilterUiModel(),
                 filterSheetState = SearchFilterSheetState.Hide,
                 state = Success(DroidKaigiSchedule.fake())
+            ),
+            onItemClick = {},
+            onBookMarkClick = { _, _ -> },
+            onBackIconClick = {},
+            onFavoritesToggleClicked = {},
+            onDayFilterClicked = {},
+            onCategoriesFilteredClicked = {},
+            onSearchTextAreaClicked = {},
+        )
+    }
+}
+
+@Preview(showSystemUi = false)
+@Composable
+fun SearchEmptyScreenPreview() {
+    KaigiTheme {
+        SearchScreen(
+            uiModel = SearchUiModel(
+                filter = SearchFilterUiModel(),
+                filterSheetState = SearchFilterSheetState.Hide,
+                state = Success(DroidKaigiSchedule.empty())
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
