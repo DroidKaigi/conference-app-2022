@@ -62,7 +62,7 @@ public data class Timetable(
         }
         if (filters.searchWord.isNotBlank()) {
             timetableItems = timetableItems.filter { timetableItem ->
-                timetableItem.title.currentLangTitle.contains(filters.searchWord)
+                timetableItem.title.currentLangTitle.lowercase().contains(filters.searchWord.lowercase())
             }
         }
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))
