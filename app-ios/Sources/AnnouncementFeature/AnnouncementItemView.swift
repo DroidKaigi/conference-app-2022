@@ -16,7 +16,7 @@ struct AnnouncementItemView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(announcement.title)
                     .font(.system(size: 16, weight: .semibold))
-                Text(announcement.content)
+                Text(.init(announcement.content))
                     .font(.system(size: 16, weight: .regular))
             }
         }
