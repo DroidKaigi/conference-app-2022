@@ -60,7 +60,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
-import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
