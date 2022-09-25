@@ -51,7 +51,8 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
                 await subscriber.send(
                     .refreshResponse(
                         TaskResult {
-                            await prefetchImage(from: result.compactMap { URL(string: $0.logo) })
+                            let prefetcher = ImagePrefetcher(urls: result.compactMap { URL(string: $0.logo) }, options: nil)
+                            prefetcher.start()
                             return result
                         }
                     )
@@ -74,15 +75,6 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
         state.sheetItem = nil
         return .none
     }
-}
-
-private func prefetchImage(from urls: [URL]) async {
-    await withCheckedContinuation({ continuation in
-        let prefetcher = ImagePrefetcher(urls: urls, options: nil) { _, _, _ in
-            continuation.resume(returning: ())
-        }
-        prefetcher.start()
-    })
 }
 
 public struct SponsorView: View {
