@@ -130,7 +130,7 @@ public struct SessionView: View {
                         Button {
                             viewStore.send(.tapMap)
                         } label: {
-                            Assets.navigate.swiftUIImage
+                            Assets.map.swiftUIImage
                         }
                         .frame(width: 48, height: 48)
 

@@ -2,15 +2,15 @@ import appioscombined
 import ComposableArchitecture
 import Model
 import SwiftUI
+import Theme
 
 public struct AnnouncementState: Equatable {
+    public var announcements: [AnnouncementsByDate]
+    public var isLoaded: Bool = false
+
     public init(announcements: [AnnouncementsByDate] = []) {
         self.announcements = announcements
     }
-
-    public var announcements: [AnnouncementsByDate]
-
-
 }
 public enum AnnouncementAction {
     case refresh
@@ -29,11 +29,13 @@ public let announcementReducer = Reducer<AnnouncementState, AnnouncementAction, 
     switch action {
     case .refresh:
         return .run { @MainActor subscriber in
+            try await repository.refresh()
             for try await response: [AnnouncementsByDate] in repository.announcements().stream() {
                 subscriber.send(.refreshResponse(response))
             }
         }
     case .refreshResponse(let list):
+        state.isLoaded = true
         state.announcements = list
         return .none
     }
@@ -49,8 +51,13 @@ public struct AnnouncementView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                Group {
-                    if viewStore.announcements.isEmpty {
+                ZStack {
+                    AssetColors.background.swiftUIColor
+                    if !viewStore.isLoaded {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: AssetColors.onBackground.swiftUIColor))
+                            .scaleEffect(x: 2, y: 2)
+                    } else if viewStore.announcements.isEmpty {
                         empty()
                     } else {
                         fulfill(viewStore)
@@ -59,8 +66,10 @@ public struct AnnouncementView: View {
                 .navigationTitle(StringsKt.shared.announcement_top_app_bar_title.desc().localized())
                 .navigationBarTitleDisplayMode(.inline)
             }
-            .onAppear {
-                viewStore.send(.refresh)
+            .task {
+                if !viewStore.isLoaded {
+                    viewStore.send(.refresh)
+                }
             }
         }
     }
@@ -76,7 +85,7 @@ public struct AnnouncementView: View {
     }
 
     func empty() -> some View {
-        VStack<Text> {
+        VStack {
             Text(StringsKt.shared.announcement_content_empty.desc().localized())
                 .font(.system(size: 16, weight: .semibold))
 

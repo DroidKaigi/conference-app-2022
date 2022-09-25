@@ -1,5 +1,6 @@
 import appioscombined
 import Assets
+import Model
 import SwiftUI
 
 struct AnnouncementItemView: View {
@@ -8,7 +9,7 @@ struct AnnouncementItemView: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
-            Image(announcement.type, bundle: .myModule)
+            announcement.typeImage
                 .resizable()
                 .frame(width: 16, height: 16)
             Spacer().frame(width: 8)
@@ -29,3 +30,16 @@ struct AnnouncementItemView_Previews: PreviewProvider {
     }
 }
 #endif
+
+private extension Announcement {
+    var typeImage: Image {
+        switch AnnouncementType(rawValue: type) ?? .notification {
+        case .alert:
+            return Assets.alert.swiftUIImage
+        case .notification:
+            return Assets.notification.swiftUIImage
+        case .feedback:
+            return Assets.feedback.swiftUIImage
+        }
+    }
+}
