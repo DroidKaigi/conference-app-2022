@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-brew install openjdk@8
+brew install openjdk@11
