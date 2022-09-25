@@ -50,7 +50,7 @@ jobs:
         env:
           BRANCH_NAME: companion_${{ github.event.workflow_run.head_branch }}
         run: |
-          cd temp_docs/
+          cd $GITHUB_WORKSPACE/temp_docs/
           git switch -C $BRANCH_NAME
           mkdir -p docs/screenshots/
           cp -a ../preview-screenshots/out/failures/delta* docs/screenshots/
@@ -60,10 +60,9 @@ jobs:
           git config --global remote.pushDefault origin
           git commit -m "Upload screenshots to github page."
           git push -f
-          cd ..
-          cd preview-screenshots/out/failures
+          cd $GITHUB_WORKSPACE/preview-screenshots/out/failures
           echo ::set-output name=images::$(ls -d delta* | jq -R -s -c 'split("\n")[:-1]' | jq -r --arg IMAGE_PATH "https://raw.githubusercontent.com/droidkaigi/conference-app-2022/$BRANCH_NAME/docs/screenshots/" '.[] |= $IMAGE_PATH + .')
-          cd ../../../
+          cd $GITHUB_WORKSPACE/
 
       - name: Build PR Comment with Preview
         id: pr_comment
@@ -102,6 +101,7 @@ jobs:
           TARGET_BRANCH_PREFIX: companion_
           DATE_FORMAT: '%Y%m%d'
         run: |
+          cd $GITHUB_WORKSPACE/temp_docs/
           expired_date=`date --date="$EXPIRED_TERM" "+${DATE_FORMAT}"` 
           git fetch --all
           git branch -r | grep "[^* ]+" -Eo | grep "${REMOTE_REPO}/${TARGET_BRANCH_PREFIX}.+" -Eo |
