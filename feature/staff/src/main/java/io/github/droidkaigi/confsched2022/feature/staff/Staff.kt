@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.components.UsernameRow
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.Staff
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.strings.Strings
@@ -35,7 +38,15 @@ fun StaffScreenRoot(
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> }
 ) {
     val uiModel by viewModel.uiModel
-    Staff(uiModel, showNavigationIcon, onNavigationIconClick, onLinkClick, modifier)
+    Staff(
+        uiModel = uiModel,
+        showNavigationIcon = showNavigationIcon,
+        onNavigationIconClick = onNavigationIconClick,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
+        onLinkClick = onLinkClick,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -43,10 +54,15 @@ fun Staff(
     uiModel: StaffUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         topBar = {
             KaigiTopAppBar(
                 showNavigationIcon = showNavigationIcon,
@@ -59,9 +75,17 @@ fun Staff(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Box(modifier = Modifier.padding(innerPadding)) {
             when (uiModel.state) {
-                is Error -> TODO()
+                is Error -> {
+                    // Do nothing
+                }
                 is Loading -> Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
@@ -97,10 +121,13 @@ fun StaffPreview() {
             uiModel = StaffUiModel(
                 state = Success(
                     Staff.fakes()
-                )
+                ),
+                appError = null,
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
             onLinkClick = { _, _ -> },
         )
     }
