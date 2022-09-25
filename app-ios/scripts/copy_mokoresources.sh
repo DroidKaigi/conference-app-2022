@@ -19,6 +19,7 @@ function prop {
 
 if [ "$CI" = true -o "$CI" = TRUE ] ; then
     export PATH="/usr/local/opt/openjdk/bin:$PATH"
+    export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 else
     export JAVA_HOME=$(prop 'org.gradle.java.home')
     echo "JAVA_HOME has been set by the script"
