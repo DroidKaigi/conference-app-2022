@@ -52,9 +52,11 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day1
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day2
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day.Day3
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
@@ -62,15 +64,12 @@ import io.github.droidkaigi.confsched2022.model.fake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -78,8 +77,9 @@ import kotlin.math.roundToInt
 fun Timetable(
     timetable: Timetable,
     timetableState: TimetableState,
+    timeLineState: TimeLineState,
     coroutineScope: CoroutineScope,
-    currentTime: Instant,
+    day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (TimetableItem, Boolean) -> Unit,
@@ -94,12 +94,13 @@ fun Timetable(
         TimetableLayout(timetable = timetable, density = density, verticalScale = verticalScale)
     }
     val scrollState = timetableState.screenScrollState
-    val timetableScreen = remember(timetableLayout, density) {
+    val timetableScreen = remember(timetableLayout, timeLineState, density) {
         TimetableScreen(
             timetableLayout,
             scrollState,
             density,
-            currentTime
+            timeLineState,
+            day
         )
     }
     val visibleItemLayouts by remember(timetableScreen) { timetableScreen.visibleItemLayouts }
@@ -139,20 +140,19 @@ fun Timetable(
             }
             .drawWithContent {
                 drawContent()
-                drawLine(
-                    currentTimeLineColor,
-                    Offset(0F, timetableScreen.currentTimePositionY.value),
-                    Offset(
-                        timetableScreen.width.toFloat(),
-                        timetableScreen.currentTimePositionY.value
-                    ),
-                    linePxSize
-                )
-                drawCircle(
-                    currentTimeLineColor,
-                    currentTimeCircleRadius,
-                    Offset(0f, timetableScreen.currentTimePositionY.value)
-                )
+                timetableScreen.timeLinePositionY.value?.let { timeLinePositionY ->
+                    drawLine(
+                        currentTimeLineColor,
+                        Offset(0F, timeLinePositionY),
+                        Offset(timetableScreen.width.toFloat(), timeLinePositionY),
+                        linePxSize
+                    )
+                    drawCircle(
+                        currentTimeLineColor,
+                        currentTimeCircleRadius,
+                        Offset(0f, timeLinePositionY)
+                    )
+                }
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -250,12 +250,14 @@ fun Timetable(
 @Composable
 fun TimetablePreview() {
     val timetableState = rememberTimetableState()
+    val timeLineState = rememberTimeLineState(timeLine = TimeLine.now())
     val coroutineScope = rememberCoroutineScope()
     Timetable(
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake(),
         timetableState = timetableState,
-        currentTime = Clock.System.now(),
+        timeLineState = timeLineState,
+        day = Day1,
         coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
         TimetableItem(timetableItem, isFavorite, 1f)
@@ -541,7 +543,8 @@ private class TimetableScreen(
     val timetableLayout: TimetableLayout,
     val scrollState: ScreenScrollState,
     private val density: Density,
-    currentTime: Instant,
+    timeLineState: TimeLineState,
+    day: DroidKaigi2022Day,
 ) {
     var width = 0
         private set
@@ -571,12 +574,11 @@ private class TimetableScreen(
         }
     }
 
-    private val currentTimeSecondOfDay =
-        currentTime.toLocalDateTime(TimeZone.currentSystemDefault()).time.toSecondOfDay()
-    private val scheduleStartTimeSecondOfDay = LocalTime(hour = 10, minute = 0).toSecondOfDay()
-    private val diffMinutesOfDay = (currentTimeSecondOfDay - scheduleStartTimeSecondOfDay) / 60
-    val currentTimePositionY = derivedStateOf {
-        scrollState.scrollY + diffMinutesOfDay * timetableLayout.minutePx + topOffset
+    val timeLinePositionY = derivedStateOf {
+        val duration = timeLineState.timeLine?.durationFromScheduleStart(day)
+        duration?.let {
+            scrollState.scrollY + it.inWholeMinutes * timetableLayout.minutePx + topOffset
+        }
     }
 
     override fun toString(): String {

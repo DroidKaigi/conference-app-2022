@@ -35,6 +35,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -45,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -58,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.view.doOnPreDraw
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -69,6 +73,7 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
@@ -81,8 +86,6 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import io.github.droidkaigi.confsched2022.core.designsystem.R as CoreR
@@ -92,17 +95,30 @@ fun SessionsScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: SessionsViewModel = hiltViewModel(),
     showNavigationIcon: Boolean = true,
-    currentTime: Instant = Clock.System.now(),
     onNavigationIconClick: () -> Unit = {},
     onSearchClicked: () -> Unit = {},
     onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val state: SessionsUiModel by viewModel.uiModel
 
+    val lifecycleObserver = remember(viewModel) {
+        LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onUpdateTimeLine()
+            }
+        }
+    }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        lifecycle.addObserver(lifecycleObserver)
+        onDispose {
+            lifecycle.removeObserver(lifecycleObserver)
+        }
+    }
+
     Sessions(
         uiModel = state,
         modifier = modifier,
-        currentTime = currentTime,
         onTimetableClick = { onTimetableClick(it) },
         onFavoriteClick = { timetableItemId, isFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, isFavorite)
@@ -123,7 +139,6 @@ fun SessionsScreenRoot(
 fun Sessions(
     uiModel: SessionsUiModel,
     showNavigationIcon: Boolean,
-    currentTime: Instant,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
@@ -135,6 +150,7 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.state
     val isTimetable = uiModel.isTimetable
+    val timeLineState = rememberTimeLineState(uiModel.timeLine)
     val pagerState = rememberPagerState()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
     val timetableListStates = DroidKaigi2022Day.values().map {
@@ -190,8 +206,8 @@ fun Sessions(
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
+                            timeLineState = timeLineState,
                             days = days,
-                            currentTime = currentTime,
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
                         )
@@ -226,9 +242,9 @@ fun Sessions(
 fun Timetable(
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
+    timeLineState: TimeLineState,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
-    currentTime: Instant,
     onTimetableClick: (TimetableItemId) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -256,7 +272,8 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
-                currentTime = currentTime,
+                timeLineState = timeLineState,
+                day = day,
                 coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
@@ -274,7 +291,8 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    currentTime = currentTime,
+                    timeLineState = timeLineState,
+                    day = day,
                     coroutineScope = coroutineScope,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
@@ -533,9 +551,9 @@ fun SessionsTimetablePreview() {
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = true,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
-            currentTime = Clock.System.now(),
             showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
@@ -557,10 +575,10 @@ fun SessionsSessionListPreview() {
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = false,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
             showNavigationIcon = true,
-            currentTime = Clock.System.now(),
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
@@ -581,9 +599,9 @@ fun SessionsLoadingPreview() {
                 state = Loading,
                 isFilterOn = false,
                 isTimetable = true,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
-            currentTime = Clock.System.now(),
             showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
@@ -595,6 +613,15 @@ fun SessionsLoadingPreview() {
         )
     }
 }
+
+@Composable
+fun rememberTimeLineState(timeLine: TimeLine?): TimeLineState =
+    remember(timeLine) {
+        TimeLineState(timeLine)
+    }
+
+@Stable
+class TimeLineState(val timeLine: TimeLine?)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

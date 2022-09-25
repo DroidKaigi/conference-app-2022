@@ -24,12 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 
 @Composable
@@ -50,8 +47,9 @@ fun HoursItem(
 @Composable
 fun Hours(
     timetableState: TimetableState,
+    timeLineState: TimeLineState,
     coroutineScope: CoroutineScope,
-    currentTime: Instant,
+    day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
     content: @Composable (String) -> Unit,
 ) {
@@ -68,11 +66,12 @@ fun Hours(
             verticalScale = verticalScale,
         )
     }
-    val hoursScreen = remember(hoursLayout, density) {
+    val hoursScreen = remember(hoursLayout, timeLineState, density) {
         HoursScreen(
             hoursLayout,
             scrollState,
-            currentTime,
+            timeLineState,
+            day,
             density
         )
     }
@@ -100,11 +99,13 @@ fun Hours(
             }
             .drawWithContent {
                 drawContent()
-                drawCircle(
-                    currentTimeLineColor,
-                    currentTimeCircleRadius,
-                    Offset(lineEnd.toFloat(), hoursScreen.currentTimePositionY.value)
-                )
+                hoursScreen.timeLinePositionY.value?.let {
+                    drawCircle(
+                        currentTimeLineColor,
+                        currentTimeCircleRadius,
+                        Offset(lineEnd.toFloat(), it)
+                    )
+                }
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -217,7 +218,8 @@ private data class HoursItemLayout(
 private class HoursScreen(
     val hoursLayout: HoursLayout,
     val scrollState: ScreenScrollState,
-    currentTime: Instant,
+    timeLineState: TimeLineState,
+    day: DroidKaigi2022Day,
     density: Density,
 ) {
     var width = 0
@@ -239,12 +241,11 @@ private class HoursScreen(
             scrollState.scrollY + hoursLayout.minutePx * 60 * it + offset
         }
     }
-    private val currentTimeSecondOfDay =
-        currentTime.toLocalDateTime(TimeZone.currentSystemDefault()).time.toSecondOfDay()
-    private val scheduleStartTimeSecondOfDay = LocalTime(hour = 10, minute = 0).toSecondOfDay()
-    private val diffMinutesOfDay = (currentTimeSecondOfDay - scheduleStartTimeSecondOfDay) / 60
-    val currentTimePositionY = derivedStateOf {
-        scrollState.scrollY + diffMinutesOfDay * hoursLayout.minutePx + offset
+    val timeLinePositionY = derivedStateOf {
+        val duration = timeLineState.timeLine?.durationFromScheduleStart(day)
+        duration?.let {
+            scrollState.scrollY + it.inWholeMinutes * hoursLayout.minutePx + offset
+        }
     }
 
     override fun toString(): String {
