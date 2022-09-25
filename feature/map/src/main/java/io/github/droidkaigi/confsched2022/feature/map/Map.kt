@@ -77,8 +77,8 @@ fun Map(
                 modifier = Modifier
                     .transformable(state = state)
                     .graphicsLayer(
-                        scaleX = maxOf(minScale, minOf(maxScale, scale)),
-                        scaleY = maxOf(minScale, minOf(maxScale, scale)),
+                        scaleX = scale.coerceIn(minScale, maxScale),
+                        scaleY = scale.coerceIn(minScale, maxScale),
                         translationX = offset.x,
                         translationY = offset.y,
                     )
