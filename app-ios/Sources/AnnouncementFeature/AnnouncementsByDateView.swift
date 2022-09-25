@@ -16,7 +16,7 @@ struct AnnouncementsByDateView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     AnnouncementItemView(announcement: announcement)
                     if announcement.id == announcementsByDate.announcements.last?.id {
-                        Divider().background(AssetColors.outline.swiftUIColor)
+                        Divider().background(ColorsKt.shared.outline.color())
                             .frame(height: 1)
                     }
                 }

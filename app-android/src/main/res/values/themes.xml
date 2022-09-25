@@ -3,7 +3,7 @@
 
     <style name="Platform.Theme.DroidKaigi" parent="Theme.Material3.DayNight">
         <item name="android:statusBarColor">@color/black30</item>
-        <item name="android:colorBackground">@color/neutralKeyColor10</item>
+        <item name="android:colorBackground">@color/background</item>
     </style>
 
     <style name="Theme.DroidKaigi" parent="Platform.Theme.DroidKaigi">

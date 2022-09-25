@@ -28,14 +28,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.core.model.R
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.model.AnnouncementsByDate
 import io.github.droidkaigi.confsched2022.model.fakes
@@ -156,7 +157,7 @@ fun AnnouncementContentList(
                             modifier = modifier
                                 .padding(start = 16.dp, end = 16.dp),
                             thickness = 1.dp,
-                            color = Color(KaigiColors.neutralVariantKeyColor60)
+                            color = colorResource(id = R.color.outline)
                         )
                     }
                 }

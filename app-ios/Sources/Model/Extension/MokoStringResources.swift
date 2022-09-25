@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 public extension StringResource {
     func localized() -> String {
@@ -16,5 +17,25 @@ private extension String {
                 removeSubrange(range)
             }
         }
+    }
+}
+
+public extension ColorResource {
+    func color() -> Color {
+        return getColor(userInterfaceStyle: UIKUIUserInterfaceStyle.uiuserinterfacestylelight).color
+    }
+}
+
+private extension GraphicsColor {
+    var color: Color {
+        let maxColor = CGFloat(0xFF)
+        return Color(
+            UIColor(
+                red: CGFloat(red) / maxColor,
+                green: CGFloat(green) / maxColor,
+                blue: CGFloat(blue) / maxColor,
+                alpha: CGFloat(alpha) / maxColor
+            )
+        )
     }
 }

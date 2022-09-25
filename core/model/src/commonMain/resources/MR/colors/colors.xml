@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- format: #RRGGBB[AA] -->
+
+    <!-- General -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="black">#000000</color>
+    <color name="black30">#0000004D</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Kaigi Colors -->
+    <!-- Primary -->
+    <color name="primary">#53DE9F</color>
+    <color name="onPrimary">#003823</color>
+    <color name="primaryContainer">#005234</color>
+    <color name="onPrimaryContainer">#73FBBA</color>
+
+    <!-- Secondary -->
+    <color name="secondary">#B4CCBC</color>
+    <color name="onSecondary">#203529</color>
+    <color name="secondaryContainer">#364B3F</color>
+    <color name="onSecondaryContainer">#D0E8D7</color>
+
+    <!-- Tertiary -->
+    <color name="tertiary">#A4CDDD</color>
+    <color name="onTertiary">#053542</color>
+    <color name="tertiaryContainer">#234C59</color>
+    <color name="onTertiaryContainer">#C0E9FA</color>
+
+    <!-- Error -->
+    <color name="error">#FFB4AB</color>
+    <color name="onError">#690005</color>
+    <color name="errorContainer">#93000A</color>
+    <color name="onErrorContainer">#FFDAD6</color>
+
+    <!-- Room color -->
+    <color name="appBar">#FE8299</color>
+    <color name="backdrop">#FF592F</color>
+    <color name="cards">#FFAF01</color>
+    <color name="dialogs">#069CCF</color>
+    <color name="online">#A58CDF</color>
+
+    <!-- Layer -->
+    <color name="background">#191C1A</color>
+    <color name="onBackground">#E1E3DF</color>
+    <color name="surface">#191C1A</color>
+    <color name="onSurface">#E1E3DF</color>
+    <color name="surfaceVariant">#404943</color>
+    <color name="onSurfaceVariant">#C0C9C1</color>
+    <color name="outline">#8A938C</color>
+
+    <!-- Notification -->
+    <color name="alert">#FFB4AB</color>
+    <color name="feedback">#E1E3DF</color>
+    <color name="notification">#E1E3DF</color>
+</resources>

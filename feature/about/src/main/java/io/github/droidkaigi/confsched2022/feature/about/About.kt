@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -46,9 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.core.model.R.color
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
-import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.strings.Strings
 
@@ -162,7 +163,7 @@ fun About(
                         start = 33.dp,
                         end = 33.dp
                     ),
-                color = Color(KaigiColors.neutralVariantKeyColor50)
+                color = colorResource(id = color.outline)
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"

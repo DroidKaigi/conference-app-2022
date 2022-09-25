@@ -15,6 +15,7 @@ struct AnnouncementItemView: View {
             Spacer().frame(width: 8)
             VStack(alignment: .leading, spacing: 8) {
                 Text(announcement.title)
+                    .foregroundColor(announcement.textColor)
                     .font(.system(size: 16, weight: .semibold))
                 Text(announcement.content)
                     .font(.system(size: 16, weight: .regular))
@@ -40,6 +41,17 @@ private extension Announcement {
             return Assets.notification.swiftUIImage
         case .feedback:
             return Assets.feedback.swiftUIImage
+        }
+    }
+
+    var textColor: Color {
+        switch AnnouncementType(rawValue: type) ?? .notification {
+        case .alert:
+            return ColorsKt.shared.alert.color()
+        case .notification:
+            return ColorsKt.shared.notification.color()
+        case .feedback:
+            return ColorsKt.shared.feedback.color()
         }
     }
 }
