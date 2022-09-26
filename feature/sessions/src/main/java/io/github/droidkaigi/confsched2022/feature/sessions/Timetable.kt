@@ -61,7 +61,6 @@ import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.fake
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -78,12 +77,12 @@ fun Timetable(
     timetable: Timetable,
     timetableState: TimetableState,
     timeLine: TimeLine?,
-    coroutineScope: CoroutineScope,
     day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val itemProvider = itemProvider({ timetable.timetableItems.size }) { index ->
         val timetableItemWithFavorite = timetable.contents[index]
         content(timetableItemWithFavorite.timetableItem, timetableItemWithFavorite.isFavorited)
@@ -250,14 +249,12 @@ fun Timetable(
 @Composable
 fun TimetablePreview() {
     val timetableState = rememberTimetableState()
-    val coroutineScope = rememberCoroutineScope()
     Timetable(
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake(),
         timetableState = timetableState,
         timeLine = TimeLine.now(),
         day = Day1,
-        coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
         TimetableItem(timetableItem, isFavorite, 1f)
     }

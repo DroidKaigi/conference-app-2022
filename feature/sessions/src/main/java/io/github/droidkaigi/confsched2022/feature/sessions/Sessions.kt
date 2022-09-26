@@ -292,7 +292,6 @@ fun Timetable(
                     timetableState = timetableState,
                     timeLine = timeLine,
                     day = day,
-                    coroutineScope = coroutineScope,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
                     )
