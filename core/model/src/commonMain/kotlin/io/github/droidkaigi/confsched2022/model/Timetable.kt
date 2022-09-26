@@ -18,6 +18,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
+@Immutable
 public data class Timetable(
     val timetableItems: TimetableItemList = TimetableItemList(),
     val favorites: PersistentSet<TimetableItemId> = persistentSetOf(),
