@@ -8,27 +8,24 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.droidkaigi.confsched2022.model.Filters
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingViewModel @Inject constructor(
+class SharedSettingViewModel @Inject constructor(
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    val uiModel: State<SettingUiModel>
+    val uiModel: State<SharedSettingUiModel>
     private val isDynamicColorEnabled: MutableState<Boolean>
 
     init {
         // TODO: initialize isDynamicColorEnabled
         isDynamicColorEnabled = mutableStateOf(true)
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            SettingUiModel(isDynamicColorEnabled = isDynamicColorEnabled.value)
+            SharedSettingUiModel(isDynamicColorEnabled = isDynamicColorEnabled.value)
         }
     }
 
