@@ -16,12 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.google.accompanist.placeholder.PlaceholderDefaults
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.placeholder.material.shimmerHighlightColor
+import com.google.accompanist.placeholder.shimmer
+import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 
 @Composable
 fun UsernameRow(
@@ -56,7 +60,11 @@ fun UsernameRow(
                         .placeholder(
                             color = MaterialTheme.colorScheme.surfaceVariant,
                             visible = true,
-                            highlight = PlaceholderHighlight.shimmer(),
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = PlaceholderDefaults.shimmerHighlightColor(
+                                    backgroundColor = Color(KaigiColors.neutralVariantKeyColor60)
+                                ),
+                            ),
                             shape = CircleShape,
                         )
                 )
