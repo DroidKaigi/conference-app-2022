@@ -104,7 +104,7 @@ fun SessionsScreenRoot(
     val lifecycleObserver = remember(viewModel) {
         LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.onUpdateTimeLine()
+                viewModel.onLifecycleResume()
             }
         }
     }

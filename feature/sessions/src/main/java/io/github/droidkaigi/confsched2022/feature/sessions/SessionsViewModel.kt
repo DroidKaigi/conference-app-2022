@@ -73,7 +73,7 @@ class SessionsViewModel @Inject constructor(
         refresh()
     }
 
-    fun onUpdateTimeLine() {
+    fun onLifecycleResume() {
         timeLine.value = TimeLine.now()
     }
 
