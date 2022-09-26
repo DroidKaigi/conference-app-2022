@@ -89,9 +89,9 @@ private fun LanguageSetting(
 
     Row(
         modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth()
-            .clickable { openDialog.value = true },
+            .clickable { openDialog.value = true }
+            .padding(16.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
