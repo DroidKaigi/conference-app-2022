@@ -7,9 +7,10 @@ public struct LoadingView: View {
 
     public var body: some View {
         ZStack {
-            AssetColors.black.swiftUIColor
+            AssetColors.background.swiftUIColor
                 .opacity(0.5)
             ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: AssetColors.onBackground.swiftUIColor))
         }
     }
 }
