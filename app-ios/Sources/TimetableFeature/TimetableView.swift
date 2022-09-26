@@ -108,23 +108,21 @@ public struct TimetableView: View {
             NavigationView {
                 ZStack(alignment: .top) {
 
-                    ZStack {
-                        if viewStore.state.showSheet {
-                            TimetableSheetView(store: store)
-                                .scrollThreshold(Self.scrollThreshold)
-                                .onScroll {
-                                    viewStore.send(.scroll($0))
-                                }
-                        } else {
-                            TimetableListView(store: store)
-                                .scrollThreshold(Self.scrollThreshold)
-                                .onScroll {
-                                    viewStore.send(.scroll($0))
-                                }
-                        }
-                        if viewStore.state.isLoading {
-                            LoadingView()
-                        }
+                    if viewStore.state.showSheet {
+                        TimetableSheetView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    } else {
+                        TimetableListView(store: store)
+                            .scrollThreshold(Self.scrollThreshold)
+                            .onScroll {
+                                viewStore.send(.scroll($0))
+                            }
+                    }
+                    if viewStore.state.isLoading {
+                        LoadingView()
                     }
 
                     HStack(spacing: 8) {
