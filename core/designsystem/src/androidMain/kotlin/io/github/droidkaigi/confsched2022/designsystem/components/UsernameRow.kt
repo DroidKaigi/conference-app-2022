@@ -53,10 +53,11 @@ fun UsernameRow(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(CircleShape)
                         .placeholder(
+                            color = MaterialTheme.colorScheme.surfaceVariant,
                             visible = true,
                             highlight = PlaceholderHighlight.shimmer(),
+                            shape = CircleShape,
                         )
                 )
             },

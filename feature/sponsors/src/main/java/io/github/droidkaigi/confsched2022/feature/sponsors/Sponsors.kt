@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -202,10 +201,10 @@ private fun LazyGridScope.sponsorsGrid(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(12.dp))
                             .placeholder(
                                 visible = true,
                                 highlight = PlaceholderHighlight.shimmer(),
+                                shape = RoundedCornerShape(12.dp),
                             ),
                     )
                 },
