@@ -11,15 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,6 +76,7 @@ fun Setting(
             horizontalAlignment = Alignment.Start
         ) {
             LanguageSetting()
+            DynamicColorSetting()
         }
     }
 }
@@ -156,6 +161,34 @@ private fun LanguageSelector(
                 Text(text = stringResource(resource = it.titleStringRes))
             }
         }
+    }
+}
+
+// TODO
+@Composable
+private fun DynamicColorSetting(modifier: Modifier = Modifier) {
+    var isDynamicColorEnabled by remember {
+        mutableStateOf(true)
+    }
+
+    Row(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(28.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = Icons.Default.Colorize, contentDescription = null)
+        Text(
+            text = stringResource(resource = Strings.setting_item_dynamic_color),
+            modifier = Modifier.weight(1f),
+        )
+        Switch(
+            checked = isDynamicColorEnabled,
+            onCheckedChange = {
+                isDynamicColorEnabled = it
+            },
+        )
     }
 }
 
