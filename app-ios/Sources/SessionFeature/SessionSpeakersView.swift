@@ -9,7 +9,7 @@ struct SessionSpeakersView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(StringsKt.shared.session_speaker.desc().localized())
+            Text(StringsKt.shared.session_speaker.localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
 

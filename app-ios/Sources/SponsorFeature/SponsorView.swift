@@ -1,6 +1,7 @@
 import appioscombined
 import CommonComponents
 import ComposableArchitecture
+import Kingfisher
 import Model
 import SafariView
 import SwiftUI
@@ -50,7 +51,9 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
                 await subscriber.send(
                     .refreshResponse(
                         TaskResult {
-                            result
+                            let prefetcher = ImagePrefetcher(urls: result.compactMap { URL(string: $0.logo) }, options: nil)
+                            prefetcher.start()
+                            return result
                         }
                     )
                 )
@@ -133,7 +136,7 @@ public struct SponsorView: View {
             .frame(minHeight: 0, maxHeight: .infinity)
             .background(AssetColors.background.swiftUIColor)
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            .navigationTitle(StringsKt.shared.title_sponsors.desc().localized())
+            .navigationTitle(StringsKt.shared.title_sponsors.localized())
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -179,7 +182,7 @@ struct SponsorItemView: View {
             }
         }
         .frame(height: height(of: sponsor.plan))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 
     private func height(of plan: Plan) -> CGFloat {

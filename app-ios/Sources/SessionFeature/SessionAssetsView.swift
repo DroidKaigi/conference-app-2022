@@ -9,7 +9,7 @@ struct SessionAssetsView: View {
 
     var body: some View {
         VStack {
-            Text(StringsKt.shared.session_material.desc().localized())
+            Text(StringsKt.shared.session_material.localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
             if let videoUrl = self.asset.videoUrl {
@@ -19,7 +19,7 @@ struct SessionAssetsView: View {
                     Button {
                         self.openURL(URL(string: videoUrl)!)
                     } label: {
-                        Text(StringsKt.shared.session_movie.desc().localized())
+                        Text(StringsKt.shared.session_movie.localized())
                             .font(Font.system(size: 14, weight: .regular, design: .default))
                     }
                 }
@@ -32,7 +32,7 @@ struct SessionAssetsView: View {
                     Button {
                         self.openURL(URL(string: slidesUrl)!)
                     } label: {
-                        Text(StringsKt.shared.session_slide.desc().localized())
+                        Text(StringsKt.shared.session_slide.localized())
                             .font(Font.system(size: 14, weight: .regular, design: .default))
                     }
                 }

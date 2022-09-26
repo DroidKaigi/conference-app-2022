@@ -4,12 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -31,13 +33,12 @@ class SessionsViewModel @Inject constructor(
 
     private val filters = mutableStateOf(Filters())
     private val isTimetableMode = mutableStateOf(true)
+    private var appError by mutableStateOf<AppError?>(null)
 
-    private val moleculeScope =
-        CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
+    val uiModel: State<SessionsUiModel> = run {
+        val moleculeScope =
+            CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    val uiModel: State<SessionsUiModel>
-
-    init {
         val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
 
@@ -53,20 +54,38 @@ class SessionsViewModel @Inject constructor(
                 schedule
             }
         }.asLoadState()
-
-        uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
+        moleculeScope.moleculeComposeState(clock = ContextClock) {
             val schedule by scheduleFlow.collectAsState(initial = UiLoadState.Loading)
 
             SessionsUiModel(
                 state = schedule,
                 isFilterOn = filters.value.filterFavorite,
                 isTimetable = isTimetableMode.value,
+                appError = appError,
             )
         }
     }
 
-    fun onToggleFilter() {
-        filters.value = filters.value.copy(!filters.value.filterFavorite)
+    init {
+        refresh()
+    }
+
+    fun onRetryButtonClick() {
+        refresh()
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            try {
+                sessionsRepository.refresh()
+            } catch (error: AppError) {
+                appError = error
+            }
+        }
+    }
+
+    fun onAppErrorNotified() {
+        appError = null
     }
 
     fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {

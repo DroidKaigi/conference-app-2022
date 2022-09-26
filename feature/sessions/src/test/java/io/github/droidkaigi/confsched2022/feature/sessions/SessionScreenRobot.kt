@@ -1,13 +1,13 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasAnySibling
-import androidx.compose.ui.test.hasStateDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import io.github.droidkaigi.confsched2022.data.sessions.FakeSessionsRepository
@@ -43,13 +43,15 @@ class SessionScreenRobot @Inject constructor() {
             .onFavorite(
                 index
             )
-            .assert(hasStateDescription(if (isFavorited) "ON" else "OFF"))
+            .assert(
+                SemanticsMatcher.expectValue(inFavoriteKey, isFavorited)
+            )
     }
 
     context(RobotTestRule)
     fun clickToggleTimetable() {
         composeTestRule
-            .onNodeWithContentDescription("Toggle timetable icon")
+            .onNodeWithTag("toggleTimetableButton", useUnmergedTree = true)
             .performClick()
     }
 

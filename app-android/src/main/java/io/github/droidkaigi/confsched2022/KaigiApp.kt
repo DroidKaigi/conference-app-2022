@@ -42,7 +42,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
@@ -79,10 +79,11 @@ import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
 import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
 import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.strings.Strings
-import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
-import io.github.droidkaigi.confsched2022.ui.LocalShareManager
+import io.github.droidkaigi.confsched2022.ui.CalendarRegistration
+import io.github.droidkaigi.confsched2022.ui.ShareManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -95,67 +96,69 @@ fun KaigiApp(
         rememberKaigiExternalNavigationController(),
 ) {
     KaigiTheme {
-        CompositionLocalProvider(
-            LocalShareManager provides AndroidShareManager(LocalContext.current),
-            LocalCalendarRegistration provides AndroidCalendarRegistration(LocalContext.current),
+        val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
+        KaigiAppDrawer(
+            kaigiAppScaffoldState = kaigiAppScaffoldState,
+            showPermanently = usePersistentNavigationDrawer,
+            drawerSheetContent = {
+                DrawerSheetContent(
+                    selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
+                    onClickDrawerItem = kaigiAppScaffoldState::navigate,
+                )
+            }
         ) {
-            val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
-            KaigiAppDrawer(
-                kaigiAppScaffoldState = kaigiAppScaffoldState,
-                showPermanently = usePersistentNavigationDrawer,
-                drawerSheetContent = {
-                    DrawerSheetContent(
-                        selectedDrawerItem = kaigiAppScaffoldState.selectedDrawerItem,
-                        onClickDrawerItem = { drawerItem ->
-                            kaigiAppScaffoldState.navigate(drawerItem)
-                        }
-                    )
-                }
+            NavHost(
+                modifier = Modifier,
+                navController = kaigiAppScaffoldState.navController,
+                startDestination = SessionsNavGraph.sessionRoute,
             ) {
-                NavHost(
-                    modifier = Modifier,
-                    navController = kaigiAppScaffoldState.navController,
-                    startDestination = SessionsNavGraph.sessionRoute,
-                ) {
-                    val showNavigationIcon = !usePersistentNavigationDrawer
-                    sessionsNavGraph(
-                        showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                        onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
-                        onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
-                        onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
-                        onNavigateFloorMapClick = kaigiAppScaffoldState::onNavigateFloorMapClick,
-                    )
-                    contributorsNavGraph(
-                        showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                        onLinkClick = kaigiExternalNavigationController::navigate,
-                    )
-                    aboutNavGraph(
-                        showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                        onLinkClick = kaigiExternalNavigationController::navigate,
-                        onStaffListClick = kaigiAppScaffoldState::onStaffListClick
-                    )
-                    staffNavGraph(
-                        showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                        onLinkClick = kaigiExternalNavigationController::navigate,
-                    )
-                    mapGraph()
-                    announcementGraph(
-                        showNavigationIcon = showNavigationIcon,
-                        onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
-                    )
-                    settingNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick
-                    )
-                    sponsorsNavGraph(
-                        showNavigationIcon,
-                        kaigiAppScaffoldState::onNavigationClick
-                    )
-                }
+                val showNavigationIcon = !usePersistentNavigationDrawer
+                sessionsNavGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
+                    onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
+                    onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
+                    onShareClick = kaigiExternalNavigationController::onShareClick,
+                    onNavigateFloorMapClick = kaigiAppScaffoldState::onNavigateFloorMapClick,
+                    onRegisterCalendarClick =
+                    kaigiExternalNavigationController::onRegisterCalendarClick
+                )
+                contributorsNavGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
+                )
+                aboutNavGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
+                    onStaffListClick = kaigiAppScaffoldState::onStaffListClick,
+                    onLicenseClick = kaigiExternalNavigationController::navigateToOssLicense,
+                )
+                staffNavGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
+                )
+                mapGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                )
+                announcementGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                )
+                settingNavGraph(
+                    showNavigationIcon,
+                    kaigiAppScaffoldState::onNavigationClick
+                )
+                sponsorsNavGraph(
+                    showNavigationIcon = showNavigationIcon,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onItemClick = kaigiExternalNavigationController::navigate
+                )
             }
         }
     }
@@ -252,7 +255,9 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     }
 
     fun onNavigateFloorMapClick() {
-        TODO("Floor map is not yet implemented.")
+        navController.navigate(
+            route = MapNavGraph.mapRoute
+        )
     }
 
     fun onNavigationClick() {
@@ -383,15 +388,22 @@ fun ColumnScope.DrawerSheetContent(
 @Composable
 fun rememberKaigiExternalNavigationController(): KaigiExternalNavigationController {
     val context = LocalContext.current
+    val shareManager = AndroidShareManager(context)
+    val calendarRegistration = AndroidCalendarRegistration(context)
+
     return remember(context) {
         KaigiExternalNavigationController(
             context,
+            shareManager,
+            calendarRegistration
         )
     }
 }
 
 class KaigiExternalNavigationController(
     private val context: Context,
+    private val shareManager: ShareManager,
+    private val calendarRegistration: CalendarRegistration
 ) {
 
     fun navigate(
@@ -420,5 +432,25 @@ class KaigiExternalNavigationController(
                 it.launchUrl(context, uri)
             }
         }
+    }
+
+    fun navigateToOssLicense() {
+        context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+    }
+
+    fun onShareClick(timeTableItem: TimetableItem) {
+        shareManager.share(
+            "${timeTableItem.title.currentLangTitle}\n" +
+                "https://droidkaigi.jp/2022/timetable/${timeTableItem.id.value}"
+        )
+    }
+
+    fun onRegisterCalendarClick(timeTableItem: TimetableItem) {
+        calendarRegistration.register(
+            startsAtMilliSeconds = timeTableItem.startsAt.toEpochMilliseconds(),
+            endsAtMilliSeconds = timeTableItem.endsAt.toEpochMilliseconds(),
+            title = timeTableItem.title.currentLangTitle,
+            location = timeTableItem.room.name.currentLangTitle,
+        )
     }
 }

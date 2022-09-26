@@ -14,6 +14,8 @@ jobs:
     runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
+      - name: Select Xcode
+        run: sudo xcode-select -s '/Applications/Xcode_14.0.app'
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1.0.4
       - name: Copy CI gradle.properties
@@ -34,12 +36,6 @@ jobs:
         with:
           name: XCFrameworks
           path: appioscombined.xcframework.zip
-      - name: Build Modules that includes plugin (Workaround for Xcode 13.x)
-        working-directory: app-ios
-        run: |
-          scripts/build.sh build Assets Debug
-          scripts/build.sh build Theme Debug
-          scripts/build.sh build AboutFeature Debug
       - name: Build App
         working-directory: app-ios
         run: |

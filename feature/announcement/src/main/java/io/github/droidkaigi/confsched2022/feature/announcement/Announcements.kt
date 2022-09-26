@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.feature.announcement
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +20,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,14 +53,18 @@ import kotlinx.datetime.todayIn
 
 @Composable
 fun AnnouncementsScreenRoot(
-    viewModel: AnnouncementsViewModel = hiltViewModel(),
+    onLinkClick: (url: String) -> Unit,
     showNavigationIcon: Boolean = true,
+    viewModel: AnnouncementsViewModel = hiltViewModel(),
     onNavigationIconClick: () -> Unit,
 ) {
     val uiModel by viewModel.uiModel
     Announcements(
-        uiModel = uiModel,
+        onLinkClick = onLinkClick,
         showNavigationIcon = showNavigationIcon,
+        uiModel = uiModel,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onNavigationIconClick = onNavigationIconClick
     )
 }
@@ -66,10 +73,16 @@ fun AnnouncementsScreenRoot(
 fun Announcements(
     uiModel: AnnouncementsUiModel,
     showNavigationIcon: Boolean,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
+    onLinkClick: (url: String) -> Unit = { _ -> },
     onNavigationIconClick: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             KaigiTopAppBar(
@@ -81,18 +94,24 @@ fun Announcements(
                     )
                 },
             )
-        },
+        }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         when (uiModel.state) {
             is Error -> {
-                uiModel.state.value?.printStackTrace()
-                TODO()
+                // Do nothing
             }
             is Success -> {
                 if (uiModel.state.value.isNotEmpty()) {
                     AnnouncementContentList(
                         announcements = uiModel.state.value,
                         innerPadding = innerPadding,
+                        onLinkClick = onLinkClick,
                     )
                 } else {
                     EmptyBody()
@@ -110,30 +129,36 @@ fun Announcements(
 fun AnnouncementContentList(
     announcements: PersistentList<AnnouncementsByDate>,
     innerPadding: PaddingValues,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        contentPadding = innerPadding,
+    Box(
+        modifier = Modifier.padding(innerPadding)
     ) {
-        announcements.forEach {
-            // TODO: Need to fix stickyHeader to make it work.
-            stickyHeader {
-                AnnouncementsHeader(dayString = it.publishedAt.convertString())
-            }
-            itemsIndexed(it.announcements) { index, announcement ->
-                AnnouncementContent(
-                    type = AnnouncementType.valueOf(announcement.type),
-                    title = announcement.title,
-                    content = announcement.content
-                )
-                if (index >= announcements.lastIndex) {
-                    Divider(
-                        modifier = modifier
-                            .padding(start = 16.dp, end = 16.dp),
-                        thickness = 1.dp,
-                        color = Color(KaigiColors.neutralVariantKeyColor60)
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            announcements.forEach {
+                stickyHeader {
+                    AnnouncementsHeader(
+                        dayString = it.publishedAt.convertString()
                     )
+                }
+                itemsIndexed(it.announcements) { index, announcement ->
+                    AnnouncementContent(
+                        type = AnnouncementType.valueOf(announcement.type),
+                        title = announcement.title,
+                        content = announcement.content,
+                        onLinkClick = onLinkClick,
+                    )
+                    if (index >= announcements.lastIndex) {
+                        Divider(
+                            modifier = modifier
+                                .padding(start = 16.dp, end = 16.dp),
+                            thickness = 1.dp,
+                            color = Color(KaigiColors.neutralVariantKeyColor60)
+                        )
+                    }
                 }
             }
         }
@@ -161,9 +186,18 @@ fun AnnouncementContent(
     type: AnnouncementType,
     title: String,
     content: String,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column {
+    val regex = "(https)(:\\/\\/[\\w\\/:%#\\\$&\\?\\(\\)~\\.=\\+\\-]+)".toRegex()
+
+    Column(
+        modifier = Modifier.clickable {
+            regex.find(content)?.let {
+                onLinkClick(it.value)
+            }
+        },
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -243,10 +277,12 @@ fun AnnouncementsPreview() {
             uiModel = AnnouncementsUiModel(
                 state = Success(
                     AnnouncementsByDate.fakes()
-                )
+                ),
+                appError = null
             ),
             showNavigationIcon = true,
-            onNavigationIconClick = {},
-        )
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
+        ) {}
     }
 }
