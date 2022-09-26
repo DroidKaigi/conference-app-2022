@@ -44,6 +44,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,6 +55,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -72,6 +74,8 @@ import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.SharedSettingUiModel
+import io.github.droidkaigi.confsched2022.feature.setting.SharedSettingViewModel
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
@@ -91,11 +95,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
+    sharedSettingViewModel: SharedSettingViewModel = hiltViewModel(),
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
 ) {
-    KaigiTheme {
+    val sharedSettingState: SharedSettingUiModel by sharedSettingViewModel.uiModel
+
+    KaigiTheme(isDynamicColorEnabled = sharedSettingState.isDynamicColorEnabled) {
         val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
         KaigiAppDrawer(
             kaigiAppScaffoldState = kaigiAppScaffoldState,

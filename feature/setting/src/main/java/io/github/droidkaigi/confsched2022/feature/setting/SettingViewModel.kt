@@ -1,5 +1,8 @@
 package io.github.droidkaigi.confsched2022.feature.setting
 
+import android.os.Build
+import android.os.Build.VERSION_CODES
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +26,7 @@ class SharedSettingViewModel @Inject constructor(
 
     init {
         // TODO: initialize isDynamicColorEnabled
-        isDynamicColorEnabled = mutableStateOf(true)
+        isDynamicColorEnabled = mutableStateOf(isSupportedDynamicColor())
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
             SharedSettingUiModel(isDynamicColorEnabled = isDynamicColorEnabled.value)
         }
@@ -32,5 +35,10 @@ class SharedSettingViewModel @Inject constructor(
     fun onDynamicColorToggle() {
         // TODO: change
         isDynamicColorEnabled.value = !isDynamicColorEnabled.value
+    }
+
+    @ChecksSdkIntAtLeast(api = VERSION_CODES.S)
+    private fun isSupportedDynamicColor(): Boolean {
+        return Build.VERSION.SDK_INT >= VERSION_CODES.S
     }
 }
