@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
@@ -52,8 +53,11 @@ fun SettingScreenRoot(
 fun Setting(
     showNavigationIcon: Boolean,
     modifier: Modifier = Modifier,
+    viewModel: SettingViewModel = hiltViewModel(),
     onNavigationIconClick: () -> Unit
 ) {
+    val state: SettingUiModel by viewModel.uiModel
+
     KaigiScaffold(
         modifier = modifier,
         topBar = {
@@ -76,7 +80,10 @@ fun Setting(
             horizontalAlignment = Alignment.Start
         ) {
             LanguageSetting()
-            DynamicColorSetting()
+            DynamicColorSetting(
+                isDynamicColorEnabled = state.isDynamicColorEnabled,
+                onDynamicToggleClick = viewModel::onDynamicColorToggle,
+            )
         }
     }
 }
@@ -166,11 +173,11 @@ private fun LanguageSelector(
 
 // TODO
 @Composable
-private fun DynamicColorSetting(modifier: Modifier = Modifier) {
-    var isDynamicColorEnabled by remember {
-        mutableStateOf(true)
-    }
-
+private fun DynamicColorSetting(
+    isDynamicColorEnabled: Boolean,
+    onDynamicToggleClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = modifier
             .padding(16.dp)
@@ -186,7 +193,7 @@ private fun DynamicColorSetting(modifier: Modifier = Modifier) {
         Switch(
             checked = isDynamicColorEnabled,
             onCheckedChange = {
-                isDynamicColorEnabled = it
+                onDynamicToggleClick()
             },
         )
     }
