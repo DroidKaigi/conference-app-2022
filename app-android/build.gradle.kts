@@ -15,7 +15,9 @@ plugins {
 
 android.namespace = "io.github.droidkaigi.confsched2022"
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile = file("keystore.properties")
+val keystoreExits = keystorePropertiesFile.exists()
+logger.lifecycle("keystoreExits:$keystoreExits")
 android {
     flavorDimensions += "network"
     signingConfigs {
@@ -26,10 +28,10 @@ android {
             keyPassword = "android"
         }
 
-        if(keystorePropertiesFile.exists()) {
+        if(keystoreExits) {
             val keystoreProperties = Properties()
             keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-            getByName("prod") {
+            create("prod") {
                 keyAlias = keystoreProperties["keyAlias"] as String?
                 keyPassword = keystoreProperties["keyPassword"] as String?
                 storeFile = keystoreProperties["storeFile"]?.let { file(it) }
@@ -46,10 +48,10 @@ android {
         }
         create("prod") {
             dimension = "network"
-            if(keystorePropertiesFile.exists()) {
-                signingConfig = signingConfigs.getByName("prod")
+            signingConfig = if(keystoreExits) {
+                signingConfigs.getByName("prod")
             } else {
-                signingConfig = signingConfigs.getByName("dev")
+                signingConfigs.getByName("dev")
             }
         }
     }

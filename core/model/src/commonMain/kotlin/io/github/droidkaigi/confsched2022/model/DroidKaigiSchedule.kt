@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
+@Immutable
 public data class DroidKaigiSchedule(
     val dayToTimetable: PersistentMap<DroidKaigi2022Day, Timetable>,
     private val timetable: Timetable

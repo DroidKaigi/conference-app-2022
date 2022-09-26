@@ -32,7 +32,7 @@ var package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
-        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.6"),
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
@@ -69,6 +69,7 @@ var package = Package(
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
+                .target(name: "Event"),
                 .target(name: "MapFeature"),
                 .target(name: "SponsorFeature"),
                 .target(name: "Theme"),
@@ -134,6 +135,9 @@ var package = Package(
             ]
         ),
         .target(
+            name: "Event"
+        ),
+        .target(
             name: "MapFeature",
             dependencies: [
                 .target(name: "Assets"),            
@@ -156,6 +160,7 @@ var package = Package(
             name: "SearchFeature",
             dependencies: [
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
                 .target(name: "SessionFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -166,6 +171,8 @@ var package = Package(
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
+                .target(name: "MapFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

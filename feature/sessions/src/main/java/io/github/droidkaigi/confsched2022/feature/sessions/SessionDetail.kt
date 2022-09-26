@@ -70,8 +70,6 @@ import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.secondLang
 import io.github.droidkaigi.confsched2022.strings.Strings
-import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
-import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
@@ -84,15 +82,14 @@ import java.util.Locale
 @Composable
 fun SessionDetailScreenRoot(
     timetableItemId: TimetableItemId,
+    onShareClick: (TimetableItem) -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SessionDetailViewModel = hiltViewModel(),
     onBackIconClick: () -> Unit = {},
     onNavigateFloorMapClick: () -> Unit,
 ) {
     val uiModel by viewModel.uiModel
-
-    val shareManager = LocalShareManager.current
-    val calendarRegistration = LocalCalendarRegistration.current
 
     SessionDetailScreen(
         modifier = modifier,
@@ -101,20 +98,9 @@ fun SessionDetailScreenRoot(
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         },
-        onShareClick = {
-            shareManager.share(
-                "${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}"
-            )
-        },
+        onShareClick = onShareClick,
         onNavigateFloorMapClick = onNavigateFloorMapClick,
-        onRegisterCalendarClick = {
-            calendarRegistration.register(
-                startsAtMilliSeconds = it.startsAt.toEpochMilliseconds(),
-                endsAtMilliSeconds = it.endsAt.toEpochMilliseconds(),
-                title = it.title.currentLangTitle,
-                location = it.room.name.currentLangTitle,
-            )
-        },
+        onRegisterCalendarClick = onRegisterCalendarClick,
     )
 }
 

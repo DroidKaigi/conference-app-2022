@@ -1,10 +1,12 @@
 package io.github.droidkaigi.confsched2022.ui
 
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
+@Immutable
 public sealed interface UiLoadState<out T> {
     public object Loading : UiLoadState<Nothing>
     public data class Success<T>(val value: T) : UiLoadState<T>
