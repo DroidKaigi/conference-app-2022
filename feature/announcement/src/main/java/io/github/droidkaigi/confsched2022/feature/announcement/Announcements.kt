@@ -265,9 +265,12 @@ private fun LocalDate.convertString(): String {
     } else if (this.compareTo(yesterday) == 0) {
         stringResource(Strings.announcement_content_header_title_yesterday)
     } else {
-        "${this.year}/${this.month.value.toString().padStart(2, '0')}/${this.dayOfMonth}"
+        "${this.year}/${this.month.value.padDayOrMonth()}/${this.dayOfMonth.padDayOrMonth()}"
     }
 }
+
+private fun Int.padDayOrMonth(): String =
+    this.toString().padStart(2, '0')
 
 @Preview(showBackground = true)
 @Composable
