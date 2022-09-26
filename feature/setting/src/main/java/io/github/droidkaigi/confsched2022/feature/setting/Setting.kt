@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.setting
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,9 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
@@ -40,24 +41,28 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
+    viewModel: SharedSettingViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as AppCompatActivity),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
+    val state: SharedSettingUiModel by viewModel.uiModel
+
     Setting(
+        sharedSettingUiModel = state,
         showNavigationIcon = showNavigationIcon,
-        onNavigationIconClick = onNavigationIconClick
+        onNavigationIconClick = onNavigationIconClick,
+        onDynamicToggleClick = viewModel::onDynamicColorToggle,
     )
 }
 
 @Composable
 fun Setting(
+    sharedSettingUiModel: SharedSettingUiModel,
     showNavigationIcon: Boolean,
+    onNavigationIconClick: () -> Unit,
+    onDynamicToggleClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SettingViewModel = hiltViewModel(),
-    onNavigationIconClick: () -> Unit
 ) {
-    val state: SettingUiModel by viewModel.uiModel
-
     KaigiScaffold(
         modifier = modifier,
         topBar = {
@@ -81,8 +86,8 @@ fun Setting(
         ) {
             LanguageSetting()
             DynamicColorSetting(
-                isDynamicColorEnabled = state.isDynamicColorEnabled,
-                onDynamicToggleClick = viewModel::onDynamicColorToggle,
+                isDynamicColorEnabled = sharedSettingUiModel.isDynamicColorEnabled,
+                onDynamicToggleClick = onDynamicToggleClick,
             )
         }
     }
