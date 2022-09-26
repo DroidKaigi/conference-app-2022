@@ -54,6 +54,7 @@
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
+    <string name="setting_item_dynamic_color">Dynamic Color</string>
     <string name="setting_item_dark_mode">Dark Mode</string>
     <string name="setting_item_language">Language</string>
     <string name="setting_language_system">System Default</string>
