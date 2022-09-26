@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -47,7 +48,7 @@ fun HoursItem(
 @Composable
 fun Hours(
     timetableState: TimetableState,
-    timeLineState: TimeLineState,
+    timeLine: TimeLine?,
     coroutineScope: CoroutineScope,
     day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
@@ -66,11 +67,11 @@ fun Hours(
             verticalScale = verticalScale,
         )
     }
-    val hoursScreen = remember(hoursLayout, timeLineState, density) {
+    val hoursScreen = remember(hoursLayout, timeLine, density) {
         HoursScreen(
             hoursLayout,
             scrollState,
-            timeLineState,
+            timeLine,
             day,
             density
         )
@@ -218,7 +219,7 @@ private data class HoursItemLayout(
 private class HoursScreen(
     val hoursLayout: HoursLayout,
     val scrollState: ScreenScrollState,
-    timeLineState: TimeLineState,
+    timeLine: TimeLine?,
     day: DroidKaigi2022Day,
     density: Density,
 ) {
@@ -242,7 +243,7 @@ private class HoursScreen(
         }
     }
     val timeLinePositionY = derivedStateOf {
-        val duration = timeLineState.timeLine?.durationFromScheduleStart(day)
+        val duration = timeLine?.durationFromScheduleStart(day)
         duration?.let {
             scrollState.scrollY + it.inWholeMinutes * hoursLayout.minutePx + offset
         }

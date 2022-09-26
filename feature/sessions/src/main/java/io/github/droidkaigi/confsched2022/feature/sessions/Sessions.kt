@@ -150,7 +150,6 @@ fun Sessions(
 ) {
     val scheduleState = uiModel.state
     val isTimetable = uiModel.isTimetable
-    val timeLineState = rememberTimeLineState(uiModel.timeLine)
     val pagerState = rememberPagerState()
     val sessionsListListStates = DroidKaigi2022Day.values().map { rememberLazyListState() }.toList()
     val timetableListStates = DroidKaigi2022Day.values().map {
@@ -206,7 +205,7 @@ fun Sessions(
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
-                            timeLineState = timeLineState,
+                            timeLine = uiModel.timeLine,
                             days = days,
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
@@ -242,7 +241,7 @@ fun Sessions(
 fun Timetable(
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
-    timeLineState: TimeLineState,
+    timeLine: TimeLine?,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -272,7 +271,7 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
-                timeLineState = timeLineState,
+                timeLine = timeLine,
                 day = day,
                 coroutineScope = coroutineScope,
             ) { hour ->
@@ -291,7 +290,7 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    timeLineState = timeLineState,
+                    timeLine = timeLine,
                     day = day,
                     coroutineScope = coroutineScope,
                     contentPadding = PaddingValues(
@@ -613,15 +612,6 @@ fun SessionsLoadingPreview() {
         )
     }
 }
-
-@Composable
-fun rememberTimeLineState(timeLine: TimeLine?): TimeLineState =
-    remember(timeLine) {
-        TimeLineState(timeLine)
-    }
-
-@Stable
-class TimeLineState(val timeLine: TimeLine?)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

@@ -77,7 +77,7 @@ import kotlin.math.roundToInt
 fun Timetable(
     timetable: Timetable,
     timetableState: TimetableState,
-    timeLineState: TimeLineState,
+    timeLine: TimeLine?,
     coroutineScope: CoroutineScope,
     day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
@@ -94,12 +94,12 @@ fun Timetable(
         TimetableLayout(timetable = timetable, density = density, verticalScale = verticalScale)
     }
     val scrollState = timetableState.screenScrollState
-    val timetableScreen = remember(timetableLayout, timeLineState, density) {
+    val timetableScreen = remember(timetableLayout, timeLine, density) {
         TimetableScreen(
             timetableLayout,
             scrollState,
             density,
-            timeLineState,
+            timeLine,
             day
         )
     }
@@ -250,13 +250,12 @@ fun Timetable(
 @Composable
 fun TimetablePreview() {
     val timetableState = rememberTimetableState()
-    val timeLineState = rememberTimeLineState(timeLine = TimeLine.now())
     val coroutineScope = rememberCoroutineScope()
     Timetable(
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake(),
         timetableState = timetableState,
-        timeLineState = timeLineState,
+        timeLine = TimeLine.now(),
         day = Day1,
         coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
@@ -543,7 +542,7 @@ private class TimetableScreen(
     val timetableLayout: TimetableLayout,
     val scrollState: ScreenScrollState,
     private val density: Density,
-    timeLineState: TimeLineState,
+    timeLine: TimeLine?,
     day: DroidKaigi2022Day,
 ) {
     var width = 0
@@ -575,7 +574,7 @@ private class TimetableScreen(
     }
 
     val timeLinePositionY = derivedStateOf {
-        val duration = timeLineState.timeLine?.durationFromScheduleStart(day)
+        val duration = timeLine?.durationFromScheduleStart(day)
         duration?.let {
             scrollState.scrollY + it.inWholeMinutes * timetableLayout.minutePx + topOffset
         }
