@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 public interface StaffRepository {
     public fun staff(): Flow<PersistentList<Staff>>
+
+    public suspend fun refresh()
 }
