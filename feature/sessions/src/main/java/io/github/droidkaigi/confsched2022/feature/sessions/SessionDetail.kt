@@ -59,6 +59,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
+import io.github.droidkaigi.confsched2022.model.KaigiPlace.Prism
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
@@ -227,11 +228,13 @@ fun SessionDetailBottomAppBar(
                         contentDescription = "share",
                     )
                 }
-                IconButton(onClick = onNavigateFloorMapClick) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_map),
-                        contentDescription = "go to floor map",
-                    )
+                if (item.day?.kaigiPlace == Prism) {
+                    IconButton(onClick = onNavigateFloorMapClick) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_map),
+                            contentDescription = "go to floor map",
+                        )
+                    }
                 }
                 IconButton(onClick = { onRegisterCalendarClick(item) }) {
                     Icon(
