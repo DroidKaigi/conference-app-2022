@@ -32,7 +32,8 @@ class SharedSettingViewModel @Inject constructor(
 
     init {
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            val dynamicColorEnabled by dynamicColorEnabledFlow.collectAsState(initial = isSupportedDynamicColor())
+            val dynamicColorEnabled
+                by dynamicColorEnabledFlow.collectAsState(initial = isSupportedDynamicColor())
             SharedSettingUiModel(isDynamicColorEnabled = dynamicColorEnabled)
         }
     }

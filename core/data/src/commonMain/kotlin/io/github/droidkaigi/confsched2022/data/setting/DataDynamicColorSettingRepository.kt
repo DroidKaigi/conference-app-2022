@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 public class DataDynamicColorSettingRepository(
     private val settingsDatastore: SettingsDatastore
-): DynamicColorSettingRepository {
+) : DynamicColorSettingRepository {
     override fun dynamicEnabledFlow(): Flow<Boolean> {
         return settingsDatastore.dynamicColorEnabled()
     }

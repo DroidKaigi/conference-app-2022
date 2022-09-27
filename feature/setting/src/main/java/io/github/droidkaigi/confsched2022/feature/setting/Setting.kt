@@ -43,7 +43,8 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
-    viewModel: SharedSettingViewModel = hiltViewModel(viewModelStoreOwner = LocalContext.current as AppCompatActivity),
+    viewModel: SharedSettingViewModel =
+        hiltViewModel(viewModelStoreOwner = LocalContext.current as AppCompatActivity),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
