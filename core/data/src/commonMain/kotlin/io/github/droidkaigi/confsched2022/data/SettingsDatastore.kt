@@ -61,10 +61,22 @@ public class SettingsDatastore(private val flowSettings: FlowSettings) {
         )
     }
 
+    public fun dynamicColorEnabled(): Flow<Boolean> {
+        return flowSettings.getBooleanFlow(KEY_DYNAMIC_COLOR, false)
+    }
+
+    public suspend fun setDynamicColorEnabled(dynamicColorEnabled: Boolean) {
+        flowSettings.putBoolean(
+            KEY_DYNAMIC_COLOR,
+            dynamicColorEnabled,
+        )
+    }
+
     public companion object {
         public const val NAME: String = "PREFERENCES_NAME"
         private const val KEY_AUTHENTICATED = "KEY_AUTHENTICATED"
         private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
+        private const val KEY_DYNAMIC_COLOR = "KEY_DYNAMIC_COLOR"
         private const val KEY = "favorites"
         private const val DELIMITER = ","
     }
