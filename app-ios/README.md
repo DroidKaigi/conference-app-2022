@@ -4,8 +4,7 @@
 - Build Kotlin Multiplatform Mobile XCFramework for iOS
 
 ```sh
-cd ../
-./gradlew appioscombined:assembleXCFramework
+./scripts/build_kmm_framework.sh Debug
 ```
 
 ### Open project with Xcode
