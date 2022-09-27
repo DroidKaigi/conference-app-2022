@@ -193,6 +193,9 @@ fun AnnouncementContent(
     modifier: Modifier = Modifier,
 ) {
     val urlRegex = "(https)(://[\\w/:%#$&?()~.=+\\-]+)".toRegex()
+    val findUrlResults = remember(content) {
+        urlRegex.findAll(content)
+    }
     val annotatedString = buildAnnotatedString {
         pushStyle(
             style = SpanStyle(
@@ -203,7 +206,7 @@ fun AnnouncementContent(
         pop()
 
         var lastIndex = 0
-        urlRegex.findAll(content).forEach { matchResult ->
+        findUrlResults.forEach { matchResult ->
             val startIndex = content.indexOf(
                 string = matchResult.value,
                 startIndex = lastIndex,
@@ -254,7 +257,7 @@ fun AnnouncementContent(
             text = annotatedString,
             style = MaterialTheme.typography.bodyLarge,
             onClick = { offset ->
-                urlRegex.findAll(content).forEach { matchResult ->
+                findUrlResults.forEach { matchResult ->
                     annotatedString.getStringAnnotations(
                         tag = matchResult.value,
                         start = offset,
