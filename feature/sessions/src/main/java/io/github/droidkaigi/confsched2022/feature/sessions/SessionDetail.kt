@@ -228,7 +228,7 @@ fun SessionDetailBottomAppBar(
                         contentDescription = "share",
                     )
                 }
-                if(item.day?.kaigiPlace == Prism) {
+                if (item.day?.kaigiPlace == Prism) {
                     IconButton(onClick = onNavigateFloorMapClick) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_map),
