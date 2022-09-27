@@ -1,5 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.setting
 
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
@@ -85,10 +87,12 @@ fun Setting(
             horizontalAlignment = Alignment.Start
         ) {
             LanguageSetting()
-            DynamicColorSetting(
-                isDynamicColorEnabled = sharedSettingUiModel.isDynamicColorEnabled,
-                onDynamicToggleClick = onDynamicToggleClick,
-            )
+            if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                DynamicColorSetting(
+                    isDynamicColorEnabled = sharedSettingUiModel.isDynamicColorEnabled,
+                    onDynamicToggleClick = onDynamicToggleClick,
+                )
+            }
         }
     }
 }

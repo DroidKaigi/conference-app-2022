@@ -3,38 +3,44 @@ package io.github.droidkaigi.confsched2022.feature.setting
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import androidx.annotation.ChecksSdkIntAtLeast
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.droidkaigi.confsched2022.model.DynamicColorSettingRepository
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedSettingViewModel @Inject constructor(
+    private val dynamicColorSettingRepository: DynamicColorSettingRepository,
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
     val uiModel: State<SharedSettingUiModel>
-    private val isDynamicColorEnabled: MutableState<Boolean>
+    private val dynamicColorEnabledFlow: Flow<Boolean> =
+        dynamicColorSettingRepository.dynamicEnabledFlow()
 
     init {
-        // TODO: initialize isDynamicColorEnabled
-        isDynamicColorEnabled = mutableStateOf(isSupportedDynamicColor())
         uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            SharedSettingUiModel(isDynamicColorEnabled = isDynamicColorEnabled.value)
+            val dynamicColorEnabled by dynamicColorEnabledFlow.collectAsState(initial = isSupportedDynamicColor())
+            SharedSettingUiModel(isDynamicColorEnabled = dynamicColorEnabled)
         }
     }
 
     fun onDynamicColorToggle() {
-        // TODO: change
-        isDynamicColorEnabled.value = !isDynamicColorEnabled.value
+        viewModelScope.launch {
+            dynamicColorSettingRepository.setDynamicColorEnabled(!dynamicColorEnabledFlow.first())
+        }
     }
 
     @ChecksSdkIntAtLeast(api = VERSION_CODES.S)
