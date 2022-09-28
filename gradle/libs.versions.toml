@@ -23,7 +23,7 @@ androidxTestEspresso = "3.4.0"
 androidxTestUiAutomator = "2.2.0"
 androidxMacroBenchmark = "1.2.0-alpha04"
 dagger = "2.44"
-spotless = "6.7.0"
+spotless = "6.11.0"
 ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
 ktor = "2.1.1"
@@ -54,7 +54,7 @@ testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
 androidxSplashScreen = "1.0.0"
-twitterComposeRulesDetekt = "0.0.14"
+twitterComposeRulesDetekt = "0.0.16"
 playOssLicenses = "17.0.0"
 playOssLicensesPlugin = "0.10.5"
 
@@ -94,6 +94,7 @@ daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler"
 
 accompanistPager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
 accompanistFlowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
+accompanistPlaceholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 
 kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 

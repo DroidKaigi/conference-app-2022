@@ -31,7 +31,7 @@ public struct TimetableListItemView: View {
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(highlightedString(text: item.title.jaTitle, searchText: searchText))
+                    Text(highlightedString(text: item.title.currentLangTitle, searchText: searchText))
                         .multilineTextAlignment(.leading)
                         .font(Font.system(size: 22, weight: .medium, design: .default))
                         .foregroundColor(AssetColors.onBackground.swiftUIColor)
@@ -47,7 +47,7 @@ public struct TimetableListItemView: View {
                             if let message = session.message {
                                 HStack(spacing: 4) {
                                     Assets.error.swiftUIImage
-                                    Text(message.jaTitle)
+                                    Text(message.currentLangTitle)
                                         .foregroundColor(AssetColors.error.swiftUIColor)
                                         .font(Font.system(size: 12, weight: .regular, design: .default))
                                 }

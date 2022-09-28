@@ -30,7 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
@@ -209,9 +212,20 @@ private fun LazyGridScope.sponsorsGrid(
                 )
                 .clickable { onItemClick(sponsor.link) }
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = sponsor.logo,
                 contentDescription = sponsor.name,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .placeholder(
+                                visible = true,
+                                highlight = PlaceholderHighlight.shimmer(),
+                                shape = RoundedCornerShape(12.dp),
+                            ),
+                    )
+                },
                 modifier = Modifier.fillMaxSize(),
             )
         }

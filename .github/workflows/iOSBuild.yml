@@ -36,6 +36,12 @@ jobs:
         with:
           name: XCFrameworks
           path: appioscombined.xcframework.zip
+      - name: Copy XCFramework to build dir
+        working-directory: app-ios
+        run: |
+          mkdir -p build
+          cp -r '../app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework' 'build'
+
       - name: Build App
         working-directory: app-ios
         run: |

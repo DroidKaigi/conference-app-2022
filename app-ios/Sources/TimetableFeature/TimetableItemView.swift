@@ -11,7 +11,7 @@ public struct TimetableItemView: View {
 
     public var body: some View {
         VStack(alignment: .leading) {
-            Text(item.timetableItem.title.jaTitle)
+            Text(item.timetableItem.title.currentLangTitle)
                 .frame(maxWidth: CGFloat.infinity, alignment: .topLeading)
                 .font(Font.system(size: 16, weight: .bold, design: .default))
                 .foregroundColor(AssetColors.white.swiftUIColor)

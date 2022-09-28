@@ -89,9 +89,7 @@ public struct SponsorView: View {
         WithViewStore(store) { viewStore in
             ZStack(alignment: .center) {
                 if viewStore.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: AssetColors.onBackground.swiftUIColor))
-                        .scaleEffect(x: 2, y: 2)
+                    LoadingView()
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 24) {
