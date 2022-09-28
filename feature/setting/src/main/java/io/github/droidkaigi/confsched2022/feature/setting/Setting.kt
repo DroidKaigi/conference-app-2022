@@ -2,7 +2,6 @@ package io.github.droidkaigi.confsched2022.feature.setting
 
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,16 +22,13 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.StringResource
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
@@ -43,18 +39,16 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
-    viewModel: KaigiAppViewModel =
-        hiltViewModel(viewModelStoreOwner = LocalContext.current as AppCompatActivity),
+    appUiModel: AppUiModel,
+    onDynamicColorToggle: (Boolean) -> Unit,
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
-    val state: AppUiModel by viewModel.uiModel
-
     Setting(
-        appUiModel = state,
+        appUiModel = appUiModel,
         showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
-        onDynamicColorToggle = viewModel::onDynamicColorToggle,
+        onDynamicColorToggle = onDynamicColorToggle,
     )
 }
 
@@ -181,7 +175,6 @@ private fun LanguageSelector(
     }
 }
 
-// TODO
 @Composable
 private fun DynamicColorSetting(
     isDynamicColorEnabled: Boolean,
@@ -213,7 +206,10 @@ private fun DynamicColorSetting(
 @Composable
 private fun SettingPreview() {
     KaigiTheme {
-        SettingScreenRoot()
+        SettingScreenRoot(
+            appUiModel = AppUiModel(false),
+            onDynamicColorToggle = {}
+        )
     }
 }
 

@@ -100,9 +100,9 @@ fun KaigiApp(
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
 ) {
-    val sharedSettingState: AppUiModel by kaigiAppViewModel.uiModel
+    val appUiModel: AppUiModel by kaigiAppViewModel.uiModel
 
-    KaigiTheme(isDynamicColorEnabled = sharedSettingState.isDynamicColorEnabled) {
+    KaigiTheme(isDynamicColorEnabled = appUiModel.isDynamicColorEnabled) {
         val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
         KaigiAppDrawer(
             kaigiAppScaffoldState = kaigiAppScaffoldState,
@@ -158,8 +158,10 @@ fun KaigiApp(
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                 )
                 settingNavGraph(
-                    showNavigationIcon,
-                    kaigiAppScaffoldState::onNavigationClick
+                    appUiModel = appUiModel,
+                    showNavigationIcon = true,
+                    onDynamicColorToggle = kaigiAppViewModel::onDynamicColorToggle,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick
                 )
                 sponsorsNavGraph(
                     showNavigationIcon = showNavigationIcon,
