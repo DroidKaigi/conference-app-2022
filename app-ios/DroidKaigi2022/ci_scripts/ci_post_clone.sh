@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-brew install java
+brew install openjdk@17

@@ -3,7 +3,6 @@ package io.github.droidkaigi.confsched2022.feature.announcement
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +40,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.AnnouncementsByDate
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.strings.Strings
@@ -189,15 +193,46 @@ fun AnnouncementContent(
     onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val regex = "(https)(:\\/\\/[\\w\\/:%#\\\$&\\?\\(\\)~\\.=\\+\\-]+)".toRegex()
+    val urlRegex = "(https)(://[\\w/:%#$&?()~.=+\\-]+)".toRegex()
+    val findUrlResults = remember(content) {
+        urlRegex.findAll(content)
+    }
+    val annotatedString = buildAnnotatedString {
+        pushStyle(
+            style = SpanStyle(
+                color = Color(type.contentTextColor)
+            )
+        )
+        append(content)
+        pop()
 
-    Column(
-        modifier = Modifier.clickable {
-            regex.find(content)?.let {
-                onLinkClick(it.value)
-            }
-        },
-    ) {
+        var lastIndex = 0
+        findUrlResults.forEach { matchResult ->
+            val startIndex = content.indexOf(
+                string = matchResult.value,
+                startIndex = lastIndex,
+            )
+            val endIndex = startIndex + matchResult.value.length
+            addStyle(
+                style = SpanStyle(
+                    color = Color.Cyan,
+                    textDecoration = TextDecoration.Underline
+                ),
+                start = startIndex,
+                end = endIndex,
+            )
+            addStringAnnotation(
+                tag = matchResult.value,
+                annotation = matchResult.value,
+                start = startIndex,
+                end = endIndex,
+            )
+
+            lastIndex = endIndex
+        }
+    }
+
+    Column {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -217,12 +252,22 @@ fun AnnouncementContent(
                 .height(16.dp)
                 .width(26.dp)
         )
-        Text(
+        ClickableText(
             modifier = modifier
                 .padding(start = 26.dp, top = 8.dp, bottom = 24.dp),
-            text = content,
+            text = annotatedString,
             style = MaterialTheme.typography.bodyLarge,
-            color = Color(type.contentTextColor),
+            onClick = { offset ->
+                findUrlResults.forEach { matchResult ->
+                    annotatedString.getStringAnnotations(
+                        tag = matchResult.value,
+                        start = offset,
+                        end = offset
+                    ).firstOrNull()?.let {
+                        onLinkClick(matchResult.value)
+                    }
+                }
+            }
         )
     }
 }

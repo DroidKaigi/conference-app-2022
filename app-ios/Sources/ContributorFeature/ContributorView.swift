@@ -29,6 +29,7 @@ public let contributorReducer = Reducer<ContributorState, ContributorAction, Con
     switch action {
     case .refresh:
         return .run { @MainActor subscriber in
+            try await environment.contributorsRepository.refresh()
             for try await result: [Contributor] in environment.contributorsRepository.contributors().stream() {
                 await subscriber.send(
                     .refreshResponse(

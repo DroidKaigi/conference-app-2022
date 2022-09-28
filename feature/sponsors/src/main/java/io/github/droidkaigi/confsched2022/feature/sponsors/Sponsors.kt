@@ -20,18 +20,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Gold
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Platinum
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorPlan.Supporter
@@ -55,6 +61,8 @@ fun SponsorsScreenRoot(
         uiModel = uiModel,
         showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onItemClick = onItemClick
     )
 }
@@ -64,10 +72,15 @@ fun Sponsors(
     uiModel: SponsorsUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
     onItemClick: (url: String) -> Unit = { _ -> },
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             KaigiTopAppBar(
@@ -81,6 +94,12 @@ fun Sponsors(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         when (uiModel.state) {
             Loading -> FullScreenLoading(Modifier.padding(innerPadding))
             is Success ->
@@ -98,7 +117,9 @@ fun Sponsors(
                         onItemClick = onItemClick
                     )
                 }
-            is Error -> TODO()
+            is Error -> {
+                // Do nothing
+            }
         }
     }
 }
@@ -191,9 +212,20 @@ private fun LazyGridScope.sponsorsGrid(
                 )
                 .clickable { onItemClick(sponsor.link) }
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = sponsor.logo,
                 contentDescription = sponsor.name,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .placeholder(
+                                visible = true,
+                                highlight = PlaceholderHighlight.shimmer(),
+                                shape = RoundedCornerShape(12.dp),
+                            ),
+                    )
+                },
                 modifier = Modifier.fillMaxSize(),
             )
         }

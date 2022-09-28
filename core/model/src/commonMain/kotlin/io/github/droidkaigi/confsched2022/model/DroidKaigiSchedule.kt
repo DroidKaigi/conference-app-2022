@@ -44,3 +44,7 @@ public data class DroidKaigiSchedule(
 public fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
     return of(Timetable.fake())
 }
+
+public fun DroidKaigiSchedule.Companion.empty(): DroidKaigiSchedule {
+    return of(Timetable())
+}

@@ -19,6 +19,10 @@
 
 ### Android
 
+You can install the production app via Get it on Google Play.
+
+[<img src="https://play.google.com/intl/ja/badges/static/images/badges/en_badge_web_generic.png" alt="You can install the production app via Get it on Google Play" width="155px">](https://play.google.com/store/apps/details?id=io.github.droidkaigi.confsched2022)
+
 The builds being distributed through mobile app distribution services.
 
 - Try the latest staging through [<img src="https://dply.me/rdembt/button/small" alt="Download to device">](https://dply.me/rdembt#install)
@@ -27,6 +31,11 @@ You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
 
 ### iOS
+
+You can install the production app via Get it on App Store.
+
+[<img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="You can install the production app via Get it on App Store" width="155px">](https://apps.apple.com/jp/app/droidkaigi2022%E5%85%AC%E5%BC%8F%E3%82%A2%E3%83%97%E3%83%AA/id1643449914)
+
 
 Beta version of this app is available on TestFlight.
 You can try and test this app with following public link.
