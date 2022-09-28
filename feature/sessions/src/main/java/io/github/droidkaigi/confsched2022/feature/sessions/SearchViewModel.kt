@@ -6,12 +6,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import co.touchlab.kermit.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
@@ -32,18 +34,17 @@ class SearchViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
     sessionsZipline: SessionsZipline
 ) : ViewModel() {
-    private val moleculeScope =
-        CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-
-    val uiModel: State<SearchUiModel>
-
     private val filters = mutableStateOf(Filters())
 
     private val filterSheetState = mutableStateOf<SearchFilterSheetState>(
         SearchFilterSheetState.Hide
     )
+    private var appError by mutableStateOf<AppError?>(null)
 
-    init {
+    val uiModel: State<SearchUiModel> = run {
+        val moleculeScope =
+            CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
+
         val ziplineScheduleModifierFlow = sessionsZipline.timetableModifier()
         val sessionScheduleFlow = sessionsRepository.droidKaigiScheduleFlow()
 
@@ -59,10 +60,8 @@ class SearchViewModel @Inject constructor(
                 schedule
             }
         }.asLoadState()
-
-        uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
+        moleculeScope.moleculeComposeState(clock = ContextClock) {
             val schedule by scheduleFlow.collectAsState(initial = UiLoadState.Loading)
-
             val filteredSchedule by remember(filters) {
                 derivedStateOf {
                     schedule.mapSuccess { it.filtered(filters.value) }
@@ -76,7 +75,8 @@ class SearchViewModel @Inject constructor(
                     isFavoritesOn = filters.value.filterFavorite
                 ),
                 filterSheetState = filterSheetState.value,
-                state = filteredSchedule
+                state = filteredSchedule,
+                appError = appError,
             )
         }
     }
@@ -141,5 +141,27 @@ class SearchViewModel @Inject constructor(
 
     fun onSearchTextAreaClicked() {
         onFilterSheetDismissed()
+    }
+
+    init {
+        refresh()
+    }
+
+    fun onRetryButtonClick() {
+        refresh()
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            try {
+                sessionsRepository.refresh()
+            } catch (e: AppError) {
+                appError = e
+            }
+        }
+    }
+
+    fun onAppErrorNotified() {
+        appError = null
     }
 }

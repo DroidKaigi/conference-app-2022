@@ -36,6 +36,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -70,6 +71,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.Typography
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
@@ -167,6 +169,8 @@ fun SearchRoot(
                 viewModel.onFilterFavoritesToggle()
             },
             onBackIconClick = onBackIconClick,
+            onRetryButtonClick = { viewModel.onRetryButtonClick() },
+            onAppErrorNotified = { viewModel.onAppErrorNotified() },
             onSearchTextAreaClicked = {
                 viewModel.onSearchTextAreaClicked()
             }
@@ -184,10 +188,15 @@ private fun SearchScreen(
     onFavoritesToggleClicked: () -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     onBackIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             if (uiModel.state is Success) {
@@ -200,11 +209,19 @@ private fun SearchScreen(
             }
         },
         content = {
+            AppErrorSnackbarEffect(
+                appError = uiModel.appError,
+                snackBarHostState = snackbarHostState,
+                onAppErrorNotified = onAppErrorNotified,
+                onRetryButtonClick = onRetryButtonClick
+            )
             Column(
                 modifier = Modifier.padding(paddingValues = it)
             ) {
                 when (uiModel.state) {
-                    is Error -> TODO()
+                    is Error -> {
+                        // Do nothing
+                    }
                     is Success -> {
                         SearchFilter(
                             modifier = Modifier
@@ -545,7 +562,8 @@ fun SearchScreenPreview() {
             uiModel = SearchUiModel(
                 filter = SearchFilterUiModel(),
                 filterSheetState = SearchFilterSheetState.Hide,
-                state = Success(DroidKaigiSchedule.fake())
+                state = Success(DroidKaigiSchedule.fake()),
+                appError = null,
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
@@ -553,6 +571,8 @@ fun SearchScreenPreview() {
             onFavoritesToggleClicked = {},
             onDayFilterClicked = {},
             onCategoriesFilteredClicked = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
             onSearchTextAreaClicked = {},
         )
     }
@@ -566,7 +586,8 @@ fun SearchEmptyScreenPreview() {
             uiModel = SearchUiModel(
                 filter = SearchFilterUiModel(),
                 filterSheetState = SearchFilterSheetState.Hide,
-                state = Success(DroidKaigiSchedule.empty())
+                state = Success(DroidKaigiSchedule.empty()),
+                appError = null,
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
@@ -575,6 +596,8 @@ fun SearchEmptyScreenPreview() {
             onDayFilterClicked = {},
             onCategoriesFilteredClicked = {},
             onSearchTextAreaClicked = {},
+            onAppErrorNotified = {},
+            onRetryButtonClick = {}
         )
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,6 +60,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.KaigiPlace.Prism
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.MultiLangText
@@ -95,6 +97,8 @@ fun SessionDetailScreenRoot(
     SessionDetailScreen(
         modifier = modifier,
         uiModel = uiModel,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
@@ -134,6 +138,8 @@ fun SessionDetailTopAppBar(
 @Composable
 fun SessionDetailScreen(
     uiModel: SessionDetailUiModel,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
@@ -141,10 +147,11 @@ fun SessionDetailScreen(
     onNavigateFloorMapClick: () -> Unit = {},
     onRegisterCalendarClick: (TimetableItem) -> Unit = {},
 ) {
-
     val uiState = uiModel.state
+    val snackbarHostState = remember { SnackbarHostState() }
 
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         topBar = {
             SessionDetailTopAppBar(
                 onBackIconClick = onBackIconClick,
@@ -165,9 +172,17 @@ fun SessionDetailScreen(
             }
         },
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Box(modifier = Modifier.padding(innerPadding)) {
             when (uiState) {
-                is Error -> TODO()
+                is Error -> {
+                    // Do nothing
+                }
                 Loading ->
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -624,8 +639,11 @@ fun PreviewSessionDetailScreen() {
     KaigiTheme {
         SessionDetailScreen(
             uiModel = SessionDetailUiModel(
-                Success(TimetableItemWithFavorite.fake())
-            )
+                state = Success(TimetableItemWithFavorite.fake()),
+                appError = null,
+            ),
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
