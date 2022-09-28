@@ -1,12 +1,14 @@
 package io.github.droidkaigi.confsched2022.data
 
 import com.russhwolf.settings.coroutines.FlowSettings
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
 
 public class SettingsDatastore(private val flowSettings: FlowSettings) {
 
@@ -62,7 +64,11 @@ public class SettingsDatastore(private val flowSettings: FlowSettings) {
     }
 
     public fun dynamicColorEnabled(): Flow<Boolean> {
-        return flowSettings.getBooleanFlow(KEY_DYNAMIC_COLOR, false)
+        return flowSettings.getBooleanFlow(
+            key = KEY_DYNAMIC_COLOR,
+            // The trick
+            defaultValue = DroidKaigi2022Day.Day1.start < Clock.System.now()
+        )
     }
 
     public suspend fun setDynamicColorEnabled(dynamicColorEnabled: Boolean) {

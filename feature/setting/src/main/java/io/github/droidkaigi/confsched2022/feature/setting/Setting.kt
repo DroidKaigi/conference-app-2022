@@ -43,27 +43,27 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
-    viewModel: SharedSettingViewModel =
+    viewModel: KaigiAppViewModel =
         hiltViewModel(viewModelStoreOwner = LocalContext.current as AppCompatActivity),
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
-    val state: SharedSettingUiModel by viewModel.uiModel
+    val state: AppUiModel by viewModel.uiModel
 
     Setting(
-        sharedSettingUiModel = state,
+        appUiModel = state,
         showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
-        onDynamicToggleClick = viewModel::onDynamicColorToggle,
+        onDynamicColorToggle = viewModel::onDynamicColorToggle,
     )
 }
 
 @Composable
 fun Setting(
-    sharedSettingUiModel: SharedSettingUiModel,
+    appUiModel: AppUiModel,
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
-    onDynamicToggleClick: () -> Unit,
+    onDynamicColorToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     KaigiScaffold(
@@ -90,8 +90,8 @@ fun Setting(
             LanguageSetting()
             if (VERSION.SDK_INT >= VERSION_CODES.S) {
                 DynamicColorSetting(
-                    isDynamicColorEnabled = sharedSettingUiModel.isDynamicColorEnabled,
-                    onDynamicToggleClick = onDynamicToggleClick,
+                    isDynamicColorEnabled = appUiModel.isDynamicColorEnabled,
+                    onDynamicColorToggle = onDynamicColorToggle,
                 )
             }
         }
@@ -185,7 +185,7 @@ private fun LanguageSelector(
 @Composable
 private fun DynamicColorSetting(
     isDynamicColorEnabled: Boolean,
-    onDynamicToggleClick: () -> Unit,
+    onDynamicColorToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -203,7 +203,7 @@ private fun DynamicColorSetting(
         Switch(
             checked = isDynamicColorEnabled,
             onCheckedChange = {
-                onDynamicToggleClick()
+                onDynamicColorToggle(it)
             },
         )
     }

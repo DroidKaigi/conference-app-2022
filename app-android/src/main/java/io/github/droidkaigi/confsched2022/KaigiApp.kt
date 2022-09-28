@@ -73,9 +73,9 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.AppUiModel
+import io.github.droidkaigi.confsched2022.feature.setting.KaigiAppViewModel
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
-import io.github.droidkaigi.confsched2022.feature.setting.SharedSettingUiModel
-import io.github.droidkaigi.confsched2022.feature.setting.SharedSettingViewModel
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
@@ -95,12 +95,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
-    sharedSettingViewModel: SharedSettingViewModel = hiltViewModel(),
+    kaigiAppViewModel: KaigiAppViewModel = hiltViewModel(),
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
 ) {
-    val sharedSettingState: SharedSettingUiModel by sharedSettingViewModel.uiModel
+    val sharedSettingState: AppUiModel by kaigiAppViewModel.uiModel
 
     KaigiTheme(isDynamicColorEnabled = sharedSettingState.isDynamicColorEnabled) {
         val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer

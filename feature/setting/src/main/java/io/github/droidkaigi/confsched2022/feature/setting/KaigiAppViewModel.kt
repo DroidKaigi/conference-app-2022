@@ -15,32 +15,29 @@ import io.github.droidkaigi.confsched2022.model.DynamicColorSettingRepository
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedSettingViewModel @Inject constructor(
+class KaigiAppViewModel @Inject constructor(
     private val dynamicColorSettingRepository: DynamicColorSettingRepository,
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
 
-    val uiModel: State<SharedSettingUiModel>
     private val dynamicColorEnabledFlow: Flow<Boolean> =
         dynamicColorSettingRepository.dynamicEnabledFlow()
 
-    init {
-        uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
-            val dynamicColorEnabled
-                by dynamicColorEnabledFlow.collectAsState(initial = isSupportedDynamicColor())
-            SharedSettingUiModel(isDynamicColorEnabled = dynamicColorEnabled)
-        }
+    val uiModel: State<AppUiModel> = moleculeScope.moleculeComposeState(clock = ContextClock) {
+        val dynamicColorSettingEnabled by dynamicColorEnabledFlow.collectAsState(
+            initial = false
+        )
+        AppUiModel(isDynamicColorEnabled = dynamicColorSettingEnabled && isSupportedDynamicColor())
     }
 
-    fun onDynamicColorToggle() {
+    fun onDynamicColorToggle(isDynamic: Boolean) {
         viewModelScope.launch {
-            dynamicColorSettingRepository.setDynamicColorEnabled(!dynamicColorEnabledFlow.first())
+            dynamicColorSettingRepository.setDynamicColorEnabled(isDynamic)
         }
     }
 
