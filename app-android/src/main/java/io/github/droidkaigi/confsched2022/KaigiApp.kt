@@ -115,6 +115,7 @@ fun KaigiApp(
                 val showNavigationIcon = !usePersistentNavigationDrawer
                 sessionsNavGraph(
                     showNavigationIcon = showNavigationIcon,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
                     onSearchIconClick = kaigiAppScaffoldState::onSearchClick,

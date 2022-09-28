@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,6 +48,9 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -85,6 +89,7 @@ import java.util.Locale
 @Composable
 fun SessionDetailScreenRoot(
     timetableItemId: TimetableItemId,
+    onLinkClick: (url: String) -> Unit,
     onShareClick: (TimetableItem) -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -99,6 +104,7 @@ fun SessionDetailScreenRoot(
         uiModel = uiModel,
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
         onAppErrorNotified = { viewModel.onAppErrorNotified() },
+        onLinkClick = onLinkClick,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
@@ -141,6 +147,7 @@ fun SessionDetailScreen(
     onRetryButtonClick: () -> Unit,
     onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
+    onLinkClick: (url: String) -> Unit = { _ -> },
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
     onShareClick: (TimetableItem) -> Unit = {},
@@ -199,7 +206,8 @@ fun SessionDetailScreen(
 
                         if (item is Session)
                             SessionDetailDescription(
-                                description = item.description
+                                description = item.description,
+                                onLinkClick = onLinkClick,
                             )
 
                         SessionDetailTargetAudience(
@@ -441,24 +449,76 @@ fun SessionDetailSessionInfo(
 @Composable
 fun SessionDetailDescription(
     description: String,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isReadMore by remember { mutableStateOf(false) }
     var isOverFlow by remember { mutableStateOf(false) }
+
+    val urlRegex = "(https)(://[\\w/:%#$&?()~.=+\\-]+)".toRegex()
+    val findUrlResults = remember(description) {
+        urlRegex.findAll(description)
+    }
+    val annotatedString = buildAnnotatedString {
+        pushStyle(
+            style = SpanStyle(
+                color = Color(0xFFE2E3DE)
+            )
+        )
+        append(description)
+        pop()
+
+        var lastIndex = 0
+        findUrlResults.forEach { matchResult ->
+            val startIndex = description.indexOf(
+                string = matchResult.value,
+                startIndex = lastIndex,
+            )
+            val endIndex = startIndex + matchResult.value.length
+            addStyle(
+                style = SpanStyle(
+                    color = Color.Cyan,
+                    textDecoration = TextDecoration.Underline
+                ),
+                start = startIndex,
+                end = endIndex,
+            )
+            addStringAnnotation(
+                tag = matchResult.value,
+                annotation = matchResult.value,
+                start = startIndex,
+                end = endIndex,
+            )
+
+            lastIndex = endIndex
+        }
+    }
+
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.padding(16.dp))
-        Text(
+        ClickableText(
             modifier = modifier
                 .animateContentSize()
                 .clickable {
                     isReadMore = true
                 },
-            text = description,
+            text = annotatedString,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
             overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
             onTextLayout = { result ->
                 isOverFlow = result.isLineEllipsized(result.lineCount - 1)
+            },
+            onClick = { offset ->
+                findUrlResults.forEach { matchResult ->
+                    annotatedString.getStringAnnotations(
+                        tag = matchResult.value,
+                        start = offset,
+                        end = offset
+                    ).firstOrNull()?.let {
+                        onLinkClick(matchResult.value)
+                    }
+                }
             }
         )
         if (isOverFlow) {
