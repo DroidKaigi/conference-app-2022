@@ -74,7 +74,7 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         return .none
     case let .selectDay(day):
         state.selectedDay = day
-        return .init(value: .refresh)
+        return .none
     case let .setFavorite(id, currentIsFavorite):
         return .run { @MainActor _ in
             try await environment.sessionsRepository.setFavorite(sessionId: id, favorite: !currentIsFavorite)
@@ -161,7 +161,9 @@ public struct TimetableView: View {
                     .animation(.linear(duration: 0.2), value: viewStore.showDate)
                 }.animation(Animation.easeInOut(duration: 0.3), value: viewStore.state.showSheet)
                 .task {
-                    await viewStore.send(.refresh).finish()
+                    if viewStore.dayToTimetable.isEmpty {
+                        await viewStore.send(.refresh).finish()
+                    }
                 }
                 .foregroundColor(AssetColors.onBackground.swiftUIColor)
                 .background(AssetColors.background.swiftUIColor)
