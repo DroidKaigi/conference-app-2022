@@ -30,10 +30,7 @@ If your java home is not found, you need to install it as it is a required for b
 
 
 ## Requirements
-- Xcode 13.4.1
-  > **Warning**
-  > If you cloned for the first time, you need to try some workaround. Please check it. [Workaround needed for build](#workaround)
-- Xcode 14.0 or Later (Recommended)
+- Xcode 14.0 or Later
 
 ## Source Code
 ### Architecture
@@ -76,13 +73,6 @@ struct SwiftLintPlugins: BuildToolPlugin {
 ```
 
 ## Workaround
-### Xcode 13.4.1
-
-For building this App with Xcode 13.4.1, we need to run following before build whole app.
-Some targets that depends on SwiftGenPlugin needs to build individually.
-
-For example, a target "Theme" depends on "SwiftGenPlugin", it needs to build individually.
-
 ### Xcode Previews
 
 Before preview resume, specifying "Target" that a preview target view is belonged is needed.
