@@ -14,15 +14,15 @@
 
 ### Building prerequisite
 
-- As we run gradle task as a part of buliding, Xcode needs to know location of your java home. Usually you should be able to find out about this by type command
+- As we run gradle task as a part of building, Xcode needs to know location of your java home. Usually you should be able to find out about this by typing the following command:
 
 ```sh
 echo $JAVA_HOME
 ```
 
-If you java home is not found, you need to install it as it is a required for building this iOS app for DrodKaigi.
+If your java home is not found, you need to install it as it is a required for building this iOS app for DroidKaigi.
 
-- Setup you Java home location found above in the file called `local.properties`. Usually, this file is created automatically once you successfully loaded project with Android Studio. If you don't find this file, you can craete this file manually at the root of the project.
+- Setup your Java home location found above in the file called `local.properties`. Usually, this file is created automatically once you successfully loaded project with Android Studio. If you don't find this file, you can create this file manually at the root of the project.
 
 ![](../art/local.properties-sample.png)
 
@@ -79,9 +79,9 @@ struct SwiftLintPlugins: BuildToolPlugin {
 ### Xcode 13.4.1
 
 For building this App with Xcode 13.4.1, we need to run following before build whole app.
-Some targets that depends on SwiftGenPlugin needs to build individualy.
+Some targets that depends on SwiftGenPlugin needs to build individually.
 
-For example, a target "Theme" depends on "SwiftGenPlugin", it needs to build individualy.
+For example, a target "Theme" depends on "SwiftGenPlugin", it needs to build individually.
 
 ### Xcode Previews
 
