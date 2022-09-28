@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 
 public class SettingsDatastore(private val flowSettings: FlowSettings) {
 
@@ -67,7 +66,7 @@ public class SettingsDatastore(private val flowSettings: FlowSettings) {
         return flowSettings.getBooleanFlow(
             key = KEY_DYNAMIC_COLOR,
             // The trick
-            defaultValue = DroidKaigi2022Day.Day1.start < Clock.System.now()
+            defaultValue = DroidKaigi2022Day.defaultDyamicThemeDate()
         )
     }
 

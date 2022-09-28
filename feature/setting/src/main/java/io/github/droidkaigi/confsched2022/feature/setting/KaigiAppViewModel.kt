@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock.ContextClock
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DynamicColorSettingRepository
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +31,7 @@ class KaigiAppViewModel @Inject constructor(
 
     val uiModel: State<AppUiModel> = moleculeScope.moleculeComposeState(clock = ContextClock) {
         val dynamicColorSettingEnabled by dynamicColorEnabledFlow.collectAsState(
-            initial = false
+            initial = DroidKaigi2022Day.defaultDyamicThemeDate()
         )
         AppUiModel(isDynamicColorEnabled = dynamicColorSettingEnabled && isSupportedDynamicColor())
     }
