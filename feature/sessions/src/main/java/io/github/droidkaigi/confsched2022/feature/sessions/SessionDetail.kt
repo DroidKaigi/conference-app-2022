@@ -96,7 +96,7 @@ fun SessionDetailScreenRoot(
         uiModel = uiModel,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
-            viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
+            viewModel.onFavoriteToggle(timetableItemId ,currentFavorite)
         },
         onShareClick = onShareClick,
         onNavigateFloorMapClick = onNavigateFloorMapClick,

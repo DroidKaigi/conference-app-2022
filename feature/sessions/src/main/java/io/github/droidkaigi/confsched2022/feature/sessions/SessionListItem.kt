@@ -54,7 +54,7 @@ internal var SemanticsPropertyReceiver.inFavorite by inFavoriteKey
 fun SessionListItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     maxTitleLines: Int = 4,
     searchWord: String? = null,
@@ -190,7 +190,7 @@ fun SessionListItem(
                 .clearAndSetSemantics {
                     inFavorite = isFavorited
                 },
-            onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
+            onClick = { onFavoriteClick(timetableItem, isFavorited) }
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(

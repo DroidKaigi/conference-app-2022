@@ -83,6 +83,12 @@
     <string name="register_favorite_action_label">Register favorite</string>
     <string name="unregister_favorite_action_label">Unregister favorite</string>
 
+    <!-- Notification -->
+    <string name="notification_title_session_start">Notice of favorite session start</string>
+    <string name="notification_message_session_title">%1$s will start soon</string>
+    <string name="notification_message_session_start_time">%1$s - %2$s @ %3$s</string>
+
+
 
     <!-- Error -->
     <string name="error_common_message">Failed to retrieve information.</string>

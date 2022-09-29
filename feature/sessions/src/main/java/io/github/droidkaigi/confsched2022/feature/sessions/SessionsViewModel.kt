@@ -14,7 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
@@ -28,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionsViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
-    sessionsZipline: SessionsZipline
+    sessionsZipline: SessionsZipline,
+    private val sessionAlert: SessionAlarm,
 ) : ViewModel() {
 
     private val filters = mutableStateOf(Filters())
@@ -88,10 +89,13 @@ class SessionsViewModel @Inject constructor(
         appError = null
     }
 
-    fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
+    fun onFavoriteToggle(session: TimetableItem, currentIsFavorite: Boolean) {
         viewModelScope.launch {
             sessionsRepository.setFavorite(
-                sessionId, !currentIsFavorite
+                session.id, currentIsFavorite.not()
+            )
+            sessionAlert.toggleRegister(
+                session, currentIsFavorite.not()
             )
         }
     }

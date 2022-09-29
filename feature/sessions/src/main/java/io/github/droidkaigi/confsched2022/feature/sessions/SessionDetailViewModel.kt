@@ -22,6 +22,7 @@ import javax.inject.Inject
 class SessionDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val sessionsRepository: SessionsRepository,
+    private val sessionAlarm: SessionAlarm,
 ) : ViewModel() {
 
     private val moleculeScope =
@@ -46,6 +47,13 @@ class SessionDetailViewModel @Inject constructor(
         viewModelScope.launch {
             sessionsRepository.setFavorite(
                 sessionId, !currentIsFavorite
+            )
+        }
+        val session = uiModel.value.state.getOrNull()?.timetableItem ?: return
+        viewModelScope.launch {
+            sessionAlarm.toggleRegister(
+                session,
+                !currentIsFavorite
             )
         }
     }

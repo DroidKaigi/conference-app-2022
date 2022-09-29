@@ -16,7 +16,7 @@ import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
@@ -30,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val sessionsRepository: SessionsRepository,
-    sessionsZipline: SessionsZipline
+    sessionsZipline: SessionsZipline,
+    private val sessionAlarm: SessionAlarm,
 ) : ViewModel() {
     private val moleculeScope =
         CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
@@ -81,9 +82,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteToggle(sessionId: TimetableItemId, currentIsFavorite: Boolean) {
+    fun onFavoriteToggle(session: TimetableItem, currentIsFavorite: Boolean) {
         viewModelScope.launch {
-            sessionsRepository.setFavorite(sessionId, currentIsFavorite.not())
+            sessionsRepository.setFavorite(session.id, currentIsFavorite.not())
+            sessionAlarm.toggleRegister(session, currentIsFavorite.not())
         }
     }
 
