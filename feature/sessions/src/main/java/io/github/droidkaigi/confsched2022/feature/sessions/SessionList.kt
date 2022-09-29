@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,12 +14,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
@@ -43,48 +39,30 @@ fun SessionList(
     Box(
         modifier = modifier,
     ) {
-        val visibleItemsInfo = remember {
-            derivedStateOf {
-                sessionsListListState.layoutInfo.visibleItemsInfo
-            }
-        }
-        var currentDurationTime: DurationTime? = null
-        visibleItemsInfo.value.forEachIndexed { visibleItemIndex, visibleItemInfo ->
-            val durationTime = timetable[visibleItemInfo.index].first
-            if (currentDurationTime != durationTime) {
-                currentDurationTime = durationTime
-                val nextDurationTime = timetable.getOrNull(visibleItemInfo.index + 1)?.first
-                val offsetDp = with(LocalDensity.current) {
-                    visibleItemInfo.offset.toDp()
-                }
+        TimeLane(
+            timetable = timetable,
+            sessionsListListState = sessionsListListState
+        ) { durationTime ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(start = 12.dp, top = 12.dp)
+                    // Remove time semantics so description is set in SessionListItem
+                    .clearAndSetSemantics { },
+            ) {
+                Text(
+                    text = durationTime.startAt,
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Box(
                     modifier = Modifier
-                        .offset(
-                            x = 0.dp,
-                            y = if (visibleItemIndex == 0 && durationTime == nextDurationTime) 0.dp else offsetDp,
-                        )
-                        // Remove time semantics so description is set in SessionListItem
-                        .clearAndSetSemantics { },
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(start = 12.dp, top = 12.dp)
-                    ) {
-                        Text(
-                            text = durationTime.startAt,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Box(
-                            modifier = Modifier
-                                .size(1.dp, 2.dp)
-                                .background(MaterialTheme.colorScheme.onBackground)
-                        ) { }
-                        Text(
-                            text = durationTime.endAt,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
+                        .size(1.dp, 2.dp)
+                        .background(MaterialTheme.colorScheme.onBackground)
+                ) { }
+                Text(
+                    text = durationTime.endAt,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
         LazyColumn(
