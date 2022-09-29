@@ -42,7 +42,6 @@ import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.secondLang
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

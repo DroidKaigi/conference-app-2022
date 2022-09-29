@@ -29,13 +29,15 @@ class SessionAlarm @Inject constructor(private val app: Application) {
     }
 
     private fun register(session: TimetableItem) {
-       val time = session.startsAt.minus(NOTIFICATION_TIME_BEFORE_START_MITES.toDuration(
-           MINUTES
-       ))
-           .toEpochMilliseconds()
+        val time = session.startsAt.minus(
+            NOTIFICATION_TIME_BEFORE_START_MITES.toDuration(
+                MINUTES
+            )
+        )
+            .toEpochMilliseconds()
 
-       if (System.currentTimeMillis() < time) {
-        val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (System.currentTimeMillis() < time) {
+            val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             AlarmManagerCompat.setAndAllowWhileIdle(
                 alarmManager,
                 AlarmManager.RTC_WAKEUP,
@@ -59,7 +61,7 @@ class SessionAlarm @Inject constructor(private val app: Application) {
             .toJavaLocalDateTime()
             .format(dtf)
 
-        val displayETime =timetableItem
+        val displayETime = timetableItem
             .endsAt
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .toJavaLocalDateTime()
@@ -67,7 +69,8 @@ class SessionAlarm @Inject constructor(private val app: Application) {
 
         val sessionTitle = app.getString(
             Strings.notification_message_session_title.resourceId,
-            timetableItem.title.currentLangTitle)
+            timetableItem.title.currentLangTitle
+        )
 
         val sessionStartTime = app.getString(
             Strings.notification_message_session_start_time.resourceId,
@@ -124,7 +127,8 @@ class SessionAlarm @Inject constructor(private val app: Application) {
 
     companion object {
         private const val NOTIFICATION_TIME_BEFORE_START_MITES = 10
-        private const val BROADCAST_RECEIVER_CLASS_NAME = "io.github.droidkaigi.confsched2022.notification.AndroidBroadcastReceiver"
+        private const val BROADCAST_RECEIVER_CLASS_NAME = "io.github.droidkaigi.confsched2022" +
+            ".notification.AndroidBroadcastReceiver"
         const val ACTION_FAVORITED_SESSION_START = "ACTION_FAVORITED_SESSION_START"
         const val EXTRA_SESSION_ID = "EXTRA_SESSION_ID"
         const val EXTRA_TITLE = "EXTRA_TITLE"

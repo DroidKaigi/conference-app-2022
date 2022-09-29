@@ -71,7 +71,7 @@ object NotificationUtil {
                 NotificationCompat.BigTextStyle()
                     .setSummaryText(title)
             )
-            .setSmallIcon( io.github.droidkaigi.confsched2022.core.designsystem.R.drawable.ic_app )
+            .setSmallIcon(io.github.droidkaigi.confsched2022.core.designsystem.R.drawable.ic_app)
             .setGroup(channelId)
             .setGroupSummary(true)
             .setAutoCancel(true)

@@ -73,8 +73,8 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
-import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimeLine
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
@@ -128,7 +128,7 @@ fun SessionsScreenRoot(
         onNavigationIconClick = onNavigationIconClick,
         onSearchClick = onSearchClicked,
         onToggleTimetableClick = { isTimetable ->
-           viewModel.onTimetableModeToggle(isTimetable)
+            viewModel.onTimetableModeToggle(isTimetable)
         },
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
         onAppErrorNotified = { viewModel.onAppErrorNotified() },
