@@ -21,15 +21,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
+import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SessionList(
     timetable: List<Pair<DurationTime, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
+    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (Pair<DurationTime?, TimetableItemWithFavorite>) -> Unit,
 ) {
@@ -51,11 +58,13 @@ fun SessionList(
                     visibleItemInfo.offset.toDp()
                 }
                 Box(
-                    modifier = if (visibleItemIndex == 0 && durationTime == nextDurationTime) {
-                        Modifier
-                    } else {
-                        Modifier.offset(x = 0.dp, y = offsetDp)
-                    }
+                    modifier = Modifier
+                        .offset(
+                            x = 0.dp,
+                            y = if (visibleItemIndex == 0 && durationTime == nextDurationTime) 0.dp else offsetDp,
+                        )
+                        // Remove time semantics so description is set in SessionListItem
+                        .clearAndSetSemantics { },
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,12 +93,33 @@ fun SessionList(
         ) {
             itemsIndexed(timetable) { _, item ->
                 key(item.second.timetableItem.id.value) {
+                    val actionLabel = stringResource(
+                        if (item.second.isFavorited) {
+                            Strings.unregister_favorite_action_label
+                        } else {
+                            Strings.register_favorite_action_label
+                        }
+                    )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onTimetableClick(item.second.timetableItem.id) }
                             .padding(12.dp)
                             .padding(start = 85.dp)
+                            .semantics(mergeDescendants = true) {
+                                customActions = listOf(
+                                    CustomAccessibilityAction(
+                                        label = actionLabel,
+                                        action = {
+                                            onFavoriteClick(
+                                                item.second.timetableItem.id,
+                                                item.second.isFavorited
+                                            )
+                                            true
+                                        }
+                                    )
+                                )
+                            }
                     ) {
                         content(item)
                     }

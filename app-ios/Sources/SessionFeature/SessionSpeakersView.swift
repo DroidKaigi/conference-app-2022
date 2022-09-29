@@ -1,6 +1,5 @@
 import appioscombined
 import CommonComponents
-import Strings
 import SwiftUI
 import Theme
 
@@ -10,7 +9,7 @@ struct SessionSpeakersView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(L10n.Session.speaker)
+            Text(StringsKt.shared.session_speaker.localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
 

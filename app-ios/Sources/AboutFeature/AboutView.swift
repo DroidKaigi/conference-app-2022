@@ -1,29 +1,35 @@
+import appioscombined
 import ComposableArchitecture
-import Strings
+import ContributorFeature
+import LicenseList
+import SponsorFeature
+import StaffFeature
 import SwiftUI
 import Theme
 
+public enum AboutDestination {
+    case none
+    case staffs
+    case license
+    case contributor
+    case sponsor
+}
+
 public struct AboutState: Equatable {
-    public enum NavigationDestination {
-        case none
-        case license
-
-        @ViewBuilder
-        public var destination: some View {
-            switch self {
-            case .license:
-                AboutLicenseView()
-            default:
-                EmptyView()
-            }
-        }
-    }
-
-    public var navigationDestination: NavigationDestination
+    public var staffState: StaffState
+    public var contributorState: ContributorState
+    public var sponsorState: SponsorState
+    public var navigationDestination: AboutDestination
 
     public init(
-        navigationDestination: NavigationDestination = .none
+        staffState: StaffState = .init(),
+        contributorState: ContributorState = .init(),
+        sponsorState: SponsorState = .init(),
+        navigationDestination: AboutDestination = .none
     ) {
+        self.staffState = staffState
+        self.contributorState = contributorState
+        self.sponsorState = sponsorState
         self.navigationDestination = navigationDestination
     }
 }
@@ -32,26 +38,92 @@ public enum AboutAction {
     case backToTop
     case openAccess
     case openStaffs
+    case openContributors
+    case openSponsors
     case openPrivacyPolicy
     case openLicense
+    case staff(StaffAction)
+    case contributor(ContributorAction)
+    case sponsor(SponsorAction)
 }
 
 public struct AboutEnvironment {
-    public init() {}
-}
+    @Environment(\.openURL) var openURL
+    public let staffRepository: StaffRepository
+    public let contributorsRepository: ContributorsRepository
+    public let sponsorRepository: SponsorsRepository
 
-public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment> { state, action, _ in
-    switch action {
-    case .backToTop:
-        state.navigationDestination = .none
-        return .none
-    case .openLicense:
-        state.navigationDestination = .license
-        return .none
-    default:
-        return .none
+    public init(
+        staffRepository: StaffRepository,
+        contributorsRepository: ContributorsRepository,
+        sponsorRepository: SponsorsRepository
+    ) {
+        self.staffRepository = staffRepository
+        self.contributorsRepository = contributorsRepository
+        self.sponsorRepository = sponsorRepository
     }
 }
+
+public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.combine(
+    staffReducer.pullback(
+        state: \.staffState,
+        action: /AboutAction.staff,
+        environment: {
+            .init(
+                staffRepository: $0.staffRepository
+            )
+        }
+    ),
+    contributorReducer.pullback(
+        state: \.contributorState,
+        action: /AboutAction.contributor,
+        environment: {
+            .init(
+                contributorsRepository: $0.contributorsRepository
+            )
+        }
+    ),
+    sponsorReducer.pullback(
+        state: \.sponsorState,
+        action: /AboutAction.sponsor,
+        environment: {
+            .init(
+                sponsorsRepository: $0.sponsorRepository
+            )
+        }
+    ),
+    .init { state, action, environment in
+        switch action {
+        case .backToTop:
+            state.navigationDestination = .none
+            return .none
+        case .openLicense:
+            state.navigationDestination = .license
+            return .none
+        case .openStaffs:
+            state.navigationDestination = .staffs
+            return .none
+        case .openContributors:
+            state.navigationDestination = .contributor
+            return .none
+        case .openSponsors:
+            state.navigationDestination = .sponsor
+            return .none
+        case .openAccess:
+            environment.openURL(URL(string: StaticURLs.access)!)
+            return .none
+        case .openPrivacyPolicy:
+            environment.openURL(URL(string: StaticURLs.privacyPolicy)!)
+            return .none
+        case .staff:
+            return .none
+        case .contributor:
+            return .none
+        case .sponsor:
+            return .none
+        }
+    }
+)
 
 public struct AboutView: View {
     private let store: Store<AboutState, AboutAction>
@@ -66,9 +138,9 @@ public struct AboutView: View {
                 ScrollView {
                     AboutViewAssets.logoCharacter.swiftUIImage
                     VStack(alignment: .leading, spacing: 24) {
-                        Text(L10n.About.whatIsDroidKaigi)
+                        Text(StringsKt.shared.about_title.localized())
                             .font(Font.system(size: 32, weight: .medium))
-                        Text(L10n.About.description)
+                        Text(StringsKt.shared.about_description.localized())
                         HStack(spacing: 16) {
                             LinkImage(
                                 image: AboutViewAssets.twitter.swiftUIImage,
@@ -124,17 +196,39 @@ public struct AboutView: View {
                     Spacer()
                         .frame(height: 32)
 
-                    NavigationLink(
-                        destination: viewStore.navigationDestination.destination,
-                        isActive: Binding<Bool>(
-                            get: {
-                                viewStore.navigationDestination != .none
-                            }, set: { newValue in
-                                if !newValue {
-                                    viewStore.send(.backToTop)
-                                }
-                            }),
-                        label: {
+                    NavigationLink(isActive: Binding<Bool>(
+                        get: {
+                            viewStore.navigationDestination != .none
+                        }, set: { newValue in
+                            if !newValue {
+                                viewStore.send(.backToTop)
+                            }
+                        }), destination: {
+                            switch viewStore.state.navigationDestination {
+                            case .none:
+                                EmptyView()
+                            case .staffs:
+                                StaffView(
+                                    store: store.scope(state: \.staffState, action: AboutAction.staff)
+                                )
+                            case .license:
+                                AboutLicenseView()
+                            case .contributor:
+                                ContributorView(
+                                    store: store.scope(
+                                        state: \.contributorState,
+                                        action: AboutAction.contributor
+                                    )
+                                )
+                            case .sponsor:
+                                SponsorView(
+                                    store: store.scope(
+                                        state: \.sponsorState,
+                                        action: AboutAction.sponsor
+                                    )
+                                )
+                            }
+                        }, label: {
                             EmptyView()
                         }
                     )
@@ -154,7 +248,11 @@ struct AboutView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(),
                 reducer: .empty,
-                environment: AboutEnvironment()
+                environment: AboutEnvironment(
+                    staffRepository: FakeStaffRepository(),
+                    contributorsRepository: FakeContributorsRepository(),
+                    sponsorRepository: FakeSponsorsRepository()
+                )
             )
         )
         .preferredColorScheme(.dark)

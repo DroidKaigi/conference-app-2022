@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 
 fun NavGraphBuilder.sessionsNavGraph(
@@ -13,6 +14,8 @@ fun NavGraphBuilder.sessionsNavGraph(
     onSearchIconClick: () -> Unit,
     onTimetableClick: (TimetableItemId) -> Unit,
     onNavigateFloorMapClick: () -> Unit,
+    onShareClick: (TimetableItem) -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit
 ) {
     composable(route = SessionsNavGraph.sessionRoute) {
         SessionsScreenRoot(
@@ -37,13 +40,18 @@ fun NavGraphBuilder.sessionsNavGraph(
             timetableItemId = TimetableItemId(id),
             onBackIconClick = onBackIconClick,
             onNavigateFloorMapClick = onNavigateFloorMapClick,
+            onShareClick = onShareClick,
+            onRegisterCalendarClick = onRegisterCalendarClick
         )
     }
 
     composable(
         route = SessionsNavGraph.sessionSearchRoute(),
     ) {
-        SearchRoot(onItemClick = onTimetableClick)
+        SearchRoot(
+            onItemClick = onTimetableClick,
+            onBackIconClick = onBackIconClick,
+        )
     }
 }
 

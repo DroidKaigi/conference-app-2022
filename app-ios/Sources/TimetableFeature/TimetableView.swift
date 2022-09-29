@@ -1,5 +1,6 @@
 import appioscombined
 import Assets
+import CommonComponents
 import ComposableArchitecture
 import Model
 import SwiftUI
@@ -10,17 +11,20 @@ public struct TimetableState: Equatable {
     public var selectedDay: DroidKaigi2022Day
     public var showDate: Bool
     public var showSheet: Bool
+    public var isLoading: Bool
 
     public init(
         dayToTimetable: [DroidKaigi2022Day: Timetable] = [:],
         selectedDay: DroidKaigi2022Day = .day1,
         showDate: Bool = true,
-        showSheet: Bool = true
+        showSheet: Bool = true,
+        isLoading: Bool = true
     ) {
         self.dayToTimetable = dayToTimetable
         self.selectedDay = selectedDay
         self.showDate = showDate
         self.showSheet = showSheet
+        self.isLoading = isLoading
     }
 }
 
@@ -46,7 +50,9 @@ public struct TimetableEnvironment {
 public let timetableReducer = Reducer<TimetableState, TimetableAction, TimetableEnvironment> { state, action, environment in
     switch action {
     case .refresh:
+        state.isLoading = true
         return .run { @MainActor subscriber in
+            try await environment.sessionsRepository.refresh()
             for try await result: DroidKaigiSchedule in environment.sessionsRepository.droidKaigiScheduleFlow().stream() {
                 await subscriber.send(
                     .refreshResponse(
@@ -61,8 +67,10 @@ public let timetableReducer = Reducer<TimetableState, TimetableAction, Timetable
         .eraseToEffect()
     case let .refreshResponse(.success(droidKaigiSchedule)):
         state.dayToTimetable = droidKaigiSchedule.dayToTimetable
+        state.isLoading = false
         return .none
     case .refreshResponse(.failure):
+        state.isLoading = false
         return .none
     case let .selectDay(day):
         state.selectedDay = day
@@ -113,6 +121,9 @@ public struct TimetableView: View {
                                 viewStore.send(.scroll($0))
                             }
                     }
+                    if viewStore.state.isLoading {
+                        LoadingView()
+                    }
 
                     HStack(spacing: 8) {
                         ForEach(
@@ -140,7 +151,6 @@ public struct TimetableView: View {
                                     : AssetColors.surface.swiftUIColor
                                 )
                                 .clipShape(Capsule())
-                                .animation(.linear(duration: 0.2), value: viewStore.showDate)
                             }
                         }
                     }
@@ -148,7 +158,8 @@ public struct TimetableView: View {
                     .padding(.vertical, 16)
                     .foregroundColor(AssetColors.onSurface.swiftUIColor)
                     .background(AssetColors.surface.swiftUIColor)
-                }
+                    .animation(.linear(duration: 0.2), value: viewStore.showDate)
+                }.animation(Animation.easeInOut(duration: 0.3), value: viewStore.state.showSheet)
                 .task {
                     await viewStore.send(.refresh).finish()
                 }

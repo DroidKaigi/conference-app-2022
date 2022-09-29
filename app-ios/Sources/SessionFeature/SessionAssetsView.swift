@@ -1,6 +1,5 @@
 import appioscombined
 import Assets
-import Strings
 import SwiftUI
 
 struct SessionAssetsView: View {
@@ -10,7 +9,7 @@ struct SessionAssetsView: View {
 
     var body: some View {
         VStack {
-            Text(L10n.Session.material)
+            Text(StringsKt.shared.session_material.localized())
                 .font(Font.system(size: 16, weight: .medium, design: .default))
                 .padding(.bottom)
             if let videoUrl = self.asset.videoUrl {
@@ -20,7 +19,7 @@ struct SessionAssetsView: View {
                     Button {
                         self.openURL(URL(string: videoUrl)!)
                     } label: {
-                        Text(L10n.Session.movie)
+                        Text(StringsKt.shared.session_movie.localized())
                             .font(Font.system(size: 14, weight: .regular, design: .default))
                     }
                 }
@@ -33,7 +32,7 @@ struct SessionAssetsView: View {
                     Button {
                         self.openURL(URL(string: slidesUrl)!)
                     } label: {
-                        Text(L10n.Session.slides)
+                        Text(StringsKt.shared.session_slide.localized())
                             .font(Font.system(size: 14, weight: .regular, design: .default))
                     }
                 }

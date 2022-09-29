@@ -1,5 +1,5 @@
+import appioscombined
 import Assets
-import Strings
 import SwiftUI
 import Theme
 
@@ -7,7 +7,7 @@ struct SessionCancelView: View {
     var body: some View {
         HStack(spacing: 6) {
             Assets.error.swiftUIImage
-            Text(L10n.Session.cancellMessage)
+            Text(StringsKt.shared.session_cancel.localized())
                 .foregroundColor(AssetColors.error.swiftUIColor)
                 .font(Font.system(size: 12, weight: .regular, design: .default))
         }

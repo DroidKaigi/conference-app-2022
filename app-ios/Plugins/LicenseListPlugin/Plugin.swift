@@ -11,7 +11,7 @@ struct LicenseListPlugin: BuildToolPlugin {
             return []
         }
         let sourcePackageDirectory = NSString(string: pluginWorkDirectory).substring(with: matchRange)
-        
+
         return [
             .prebuildCommand(
                 displayName: "LicenseList",

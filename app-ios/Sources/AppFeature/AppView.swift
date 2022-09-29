@@ -1,17 +1,14 @@
 import AboutFeature
+import AnnouncementFeature
 import appioscombined
 import Assets
 import Auth
 import ComposableArchitecture
 import Container
-import ContributorFeature
+import Event
 import MapFeature
-import NotificationFeature
 import SearchFeature
 import SessionFeature
-import SettingFeature
-import SponsorFeature
-import Strings
 import SwiftUI
 import Theme
 import TimetableFeature
@@ -19,21 +16,15 @@ import TimetableFeature
 public enum AppTab {
     case timetable
     case about
-    case notification
+    case announcement
     case map
-    case sponsor
-    case contributor
-    case setting
 }
 
 public struct AppState: Equatable {
     public var timetableState: TimetableState
     public var aboutState: AboutState
-    public var notificationState: NotificationState
+    public var announcementState: AnnouncementState
     public var mapState: MapState
-    public var sponsorState: SponsorState
-    public var contributorState: ContributorState
-    public var settingState: SettingState
     public var sessionState: SessionState?
     public var searchState: SearchState?
     public var selectedTab: AppTab
@@ -41,22 +32,16 @@ public struct AppState: Equatable {
     public init(
         timetableState: TimetableState = .init(),
         aboutState: AboutState = .init(),
-        notificationState: NotificationState = .init(),
+        announcementState: AnnouncementState = .init(),
         mapState: MapState = .init(),
-        sponsorState: SponsorState = .init(),
-        contributorState: ContributorState = .init(),
-        settingState: SettingState = .init(),
         sessionState: SessionState? = nil,
         searchState: SearchState? = nil,
         selectedTab: AppTab = .timetable
     ) {
         self.timetableState = timetableState
         self.aboutState = aboutState
-        self.notificationState = notificationState
+        self.announcementState = announcementState
         self.mapState = mapState
-        self.sponsorState = sponsorState
-        self.contributorState = contributorState
-        self.settingState = settingState
         self.searchState = searchState
         self.sessionState = sessionState
         self.selectedTab = selectedTab
@@ -66,11 +51,8 @@ public struct AppState: Equatable {
 public enum AppAction {
     case timetable(TimetableAction)
     case about(AboutAction)
-    case notification(NotificationAction)
+    case announcement(AnnouncementAction)
     case map(MapAction)
-    case sponsor(SponsorAction)
-    case contributor(ContributorAction)
-    case setting(SettingAction)
     case search(SearchAction)
     case session(SessionAction)
     case selectTab(AppTab)
@@ -80,14 +62,26 @@ public enum AppAction {
 
 public struct AppEnvironment {
     public let contributorsRepository: ContributorsRepository
+    public let sponsorsRepository: SponsorsRepository
     public let sessionsRepository: SessionsRepository
+    public let announcementsRepository: AnnouncementsRepository
+    public let staffRepository: StaffRepository
+    public let eventKitClient: EventKitClientProtocol
 
     public init(
         contributorsRepository: ContributorsRepository,
-        sessionsRepository: SessionsRepository
+        sponsorsRepository: SponsorsRepository,
+        sessionsRepository: SessionsRepository,
+        announcementsRepository: AnnouncementsRepository,
+        staffRepository: StaffRepository,
+        eventKitClient: EventKitClientProtocol
     ) {
         self.contributorsRepository = contributorsRepository
+        self.sponsorsRepository = sponsorsRepository
         self.sessionsRepository = sessionsRepository
+        self.announcementsRepository = announcementsRepository
+        self.staffRepository = staffRepository
+        self.eventKitClient = eventKitClient
     }
 }
 
@@ -97,14 +91,22 @@ public extension AppEnvironment {
 
         return .init(
             contributorsRepository: container.get(type: ContributorsRepository.self),
-            sessionsRepository: container.get(type: SessionsRepository.self)
+            sponsorsRepository: container.get(type: SponsorsRepository.self),
+            sessionsRepository: container.get(type: SessionsRepository.self),
+            announcementsRepository: container.get(type: AnnouncementsRepository.self),
+            staffRepository: container.get(type: StaffRepository.self),
+            eventKitClient: EventKitClient()
         )
     }
 
     static var mock: Self {
         return .init(
             contributorsRepository: FakeContributorsRepository(),
-            sessionsRepository: FakeSessionsRepository()
+            sponsorsRepository: FakeSponsorsRepository(),
+            sessionsRepository: FakeSessionsRepository(),
+            announcementsRepository: FakeAnnouncementsRepository(),
+            staffRepository: FakeStaffRepository(),
+            eventKitClient: EventKitClientMock()
         )
     }
 }
@@ -122,15 +124,21 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
     aboutReducer.pullback(
         state: \.aboutState,
         action: /AppAction.about,
-        environment: { _ in
-            .init()
+        environment: {
+            .init(
+                staffRepository: $0.staffRepository,
+                contributorsRepository: $0.contributorsRepository,
+                sponsorRepository: $0.sponsorsRepository
+            )
         }
     ),
-    notificationReducer.pullback(
-        state: \.notificationState,
-        action: /AppAction.notification,
-        environment: { _ in
-            .init()
+    announcementReducer.pullback(
+        state: \.announcementState,
+        action: /AppAction.announcement,
+        environment: {
+            .init(
+                announcementsRepository: $0.announcementsRepository
+            )
         }
     ),
     mapReducer.pullback(
@@ -140,35 +148,13 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             .init()
         }
     ),
-    sponsorReducer.pullback(
-        state: \.sponsorState,
-        action: /AppAction.sponsor,
-        environment: { _ in
-            .init()
-        }
-    ),
-    contributorReducer.pullback(
-        state: \.contributorState,
-        action: /AppAction.contributor,
-        environment: {
-            .init(
-                contributorsRepository: $0.contributorsRepository
-            )
-        }
-    ),
-    settingReducer.pullback(
-        state: \.settingState,
-        action: /AppAction.setting,
-        environment: { _ in
-            .init()
-        }
-    ),
     searchReducer.optional().pullback(
         state: \.searchState,
         action: /AppAction.search,
         environment: {
             .init(
-                sessionsRepository: $0.sessionsRepository
+                sessionsRepository: $0.sessionsRepository,
+                eventKitClient: $0.eventKitClient
             )
         }
     ),
@@ -176,7 +162,10 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         state: \.sessionState,
         action: /AppAction.session,
         environment: {
-            .init(sessionsRepository: $0.sessionsRepository)
+            .init(
+                sessionsRepository: $0.sessionsRepository,
+                eventKitClient: $0.eventKitClient
+            )
         }
     ),
     .init { state, action, _ in
@@ -193,15 +182,9 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             return .none
         case .about:
             return .none
-        case .notification:
+        case .announcement:
             return .none
         case .map:
-            return .none
-        case .sponsor:
-            return .none
-        case .contributor:
-            return .none
-        case .setting:
             return .none
         case .search:
             return .none
@@ -242,6 +225,8 @@ public struct AppView: View {
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+
+        UIToolbar.appearance().backgroundColor = AssetColors.surface.color
     }
 
     public var body: some View {
@@ -260,7 +245,7 @@ public struct AppView: View {
                 )
                 .tabItem {
                     Label {
-                        Text(L10n.Timetable.title)
+                        Text(StringsKt.shared.title_sessions.localized())
                     } icon: {
                         Assets.calendar.swiftUIImage
                             .renderingMode(.template)
@@ -275,21 +260,21 @@ public struct AppView: View {
                 )
                 .tabItem {
                     Image(systemName: "questionmark.circle")
-                    Text(L10n.About.title)
+                    Text(StringsKt.shared.title_about.localized())
                 }
                 .tag(AppTab.about)
-                NotificationView(
+                AnnouncementView(
                     store: store.scope(
-                        state: \.notificationState,
-                        action: AppAction.notification
+                        state: \.announcementState,
+                        action: AppAction.announcement
                     )
                 )
                 .tabItem {
-                    Assets.notification.swiftUIImage
+                    Assets.announcement.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Notification.title)
+                    Text(StringsKt.shared.title_announcement.localized())
                 }
-                .tag(AppTab.notification)
+                .tag(AppTab.announcement)
                 MapView(
                     store: store.scope(
                         state: \.mapState,
@@ -299,45 +284,9 @@ public struct AppView: View {
                 .tabItem {
                     Assets.map.swiftUIImage
                         .renderingMode(.template)
-                    Text(L10n.Map.title)
+                    Text(StringsKt.shared.title_map.localized())
                 }
                 .tag(AppTab.map)
-                SponsorView(
-                    store: store.scope(
-                        state: \.sponsorState,
-                        action: AppAction.sponsor
-                    )
-                )
-                .tabItem {
-                    Assets.company.swiftUIImage
-                        .renderingMode(.template)
-                    Text(L10n.Sponsor.title)
-                }
-                .tag(AppTab.sponsor)
-                ContributorView(
-                    store: store.scope(
-                        state: \.contributorState,
-                        action: AppAction.contributor
-                    )
-                )
-                .tabItem {
-                    Assets.people.swiftUIImage
-                        .renderingMode(.template)
-                    Text(L10n.Contributors.title)
-                }
-                .tag(AppTab.contributor)
-                SettingView(
-                    store: store.scope(
-                        state: \.settingState,
-                        action: AppAction.setting
-                    )
-                )
-                .tabItem {
-                    Assets.gear.swiftUIImage
-                        .renderingMode(.template)
-                    Text(L10n.Setting.title)
-                }
-                .tag(AppTab.setting)
             }
             .accentColor(AssetColors.onSurface.swiftUIColor)
             .sheet(

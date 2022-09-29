@@ -28,6 +28,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.surfaceColorAtElevation
@@ -45,6 +46,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -54,15 +57,18 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
@@ -98,6 +104,8 @@ fun SessionsScreenRoot(
         onToggleTimetableClick = { isTimetable ->
             viewModel.onTimetableModeToggle(isTimetable)
         },
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
     )
 }
 
@@ -111,6 +119,8 @@ fun Sessions(
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scheduleState = uiModel.state
@@ -126,8 +136,10 @@ fun Sessions(
         timetableListStates,
         sessionsListListStates
     )
+    val snackbarHostState = remember { SnackbarHostState() }
     KaigiScaffold(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         topBar = {
             SessionsTopBar(
                 pagerContentsScrollState,
@@ -140,11 +152,17 @@ fun Sessions(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Column {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
-                    TODO()
+                    // Do nothing
                 }
                 Loading -> Box(
                     modifier = modifier
@@ -226,6 +244,7 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
             }
@@ -233,7 +252,8 @@ fun Timetable(
             Column(modifier = Modifier.weight(1f)) {
                 Rooms(
                     rooms = timetable.rooms,
-                    timetableState = timetableState
+                    timetableState = timetableState,
+                    coroutineScope = coroutineScope,
                 ) { room ->
                     RoomItem(room = room)
                 }
@@ -241,7 +261,6 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    coroutineScope = coroutineScope,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
                     )
@@ -251,7 +270,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
-                            .padding(horizontal = 0.5.dp)
+                            .padding(end = 4.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),
@@ -298,6 +317,7 @@ fun SessionsList(
             timetable = timeHeaderAndTimetableItems,
             sessionsListListState = sessionsListListStates[dayIndex],
             onTimetableClick = onTimetableClick,
+            onFavoriteClick = onFavoriteClick,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
@@ -305,7 +325,7 @@ fun SessionsList(
             SessionListItem(
                 timetableItem = timetableItemWithFavorite.timetableItem,
                 isFavorited = timetableItemWithFavorite.isFavorited,
-                onFavoriteClick = onFavoriteClick,
+                onFavoriteClick = onFavoriteClick
             )
         }
     }
@@ -336,7 +356,7 @@ fun SessionsTopBar(
                 Image(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
-                    contentDescription = "logo in toolbar"
+                    contentDescription = null
                 )
             },
             trailingIcons = {
@@ -347,7 +367,7 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_search
                         ),
-                        contentDescription = "Search icon"
+                        contentDescription = stringResource(Strings.search_button_description)
                     )
                 }
                 IconButton(
@@ -357,7 +377,16 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_today
                         ),
-                        contentDescription = "Toggle timetable icon"
+                        contentDescription = stringResource(
+                            if (isTimetable) {
+                                Strings.session_appearance_to_list_button_description
+                            } else {
+                                Strings.session_appearance_to_table_button_description
+                            }
+                        ),
+                        modifier = Modifier.semantics {
+                            testTag = "toggleTimetableButton"
+                        }
                     )
                 }
             }
@@ -432,7 +461,8 @@ fun SessionsTimetablePreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -440,6 +470,8 @@ fun SessionsTimetablePreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -452,7 +484,8 @@ fun SessionsSessionListPreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = false
+                isTimetable = false,
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -460,6 +493,8 @@ fun SessionsSessionListPreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -472,14 +507,17 @@ fun SessionsLoadingPreview() {
             uiModel = SessionsUiModel(
                 state = Loading,
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                appError = null
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
-            showNavigationIcon = true
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }

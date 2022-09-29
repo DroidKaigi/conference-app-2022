@@ -15,5 +15,6 @@ android.kotlinOptions.freeCompilerArgs = listOf(
 )
 
 dependencies {
+    implementation(projects.core.model)
     implementation(libs.accompanistPager)
 }

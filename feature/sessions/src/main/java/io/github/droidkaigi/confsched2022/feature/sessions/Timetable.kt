@@ -58,7 +58,6 @@ import io.github.droidkaigi.confsched2022.model.Timetable
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableRoom
 import io.github.droidkaigi.confsched2022.model.fake
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -74,11 +73,11 @@ import kotlin.math.roundToInt
 fun Timetable(
     timetable: Timetable,
     timetableState: TimetableState,
-    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (TimetableItem, Boolean) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val itemProvider = itemProvider({ timetable.timetableItems.size }) { index ->
         val timetableItemWithFavorite = timetable.contents[index]
         content(timetableItemWithFavorite.timetableItem, timetableItemWithFavorite.isFavorited)
@@ -224,12 +223,10 @@ fun Timetable(
 @Composable
 fun TimetablePreview() {
     val timetableState = rememberTimetableState()
-    val coroutineScope = rememberCoroutineScope()
     Timetable(
         modifier = Modifier.fillMaxSize(),
         timetable = Timetable.fake(),
         timetableState = timetableState,
-        coroutineScope = coroutineScope,
     ) { timetableItem, isFavorite ->
         TimetableItem(timetableItem, isFavorite, 1f)
     }
@@ -401,6 +398,26 @@ class ScreenScrollState(
         launch {
             _scrollY.animateDecay(
                 velocity.y / 2f,
+                exponentialDecay()
+            )
+        }
+    }
+
+    suspend fun flingYIfPossible() = coroutineScope {
+        val velocity = velocityTracker.calculateVelocity()
+        launch {
+            _scrollY.animateDecay(
+                velocity.y / 2f,
+                exponentialDecay()
+            )
+        }
+    }
+
+    suspend fun flingXIfPossible() = coroutineScope {
+        val velocity = velocityTracker.calculateVelocity()
+        launch {
+            _scrollX.animateDecay(
+                velocity.x / 2f,
                 exponentialDecay()
             )
         }
@@ -597,7 +614,7 @@ private class TimetableScreen(
  *
  * ref: https://stackoverflow.com/a/72935823
  */
-private suspend fun PointerInputScope.detectDragGestures(
+internal suspend fun PointerInputScope.detectDragGestures(
     onDragStart: (Offset) -> Unit = { },
     onDragEnd: () -> Unit = { },
     onDragCancel: () -> Unit = { },

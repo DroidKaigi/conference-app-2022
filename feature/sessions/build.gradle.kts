@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.androidxCoreKtx)
     implementation(libs.composeUi)
     implementation(libs.accompanistFlowlayout)
+    implementation(libs.composeMaterial)
     implementation(libs.composeMaterial3)
     implementation(libs.composeUiToolingPreview)
     implementation(libs.androidxLifecycleLifecycleRuntimeKtx)
