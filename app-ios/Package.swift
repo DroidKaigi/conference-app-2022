@@ -69,6 +69,7 @@ var package = Package(
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
+                .target(name: "Crashlytics"),
                 .target(name: "Event"),
                 .target(name: "MapFeature"),
                 .target(name: "SponsorFeature"),
@@ -133,6 +134,12 @@ var package = Package(
                 .target(name: "appioscombined"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "Crashlytics",
+            dependencies: [
+                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
             ]
         ),
         .target(

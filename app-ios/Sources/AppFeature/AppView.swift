@@ -6,6 +6,7 @@ import Auth
 import ComposableArchitecture
 import Container
 import Event
+import Firebase
 import MapFeature
 import SearchFeature
 import SessionFeature
@@ -87,7 +88,8 @@ public struct AppEnvironment {
 
 public extension AppEnvironment {
     static var client: Self {
-        let container = DIContainer(authenticator: Auth.Authenticator())
+        FirebaseApp.configure()
+        let container = DIContainer(authenticator: Authenticator())
 
         return .init(
             contributorsRepository: container.get(type: ContributorsRepository.self),
