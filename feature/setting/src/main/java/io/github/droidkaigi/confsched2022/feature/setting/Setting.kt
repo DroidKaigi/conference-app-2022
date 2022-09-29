@@ -1,5 +1,7 @@
 package io.github.droidkaigi.confsched2022.feature.setting
 
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,11 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -35,20 +39,26 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @Composable
 fun SettingScreenRoot(
+    appUiModel: AppUiModel,
+    onDynamicColorToggle: (Boolean) -> Unit,
     showNavigationIcon: Boolean = true,
     onNavigationIconClick: () -> Unit = {}
 ) {
     Setting(
+        appUiModel = appUiModel,
         showNavigationIcon = showNavigationIcon,
-        onNavigationIconClick = onNavigationIconClick
+        onNavigationIconClick = onNavigationIconClick,
+        onDynamicColorToggle = onDynamicColorToggle,
     )
 }
 
 @Composable
 fun Setting(
+    appUiModel: AppUiModel,
     showNavigationIcon: Boolean,
+    onNavigationIconClick: () -> Unit,
+    onDynamicColorToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit
 ) {
     KaigiScaffold(
         modifier = modifier,
@@ -72,6 +82,12 @@ fun Setting(
             horizontalAlignment = Alignment.Start
         ) {
             LanguageSetting()
+            if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                DynamicColorSetting(
+                    isDynamicColorEnabled = appUiModel.isDynamicColorEnabled,
+                    onDynamicColorToggle = onDynamicColorToggle,
+                )
+            }
         }
     }
 }
@@ -84,9 +100,9 @@ private fun LanguageSetting(
 
     Row(
         modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth()
-            .clickable { openDialog.value = true },
+            .clickable { openDialog.value = true }
+            .padding(16.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -159,11 +175,41 @@ private fun LanguageSelector(
     }
 }
 
+@Composable
+private fun DynamicColorSetting(
+    isDynamicColorEnabled: Boolean,
+    onDynamicColorToggle: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(28.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = Icons.Default.Colorize, contentDescription = null)
+        Text(
+            text = stringResource(resource = Strings.setting_item_dynamic_color),
+            modifier = Modifier.weight(1f),
+        )
+        Switch(
+            checked = isDynamicColorEnabled,
+            onCheckedChange = {
+                onDynamicColorToggle(it)
+            },
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun SettingPreview() {
     KaigiTheme {
-        SettingScreenRoot()
+        SettingScreenRoot(
+            appUiModel = AppUiModel(false),
+            onDynamicColorToggle = {}
+        )
     }
 }
 

@@ -4,11 +4,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
 fun NavGraphBuilder.settingNavGraph(
+    appUiModel: AppUiModel,
     showNavigationIcon: Boolean,
+    onDynamicColorToggle: (Boolean) -> Unit,
     onNavigationIconClick: () -> Unit
 ) {
     composable(route = SettingNavGraph.settingRoute) {
         SettingScreenRoot(
+            appUiModel = appUiModel,
+            onDynamicColorToggle = onDynamicColorToggle,
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick
         )
