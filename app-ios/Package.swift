@@ -77,6 +77,7 @@ var package = Package(
                 .target(name: "SessionFeature"),
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
+                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
