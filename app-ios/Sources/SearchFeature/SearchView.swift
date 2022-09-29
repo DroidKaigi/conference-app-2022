@@ -89,8 +89,8 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
                 Timetable(
                     timetableItems: timetable.timetableItems.filter { item in
                         state.searchText.isEmpty
-                        || item.title.jaTitle.contains(state.searchText)
-                        || item.title.enTitle.contains(state.searchText)
+                        || item.title.jaTitle.localizedCaseInsensitiveContains(state.searchText)
+                        || item.title.enTitle.localizedCaseInsensitiveContains(state.searchText)
                     },
                     favorites: timetable.favorites
                 )
