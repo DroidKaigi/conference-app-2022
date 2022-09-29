@@ -69,7 +69,7 @@ fun NavGraphBuilder.sessionsNavGraph(
     ) {
         val id = it.arguments?.getString("id") ?: ""
         SearchRoot(
-            categoryId = id,
+            initialCategoryId = id,
             onItemClick = onTimetableClick,
             onBackIconClick = onBackIconClick,
         )
