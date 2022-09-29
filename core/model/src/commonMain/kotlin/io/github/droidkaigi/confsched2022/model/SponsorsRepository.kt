@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 public interface SponsorsRepository {
     public fun sponsors(): Flow<PersistentList<Sponsor>>
+
+    public suspend fun refresh()
 }

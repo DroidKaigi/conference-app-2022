@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.feature.sessions
 
+import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
@@ -8,7 +9,8 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState
 data class SearchUiModel(
     val filter: SearchFilterUiModel,
     val filterSheetState: SearchFilterSheetState,
-    val state: UiLoadState<DroidKaigiSchedule>
+    val state: UiLoadState<DroidKaigiSchedule>,
+    val appError: AppError?
 )
 
 data class SearchFilterUiModel(

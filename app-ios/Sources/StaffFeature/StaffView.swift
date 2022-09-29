@@ -32,6 +32,7 @@ public let staffReducer = Reducer<StaffState, StaffAction, StaffEnvironment> { s
     switch action {
     case .refresh:
         return .run { @MainActor subscriber in
+            try await environment.staffRepository.refresh()
             for try await result: [Staff] in environment.staffRepository.staff().stream() {
                 await subscriber.send(
                     .refreshResponse(

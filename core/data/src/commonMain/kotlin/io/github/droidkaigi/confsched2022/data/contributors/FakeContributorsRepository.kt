@@ -14,6 +14,5 @@ public class FakeContributorsRepository : ContributorsRepository {
     }
 
     override suspend fun refresh() {
-        TODO("Not yet implemented")
     }
 }

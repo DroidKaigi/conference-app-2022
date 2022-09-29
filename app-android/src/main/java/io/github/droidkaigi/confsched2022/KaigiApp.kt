@@ -44,6 +44,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,6 +55,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -71,6 +73,8 @@ import io.github.droidkaigi.confsched2022.feature.map.MapNavGraph
 import io.github.droidkaigi.confsched2022.feature.map.mapGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.SessionsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sessions.sessionsNavGraph
+import io.github.droidkaigi.confsched2022.feature.setting.AppUiModel
+import io.github.droidkaigi.confsched2022.feature.setting.KaigiAppViewModel
 import io.github.droidkaigi.confsched2022.feature.setting.SettingNavGraph
 import io.github.droidkaigi.confsched2022.feature.setting.settingNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
@@ -91,11 +95,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun KaigiApp(
     windowSizeClass: WindowSizeClass,
+    kaigiAppViewModel: KaigiAppViewModel = hiltViewModel(),
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
 ) {
-    KaigiTheme {
+    val appUiModel: AppUiModel by kaigiAppViewModel.uiModel
+
+    KaigiTheme(isDynamicColorEnabled = appUiModel.isDynamicColorEnabled) {
         val usePersistentNavigationDrawer = windowSizeClass.usePersistentNavigationDrawer
         KaigiAppDrawer(
             kaigiAppScaffoldState = kaigiAppScaffoldState,
@@ -115,6 +122,7 @@ fun KaigiApp(
                 val showNavigationIcon = !usePersistentNavigationDrawer
                 sessionsNavGraph(
                     showNavigationIcon = showNavigationIcon,
+                    onLinkClick = kaigiExternalNavigationController::navigate,
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
                     onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
@@ -151,8 +159,10 @@ fun KaigiApp(
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                 )
                 settingNavGraph(
-                    showNavigationIcon,
-                    kaigiAppScaffoldState::onNavigationClick
+                    appUiModel = appUiModel,
+                    showNavigationIcon = true,
+                    onDynamicColorToggle = kaigiAppViewModel::onDynamicColorToggle,
+                    onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick
                 )
                 sponsorsNavGraph(
                     showNavigationIcon = showNavigationIcon,
