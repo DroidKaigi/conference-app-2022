@@ -268,7 +268,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     fun onSearchClick() {
         navController.navigate(
-            route = SessionsNavGraph.sessionSearchRoute(null)
+            route = SessionsNavGraph.sessionSearchRoute()
         )
     }
 

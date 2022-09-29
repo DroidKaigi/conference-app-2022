@@ -51,6 +51,15 @@ fun NavGraphBuilder.sessionsNavGraph(
     }
 
     composable(
+        route = SessionsNavGraph.sessionSearchRoute(),
+    ) {
+        SearchRoot(
+            onItemClick = onTimetableClick,
+            onBackIconClick = onBackIconClick,
+        )
+    }
+
+    composable(
         route = SessionsNavGraph.sessionSearchRoute("{id}"),
         arguments = listOf(
             navArgument("id") {
@@ -72,6 +81,10 @@ object SessionsNavGraph {
     fun sessionDetailRoute(sessionId: String) =
         "session/detail/$sessionId"
 
-    fun sessionSearchRoute(categoryId: String?) =
-        "session/search/$categoryId"
+    fun sessionSearchRoute(categoryId: String? = null) =
+        if (categoryId != null) {
+            "session/search/$categoryId"
+        } else {
+            "session/search"
+        }
 }
