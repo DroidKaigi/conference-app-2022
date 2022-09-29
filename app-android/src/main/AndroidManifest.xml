@@ -43,7 +43,7 @@
                 android:name="io.github.droidkaigi.confsched2022.initializer.FirebaseInitializer"
                 android:value="androidx.startup" />
         </provider>
-        <receiver android:name="io.github.droidkaigi.confsched2022.impl.AndroidBroadcastReceiver" />
+        <receiver android:name="io.github.droidkaigi.confsched2022.notification.AndroidBroadcastReceiver" />
     </application>
 
 </manifest>

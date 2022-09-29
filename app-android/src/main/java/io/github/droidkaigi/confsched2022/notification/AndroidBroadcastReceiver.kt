@@ -1,4 +1,4 @@
-package io.github.droidkaigi.confsched2022.impl
+package io.github.droidkaigi.confsched2022.notification
 
 import android.content.BroadcastReceiver
 import android.content.Context

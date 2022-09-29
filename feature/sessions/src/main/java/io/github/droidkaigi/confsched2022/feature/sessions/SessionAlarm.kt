@@ -124,7 +124,7 @@ class SessionAlarm @Inject constructor(private val app: Application) {
 
     companion object {
         private const val NOTIFICATION_TIME_BEFORE_START_MITES = 10
-        private const val BROADCAST_RECEIVER_CLASS_NAME = "io.github.droidkaigi.confsched2022.impl.AndroidBroadcastReceiver"
+        private const val BROADCAST_RECEIVER_CLASS_NAME = "io.github.droidkaigi.confsched2022.notification.AndroidBroadcastReceiver"
         const val ACTION_FAVORITED_SESSION_START = "ACTION_FAVORITED_SESSION_START"
         const val EXTRA_SESSION_ID = "EXTRA_SESSION_ID"
         const val EXTRA_TITLE = "EXTRA_TITLE"
