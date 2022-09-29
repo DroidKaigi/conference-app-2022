@@ -5,11 +5,13 @@ import androidx.navigation.compose.composable
 
 fun NavGraphBuilder.announcementGraph(
     showNavigationIcon: Boolean,
+    onLinkClick: (url: String) -> Unit,
     onNavigationIconClick: () -> Unit,
 ) {
     composable(route = AnnouncementNavGraph.announcementRoute) {
-        AnnouncementScreenRoot(
+        AnnouncementsScreenRoot(
             showNavigationIcon = showNavigationIcon,
+            onLinkClick = onLinkClick,
             onNavigationIconClick = onNavigationIconClick
         )
     }

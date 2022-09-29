@@ -1,4 +1,6 @@
 import com.android.build.api.variant.ResValue
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("droidkaigi.primitive.androidapplication")
@@ -7,10 +9,15 @@ plugins {
     id("droidkaigi.primitive.android.hilt")
     id("droidkaigi.primitive.android.firebase")
     id("droidkaigi.primitive.spotless")
+    id("droidkaigi.primitive.android.ossLicense")
+    id("droidkaigi.primitive.android.crashlytics")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022"
 
+val keystorePropertiesFile = file("keystore.properties")
+val keystoreExits = keystorePropertiesFile.exists()
+// logger.lifecycle("keystoreExits:$keystoreExits")
 android {
     flavorDimensions += "network"
     signingConfigs {
@@ -19,6 +26,17 @@ android {
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
+        }
+
+        if (keystoreExits) {
+            val keystoreProperties = Properties()
+            keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+            create("prod") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
     }
     productFlavors {
@@ -30,6 +48,11 @@ android {
         }
         create("prod") {
             dimension = "network"
+            signingConfig = if (keystoreExits) {
+                signingConfigs.getByName("prod")
+            } else {
+                signingConfigs.getByName("dev")
+            }
         }
     }
     buildTypes {
@@ -42,6 +65,13 @@ android {
         }
         debug {
             signingConfig = null
+        }
+        create("benchmark") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+            proguardFiles("benchmark-rules.pro")
         }
     }
 }
@@ -90,8 +120,10 @@ dependencies {
     implementation(libs.androidXChromeCustomTabs)
     implementation(libs.androidxNavigationCompose)
     implementation(libs.androidxStartup)
+    implementation(libs.androidxAppCompat)
     implementation(libs.hiltNavigationCompose)
     implementation(libs.material3)
     implementation(libs.firebaseCommon)
     implementation(libs.firebaseAuth)
+    implementation(libs.androidxSplashScreen)
 }

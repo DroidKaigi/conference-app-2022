@@ -1,11 +1,10 @@
 package io.github.droidkaigi.confsched2022.model
 
 import platform.Foundation.NSLocale
-import platform.Foundation.countryCode
-import platform.Foundation.currentLocale
+import platform.Foundation.preferredLanguages
 
 public actual fun getDefaultLocale(): Locale =
-    if (NSLocale.currentLocale.countryCode == "JP") {
+    if (NSLocale.preferredLanguages.first().toString().startsWith("ja")) {
         Locale.JAPAN
     } else {
         Locale.OTHER

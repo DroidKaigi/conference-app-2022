@@ -1,5 +1,5 @@
-import PackagePlugin
 import Foundation
+import PackagePlugin
 
 @main
 struct SwiftLintCommandPlugin: CommandPlugin {
@@ -15,8 +15,7 @@ struct SwiftLintCommandPlugin: CommandPlugin {
         process.waitUntilExit()
         if process.terminationReason == .exit && process.terminationStatus == 0 {
             print("Linting succeeded!")
-        }
-        else {
+        } else {
             Diagnostics.error("Linting error occured!")
         }
     }

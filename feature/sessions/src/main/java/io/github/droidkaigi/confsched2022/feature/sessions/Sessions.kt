@@ -29,11 +29,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -44,27 +46,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.view.doOnPreDraw
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.orEmptyContents
+import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
@@ -87,6 +101,21 @@ fun SessionsScreenRoot(
 ) {
     val state: SessionsUiModel by viewModel.uiModel
 
+    val lifecycleObserver = remember(viewModel) {
+        LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onLifecycleResume()
+            }
+        }
+    }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        lifecycle.addObserver(lifecycleObserver)
+        onDispose {
+            lifecycle.removeObserver(lifecycleObserver)
+        }
+    }
+
     Sessions(
         uiModel = state,
         modifier = modifier,
@@ -100,6 +129,8 @@ fun SessionsScreenRoot(
         onToggleTimetableClick = { isTimetable ->
             viewModel.onTimetableModeToggle(isTimetable)
         },
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
     )
 }
 
@@ -113,6 +144,8 @@ fun Sessions(
     onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scheduleState = uiModel.state
@@ -128,8 +161,10 @@ fun Sessions(
         timetableListStates,
         sessionsListListStates
     )
+    val snackbarHostState = remember { SnackbarHostState() }
     KaigiScaffold(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         topBar = {
             SessionsTopBar(
                 pagerContentsScrollState,
@@ -142,11 +177,17 @@ fun Sessions(
             )
         }
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Column {
             when (scheduleState) {
                 is Error -> {
                     scheduleState.value?.printStackTrace()
-                    TODO()
+                    // Do nothing
                 }
                 Loading -> Box(
                     modifier = modifier
@@ -164,6 +205,7 @@ fun Sessions(
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
+                            timeLine = uiModel.timeLine,
                             days = days,
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
@@ -199,6 +241,7 @@ fun Sessions(
 fun Timetable(
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
+    timeLine: TimeLine?,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -228,6 +271,8 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                timeLine = timeLine,
+                day = day,
                 coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
@@ -245,7 +290,8 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    coroutineScope = coroutineScope,
+                    timeLine = timeLine,
+                    day = day,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
                     )
@@ -255,7 +301,7 @@ fun Timetable(
                         isFavorited = isFavorited,
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
-                            .padding(horizontal = 0.5.dp)
+                            .padding(end = 4.dp)
                             .clickable(
                                 onClick = { onTimetableClick(timetableItem.id) }
                             ),
@@ -309,44 +355,64 @@ fun SessionsList(
             sessionsListListState = sessionsListListStates[dayIndex],
             contentPadding = contentPadding
         ) { (timeHeader, timetableItemWithFavorite) ->
-            Box(
+            val actionLabel = stringResource(
+                if (timetableItemWithFavorite.isFavorited) {
+                    Strings.unregister_favorite_action_label
+                } else {
+                    Strings.register_favorite_action_label
+                }
+            )
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onTimetableClick(timetableItemWithFavorite.timetableItem.id) }
                     .padding(12.dp)
+                    .semantics(mergeDescendants = true) {
+                        customActions = listOf(
+                            CustomAccessibilityAction(
+                                label = actionLabel,
+                                action = {
+                                    onFavoriteClick(
+                                        timetableItemWithFavorite.timetableItem.id,
+                                        timetableItemWithFavorite.isFavorited
+                                    )
+                                    true
+                                }
+                            )
+                        )
+                    }
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
+                Box(
+                    modifier = Modifier
+                        .width(85.dp)
+                        // Remove time semantics so description is set in SessionListItem
+                        .clearAndSetSemantics { },
                 ) {
-                    Box(
-                        modifier = Modifier.width(85.dp),
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            timeHeader?.let {
-                                Text(
-                                    text = it.startAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(1.dp, 2.dp)
-                                        .background(MaterialTheme.colorScheme.onBackground)
-                                ) { }
-                                Text(
-                                    text = it.endAt,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
+                        timeHeader?.let {
+                            Text(
+                                text = it.startAt,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(1.dp, 2.dp)
+                                    .background(MaterialTheme.colorScheme.onBackground)
+                            ) { }
+                            Text(
+                                text = it.endAt,
+                                style = MaterialTheme.typography.titleMedium
+                            )
                         }
                     }
-                    SessionListItem(
-                        timetableItem = timetableItemWithFavorite.timetableItem,
-                        isFavorited = timetableItemWithFavorite.isFavorited,
-                        onFavoriteClick = onFavoriteClick
-                    )
                 }
+                SessionListItem(
+                    timetableItem = timetableItemWithFavorite.timetableItem,
+                    isFavorited = timetableItemWithFavorite.isFavorited,
+                    onFavoriteClick = onFavoriteClick
+                )
             }
         }
     }
@@ -377,7 +443,7 @@ fun SessionsTopBar(
                 Image(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = CoreR.drawable.ic_app),
-                    contentDescription = "logo in toolbar"
+                    contentDescription = null
                 )
             },
             trailingIcons = {
@@ -388,7 +454,7 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_search
                         ),
-                        contentDescription = "Search icon"
+                        contentDescription = stringResource(Strings.search_button_description)
                     )
                 }
                 IconButton(
@@ -398,7 +464,16 @@ fun SessionsTopBar(
                         painter = painterResource(
                             id = R.drawable.ic_today
                         ),
-                        contentDescription = "Toggle timetable icon"
+                        contentDescription = stringResource(
+                            if (isTimetable) {
+                                Strings.session_appearance_to_list_button_description
+                            } else {
+                                Strings.session_appearance_to_table_button_description
+                            }
+                        ),
+                        modifier = Modifier.semantics {
+                            testTag = "toggleTimetableButton"
+                        }
                     )
                 }
             }
@@ -473,7 +548,9 @@ fun SessionsTimetablePreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                timeLine = TimeLine.now(),
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -481,6 +558,8 @@ fun SessionsTimetablePreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -493,7 +572,9 @@ fun SessionsSessionListPreview() {
             uiModel = SessionsUiModel(
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
-                isTimetable = false
+                isTimetable = false,
+                timeLine = TimeLine.now(),
+                appError = null
             ),
             showNavigationIcon = true,
             onNavigationIconClick = {},
@@ -501,6 +582,8 @@ fun SessionsSessionListPreview() {
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }
@@ -513,14 +596,18 @@ fun SessionsLoadingPreview() {
             uiModel = SessionsUiModel(
                 state = Loading,
                 isFilterOn = false,
-                isTimetable = true
+                isTimetable = true,
+                timeLine = TimeLine.now(),
+                appError = null
             ),
+            showNavigationIcon = true,
             onNavigationIconClick = {},
             onTimetableClick = {},
             onFavoriteClick = { _, _ -> },
             onSearchClick = {},
             onToggleTimetableClick = {},
-            showNavigationIcon = true
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }

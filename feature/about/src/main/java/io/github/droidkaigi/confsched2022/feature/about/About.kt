@@ -59,6 +59,7 @@ fun AboutScreenRoot(
     onNavigationIconClick: () -> Unit = {},
     onLinkClick: (url: String, packageName: String?) -> Unit = { _, _ -> },
     onStaffListClick: () -> Unit = {},
+    onLicenseClick: () -> Unit = {},
     versionName: String? = versionName(LocalContext.current)
 ) {
     About(
@@ -66,6 +67,7 @@ fun AboutScreenRoot(
         onNavigationIconClick,
         onLinkClick,
         onStaffListClick,
+        onLicenseClick,
         versionName,
         modifier,
     )
@@ -77,6 +79,7 @@ fun About(
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
     onStaffListClick: () -> Unit,
+    onLicenseClick: () -> Unit,
     versionName: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -182,9 +185,7 @@ fun About(
                 AuxiliaryInformationRow(
                     imageVector = Icons.Filled.Folder,
                     textRes = Strings.about_license,
-                    onClick = {
-                        // TODO: Implement license
-                    }
+                    onClick = onLicenseClick
                 )
 
                 AuxiliaryInformationRow(

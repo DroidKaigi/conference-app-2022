@@ -16,7 +16,12 @@
 * [App Design](https://www.figma.com/file/NcSMs6dMsD88d4wOY0g3rK/DroidKaigi-2022-Conference-App?node-id=0%3A1)
 
 ## Try it out
+
 ### Android
+
+You can install the production app via Get it on Google Play.
+
+[<img src="https://play.google.com/intl/ja/badges/static/images/badges/en_badge_web_generic.png" alt="You can install the production app via Get it on Google Play" width="155px">](https://play.google.com/store/apps/details?id=io.github.droidkaigi.confsched2022)
 
 The builds being distributed through mobile app distribution services.
 
@@ -26,6 +31,12 @@ You can download apk from the GitHub Artifact.
 https://github.com/DroidKaigi/conference-app-2022/actions/workflows/Build.yml?query=branch%3Amain
 
 ### iOS
+
+You can install the production app via Get it on App Store.
+
+[<img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="You can install the production app via Get it on App Store" width="155px">](https://apps.apple.com/jp/app/droidkaigi2022%E5%85%AC%E5%BC%8F%E3%82%A2%E3%83%97%E3%83%AA/id1643449914)
+
+
 Beta version of this app is available on TestFlight.
 You can try and test this app with following public link.
 
@@ -35,14 +46,15 @@ In this project, distribute beta version with [Xcode Cloud](https://developer.ap
 
 ## Contributing
 
-We always welcome any and all contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information
+We always welcome any and all contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
-For Japanese speakers, please see [CONTRIBUTING.ja.md](CONTRIBUTING.ja.md)
+For Japanese speakers, please see [CONTRIBUTING.ja.md](CONTRIBUTING.ja.md).
 
 ## Requirements
 
-Latest Android Studio **Electric Eel** and higher. You can download it from [this page](https://developer.android.com/studio/preview).
-[iOS Requirements](app-ios/README.md)
+Latest Android Studio **Electric Eel** or higher. You can download it from [this page](https://developer.android.com/studio/preview).
+
+[iOS Requirements](app-ios/README.md).
 
 # Tech Stacks
 
@@ -50,8 +62,8 @@ This year's app pretty much takes the idea from [now in android](https://github.
 
 <img width="891" alt="image" src="https://user-images.githubusercontent.com/1838962/190183970-d9ef282a-59f8-4233-b996-209f143868b2.png">
 
-
 ## Configurable build logic
+
 Management methods such as feature-xxx and core-xx, which are used in modularization, are introduced to manage the build logic.
 This method makes the build logic manageable.
 
@@ -113,7 +125,6 @@ val uiModel = moleculeScope.moleculeComposeState(clock = ContextClock) {
 
 ## Testing strategy
 
-
 ### Make test scalable by using robot testing pattern
 
 In this project, tests are separated into what and how.
@@ -168,7 +179,6 @@ class SessionScreenRobot @Inject constructor() {
 ...
 ```
 
-
 ### Create a test with high fidelity without making it flaky
 
 In this project, we will use Hilt in the JVM for integration testing to avoid device-specific problems.  
@@ -218,6 +228,7 @@ class SessionScreenRobot @Inject constructor() {
 ```
 
 ## Instant logic updates using Kotlin JS
+
 We are trying to use [https://github.com/cashapp/zipline](https://github.com/cashapp/zipline) as an experimental approach.  
 This allows us to use the regular JVM Kotlin implementation as a fallback, while releasing logic implemented in Javascript, which can be updated instantly as well as development on the Web.  
 We are excited about these possibilities for Kotlin.
@@ -265,17 +276,16 @@ class JsScheduleModifier() : ScheduleModifier {
 You can check the manifest file to see how it works.  
 https://droidkaigi.github.io/conference-app-2022/manifest.zipline.json
 
-
 ## LazyLayout
 
 We are trying to draw a timetable using LazyLayout, a base implementation of LazyColumn and LazyGrid, which was introduced in [the Lazy layouts in Compose session](https://www.youtube.com/watch?v=1ANt65eoNhQ) at Google I/O.
-
 
 <img src="https://user-images.githubusercontent.com/1838962/190185866-298a7c40-33f0-44af-b5e0-d030b0186e2c.png" width="250px" />
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
 
 ## Special Thanks
+
 * [Contributors](https://github.com/DroidKaigi/conference-app-2022/graphs/contributors)
 * iOS App Leader [ry-itto / Ryoya Ito](https://github.com/ry-itto)
 * Designer [Chihokotaro / Chihoko Watanabe](https://twitter.com/chihokotaro)

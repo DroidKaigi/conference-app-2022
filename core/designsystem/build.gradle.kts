@@ -11,7 +11,9 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.model)
     kotlinCompilerPluginClasspath(libs.composeCompiler)
     implementation(libs.coilCompose)
     implementation(libs.composeUiGoogleFonts)
+    implementation(libs.accompanistPlaceholder)
 }

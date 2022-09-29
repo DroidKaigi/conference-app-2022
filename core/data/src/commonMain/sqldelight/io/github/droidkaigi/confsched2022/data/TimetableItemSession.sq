@@ -55,3 +55,7 @@ INSERT INTO timetableItemSession (
 
 deleteAll:
 DELETE FROM timetableItemSession;
+
+selectAllCategories:
+SELECT DISTINCT categoryId, categoryTitleJa, categoryTitleEn
+FROM timetableItemSession;

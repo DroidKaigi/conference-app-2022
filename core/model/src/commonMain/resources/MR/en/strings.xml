@@ -12,7 +12,9 @@
     <!-- About -->
     <string name="about_top_app_bar_title">About DroidKaigi</string>
     <string name="about_title">What is DroidKaigi?</string>
-    <string name="about_description">DroidKaigi is a conference tailored for Android developers. It\'s scheduled to take place on the 5 to 7 of October 2022.</string>
+    <string name="about_description">DroidKaigi is a conference tailored for Android developers.
+        It\'s scheduled to take place on the 5 to 7 of October 2022.
+    </string>
     <string name="about_access">Access</string>
     <string name="about_staff">Staff List</string>
     <string name="about_privacy">Privacy Policy</string>
@@ -21,12 +23,21 @@
     <string name="about_app_version">App Version</string>
 
     <!-- Announcement -->
-    <string name="announcement_top_app_bar_title">Announcement</string>
+    <string name="announcement_top_app_bar_title">News</string>
+    <string name="announcement_content_header_title_today">Today</string>
+    <string name="announcement_content_header_title_yesterday">Yesterday</string>
+    <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>
 
     <!-- Contributors -->
     <string name="contributors_top_app_bar_title">Contributors</string>
 
+    <!-- Search -->
+    <string name="search_filter_select_day">Day</string>
+    <string name="search_filter_select_category">Category</string>
+    <string name="search_filter_favorites">Favorites</string>
+
     <!-- Map -->
+    <string name="map_top_app_bar_title">Floor Map</string>
 
     <!-- Sessions -->
     <string name="session_description_read_more_text">Read more</string>
@@ -37,14 +48,26 @@
     <string name="session_slide">SLIDE</string>
     <string name="session_language_interpretation">(interpretation)</string>
     <string name="session_cancel">このセッションは事情により中止となりました</string>
+    <string name="session_event_add_confirm">Add an event</string>
+    <string name="session_event_add_confirm_ok">OK</string>
+    <string name="session_event_add_confirm_cancel">Cancel</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
+    <string name="setting_item_dynamic_color">Dynamic Color</string>
     <string name="setting_item_dark_mode">Dark Mode</string>
     <string name="setting_item_language">Language</string>
+    <string name="setting_language_system">System Default</string>
+    <string name="setting_language_english" translatable="false">English</string>
+    <string name="setting_language_japanese" translatable="false">日本語</string>
+    <string name="setting_language_simplified_chinese" translatable="false">简体中文</string>
+    <string name="setting_dialog_confirm">OK</string>
 
     <!-- Sponsors -->
     <string name="sponsors_top_app_bar_title">Sponsors</string>
+    <string name="sponsors_platinum_sponsors_title">PLATINUM SPONSORS</string>
+    <string name="sponsors_gold_sponsors_title">GOLD SPONSORS</string>
+    <string name="sponsors_supporter_sponsors_title">SPONSORS</string>
 
     <!-- Staff -->
     <string name="staff_top_app_bar_title">Staff</string>
@@ -52,4 +75,17 @@
     <!-- Search -->
     <string name="search_placeholder">Search Session</string>
     <string name="search_empty_result">この検索条件に一致する結果はありません</string>
+
+    <!-- ContentDescriptions -->
+    <string name="nav_drawer_menu_button_description">Open NavigationDrawer</string>
+    <string name="search_button_description">Search</string>
+    <string name="session_appearance_to_list_button_description">Change sessions to list view</string>
+    <string name="session_appearance_to_table_button_description">Change sessions to table view</string>
+    <string name="register_favorite_action_label">Register favorite</string>
+    <string name="unregister_favorite_action_label">Unregister favorite</string>
+
+
+    <!-- Error -->
+    <string name="error_common_message">Failed to retrieve information.</string>
+    <string name="error_common_retry">Retry</string>
 </resources>

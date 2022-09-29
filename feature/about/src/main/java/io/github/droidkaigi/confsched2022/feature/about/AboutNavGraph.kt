@@ -7,14 +7,16 @@ fun NavGraphBuilder.aboutNavGraph(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onLinkClick: (url: String, packageName: String?) -> Unit,
-    onStaffListClick: () -> Unit
+    onStaffListClick: () -> Unit,
+    onLicenseClick: () -> Unit
 ) {
     composable(route = AboutNavGraph.aboutRoute) {
         AboutScreenRoot(
             showNavigationIcon = showNavigationIcon,
             onNavigationIconClick = onNavigationIconClick,
             onLinkClick = onLinkClick,
-            onStaffListClick = onStaffListClick
+            onStaffListClick = onStaffListClick,
+            onLicenseClick = onLicenseClick
         )
     }
 }

@@ -3,7 +3,6 @@ package io.github.droidkaigi.confsched2022.data.announcement
 import io.github.droidkaigi.confsched2022.BuildKonfig
 import io.github.droidkaigi.confsched2022.data.NetworkService
 import io.github.droidkaigi.confsched2022.data.announcement.response.AnnouncementsResponse
-import io.github.droidkaigi.confsched2022.data.toInstantAsJST
 import io.github.droidkaigi.confsched2022.model.Announcement
 import io.github.droidkaigi.confsched2022.model.AnnouncementsByDate
 import kotlinx.collections.immutable.PersistentList
@@ -18,7 +17,7 @@ public class AnnouncementsApi(
         language: String
     ): PersistentList<AnnouncementsByDate> {
         return networkService.get<AnnouncementsResponse>(
-            url = "${BuildKonfig.apiUrl}/events/droidkaigi2022/announcements/$language"
+            url = "${BuildKonfig.apiUrl}/announcements/$language"
         ).toAnnouncementsByDate()
     }
 }
@@ -28,7 +27,7 @@ private fun AnnouncementsResponse.toAnnouncementsByDate(): PersistentList<Announ
 
     return announcements
         .groupBy { response ->
-            response.publishedAt.toInstantAsJST().toLocalDateTime(systemTZ).date
+            response.publishedAt.toLocalDateTime(systemTZ).date
         }
         .map {
             AnnouncementsByDate(

@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,7 +7,7 @@ var package = Package(
     name: "DroidKaigiPackage",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
     ],
     products: [
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
@@ -19,11 +19,10 @@ var package = Package(
         .library(name: "Assets", targets: ["Assets"]),
         .library(name: "MapFeature", targets: ["MapFeature"]),
         .library(name: "Model", targets: ["Model"]),
-        .library(name: "NotificationFeature", targets: ["NotificationFeature"]),
+        .library(name: "AnnouncementFeature", targets: ["AnnouncementFeature"]),
         .library(name: "SafariView", targets: ["SafariView"]),
         .library(name: "SearchFeature", targets: ["SearchFeature"]),
         .library(name: "SessionFeature", targets: ["SessionFeature"]),
-        .library(name: "SettingFeature", targets: ["SettingFeature"]),
         .library(name: "SponsorFeature", targets: ["SponsorFeature"]),
         .library(name: "StaffFeature", targets: ["StaffFeature"]),
         .library(name: "TimetableFeature", targets: ["TimetableFeature"]),
@@ -33,7 +32,7 @@ var package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
-        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.6"),
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
@@ -41,10 +40,12 @@ var package = Package(
             name: "AboutFeature",
             dependencies: [
                 .target(name: "appioscombined"),
+                .target(name: "ContributorFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .target(name: "SafariView"),
                 .target(name: "StaffFeature"),
+                .target(name: "SponsorFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "LicenseList", package: "LicenseList")
             ],
@@ -63,20 +64,30 @@ var package = Package(
             dependencies: [
                 .target(name: "appioscombined"),
                 .target(name: "AboutFeature"),
+                .target(name: "AnnouncementFeature"),
                 .target(name: "Assets"),
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
+                .target(name: "Event"),
                 .target(name: "MapFeature"),
-                .target(name: "NotificationFeature"),
                 .target(name: "SponsorFeature"),
                 .target(name: "Theme"),
                 .target(name: "SearchFeature"),
                 .target(name: "SessionFeature"),
-                .target(name: "SettingFeature"),
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ]
+        ),
+        .target(
+            name: "AnnouncementFeature",
+            dependencies: [
+                .target(name: "appioscombined"),
+                .target(name: "Assets"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Model"),
+                .target(name: "Theme"),
             ]
         ),
         .target(
@@ -124,22 +135,21 @@ var package = Package(
             ]
         ),
         .target(
+            name: "Event"
+        ),
+        .target(
             name: "MapFeature",
             dependencies: [
+                .target(name: "Assets"),            
                 .target(name: "CommonComponents"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Model"),
             ]
         ),
         .target(
             name: "Model",
             dependencies: [
                 .target(name: "appioscombined"),
-            ]
-        ),
-        .target(
-            name: "NotificationFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
         .target(
@@ -150,6 +160,8 @@ var package = Package(
             name: "SearchFeature",
             dependencies: [
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
+                .target(name: "SessionFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -159,14 +171,10 @@ var package = Package(
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
+                .target(name: "MapFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]
-        ),
-        .target(
-            name: "SettingFeature",
-            dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -184,7 +192,9 @@ var package = Package(
         .target(
             name: "StaffFeature",
             dependencies: [
+                .target(name: "CommonComponents"),
                 .target(name: "Model"),
+                .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -214,7 +224,7 @@ var package = Package(
         ),
         .binaryTarget(
             name: "appioscombined",
-            path: "../app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework"
+            path: "build/appioscombined.xcframework"
         ),
         .plugin(
             name: "SwiftLintPlugin",

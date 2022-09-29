@@ -9,4 +9,7 @@ import kotlinx.coroutines.flow.flowOf
 
 public class FakeSponsorsRepository : SponsorsRepository {
     override fun sponsors(): Flow<PersistentList<Sponsor>> = flowOf(Sponsor.fakes())
+
+    override suspend fun refresh() {
+    }
 }

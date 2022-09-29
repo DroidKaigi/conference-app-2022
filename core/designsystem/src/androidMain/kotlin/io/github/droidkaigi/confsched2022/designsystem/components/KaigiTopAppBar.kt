@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.strings.Strings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +53,12 @@ fun KaigiTopAppBar(
                 IconButton(
                     onClick = onNavigationIconClick
                 ) {
-                    Icon(imageVector = Icons.Default.Menu, "menu")
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = stringResource(
+                            Strings.nav_drawer_menu_button_description
+                        )
+                    )
                 }
             }
         },
