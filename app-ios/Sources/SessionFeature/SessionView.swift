@@ -187,12 +187,14 @@ public struct SessionView: View {
                         }
                         .frame(width: 48, height: 48)
 
-                        Button {
-                            viewStore.send(.tapMap)
-                        } label: {
-                            Assets.map.swiftUIImage
+                        if viewStore.timetableItemWithFavorite.timetableItem.day?.kaigiPlace.isPrism ?? false {
+                            Button {
+                                viewStore.send(.tapMap)
+                            } label: {
+                                Assets.map.swiftUIImage
+                            }
+                            .frame(width: 48, height: 48)
                         }
-                        .frame(width: 48, height: 48)
 
                         Button {
                             viewStore.send(.tapCalendar)

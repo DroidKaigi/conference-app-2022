@@ -47,6 +47,7 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
     case .refresh:
         state.isLoading = true
         return .run { @MainActor subscriber in
+            try await environment.sponsorsRepository.refresh()
             for try await result: [Sponsor] in environment.sponsorsRepository.sponsors().stream() {
                 await subscriber.send(
                     .refreshResponse(

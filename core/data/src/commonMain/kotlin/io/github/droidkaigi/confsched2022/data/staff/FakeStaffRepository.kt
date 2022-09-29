@@ -12,4 +12,7 @@ public class FakeStaffRepository : StaffRepository {
     override fun staff(): Flow<PersistentList<Staff>> {
         return flowOf(staff)
     }
+
+    override suspend fun refresh() {
+    }
 }

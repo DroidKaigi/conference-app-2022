@@ -40,6 +40,7 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.AnnouncementsByDate
 import io.github.droidkaigi.confsched2022.model.fakes
 import io.github.droidkaigi.confsched2022.strings.Strings

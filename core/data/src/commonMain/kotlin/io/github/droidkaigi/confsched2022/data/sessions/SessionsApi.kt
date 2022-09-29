@@ -40,9 +40,9 @@ internal fun SessionAllResponse.toTimetable(): Timetable {
                 TimetableSpeaker(
                     id = apiSpeaker.id,
                     name = apiSpeaker.fullName,
-                    bio = apiSpeaker.bio,
+                    bio = apiSpeaker.bio ?: "",
                     iconUrl = apiSpeaker.profilePicture.orEmpty(),
-                    tagLine = apiSpeaker.tagLine,
+                    tagLine = apiSpeaker.tagLine ?: "",
                 )
             }.first()
         }

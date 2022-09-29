@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -35,6 +36,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -69,11 +71,13 @@ import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.Typography
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.empty
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -166,6 +170,8 @@ fun SearchRoot(
                 viewModel.onFilterFavoritesToggle()
             },
             onBackIconClick = onBackIconClick,
+            onRetryButtonClick = { viewModel.onRetryButtonClick() },
+            onAppErrorNotified = { viewModel.onAppErrorNotified() },
             onSearchTextAreaClicked = {
                 viewModel.onSearchTextAreaClicked()
             }
@@ -183,10 +189,15 @@ private fun SearchScreen(
     onFavoritesToggleClicked: () -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     onBackIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         topBar = {
             if (uiModel.state is Success) {
@@ -199,11 +210,19 @@ private fun SearchScreen(
             }
         },
         content = {
+            AppErrorSnackbarEffect(
+                appError = uiModel.appError,
+                snackBarHostState = snackbarHostState,
+                onAppErrorNotified = onAppErrorNotified,
+                onRetryButtonClick = onRetryButtonClick
+            )
             Column(
                 modifier = Modifier.padding(paddingValues = it)
             ) {
                 when (uiModel.state) {
-                    is Error -> TODO()
+                    is Error -> {
+                        // Do nothing
+                    }
                     is Success -> {
                         SearchFilter(
                             modifier = Modifier
@@ -215,12 +234,25 @@ private fun SearchScreen(
                             onCategoryClicked = onCategoriesFilteredClicked,
                             onFavoritesClicked = onFavoritesToggleClicked
                         )
-                        SearchedItemListField(
-                            schedule = uiModel.state.value,
-                            searchWord = searchWord.value,
-                            onItemClick = onItemClick,
-                            onBookMarkClick = onBookMarkClick,
-                        )
+                        val foundSomeResults =
+                            uiModel.state.value.dayToTimetable.any { (_, timeTable) ->
+                                timeTable
+                                    .filtered(
+                                        Filters(filterSession = true, searchWord = searchWord.value)
+                                    )
+                                    .isEmpty()
+                                    .not()
+                            }
+                        if (foundSomeResults) {
+                            SearchedItemListField(
+                                schedule = uiModel.state.value,
+                                searchWord = searchWord.value,
+                                onItemClick = onItemClick,
+                                onBookMarkClick = onBookMarkClick,
+                            )
+                        } else {
+                            SearchEmptyScreen()
+                        }
                     }
                     Loading -> {
                         FullScreenLoading()
@@ -497,6 +529,32 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun SearchEmptyScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier.wrapContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null,
+                modifier = Modifier.size(58.dp),
+                tint = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(Strings.search_empty_result.resourceId),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+    }
+}
+
 @Preview(showSystemUi = false)
 @Composable
 fun SearchScreenPreview() {
@@ -505,7 +563,32 @@ fun SearchScreenPreview() {
             uiModel = SearchUiModel(
                 filter = SearchFilterUiModel(),
                 filterSheetState = SearchFilterSheetState.Hide,
-                state = Success(DroidKaigiSchedule.fake())
+                state = Success(DroidKaigiSchedule.fake()),
+                appError = null,
+            ),
+            onItemClick = {},
+            onBookMarkClick = { _, _ -> },
+            onBackIconClick = {},
+            onFavoritesToggleClicked = {},
+            onDayFilterClicked = {},
+            onCategoriesFilteredClicked = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
+            onSearchTextAreaClicked = {},
+        )
+    }
+}
+
+@Preview(showSystemUi = false)
+@Composable
+fun SearchEmptyScreenPreview() {
+    KaigiTheme {
+        SearchScreen(
+            uiModel = SearchUiModel(
+                filter = SearchFilterUiModel(),
+                filterSheetState = SearchFilterSheetState.Hide,
+                state = Success(DroidKaigiSchedule.empty()),
+                appError = null,
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
@@ -514,6 +597,8 @@ fun SearchScreenPreview() {
             onDayFilterClicked = {},
             onCategoriesFilteredClicked = {},
             onSearchTextAreaClicked = {},
+            onAppErrorNotified = {},
+            onRetryButtonClick = {}
         )
     }
 }

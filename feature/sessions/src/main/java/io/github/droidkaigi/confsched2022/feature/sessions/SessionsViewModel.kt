@@ -15,6 +15,8 @@ import io.github.droidkaigi.confsched2022.model.AppError
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.SessionsRepository
 import io.github.droidkaigi.confsched2022.model.TimetableItem
+import io.github.droidkaigi.confsched2022.model.TimeLine
+import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.ui.UiLoadState
 import io.github.droidkaigi.confsched2022.ui.asLoadState
 import io.github.droidkaigi.confsched2022.ui.moleculeComposeState
@@ -34,6 +36,7 @@ class SessionsViewModel @Inject constructor(
 
     private val filters = mutableStateOf(Filters())
     private val isTimetableMode = mutableStateOf(true)
+    private val timeLine = mutableStateOf(TimeLine.now())
     private var appError by mutableStateOf<AppError?>(null)
 
     val uiModel: State<SessionsUiModel> = run {
@@ -62,6 +65,7 @@ class SessionsViewModel @Inject constructor(
                 state = schedule,
                 isFilterOn = filters.value.filterFavorite,
                 isTimetable = isTimetableMode.value,
+                timeLine = timeLine.value,
                 appError = appError,
             )
         }
@@ -69,6 +73,10 @@ class SessionsViewModel @Inject constructor(
 
     init {
         refresh()
+    }
+
+    fun onLifecycleResume() {
+        timeLine.value = TimeLine.now()
     }
 
     fun onRetryButtonClick() {
