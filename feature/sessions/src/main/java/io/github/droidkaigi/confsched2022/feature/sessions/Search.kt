@@ -100,8 +100,10 @@ fun SearchRoot(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    if (categoryId != null) {
-        viewModel.onCategorySelected(categoryId)
+    LaunchedEffect(categoryId) {
+        if (categoryId != null) {
+            viewModel.onCategorySelected(categoryId)
+        }
     }
 
     LaunchedEffect(state.filterSheetState) {
