@@ -16,10 +16,10 @@ extension Kotlinx_datetimeLocalDate {
             return ""
         }
         if calendar.isDateInToday(date) {
-            return StringsKt.shared.announcement_content_header_title_today.desc().localized()
+            return StringsKt.shared.announcement_content_header_title_today.localized()
         }
         if calendar.isDateInYesterday(date) {
-            return StringsKt.shared.announcement_content_header_title_yesterday.desc().localized()
+            return StringsKt.shared.announcement_content_header_title_yesterday.localized()
         }
         return dateFormatter.string(from: date)
     }
