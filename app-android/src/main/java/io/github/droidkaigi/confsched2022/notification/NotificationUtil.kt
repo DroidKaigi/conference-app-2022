@@ -113,22 +113,22 @@ object NotificationUtil {
 
 enum class NotificationChannelInfo(
     val channelId: String,
-    private val channelNameResId: Int,
+    private val channelName: String,
     val defaultLaunchUrl: String
 ) {
     DEFAULT(
         "default_channel",
-        0,
+        "Default",
         "https://droidkaigi.jp/2022"
     ),
     FAVORITE_SESSION_START(
         "favorite_session_start_channel",
-        1,
+        "Session Alarm",
         "https://droidkaigi.jp/2022"
     );
 
-//    fun channelName(context: Context): String = context.getString(channelNameResId)
-    fun channelName(context: Context): String = "torikatsutest"
+    //    fun channelName(context: Context): String = context.getString(channelNameResId)
+    fun channelName(context: Context): String = channelName
 
     companion object {
         fun of(channelId: String): NotificationChannelInfo {
