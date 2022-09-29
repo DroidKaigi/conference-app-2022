@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -228,6 +229,11 @@ fun KaigiAppDrawer(
         LaunchedEffect(drawerState.isAnimationRunning) {
             if (drawerState.isAnimationRunning && drawerState.isClosed) {
                 keyboardController?.hide()
+            }
+        }
+        BackHandler(enabled = drawerState.isOpen) {
+            kaigiAppScaffoldState.coroutineScope.launch {
+                drawerState.close()
             }
         }
         ModalNavigationDrawer(
