@@ -27,15 +27,15 @@ fun TimeLane(
         if (currentDurationTime != durationTime) {
             currentDurationTime = durationTime
             val nextDurationTime = timetable.getOrNull(visibleItemInfo.index + 1)?.first
-            val offsetDp = visibleItemInfo.offset
             Box(
-                modifier = Modifier
-                    .offset {
-                        IntOffset(
-                            x = 0,
-                            y = if (visibleItemIndex == 0 && durationTime == nextDurationTime) 0 else offsetDp,
-                        )
-                    }
+                modifier = Modifier.offset {
+                    IntOffset(
+                        x = 0,
+                        y = if (visibleItemIndex == 0 &&
+                            durationTime == nextDurationTime
+                        ) 0 else visibleItemInfo.offset,
+                    )
+                }
             ) {
                 content(durationTime)
             }
