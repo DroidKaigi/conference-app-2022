@@ -158,7 +158,10 @@ public struct SessionView: View {
                         if let session = timetableItem.asSession() {
                             SessionDescriptionView(text: session.description_)
                         }
-                        SessionAudienceView(targetAudience: timetableItem.targetAudience)
+
+                        if timetableItem.targetAudience != "TBW" {
+                            SessionAudienceView(targetAudience: timetableItem.targetAudience)
+                        }
 
                         if let session = timetableItem.asSession() {
                             SessionSpeakersView(speakers: session.speakers)
