@@ -9,7 +9,6 @@ import Theme
 
 public struct SessionState: Equatable {
     public var timetableItemWithFavorite: TimetableItemWithFavorite
-    public var isShareSheetShown: Bool = false
     public var mapState: MapState?
     public var eventAddConfirmAlert: AlertState<SessionAction>?
 
@@ -22,8 +21,6 @@ public enum SessionAction: Equatable {
     case tapCalendar
     case tapMap
     case tapFavorite
-    case tapShare
-    case hideShareSheet
     case showEventAddConfirmAlert
     case hideEventAddConfirmAlert
     case addEvent
@@ -78,12 +75,6 @@ public let sessionReducer = Reducer<SessionState, SessionAction, SessionEnvironm
             }
             .receive(on: DispatchQueue.main.eraseToAnyScheduler())
             .eraseToEffect()
-        case .tapShare:
-            state.isShareSheetShown = true
-            return .none
-        case .hideShareSheet:
-            state.isShareSheetShown = false
-            return .none
         case .showEventAddConfirmAlert:
             state.eventAddConfirmAlert = .init(
                 title: .init(StringsKt.shared.session_event_add_confirm.localized()),
@@ -180,12 +171,10 @@ public struct SessionView: View {
 
                 HStack {
                     HStack {
-                        Button {
-                            viewStore.send(.tapShare)
-                        } label: {
+                        ShareLink(item: timetableItem.shareText) {
                             Assets.share.swiftUIImage
+                                .frame(width: 48, height: 48)
                         }
-                        .frame(width: 48, height: 48)
 
                         if viewStore.timetableItemWithFavorite.timetableItem.day?.kaigiPlace.isPrism ?? false {
                             Button {
@@ -221,9 +210,6 @@ public struct SessionView: View {
             }
             .foregroundColor(AssetColors.onBackground.swiftUIColor)
             .background(AssetColors.background.swiftUIColor)
-            .sheet(isPresented: viewStore.binding(get: { $0.isShareSheetShown }, send: .hideShareSheet)) {
-                ShareTextView(text: timetableItem.shareText)
-            }
             .sheet(isPresented: viewStore.binding(get: { $0.mapState != nil }, send: .hideMap)) {
                 IfLetStore(
                     store.scope(
