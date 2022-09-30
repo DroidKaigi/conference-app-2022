@@ -217,7 +217,7 @@ fun SessionDetailScreen(
                                 onLinkClick = onLinkClick,
                             )
 
-                        if(item.targetAudience != "TBW") {
+                        if (item.targetAudience != "TBW") {
                             SessionDetailTargetAudience(
                                 targetAudience = item.targetAudience
                             )
