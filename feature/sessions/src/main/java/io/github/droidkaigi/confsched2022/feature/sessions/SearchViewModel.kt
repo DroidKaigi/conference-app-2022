@@ -101,6 +101,20 @@ class SearchViewModel @Inject constructor(
         )
     }
 
+    fun onCategorySelected(categoryId: String) {
+        viewModelScope.launch {
+            val categories = sessionsRepository.getCategories()
+            if (categories.isEmpty())
+                return@launch
+
+            filters.value = filters.value.copy(
+                categories = listOf(
+                    categories.first { it.id.toString() == categoryId }
+                )
+            )
+        }
+    }
+
     fun onDaySelected(day: DroidKaigi2022Day, isSelected: Boolean) {
         val selectedDays = filters.value.days.toMutableList()
         filters.value = filters.value.copy(

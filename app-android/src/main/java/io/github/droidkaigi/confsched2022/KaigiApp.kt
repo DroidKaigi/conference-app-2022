@@ -82,6 +82,9 @@ import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
+import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
+import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.notification.AndroidCalendarRegistration
@@ -125,6 +128,7 @@ fun KaigiApp(
                     showNavigationIcon = showNavigationIcon,
                     onLinkClick = kaigiExternalNavigationController::navigate,
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
+                    onCategoryTagClick = kaigiAppScaffoldState::onCategoryTagClick,
                     onBackIconClick = kaigiAppScaffoldState::onBackIconClick,
                     onSearchIconClick = kaigiAppScaffoldState::onSearchClick,
                     onTimetableClick = kaigiAppScaffoldState::onTimeTableClick,
@@ -267,6 +271,14 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
     fun onSearchClick() {
         navController.navigate(
             route = SessionsNavGraph.sessionSearchRoute()
+        )
+    }
+
+    fun onCategoryTagClick(
+        category: TimetableCategory?
+    ) {
+        navController.navigate(
+            route = SessionsNavGraph.sessionSearchRoute(category?.id.toString())
         )
     }
 

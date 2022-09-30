@@ -81,7 +81,7 @@ public struct TimetableListItemView: View {
     private func highlightedString(text: String, searchText: String) -> AttributedString {
         var attrString = AttributedString(stringLiteral: text)
 
-        if let range = attrString.range(of: searchText) {
+        if let range = attrString.range(of: searchText, options: .caseInsensitive) {
             attrString[range].backgroundColor = AssetColors.secondaryContainer.swiftUIColor
         }
 
