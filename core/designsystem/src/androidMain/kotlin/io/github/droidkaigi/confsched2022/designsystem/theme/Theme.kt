@@ -1,9 +1,12 @@
 package io.github.droidkaigi.confsched2022.designsystem.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorPalette = darkColorScheme(
     primary = Color(KaigiColors.primaryKeyColor80),
@@ -31,16 +34,21 @@ private val DarkColorPalette = darkColorScheme(
     outline = Color(KaigiColors.neutralVariantKeyColor60),
 )
 
+@SuppressLint("NewApi")
 @Composable
-fun KaigiTheme(
+public fun KaigiTheme(
     // Currently, we are not supporting light theme
 //    darkTheme: Boolean = isSystemInDarkTheme(),
+    isDynamicColorEnabled: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    val colorScheme = if (isDynamicColorEnabled) {
+        dynamicDarkColorScheme(LocalContext.current)
+    } else {
+        DarkColorPalette
+    }
+
     MaterialTheme(
-        colorScheme = DarkColorPalette,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
+        colorScheme = colorScheme, typography = Typography, shapes = Shapes, content = content
     )
 }

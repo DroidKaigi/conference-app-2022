@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2022.data
 
 import com.russhwolf.settings.coroutines.FlowSettings
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
@@ -61,10 +62,26 @@ public class SettingsDatastore(private val flowSettings: FlowSettings) {
         )
     }
 
+    public fun dynamicColorEnabled(): Flow<Boolean> {
+        return flowSettings.getBooleanFlow(
+            key = KEY_DYNAMIC_COLOR,
+            // The trick
+            defaultValue = DroidKaigi2022Day.defaultDyamicThemeDate()
+        )
+    }
+
+    public suspend fun setDynamicColorEnabled(dynamicColorEnabled: Boolean) {
+        flowSettings.putBoolean(
+            KEY_DYNAMIC_COLOR,
+            dynamicColorEnabled,
+        )
+    }
+
     public companion object {
         public const val NAME: String = "PREFERENCES_NAME"
         private const val KEY_AUTHENTICATED = "KEY_AUTHENTICATED"
         private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
+        private const val KEY_DYNAMIC_COLOR = "KEY_DYNAMIC_COLOR"
         private const val KEY = "favorites"
         private const val DELIMITER = ","
     }

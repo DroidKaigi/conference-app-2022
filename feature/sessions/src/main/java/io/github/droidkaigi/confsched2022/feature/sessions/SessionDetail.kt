@@ -69,6 +69,7 @@ import io.github.droidkaigi.confsched2022.model.KaigiPlace.Prism
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -90,6 +91,7 @@ import java.util.Locale
 fun SessionDetailScreenRoot(
     timetableItemId: TimetableItemId,
     onLinkClick: (url: String) -> Unit,
+    onCategoryTagClick: (TimetableCategory) -> Unit,
     onShareClick: (TimetableItem) -> Unit,
     onRegisterCalendarClick: (TimetableItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -105,6 +107,7 @@ fun SessionDetailScreenRoot(
         onRetryButtonClick = { viewModel.onRetryButtonClick() },
         onAppErrorNotified = { viewModel.onAppErrorNotified() },
         onLinkClick = onLinkClick,
+        onCategoryTagClick = onCategoryTagClick,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
@@ -148,6 +151,7 @@ fun SessionDetailScreen(
     onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
     onLinkClick: (url: String) -> Unit = { _ -> },
+    onCategoryTagClick: (category: TimetableCategory) -> Unit = { _ -> },
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
     onShareClick: (TimetableItem) -> Unit = {},
@@ -202,7 +206,10 @@ fun SessionDetailScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(horizontal = 16.dp)
                     ) {
-                        SessionDetailSessionInfo(item = item)
+                        SessionDetailSessionInfo(
+                            onCategoryTagClick = onCategoryTagClick,
+                            item = item,
+                        )
 
                         if (item is Session)
                             SessionDetailDescription(
@@ -210,9 +217,11 @@ fun SessionDetailScreen(
                                 onLinkClick = onLinkClick,
                             )
 
-                        SessionDetailTargetAudience(
-                            targetAudience = item.targetAudience
-                        )
+                        if (item.targetAudience != "TBW") {
+                            SessionDetailTargetAudience(
+                                targetAudience = item.targetAudience
+                            )
+                        }
 
                         if (item is Session)
                             SessionDetailSpeakers(
@@ -294,6 +303,7 @@ fun SessionDetailBottomAppBar(
 @Composable
 fun SessionTagsLine(
     item: TimetableItem,
+    onCategoryTagClick: (category: TimetableCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sessionMinutes =
@@ -336,6 +346,7 @@ fun SessionTagsLine(
             Text(sessionMinutes + "min")
         }
         KaigiTag(
+            modifier = Modifier.clickable { onCategoryTagClick(item.category) },
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
             Text(item.category.title.currentLangTitle)
@@ -417,6 +428,7 @@ fun SessionScheduleInfo(
 @Composable
 fun SessionDetailSessionInfo(
     item: TimetableItem,
+    onCategoryTagClick: (category: TimetableCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -428,7 +440,10 @@ fun SessionDetailSessionInfo(
 
         Spacer(modifier = Modifier.padding(24.dp))
 
-        SessionTagsLine(item = item)
+        SessionTagsLine(
+            onCategoryTagClick = onCategoryTagClick,
+            item = item,
+        )
 
         Spacer(modifier = Modifier.padding(24.dp))
 

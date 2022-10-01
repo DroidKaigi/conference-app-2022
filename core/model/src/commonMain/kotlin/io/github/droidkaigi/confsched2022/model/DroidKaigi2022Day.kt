@@ -1,5 +1,6 @@
 package io.github.droidkaigi.confsched2022.model
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -46,6 +47,10 @@ public enum class DroidKaigi2022Day(
             return values().firstOrNull {
                 time in it.start..it.end
             }
+        }
+
+        public fun defaultDyamicThemeDate(): Boolean {
+            return Day1.start < Clock.System.now()
         }
     }
 }

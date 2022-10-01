@@ -63,7 +63,7 @@ public struct AnnouncementView: View {
                         fulfill(viewStore)
                     }
                 }
-                .navigationTitle(StringsKt.shared.announcement_top_app_bar_title.desc().localized())
+                .navigationTitle(StringsKt.shared.announcement_top_app_bar_title.localized())
                 .navigationBarTitleDisplayMode(.inline)
             }
             .task {
@@ -86,7 +86,7 @@ public struct AnnouncementView: View {
 
     func empty() -> some View {
         VStack {
-            Text(StringsKt.shared.announcement_content_empty.desc().localized())
+            Text(StringsKt.shared.announcement_content_empty.localized())
                 .font(.system(size: 16, weight: .semibold))
 
         }
