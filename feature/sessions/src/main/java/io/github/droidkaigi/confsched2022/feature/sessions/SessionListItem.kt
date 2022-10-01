@@ -65,7 +65,9 @@ fun SessionListItem(
     val secondLang = lang.secondLang()
 
     Row(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("session"),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1F)) {
