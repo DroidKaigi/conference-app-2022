@@ -314,8 +314,8 @@ private data class TimetableItemLayout(
         val xInside =
             left in screenLeft..screenRight || right in screenLeft..screenRight
         val yInside =
-            top in screenTop..screenBottom || bottom in screenTop..screenBottom
-                || (top <= screenTop && screenBottom <= bottom)
+            top in screenTop..screenBottom || bottom in screenTop..screenBottom ||
+                (top <= screenTop && screenBottom <= bottom)
         return xInside && yInside
     }
 }
