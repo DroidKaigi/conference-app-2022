@@ -14,6 +14,7 @@ import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 fun TimeLane(
     timetable: List<Pair<DurationTime, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
+    modifier: Modifier = Modifier,
     content: @Composable (DurationTime) -> Unit,
 ) {
     val visibleItemsInfo = remember {
@@ -28,7 +29,7 @@ fun TimeLane(
             currentDurationTime = durationTime
             val nextDurationTime = timetable.getOrNull(visibleItemInfo.index + 1)?.first
             Box(
-                modifier = Modifier.offset {
+                modifier = modifier.offset {
                     IntOffset(
                         x = 0,
                         y = if (visibleItemIndex == 0 &&
