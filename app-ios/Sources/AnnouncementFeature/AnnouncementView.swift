@@ -50,7 +50,7 @@ public struct AnnouncementView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 ZStack {
                     AssetColors.background.swiftUIColor
                     if !viewStore.isLoaded {

@@ -131,7 +131,7 @@ struct ListItemButtonStyle: ButtonStyle {
 #if DEBUG
 struct ContributorView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             ContributorView(
                 store: .init(
                     initialState: .init(

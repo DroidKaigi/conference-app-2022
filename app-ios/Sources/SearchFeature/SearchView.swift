@@ -117,7 +117,7 @@ public struct SearchView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 Group {
                     if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
                         EmptyResultView()
