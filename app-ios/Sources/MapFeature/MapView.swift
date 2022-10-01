@@ -9,20 +9,14 @@ public struct MapState: Equatable {
     public init() {}
 }
 
-public enum MapAction: Equatable {
-    case tapPin
-}
+public enum MapAction: Equatable {}
 
 public struct MapEnvironment {
     public init() {}
 }
 
-public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, action, _ in
-    switch action {
-    case .tapPin:
-        print("TODO: Pin is not implemented yet!")
-        return .none
-    }
+public let mapReducer = Reducer<MapState, MapAction, MapEnvironment> { _, _, _ in
+    return .none
 }
 
 public struct MapView: View {
@@ -33,7 +27,7 @@ public struct MapView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store) { _ in
             NavigationView {
                 ZStack {
                     AssetColors.background.swiftUIColor
