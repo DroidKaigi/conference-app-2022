@@ -16,6 +16,7 @@
         DroidKaigiはエンジニアが主役のAndroidカンファレンスです。\nAndroid技術情報の共有とコミュニケーションを目的に、2022年10月5日(水)〜7日(金)の3日間開催します。
     </string>
     <string name="about_access">会場アクセス</string>
+    <string name="about_access_detail">東京ドームシティ プリズムホール (Day 1, Day 2)\nベルサール飯田橋ファースト (Day 3)</string>
     <string name="about_staff">スタッフリスト</string>
     <string name="about_privacy">プライバシーポリシー</string>
     <string name="about_license">ライセンス</string>
