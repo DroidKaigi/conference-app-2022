@@ -130,8 +130,8 @@ fun SessionDetailTopAppBar(
         navigationIcon = {
             IconButton(onClick = onBackIconClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = "close"
+                    painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
+                    contentDescription = "back"
                 )
             }
         },
