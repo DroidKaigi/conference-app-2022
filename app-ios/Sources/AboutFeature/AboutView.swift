@@ -155,13 +155,21 @@ public struct AboutView: View {
                     ForEach(AboutNavigationItem.items, id: \.title) { item in
                         if let destination = item.destination {
                             NavigationLink(value: destination, label: {
-                                AboutNavigationItemView(image: item.image.swiftUIImage, title: item.title)
+                                AboutNavigationItemView(
+                                    image: item.image.swiftUIImage,
+                                    title: item.title,
+                                    subTitle: item.subTitle
+                                )
                             })
                         } else {
                             Button {
                                 viewStore.send(item.action)
                             } label: {
-                                AboutNavigationItemView(image: item.image.swiftUIImage, title: item.title)
+                                AboutNavigationItemView(
+                                    image: item.image.swiftUIImage,
+                                    title: item.title,
+                                    subTitle: item.subTitle
+                                )
                             }
                         }
                     }
