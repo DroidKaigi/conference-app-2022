@@ -256,9 +256,9 @@ fun About(
 private fun AuxiliaryInformationRow(
     imageVector: ImageVector,
     textRes: StringResource,
-    detailTextRes: StringResource? = null,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    detailTextRes: StringResource? = null,
 ) {
     Row(
         modifier = modifier
