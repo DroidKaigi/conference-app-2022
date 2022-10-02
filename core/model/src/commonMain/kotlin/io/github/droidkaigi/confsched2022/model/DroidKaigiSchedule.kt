@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
+@Immutable
 public data class DroidKaigiSchedule(
     val dayToTimetable: PersistentMap<DroidKaigi2022Day, Timetable>,
     private val timetable: Timetable
@@ -42,4 +43,8 @@ public data class DroidKaigiSchedule(
 
 public fun DroidKaigiSchedule.Companion.fake(): DroidKaigiSchedule {
     return of(Timetable.fake())
+}
+
+public fun DroidKaigiSchedule.Companion.empty(): DroidKaigiSchedule {
+    return of(Timetable())
 }

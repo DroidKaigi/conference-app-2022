@@ -23,7 +23,7 @@
     <string name="about_app_version">App Version</string>
 
     <!-- Announcement -->
-    <string name="announcement_top_app_bar_title">News</string>
+    <string name="announcement_top_app_bar_title">Announcement</string>
     <string name="announcement_content_header_title_today">Today</string>
     <string name="announcement_content_header_title_yesterday">Yesterday</string>
     <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>
@@ -48,9 +48,13 @@
     <string name="session_slide">SLIDE</string>
     <string name="session_language_interpretation">(interpretation)</string>
     <string name="session_cancel">このセッションは事情により中止となりました</string>
+    <string name="session_event_add_confirm">Add an event</string>
+    <string name="session_event_add_confirm_ok">OK</string>
+    <string name="session_event_add_confirm_cancel">Cancel</string>
 
     <!-- Setting -->
     <string name="setting_title">Setting</string>
+    <string name="setting_item_dynamic_color">Dynamic Color</string>
     <string name="setting_item_dark_mode">Dark Mode</string>
     <string name="setting_item_language">Language</string>
     <string name="setting_language_system">System Default</string>

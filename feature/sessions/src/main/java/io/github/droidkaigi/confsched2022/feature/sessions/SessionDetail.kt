@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,6 +25,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,6 +48,9 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -59,9 +64,12 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTag
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 import io.github.droidkaigi.confsched2022.designsystem.theme.TimetableItemColor
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
+import io.github.droidkaigi.confsched2022.model.KaigiPlace.Prism
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableAsset
+import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
@@ -70,8 +78,6 @@ import io.github.droidkaigi.confsched2022.model.TimetableSpeaker
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.model.secondLang
 import io.github.droidkaigi.confsched2022.strings.Strings
-import io.github.droidkaigi.confsched2022.ui.LocalCalendarRegistration
-import io.github.droidkaigi.confsched2022.ui.LocalShareManager
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
@@ -84,6 +90,10 @@ import java.util.Locale
 @Composable
 fun SessionDetailScreenRoot(
     timetableItemId: TimetableItemId,
+    onLinkClick: (url: String) -> Unit,
+    onCategoryTagClick: (TimetableCategory) -> Unit,
+    onShareClick: (TimetableItem) -> Unit,
+    onRegisterCalendarClick: (TimetableItem) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SessionDetailViewModel = hiltViewModel(),
     onBackIconClick: () -> Unit = {},
@@ -91,30 +101,20 @@ fun SessionDetailScreenRoot(
 ) {
     val uiModel by viewModel.uiModel
 
-    val shareManager = LocalShareManager.current
-    val calendarRegistration = LocalCalendarRegistration.current
-
     SessionDetailScreen(
         modifier = modifier,
         uiModel = uiModel,
+        onRetryButtonClick = { viewModel.onRetryButtonClick() },
+        onAppErrorNotified = { viewModel.onAppErrorNotified() },
+        onLinkClick = onLinkClick,
+        onCategoryTagClick = onCategoryTagClick,
         onBackIconClick = onBackIconClick,
         onFavoriteClick = { currentFavorite ->
             viewModel.onFavoriteToggle(timetableItemId, currentFavorite)
         },
-        onShareClick = {
-            shareManager.share(
-                "${it.title.currentLangTitle}\nhttps://droidkaigi.jp/2022/timetable/${it.id.value}"
-            )
-        },
+        onShareClick = onShareClick,
         onNavigateFloorMapClick = onNavigateFloorMapClick,
-        onRegisterCalendarClick = {
-            calendarRegistration.register(
-                startsAtMilliSeconds = it.startsAt.toEpochMilliseconds(),
-                endsAtMilliSeconds = it.endsAt.toEpochMilliseconds(),
-                title = it.title.currentLangTitle,
-                location = it.room.name.currentLangTitle,
-            )
-        },
+        onRegisterCalendarClick = onRegisterCalendarClick,
     )
 }
 
@@ -147,17 +147,22 @@ fun SessionDetailTopAppBar(
 @Composable
 fun SessionDetailScreen(
     uiModel: SessionDetailUiModel,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
+    onLinkClick: (url: String) -> Unit = { _ -> },
+    onCategoryTagClick: (category: TimetableCategory) -> Unit = { _ -> },
     onBackIconClick: () -> Unit = {},
     onFavoriteClick: (Boolean) -> Unit = {},
     onShareClick: (TimetableItem) -> Unit = {},
     onNavigateFloorMapClick: () -> Unit = {},
     onRegisterCalendarClick: (TimetableItem) -> Unit = {},
 ) {
-
     val uiState = uiModel.state
+    val snackbarHostState = remember { SnackbarHostState() }
 
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         topBar = {
             SessionDetailTopAppBar(
                 onBackIconClick = onBackIconClick,
@@ -178,9 +183,17 @@ fun SessionDetailScreen(
             }
         },
     ) { innerPadding ->
+        AppErrorSnackbarEffect(
+            appError = uiModel.appError,
+            snackBarHostState = snackbarHostState,
+            onAppErrorNotified = onAppErrorNotified,
+            onRetryButtonClick = onRetryButtonClick
+        )
         Box(modifier = Modifier.padding(innerPadding)) {
             when (uiState) {
-                is Error -> TODO()
+                is Error -> {
+                    // Do nothing
+                }
                 Loading ->
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -193,16 +206,22 @@ fun SessionDetailScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(horizontal = 16.dp)
                     ) {
-                        SessionDetailSessionInfo(item = item)
+                        SessionDetailSessionInfo(
+                            onCategoryTagClick = onCategoryTagClick,
+                            item = item,
+                        )
 
                         if (item is Session)
                             SessionDetailDescription(
-                                description = item.description
+                                description = item.description,
+                                onLinkClick = onLinkClick,
                             )
 
-                        SessionDetailTargetAudience(
-                            targetAudience = item.targetAudience
-                        )
+                        if (item.targetAudience != "TBW") {
+                            SessionDetailTargetAudience(
+                                targetAudience = item.targetAudience
+                            )
+                        }
 
                         if (item is Session)
                             SessionDetailSpeakers(
@@ -241,11 +260,13 @@ fun SessionDetailBottomAppBar(
                         contentDescription = "share",
                     )
                 }
-                IconButton(onClick = onNavigateFloorMapClick) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_map),
-                        contentDescription = "go to floor map",
-                    )
+                if (item.day?.kaigiPlace == Prism) {
+                    IconButton(onClick = onNavigateFloorMapClick) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_map),
+                            contentDescription = "go to floor map",
+                        )
+                    }
                 }
                 IconButton(onClick = { onRegisterCalendarClick(item) }) {
                     Icon(
@@ -282,6 +303,7 @@ fun SessionDetailBottomAppBar(
 @Composable
 fun SessionTagsLine(
     item: TimetableItem,
+    onCategoryTagClick: (category: TimetableCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sessionMinutes =
@@ -324,6 +346,7 @@ fun SessionTagsLine(
             Text(sessionMinutes + "min")
         }
         KaigiTag(
+            modifier = Modifier.clickable { onCategoryTagClick(item.category) },
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
             Text(item.category.title.currentLangTitle)
@@ -405,6 +428,7 @@ fun SessionScheduleInfo(
 @Composable
 fun SessionDetailSessionInfo(
     item: TimetableItem,
+    onCategoryTagClick: (category: TimetableCategory) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -416,7 +440,10 @@ fun SessionDetailSessionInfo(
 
         Spacer(modifier = Modifier.padding(24.dp))
 
-        SessionTagsLine(item = item)
+        SessionTagsLine(
+            onCategoryTagClick = onCategoryTagClick,
+            item = item,
+        )
 
         Spacer(modifier = Modifier.padding(24.dp))
 
@@ -437,24 +464,76 @@ fun SessionDetailSessionInfo(
 @Composable
 fun SessionDetailDescription(
     description: String,
+    onLinkClick: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isReadMore by remember { mutableStateOf(false) }
     var isOverFlow by remember { mutableStateOf(false) }
+
+    val urlRegex = "(https)(://[\\w/:%#$&?()~.=+\\-]+)".toRegex()
+    val findUrlResults = remember(description) {
+        urlRegex.findAll(description)
+    }
+    val annotatedString = buildAnnotatedString {
+        pushStyle(
+            style = SpanStyle(
+                color = Color(0xFFE2E3DE)
+            )
+        )
+        append(description)
+        pop()
+
+        var lastIndex = 0
+        findUrlResults.forEach { matchResult ->
+            val startIndex = description.indexOf(
+                string = matchResult.value,
+                startIndex = lastIndex,
+            )
+            val endIndex = startIndex + matchResult.value.length
+            addStyle(
+                style = SpanStyle(
+                    color = Color.Cyan,
+                    textDecoration = TextDecoration.Underline
+                ),
+                start = startIndex,
+                end = endIndex,
+            )
+            addStringAnnotation(
+                tag = matchResult.value,
+                annotation = matchResult.value,
+                start = startIndex,
+                end = endIndex,
+            )
+
+            lastIndex = endIndex
+        }
+    }
+
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.padding(16.dp))
-        Text(
+        ClickableText(
             modifier = modifier
                 .animateContentSize()
                 .clickable {
                     isReadMore = true
                 },
-            text = description,
+            text = annotatedString,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = if (isReadMore) Int.MAX_VALUE else 5,
             overflow = if (isReadMore) TextOverflow.Visible else TextOverflow.Ellipsis,
             onTextLayout = { result ->
                 isOverFlow = result.isLineEllipsized(result.lineCount - 1)
+            },
+            onClick = { offset ->
+                findUrlResults.forEach { matchResult ->
+                    annotatedString.getStringAnnotations(
+                        tag = matchResult.value,
+                        start = offset,
+                        end = offset
+                    ).firstOrNull()?.let {
+                        onLinkClick(matchResult.value)
+                    }
+                }
             }
         )
         if (isOverFlow) {
@@ -635,8 +714,11 @@ fun PreviewSessionDetailScreen() {
     KaigiTheme {
         SessionDetailScreen(
             uiModel = SessionDetailUiModel(
-                Success(TimetableItemWithFavorite.fake())
-            )
+                state = Success(TimetableItemWithFavorite.fake()),
+                appError = null,
+            ),
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
         )
     }
 }

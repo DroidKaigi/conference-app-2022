@@ -5,4 +5,8 @@ public extension TimetableItem {
 
         return endMinute - startMinute
     }
+
+    var shareText: String {
+        return "\(self.title.currentLangTitle)\nhttps://droidkaigi.jp/2022/timetable/\(self.id.value)"
+    }
 }

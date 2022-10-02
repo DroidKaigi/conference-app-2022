@@ -60,7 +60,7 @@ struct SessionTagsView_Previews: PreviewProvider {
 extension TimetableItem {
     var tags: [Tag] {
         return [
-            Tag(text: self.room.name.currentLangTitle, color: AssetColors.pink.swiftUIColor),
+            Tag(text: self.room.name.currentLangTitle, color: room.roomColor),
             Tag(text: "\(self.durationInMinutes)min", color: AssetColors.secondaryContainer.swiftUIColor),
             Tag(text: self.category.title.currentLangTitle, color: AssetColors.secondaryContainer.swiftUIColor)
         ] + self.levels.map {

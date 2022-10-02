@@ -1,6 +1,7 @@
 import appioscombined
 import CommonComponents
 import ComposableArchitecture
+import Kingfisher
 import Model
 import SafariView
 import SwiftUI
@@ -46,11 +47,14 @@ public let sponsorReducer = Reducer<SponsorState, SponsorAction, SponsorEnvironm
     case .refresh:
         state.isLoading = true
         return .run { @MainActor subscriber in
+            try await environment.sponsorsRepository.refresh()
             for try await result: [Sponsor] in environment.sponsorsRepository.sponsors().stream() {
                 await subscriber.send(
                     .refreshResponse(
                         TaskResult {
-                            result
+                            let prefetcher = ImagePrefetcher(urls: result.compactMap { URL(string: $0.logo) }, options: nil)
+                            prefetcher.start()
+                            return result
                         }
                     )
                 )
@@ -85,9 +89,7 @@ public struct SponsorView: View {
         WithViewStore(store) { viewStore in
             ZStack(alignment: .center) {
                 if viewStore.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: AssetColors.onBackground.swiftUIColor))
-                        .scaleEffect(x: 2, y: 2)
+                    LoadingView()
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 24) {
@@ -201,7 +203,7 @@ struct SponsorItemView: View {
 #if DEBUG
 struct SponsorView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             SponsorView(
                 store: .init(
                     initialState: .init(
@@ -219,7 +221,7 @@ struct SponsorView_Previews: PreviewProvider {
 }
 struct SponsorView_Loading_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             SponsorView(
                 store: .init(
                     initialState: .init(

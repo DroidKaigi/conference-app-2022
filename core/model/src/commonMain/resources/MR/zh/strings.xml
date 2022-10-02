@@ -49,9 +49,14 @@
     <!-- TODO:Translation into Chinese -->
     <string name="session_language_interpretation">(interpretation)</string>
     <string name="session_cancel">このセッションは事情により中止となりました</string>
+    <string name="session_event_add_confirm">Add an event</string>
+    <string name="session_event_add_confirm_ok">OK</string>
+    <string name="session_event_add_confirm_cancel">Cancel</string>
 
     <!-- Setting -->
     <string name="setting_title">设置</string>
+    <!-- TODO:Translation into Chinese -->
+    <string name="setting_item_dynamic_color">Dynamic Color</string>
     <string name="setting_item_dark_mode">深色模式</string>
     <string name="setting_item_language">语言设置</string>
     <string name="setting_language_system">系统默认设置</string>

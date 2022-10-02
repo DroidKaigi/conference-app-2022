@@ -9,7 +9,7 @@ public struct MapState: Equatable {
     public init() {}
 }
 
-public enum MapAction {
+public enum MapAction: Equatable {
     case tapPin
 }
 
@@ -34,15 +34,13 @@ public struct MapView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 ZStack {
                     AssetColors.background.swiftUIColor
                     Image(asset: Assets.floorMap)
                         .resizable()
                         .scaledToFit()
                         .padding(14)
-                        .navigationTitle(StringsKt.shared.title_map.localized())
-                        .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .bottomBar) {
                                 Button(
@@ -55,8 +53,9 @@ public struct MapView: View {
                             }
                         }
                 }
+                .navigationTitle(StringsKt.shared.title_map.localized())
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationViewStyle(.stack)
         }
     }
 }

@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.kspGradlePlugin)
     implementation(libs.paparazziGradlePlugin)
     implementation(libs.playOssLicensesPlugin)
+    implementation(libs.crashlyticsPlugin)
 }
 
 gradlePlugin {
@@ -62,6 +63,10 @@ gradlePlugin {
         register("androidOssLicense") {
             id = "droidkaigi.primitive.android.ossLicense"
             implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidOssLicensePlugin"
+        }
+        register("crashlytics") {
+            id = "droidkaigi.primitive.android.crashlytics"
+            implementationClass = "io.github.droidkaigi.confsched2022.primitive.AndroidCrashlyticsPlugin"
         }
         register("dependencyGraph") {
             id = "droidkaigi.primitive.dependencygraph"

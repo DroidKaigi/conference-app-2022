@@ -58,3 +58,9 @@ kotlin-js-store/
 
 # Moko resource
 **/moko-resources-generated.js
+
+# Android Key
+app-android/src/prod/google-services.json
+keystore.properties
+prod.keystore
+

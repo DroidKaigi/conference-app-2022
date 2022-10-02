@@ -9,24 +9,22 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
@@ -34,11 +32,15 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +53,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,16 +62,21 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.designsystem.theme.Typography
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.model.empty
 import io.github.droidkaigi.confsched2022.model.fake
 import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
@@ -80,6 +89,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
+    initialCategoryId: String? = null,
     viewModel: SearchViewModel = hiltViewModel(),
     onBackIconClick: () -> Unit = {},
     onItemClick: (TimetableItemId) -> Unit,
@@ -89,6 +99,12 @@ fun SearchRoot(
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(initialCategoryId) {
+        if (initialCategoryId != null) {
+            viewModel.onCategorySelected(initialCategoryId)
+        }
+    }
 
     LaunchedEffect(state.filterSheetState) {
         when (state.filterSheetState) {
@@ -112,7 +128,7 @@ fun SearchRoot(
             when (val sheetState = state.filterSheetState) {
                 is SearchFilterSheetState.ShowDayFilter -> {
                     FilterDaySheet(
-                        selectedDay = state.filter.selectedDay,
+                        selectedDays = state.filter.selectedDays,
                         kaigiDays = sheetState.days,
                         onDaySelected = viewModel::onDaySelected,
                         onDismiss = viewModel::onFilterSheetDismissed
@@ -160,6 +176,8 @@ fun SearchRoot(
                 viewModel.onFilterFavoritesToggle()
             },
             onBackIconClick = onBackIconClick,
+            onRetryButtonClick = { viewModel.onRetryButtonClick() },
+            onAppErrorNotified = { viewModel.onAppErrorNotified() },
             onSearchTextAreaClicked = {
                 viewModel.onSearchTextAreaClicked()
             }
@@ -177,28 +195,41 @@ private fun SearchScreen(
     onFavoritesToggleClicked: () -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     onBackIconClick: () -> Unit,
+    onRetryButtonClick: () -> Unit,
+    onAppErrorNotified: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchWord = rememberSaveable { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     KaigiScaffold(
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
-        topBar = {},
-        content = {
-            Column(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+        topBar = {
+            if (uiModel.state is Success) {
+                SearchTextFieldTopAppBar(
+                    searchWord = searchWord.value,
+                    onSearchWordChange = { searchWord.value = it },
+                    onSearchTextAreaClicked = onSearchTextAreaClicked,
+                    onBackClick = onBackIconClick
                 )
+            }
+        },
+        content = {
+            AppErrorSnackbarEffect(
+                appError = uiModel.appError,
+                snackBarHostState = snackbarHostState,
+                onAppErrorNotified = onAppErrorNotified,
+                onRetryButtonClick = onRetryButtonClick
+            )
+            Column(
+                modifier = Modifier.padding(paddingValues = it)
             ) {
                 when (uiModel.state) {
-                    is Error -> TODO()
+                    is Error -> {
+                        // Do nothing
+                    }
                     is Success -> {
-                        SearchTextField(
-                            searchWord = searchWord.value,
-                            onSearchWordChange = { searchWord.value = it },
-                            onSearchTextAreaClicked = onSearchTextAreaClicked,
-                        ) {
-                            onBackIconClick()
-                        }
                         SearchFilter(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -209,12 +240,25 @@ private fun SearchScreen(
                             onCategoryClicked = onCategoriesFilteredClicked,
                             onFavoritesClicked = onFavoritesToggleClicked
                         )
-                        SearchedItemListField(
-                            schedule = uiModel.state.value,
-                            searchWord = searchWord.value,
-                            onItemClick = onItemClick,
-                            onBookMarkClick = onBookMarkClick,
-                        )
+                        val foundSomeResults =
+                            uiModel.state.value.dayToTimetable.any { (_, timeTable) ->
+                                timeTable
+                                    .filtered(
+                                        Filters(filterSession = true, searchWord = searchWord.value)
+                                    )
+                                    .isEmpty()
+                                    .not()
+                            }
+                        if (foundSomeResults) {
+                            SearchedItemListField(
+                                schedule = uiModel.state.value,
+                                searchWord = searchWord.value,
+                                onItemClick = onItemClick,
+                                onBookMarkClick = onBookMarkClick,
+                            )
+                        } else {
+                            SearchEmptyScreen()
+                        }
                     }
                     Loading -> {
                         FullScreenLoading()
@@ -225,6 +269,46 @@ private fun SearchScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchTextFieldTopAppBar(
+    searchWord: String,
+    onSearchWordChange: (String) -> Unit,
+    onSearchTextAreaClicked: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+) {
+    Column {
+        TopAppBar(
+            modifier = modifier,
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
+                        contentDescription = "back"
+                    )
+                }
+            },
+            title = {
+                SearchTextField(
+                    modifier = Modifier
+                        .background(color = backgroundColor),
+                    searchWord = searchWord,
+                    onSearchWordChange = onSearchWordChange,
+                    onSearchTextAreaClicked = onSearchTextAreaClicked
+                )
+            },
+            colors = TopAppBarDefaults
+                .smallTopAppBarColors(containerColor = backgroundColor)
+        )
+        Divider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchTextField(
@@ -232,7 +316,7 @@ private fun SearchTextField(
     onSearchWordChange: (String) -> Unit,
     onSearchTextAreaClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
+    textStyle: TextStyle = Typography.titleMedium,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -248,38 +332,48 @@ private fun SearchTextField(
             }
         }
     }
-    TextField(
+
+    BasicTextField(
         value = searchWord,
         modifier = modifier
             .fillMaxWidth(1.0f)
             .height(64.dp)
             .background(color = MaterialTheme.colorScheme.surfaceVariant)
             .focusRequester(focusRequester),
-        placeholder = { Text(stringResource(Strings.search_placeholder)) },
+        onValueChange = onSearchWordChange,
+        textStyle = textStyle.copy(color = MaterialTheme.colorScheme.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         singleLine = true,
         keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
-                contentDescription = "arrow_back_icon",
-                modifier = modifier
-                    .clickable { onBackClick() }
-            )
-        },
-        trailingIcon = {
-            IconButton(
-                onClick = { onSearchWordChange("") }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "search_word_delete_icon",
-                )
-            }
-        },
-        onValueChange = {
-            onSearchWordChange(it)
-        },
         interactionSource = interactionSource,
+        decorationBox = @Composable { innerTextField ->
+            TextFieldDefaults.TextFieldDecorationBox(
+                value = searchWord,
+                visualTransformation = VisualTransformation.None,
+                innerTextField = innerTextField,
+                placeholder = { Text(stringResource(Strings.search_placeholder)) },
+                trailingIcon = {
+                    IconButton(
+                        onClick = { onSearchWordChange("") }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "search_word_delete_icon",
+                        )
+                    }
+                },
+                singleLine = true,
+                enabled = true,
+                colors = TextFieldDefaults.textFieldColors(),
+                interactionSource = remember { MutableInteractionSource() },
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    bottom = 16.dp,
+                    start = 0.dp,
+                    end = 16.dp
+                )
+            )
+        }
     )
 }
 
@@ -392,8 +486,9 @@ fun SearchFilter(
         FilterButton(
             isSelected = model.isDaySelected,
             isDropDown = true,
-            text = model.selectedDay?.name
-                ?: stringResource(id = Strings.search_filter_select_day.resourceId),
+            text = model.selectedDaysValues.ifEmpty {
+                stringResource(id = Strings.search_filter_select_day.resourceId)
+            },
             onClicked = onDayClicked
         )
 
@@ -440,6 +535,32 @@ fun FullScreenLoading(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun SearchEmptyScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier.wrapContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null,
+                modifier = Modifier.size(58.dp),
+                tint = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(Strings.search_empty_result.resourceId),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+    }
+}
+
 @Preview(showSystemUi = false)
 @Composable
 fun SearchScreenPreview() {
@@ -448,7 +569,32 @@ fun SearchScreenPreview() {
             uiModel = SearchUiModel(
                 filter = SearchFilterUiModel(),
                 filterSheetState = SearchFilterSheetState.Hide,
-                state = Success(DroidKaigiSchedule.fake())
+                state = Success(DroidKaigiSchedule.fake()),
+                appError = null,
+            ),
+            onItemClick = {},
+            onBookMarkClick = { _, _ -> },
+            onBackIconClick = {},
+            onFavoritesToggleClicked = {},
+            onDayFilterClicked = {},
+            onCategoriesFilteredClicked = {},
+            onRetryButtonClick = {},
+            onAppErrorNotified = {},
+            onSearchTextAreaClicked = {},
+        )
+    }
+}
+
+@Preview(showSystemUi = false)
+@Composable
+fun SearchEmptyScreenPreview() {
+    KaigiTheme {
+        SearchScreen(
+            uiModel = SearchUiModel(
+                filter = SearchFilterUiModel(),
+                filterSheetState = SearchFilterSheetState.Hide,
+                state = Success(DroidKaigiSchedule.empty()),
+                appError = null,
             ),
             onItemClick = {},
             onBookMarkClick = { _, _ -> },
@@ -457,6 +603,8 @@ fun SearchScreenPreview() {
             onDayFilterClicked = {},
             onCategoriesFilteredClicked = {},
             onSearchTextAreaClicked = {},
+            onAppErrorNotified = {},
+            onRetryButtonClick = {}
         )
     }
 }

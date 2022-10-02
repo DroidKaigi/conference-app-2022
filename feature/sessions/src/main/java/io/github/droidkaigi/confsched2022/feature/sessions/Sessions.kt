@@ -35,6 +35,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -46,6 +47,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -60,6 +62,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.view.doOnPreDraw
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -68,9 +72,10 @@ import dev.icerock.moko.resources.compose.stringResource
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
-import io.github.droidkaigi.confsched2022.feature.announcement.AppErrorSnackbarEffect
+import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
@@ -97,6 +102,21 @@ fun SessionsScreenRoot(
     onTimetableClick: (TimetableItemId) -> Unit = {},
 ) {
     val state: SessionsUiModel by viewModel.uiModel
+
+    val lifecycleObserver = remember(viewModel) {
+        LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onLifecycleResume()
+            }
+        }
+    }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        lifecycle.addObserver(lifecycleObserver)
+        onDispose {
+            lifecycle.removeObserver(lifecycleObserver)
+        }
+    }
 
     Sessions(
         uiModel = state,
@@ -187,6 +207,7 @@ fun Sessions(
                             pagerState = pagerState,
                             schedule = schedule,
                             timetableListStates = pagerContentsScrollState.timetableStates,
+                            timeLine = uiModel.timeLine,
                             days = days,
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
@@ -222,6 +243,7 @@ fun Sessions(
 fun Timetable(
     pagerState: PagerState,
     timetableListStates: List<TimetableState>,
+    timeLine: TimeLine?,
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
@@ -251,6 +273,8 @@ fun Timetable(
                     rememberTransformableStateForScreenScale(timetableState.screenScaleState),
                 ),
                 timetableState = timetableState,
+                timeLine = timeLine,
+                day = day,
                 coroutineScope = coroutineScope,
             ) { hour ->
                 HoursItem(hour = hour)
@@ -268,7 +292,8 @@ fun Timetable(
                 Timetable(
                     timetable = timetable,
                     timetableState = timetableState,
-                    coroutineScope = coroutineScope,
+                    timeLine = timeLine,
+                    day = day,
                     contentPadding = PaddingValues(
                         bottom = contentPadding.calculateBottomPadding(),
                     )
@@ -526,6 +551,7 @@ fun SessionsTimetablePreview() {
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = true,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
             showNavigationIcon = true,
@@ -549,6 +575,7 @@ fun SessionsSessionListPreview() {
                 state = Success(DroidKaigiSchedule.fake()),
                 isFilterOn = false,
                 isTimetable = false,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
             showNavigationIcon = true,
@@ -572,6 +599,7 @@ fun SessionsLoadingPreview() {
                 state = Loading,
                 isFilterOn = false,
                 isTimetable = true,
+                timeLine = TimeLine.now(),
                 appError = null
             ),
             showNavigationIcon = true,

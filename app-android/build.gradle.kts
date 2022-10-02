@@ -1,4 +1,6 @@
 import com.android.build.api.variant.ResValue
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("droidkaigi.primitive.androidapplication")
@@ -8,10 +10,14 @@ plugins {
     id("droidkaigi.primitive.android.firebase")
     id("droidkaigi.primitive.spotless")
     id("droidkaigi.primitive.android.ossLicense")
+    id("droidkaigi.primitive.android.crashlytics")
 }
 
 android.namespace = "io.github.droidkaigi.confsched2022"
 
+val keystorePropertiesFile = file("keystore.properties")
+val keystoreExits = keystorePropertiesFile.exists()
+// logger.lifecycle("keystoreExits:$keystoreExits")
 android {
     flavorDimensions += "network"
     signingConfigs {
@@ -20,6 +26,17 @@ android {
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
+        }
+
+        if (keystoreExits) {
+            val keystoreProperties = Properties()
+            keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+            create("prod") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
     }
     productFlavors {
@@ -31,6 +48,11 @@ android {
         }
         create("prod") {
             dimension = "network"
+            signingConfig = if (keystoreExits) {
+                signingConfigs.getByName("prod")
+            } else {
+                signingConfigs.getByName("dev")
+            }
         }
     }
     buildTypes {

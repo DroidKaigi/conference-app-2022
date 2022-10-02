@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -23,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
+import io.github.droidkaigi.confsched2022.model.TimeLine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -45,7 +48,9 @@ fun HoursItem(
 @Composable
 fun Hours(
     timetableState: TimetableState,
+    timeLine: TimeLine?,
     coroutineScope: CoroutineScope,
+    day: DroidKaigi2022Day,
     modifier: Modifier = Modifier,
     content: @Composable (String) -> Unit,
 ) {
@@ -62,10 +67,12 @@ fun Hours(
             verticalScale = verticalScale,
         )
     }
-    val hoursScreen = remember(hoursLayout, density) {
+    val hoursScreen = remember(hoursLayout, timeLine, density) {
         HoursScreen(
             hoursLayout,
             scrollState,
+            timeLine,
+            day,
             density
         )
     }
@@ -74,6 +81,9 @@ fun Hours(
     val linePxSize = with(timetableState.density) { lineStrokeSize.toPx() }
     val lineOffset = with(density) { 67.dp.roundToPx() }
     val lineEnd = with(density) { hoursWidth.roundToPx() }
+    val currentTimeLineColor = MaterialTheme.colorScheme.primary
+    val currentTimeCircleRadius =
+        with(timetableState.density) { TimetableSizes.currentTimeCircleRadius.toPx() }
     LazyLayout(
         modifier = modifier
             .width(hoursWidth)
@@ -85,6 +95,16 @@ fun Hours(
                         Offset(lineOffset.toFloat(), it),
                         Offset(lineEnd.toFloat(), it),
                         linePxSize
+                    )
+                }
+            }
+            .drawWithContent {
+                drawContent()
+                hoursScreen.timeLinePositionY.value?.let {
+                    drawCircle(
+                        currentTimeLineColor,
+                        currentTimeCircleRadius,
+                        Offset(lineEnd.toFloat(), it)
                     )
                 }
             }
@@ -199,6 +219,8 @@ private data class HoursItemLayout(
 private class HoursScreen(
     val hoursLayout: HoursLayout,
     val scrollState: ScreenScrollState,
+    timeLine: TimeLine?,
+    day: DroidKaigi2022Day,
     density: Density,
 ) {
     var width = 0
@@ -218,6 +240,12 @@ private class HoursScreen(
     val timeHorizontalLines = derivedStateOf {
         (0..10).map {
             scrollState.scrollY + hoursLayout.minutePx * 60 * it + offset
+        }
+    }
+    val timeLinePositionY = derivedStateOf {
+        val duration = timeLine?.durationFromScheduleStart(day)
+        duration?.let {
+            scrollState.scrollY + it.inWholeMinutes * hoursLayout.minutePx + offset
         }
     }
 

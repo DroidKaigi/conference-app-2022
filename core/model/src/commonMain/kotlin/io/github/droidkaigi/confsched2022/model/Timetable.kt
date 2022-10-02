@@ -18,6 +18,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 @Serializable
+@Immutable
 public data class Timetable(
     val timetableItems: TimetableItemList = TimetableItemList(),
     val favorites: PersistentSet<TimetableItemId> = persistentSetOf(),
@@ -42,9 +43,9 @@ public data class Timetable(
 
     public fun filtered(filters: Filters): Timetable {
         var timetableItems = timetableItems.toList()
-        if (filters.day != null) {
+        if (filters.days.isNotEmpty()) {
             timetableItems = timetableItems.filter { timetableItem ->
-                timetableItem.day == filters.day
+                filters.days.contains(timetableItem.day)
             }
         }
         if (filters.categories.isNotEmpty()) {
@@ -62,7 +63,10 @@ public data class Timetable(
         }
         if (filters.searchWord.isNotBlank()) {
             timetableItems = timetableItems.filter { timetableItem ->
-                timetableItem.title.currentLangTitle.contains(filters.searchWord)
+                timetableItem.title.currentLangTitle.contains(
+                    filters.searchWord,
+                    ignoreCase = true
+                )
             }
         }
         return copy(timetableItems = TimetableItemList(timetableItems.toPersistentList()))

@@ -220,7 +220,7 @@ private fun HighlightedText(
         buildAnnotatedString {
             append(text)
             if (keyword.isNotEmpty()) {
-                var index = text.indexOf(keyword)
+                var index = text.lowercase().indexOf(keyword.lowercase())
                 while (index >= 0) {
                     addStyle(highlightStyle, index, index + keyword.length)
                     index = text.indexOf(keyword, index + 1)

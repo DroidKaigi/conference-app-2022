@@ -24,7 +24,7 @@ androidxTestUiAutomator = "2.2.0"
 androidxMacroBenchmark = "1.2.0-alpha04"
 androidxProfileinstaller = "1.2.0-beta01"
 dagger = "2.44"
-spotless = "6.7.0"
+spotless = "6.11.0"
 ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
 ktor = "2.1.1"
@@ -35,7 +35,7 @@ okHttp = "4.10.0"
 sqldelight = "1.5.3"
 kotlinxSerialization = "1.4.0"
 multiplatformSettings = "0.9"
-robolectric = "4.8.2"
+robolectric = "4.9"
 kermit = "1.1.3"
 kotlinxDatetime = "0.4.0"
 accompanist = "0.26.2-beta"
@@ -55,7 +55,7 @@ testParameterInjector = "1.8"
 mokoResources = "0.20.1"
 detekt = '1.21.0'
 androidxSplashScreen = "1.0.0"
-twitterComposeRulesDetekt = "0.0.14"
+twitterComposeRulesDetekt = "0.0.17"
 playOssLicenses = "17.0.0"
 playOssLicensesPlugin = "0.10.5"
 
@@ -77,6 +77,7 @@ detektGradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugi
 kspGradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 paparazziGradlePlugin = { module = "app.cash.paparazzi:paparazzi-gradle-plugin", version.ref = "paparazzi" }
 playOssLicensesPlugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "playOssLicensesPlugin" }
+crashlyticsPlugin = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.9.2" }
 
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -94,6 +95,7 @@ daggerHiltAndroidCompiler = { module = "com.google.dagger:hilt-android-compiler"
 
 accompanistPager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
 accompanistFlowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
+accompanistPlaceholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 
 kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
@@ -140,6 +142,8 @@ coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" 
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
 mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
 playOssLicenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref="playOssLicenses" }
+crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.2.13" }
+crashlyticsAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.1.1" }
 
 twitterComposeRulesDetekt = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRulesDetekt" }
 

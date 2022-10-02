@@ -48,9 +48,13 @@
     <string name="session_slide">スライド</string>
     <string name="session_language_interpretation">(同時通訳)</string>
     <string name="session_cancel">このセッションは事情により中止となりました</string>
+    <string name="session_event_add_confirm">イベントを追加します。</string>
+    <string name="session_event_add_confirm_ok">OK</string>
+    <string name="session_event_add_confirm_cancel">キャンセル</string>
 
     <!-- Setting -->
     <string name="setting_title">設定</string>
+    <string name="setting_item_dynamic_color">ダイナミックカラー</string>
     <string name="setting_item_dark_mode">ダークモード</string>
     <string name="setting_item_language">言語設定</string>
     <string name="setting_language_system">システムのデフォルト</string>

@@ -1,5 +1,6 @@
 import CommonComponents
 import ComposableArchitecture
+import Event
 import Model
 import SessionFeature
 import SwiftUI
@@ -34,11 +35,14 @@ public enum SearchAction {
 
 public struct SearchEnvironment {
     public let sessionsRepository: SessionsRepository
+    public let eventKitClient: EventKitClientProtocol
 
     public init(
-        sessionsRepository: SessionsRepository
+        sessionsRepository: SessionsRepository,
+        eventKitClient: EventKitClientProtocol
     ) {
         self.sessionsRepository = sessionsRepository
+        self.eventKitClient = eventKitClient
     }
 }
 
@@ -47,7 +51,10 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
         state: \.sessionState,
         action: /SearchAction.session,
         environment: {
-            .init(sessionsRepository: $0.sessionsRepository)
+            .init(
+                sessionsRepository: $0.sessionsRepository,
+                eventKitClient: $0.eventKitClient
+            )
         }
     ),
     .init { state, action, environment in
@@ -82,8 +89,8 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
                 Timetable(
                     timetableItems: timetable.timetableItems.filter { item in
                         state.searchText.isEmpty
-                        || item.title.jaTitle.contains(state.searchText)
-                        || item.title.enTitle.contains(state.searchText)
+                        || item.title.jaTitle.localizedCaseInsensitiveContains(state.searchText)
+                        || item.title.enTitle.localizedCaseInsensitiveContains(state.searchText)
                     },
                     favorites: timetable.favorites
                 )
@@ -101,7 +108,6 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
     }
 )
 
-
 public struct SearchView: View {
     private let store: Store<SearchState, SearchAction>
 
@@ -111,7 +117,7 @@ public struct SearchView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 Group {
                     if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
                         EmptyResultView()
@@ -188,7 +194,8 @@ struct SearchView_Previews: PreviewProvider {
                 ),
                 reducer: .empty,
                 environment: SearchEnvironment(
-                    sessionsRepository: FakeSessionsRepository()
+                    sessionsRepository: FakeSessionsRepository(),
+                    eventKitClient: EventKitClientMock()
                 )
             )
         )

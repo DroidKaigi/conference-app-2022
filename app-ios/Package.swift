@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,7 +7,7 @@ var package = Package(
     name: "DroidKaigiPackage",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
     ],
     products: [
         .library(name: "AboutFeature", targets: ["AboutFeature"]),
@@ -32,7 +32,7 @@ var package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
-        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.5"),
+        .package(url: "https://github.com/cybozu/LicenseList", from: "0.1.6"),
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.3.2"),
     ],
     targets: [
@@ -69,6 +69,8 @@ var package = Package(
                 .target(name: "Auth"),
                 .target(name: "Container"),
                 .target(name: "ContributorFeature"),
+                .target(name: "Crashlytics"),
+                .target(name: "Event"),
                 .target(name: "MapFeature"),
                 .target(name: "SponsorFeature"),
                 .target(name: "Theme"),
@@ -76,6 +78,7 @@ var package = Package(
                 .target(name: "SessionFeature"),
                 .target(name: "StaffFeature"),
                 .target(name: "TimetableFeature"),
+                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
         ),
@@ -134,6 +137,15 @@ var package = Package(
             ]
         ),
         .target(
+            name: "Crashlytics",
+            dependencies: [
+                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
+            ]
+        ),
+        .target(
+            name: "Event"
+        ),
+        .target(
             name: "MapFeature",
             dependencies: [
                 .target(name: "Assets"),            
@@ -156,6 +168,7 @@ var package = Package(
             name: "SearchFeature",
             dependencies: [
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
                 .target(name: "SessionFeature"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ]
@@ -166,6 +179,8 @@ var package = Package(
                 .target(name: "appioscombined"),
                 .target(name: "Assets"),
                 .target(name: "CommonComponents"),
+                .target(name: "Event"),
+                .target(name: "MapFeature"),
                 .target(name: "Model"),
                 .target(name: "Theme"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -217,7 +232,7 @@ var package = Package(
         ),
         .binaryTarget(
             name: "appioscombined",
-            path: "../app-ios-combined/build/XCFrameworks/debug/appioscombined.xcframework"
+            path: "build/appioscombined.xcframework"
         ),
         .plugin(
             name: "SwiftLintPlugin",

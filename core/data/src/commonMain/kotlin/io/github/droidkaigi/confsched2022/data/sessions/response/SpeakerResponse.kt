@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 internal data class SpeakerResponse(
     val profilePicture: String? = null,
     val sessions: List<Int> = emptyList(),
-    val tagLine: String = "",
+    val tagLine: String? = null,
     val isTopSpeaker: Boolean?,
-    val bio: String = "",
+    val bio: String? = null,
     val fullName: String,
     val id: String,
 )
