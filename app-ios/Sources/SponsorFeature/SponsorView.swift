@@ -203,7 +203,7 @@ struct SponsorItemView: View {
 #if DEBUG
 struct SponsorView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             SponsorView(
                 store: .init(
                     initialState: .init(
@@ -221,7 +221,7 @@ struct SponsorView_Previews: PreviewProvider {
 }
 struct SponsorView_Loading_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             SponsorView(
                 store: .init(
                     initialState: .init(

@@ -89,6 +89,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun SearchRoot(
     modifier: Modifier = Modifier,
+    initialCategoryId: String? = null,
     viewModel: SearchViewModel = hiltViewModel(),
     onBackIconClick: () -> Unit = {},
     onItemClick: (TimetableItemId) -> Unit,
@@ -98,6 +99,12 @@ fun SearchRoot(
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(initialCategoryId) {
+        if (initialCategoryId != null) {
+            viewModel.onCategorySelected(initialCategoryId)
+        }
+    }
 
     LaunchedEffect(state.filterSheetState) {
         when (state.filterSheetState) {

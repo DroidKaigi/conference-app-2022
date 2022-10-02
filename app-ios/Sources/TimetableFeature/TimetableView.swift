@@ -105,7 +105,7 @@ public struct TimetableView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 ZStack(alignment: .top) {
 
                     if viewStore.state.showSheet {
@@ -192,7 +192,6 @@ public struct TimetableView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationViewStyle(.stack)
         }
     }
 }

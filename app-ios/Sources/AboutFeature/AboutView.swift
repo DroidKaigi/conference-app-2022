@@ -7,8 +7,7 @@ import StaffFeature
 import SwiftUI
 import Theme
 
-public enum AboutDestination {
-    case none
+public enum AboutDestination: Hashable {
     case staffs
     case license
     case contributor
@@ -19,23 +18,19 @@ public struct AboutState: Equatable {
     public var staffState: StaffState
     public var contributorState: ContributorState
     public var sponsorState: SponsorState
-    public var navigationDestination: AboutDestination
 
     public init(
         staffState: StaffState = .init(),
         contributorState: ContributorState = .init(),
-        sponsorState: SponsorState = .init(),
-        navigationDestination: AboutDestination = .none
+        sponsorState: SponsorState = .init()
     ) {
         self.staffState = staffState
         self.contributorState = contributorState
         self.sponsorState = sponsorState
-        self.navigationDestination = navigationDestination
     }
 }
 
 public enum AboutAction {
-    case backToTop
     case openAccess
     case openStaffs
     case openContributors
@@ -92,22 +87,15 @@ public let aboutReducer = Reducer<AboutState, AboutAction, AboutEnvironment>.com
             )
         }
     ),
-    .init { state, action, environment in
+    .init { _, action, environment in
         switch action {
-        case .backToTop:
-            state.navigationDestination = .none
-            return .none
         case .openLicense:
-            state.navigationDestination = .license
             return .none
         case .openStaffs:
-            state.navigationDestination = .staffs
             return .none
         case .openContributors:
-            state.navigationDestination = .contributor
             return .none
         case .openSponsors:
-            state.navigationDestination = .sponsor
             return .none
         case .openAccess:
             environment.openURL(URL(string: StaticURLs.access)!)
@@ -134,7 +122,7 @@ public struct AboutView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 ScrollView {
                     AboutViewAssets.logoCharacter.swiftUIImage
                     VStack(alignment: .leading, spacing: 24) {
@@ -165,17 +153,16 @@ public struct AboutView: View {
                         .padding(.horizontal, 45)
 
                     ForEach(AboutNavigationItem.items, id: \.title) { item in
-                        Button {
-                            viewStore.send(item.action)
-                        } label: {
-                            HStack(spacing: 12) {
-                                item.image.swiftUIImage
-                                    .renderingMode(.template)
-                                Text(item.title)
-                                Spacer()
+                        if let destination = item.destination {
+                            NavigationLink(value: destination, label: {
+                                AboutNavigationItemView(image: item.image.swiftUIImage, title: item.title)
+                            })
+                        } else {
+                            Button {
+                                viewStore.send(item.action)
+                            } label: {
+                                AboutNavigationItemView(image: item.image.swiftUIImage, title: item.title)
                             }
-                            .padding(16)
-                            .frame(minHeight: 56)
                         }
                     }
                     .padding(.horizontal, 29)
@@ -195,47 +182,31 @@ public struct AboutView: View {
 
                     Spacer()
                         .frame(height: 32)
-
-                    NavigationLink(isActive: Binding<Bool>(
-                        get: {
-                            viewStore.navigationDestination != .none
-                        }, set: { newValue in
-                            if !newValue {
-                                viewStore.send(.backToTop)
-                            }
-                        }), destination: {
-                            switch viewStore.state.navigationDestination {
-                            case .none:
-                                EmptyView()
-                            case .staffs:
-                                StaffView(
-                                    store: store.scope(state: \.staffState, action: AboutAction.staff)
-                                )
-                            case .license:
-                                AboutLicenseView()
-                            case .contributor:
-                                ContributorView(
-                                    store: store.scope(
-                                        state: \.contributorState,
-                                        action: AboutAction.contributor
-                                    )
-                                )
-                            case .sponsor:
-                                SponsorView(
-                                    store: store.scope(
-                                        state: \.sponsorState,
-                                        action: AboutAction.sponsor
-                                    )
-                                )
-                            }
-                        }, label: {
-                            EmptyView()
-                        }
-                    )
                 }
                 .foregroundColor(AssetColors.onBackground.swiftUIColor)
                 .background(AssetColors.background.swiftUIColor)
                 .navigationBarHidden(true)
+                .navigationDestination(for: AboutDestination.self) { destination in
+                    switch destination {
+                    case .staffs:
+                        StaffView(
+                            store: store.scope(state: \.staffState, action: AboutAction.staff)
+                        )
+                    case .license:
+                        AboutLicenseView()
+                    case .contributor:
+                        ContributorView(
+                            store: store.scope(state: \.contributorState, action: AboutAction.contributor)
+                        )
+                    case .sponsor:
+                        SponsorView(
+                            store: store.scope(
+                                state: \.sponsorState,
+                                action: AboutAction.sponsor
+                            )
+                        )
+                    }
+                }
             }
         }
     }

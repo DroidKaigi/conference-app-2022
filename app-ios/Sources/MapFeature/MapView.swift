@@ -28,18 +28,17 @@ public struct MapView: View {
 
     public var body: some View {
         WithViewStore(store) { _ in
-            NavigationView {
+            NavigationStack {
                 ZStack {
                     AssetColors.background.swiftUIColor
                     Image(asset: Assets.floorMap)
                         .resizable()
                         .scaledToFit()
                         .padding(14)
-                        .navigationTitle(StringsKt.shared.title_map.localized())
-                        .navigationBarTitleDisplayMode(.inline)
                 }
+                .navigationTitle(StringsKt.shared.title_map.localized())
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationViewStyle(.stack)
         }
     }
 }

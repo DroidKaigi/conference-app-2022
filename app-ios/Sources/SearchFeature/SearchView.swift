@@ -89,8 +89,8 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
                 Timetable(
                     timetableItems: timetable.timetableItems.filter { item in
                         state.searchText.isEmpty
-                        || item.title.jaTitle.contains(state.searchText)
-                        || item.title.enTitle.contains(state.searchText)
+                        || item.title.jaTitle.localizedCaseInsensitiveContains(state.searchText)
+                        || item.title.enTitle.localizedCaseInsensitiveContains(state.searchText)
                     },
                     favorites: timetable.favorites
                 )
@@ -117,7 +117,7 @@ public struct SearchView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
+            NavigationStack {
                 Group {
                     if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
                         EmptyResultView()
