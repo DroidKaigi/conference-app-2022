@@ -25,6 +25,7 @@ androidComponents {
 dependencies {
 
     implementation(projects.core.ui)
+    implementation(projects.feature.about)
     implementation(projects.feature.contributors)
     implementation(projects.feature.sessions)
 
