@@ -98,11 +98,17 @@ class SessionAlarm @Inject constructor(private val app: Application) {
             text
         )
 
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
         return PendingIntent.getBroadcast(
             app,
             timetableItem.id.hashCode(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            flags,
         )
     }
 

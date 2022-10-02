@@ -101,6 +101,7 @@ fun KaigiApp(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
+    sessionIdFromNotification: String? = null,
 ) {
     val appUiModel: AppUiModel by kaigiAppViewModel.uiModel
 
@@ -173,6 +174,10 @@ fun KaigiApp(
                     onItemClick = kaigiExternalNavigationController::navigate
                 )
             }
+        }
+
+        sessionIdFromNotification?.let {
+            kaigiAppScaffoldState.onTimeTableClick(TimetableItemId(it))
         }
     }
 }
