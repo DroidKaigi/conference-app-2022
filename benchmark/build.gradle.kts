@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("com.android.test")
     id("org.jetbrains.kotlin.android")
@@ -23,6 +25,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         missingDimensionStrategy("network", "dev")
+        testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
     }
 
     buildTypes {
@@ -32,7 +35,17 @@ android {
             matchingFallbacks += listOf("release")
         }
     }
-
+    testOptions {
+        managedDevices {
+            devices {
+                create ("pixel2Api31", ManagedVirtualDevice::class) {
+                    device = "Pixel 2"
+                    apiLevel = 31
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
     targetProjectPath = ":app-android"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
@@ -42,6 +55,7 @@ dependencies {
     implementation(libs.androidxTestEspressoEspressoCore)
     implementation(libs.androidxTestUiAutomator)
     implementation(libs.androidxMacroBenchmark)
+    implementation(libs.androidxProfileinstaller)
 }
 
 androidComponents {
