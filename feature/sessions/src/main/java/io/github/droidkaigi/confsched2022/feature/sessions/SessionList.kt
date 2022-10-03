@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.strings.Strings
@@ -32,7 +33,7 @@ fun SessionList(
     timetable: List<Pair<DurationTime, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (Pair<DurationTime?, TimetableItemWithFavorite>) -> Unit,
 ) {
@@ -90,7 +91,7 @@ fun SessionList(
                                         label = actionLabel,
                                         action = {
                                             onFavoriteClick(
-                                                item.second.timetableItem.id,
+                                                item.second.timetableItem,
                                                 item.second.isFavorited
                                             )
                                             true

@@ -82,11 +82,11 @@ import io.github.droidkaigi.confsched2022.feature.sponsors.SponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.sponsors.sponsorsNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.StaffNavGraph
 import io.github.droidkaigi.confsched2022.feature.staff.staffNavGraph
-import io.github.droidkaigi.confsched2022.impl.AndroidCalendarRegistration
-import io.github.droidkaigi.confsched2022.impl.AndroidShareManager
 import io.github.droidkaigi.confsched2022.model.TimetableCategory
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
+import io.github.droidkaigi.confsched2022.notification.AndroidCalendarRegistration
+import io.github.droidkaigi.confsched2022.notification.AndroidShareManager
 import io.github.droidkaigi.confsched2022.strings.Strings
 import io.github.droidkaigi.confsched2022.ui.CalendarRegistration
 import io.github.droidkaigi.confsched2022.ui.ShareManager
@@ -101,6 +101,7 @@ fun KaigiApp(
     kaigiAppScaffoldState: KaigiAppScaffoldState = rememberKaigiAppScaffoldState(),
     kaigiExternalNavigationController: KaigiExternalNavigationController =
         rememberKaigiExternalNavigationController(),
+    sessionIdFromNotification: String? = null,
 ) {
     val appUiModel: AppUiModel by kaigiAppViewModel.uiModel
 
@@ -172,6 +173,12 @@ fun KaigiApp(
                     onNavigationIconClick = kaigiAppScaffoldState::onNavigationClick,
                     onItemClick = kaigiExternalNavigationController::navigate
                 )
+            }
+        }
+
+        LaunchedEffect(sessionIdFromNotification) {
+            sessionIdFromNotification?.let {
+                kaigiAppScaffoldState.onTimeTableClick(TimetableItemId(it))
             }
         }
     }

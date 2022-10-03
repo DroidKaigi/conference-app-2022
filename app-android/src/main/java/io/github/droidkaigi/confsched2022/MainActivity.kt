@@ -27,8 +27,17 @@ class MainActivity : AppCompatActivity() {
                 Color.argb((255 * 0.5).toInt(), 0, 0, 0)
             }
 
+        val sessionIdString: String? = if (this.intent?.data != null) {
+            this.intent.data.toString()
+        } else {
+            null
+        }
+
         setContent {
-            KaigiApp(calculateWindowSizeClass(this))
+            KaigiApp(
+                windowSizeClass = calculateWindowSizeClass(this),
+                sessionIdFromNotification = sessionIdString
+            )
         }
     }
 }

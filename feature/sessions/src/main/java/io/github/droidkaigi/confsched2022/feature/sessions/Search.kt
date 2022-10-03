@@ -75,6 +75,7 @@ import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.Filters
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.empty
 import io.github.droidkaigi.confsched2022.model.fake
@@ -160,8 +161,8 @@ fun SearchRoot(
             modifier = modifier.padding(paddingValues = padding),
             uiModel = state,
             onItemClick = onItemClick,
-            onBookMarkClick = { sessionId, currentIsFavorite ->
-                viewModel.onFavoriteToggle(sessionId, currentIsFavorite)
+            onBookMarkClick = { session, currentIsFavorite ->
+                viewModel.onFavoriteToggle(session, currentIsFavorite)
             },
             onDayFilterClicked = {
                 keyboardController?.hide()
@@ -189,7 +190,7 @@ fun SearchRoot(
 private fun SearchScreen(
     uiModel: SearchUiModel,
     onItemClick: (TimetableItemId) -> Unit,
-    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
+    onBookMarkClick: (session: TimetableItem, currentIsFavorite: Boolean) -> Unit,
     onDayFilterClicked: () -> Unit,
     onCategoriesFilteredClicked: () -> Unit,
     onFavoritesToggleClicked: () -> Unit,
@@ -383,7 +384,7 @@ private fun SearchedItemListField(
     schedule: DroidKaigiSchedule,
     searchWord: String,
     onItemClick: (TimetableItemId) -> Unit,
-    onBookMarkClick: (sessionId: TimetableItemId, currentIsFavorite: Boolean) -> Unit,
+    onBookMarkClick: (session: TimetableItem, currentIsFavorite: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -415,7 +416,7 @@ private fun SearchedItemListField(
                                     label = actionLabel,
                                     action = {
                                         onBookMarkClick(
-                                            timetableItemWithFavorite.timetableItem.id,
+                                            timetableItemWithFavorite.timetableItem,
                                             timetableItemWithFavorite.isFavorited
                                         )
                                         true

@@ -42,7 +42,6 @@ import io.github.droidkaigi.confsched2022.feature.sessions.R.drawable
 import io.github.droidkaigi.confsched2022.model.Lang
 import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
-import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.secondLang
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -54,7 +53,7 @@ internal var SemanticsPropertyReceiver.inFavorite by inFavoriteKey
 fun SessionListItem(
     timetableItem: TimetableItem,
     isFavorited: Boolean,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     maxTitleLines: Int = 4,
     searchWord: String? = null,
@@ -190,7 +189,7 @@ fun SessionListItem(
                 .clearAndSetSemantics {
                     inFavorite = isFavorited
                 },
-            onClick = { onFavoriteClick(timetableItem.id, isFavorited) }
+            onClick = { onFavoriteClick(timetableItem, isFavorited) }
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(

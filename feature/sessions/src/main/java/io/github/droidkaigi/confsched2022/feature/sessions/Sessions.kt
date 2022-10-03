@@ -69,6 +69,7 @@ import io.github.droidkaigi.confsched2022.feature.common.AppErrorSnackbarEffect
 import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
 import io.github.droidkaigi.confsched2022.model.TimeLine
+import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.model.fake
@@ -115,8 +116,8 @@ fun SessionsScreenRoot(
         uiModel = state,
         modifier = modifier,
         onTimetableClick = { onTimetableClick(it) },
-        onFavoriteClick = { timetableItemId, isFavorite ->
-            viewModel.onFavoriteToggle(timetableItemId, isFavorite)
+        onFavoriteClick = { session, isFavorite ->
+            viewModel.onFavoriteToggle(session, isFavorite)
         },
         showNavigationIcon = showNavigationIcon,
         onNavigationIconClick = onNavigationIconClick,
@@ -136,7 +137,7 @@ fun Sessions(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
     onRetryButtonClick: () -> Unit,
@@ -315,7 +316,7 @@ fun SessionsList(
     schedule: DroidKaigiSchedule,
     days: Array<DroidKaigi2022Day>,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
-    onFavoriteClick: (TimetableItemId, Boolean) -> Unit,
+    onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) {
@@ -369,7 +370,7 @@ fun SessionsTopBar(
     onNavigationIconClick: () -> Unit,
     onSearchClick: () -> Unit,
     onToggleTimetableClick: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val pagerState = pagerContentsScrollState.pagerState
     Column(
