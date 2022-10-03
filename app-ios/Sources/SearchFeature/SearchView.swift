@@ -6,13 +6,6 @@ import Model
 import SessionFeature
 import SwiftUI
 
-extension Optional where Wrapped: DroidKaigi2022Day {
-    func toArray() -> [DroidKaigi2022Day] {
-        guard let self = self else { return [] }
-        return [self]
-    }
-}
-
 public struct SearchState: Equatable {
     public var searchText: String
     public var eventDays: [DroidKaigi2022Day]
@@ -23,7 +16,7 @@ public struct SearchState: Equatable {
     public var showDayFilterSheet: Bool
     public var showCategoryFilterSheet: Bool
     public var filterFavorite: Bool
-    public var filterDay: DroidKaigi2022Day?
+    public var filterDays: [DroidKaigi2022Day]
     public var filterCategories: [TimetableCategory]
 
     public init(
@@ -35,7 +28,7 @@ public struct SearchState: Equatable {
         showDayFilterSheet: Bool = false,
         showCategoryFilterSheet: Bool = false,
         filterFavorite: Bool = false,
-        filterDay: DroidKaigi2022Day? = nil,
+        filterDays: [DroidKaigi2022Day] = [],
         filterCategories: [TimetableCategory] = []
     ) {
         self.searchText = searchText
@@ -47,7 +40,7 @@ public struct SearchState: Equatable {
         self.showDayFilterSheet = showDayFilterSheet
         self.showCategoryFilterSheet = showCategoryFilterSheet
         self.filterFavorite = filterFavorite
-        self.filterDay = filterDay
+        self.filterDays = filterDays
         self.filterCategories = filterCategories
     }
 }
@@ -65,6 +58,8 @@ public enum SearchAction {
     case selectCategory(TimetableCategory)
     case deselectCategory(TimetableCategory)
     case selectDay(DroidKaigi2022Day)
+    case deselectDay(DroidKaigi2022Day)
+    case filter
     case showDayFilterSheet
     case showCategoryFilterSheet
     case filterFavorite
@@ -112,7 +107,17 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             }
         case let .refreshResponse(.success(dayToTimetable)):
             state.dayToTimetable = dayToTimetable
-            state.searchResult = dayToTimetable
+            state.searchResult = state.dayToTimetable.mapValues { timetable in
+                timetable.filtered(
+                    filters: Filters(
+                        days: state.filterDays,
+                        categories: state.filterCategories,
+                        filterFavorite: state.filterFavorite,
+                        filterSession: false,
+                        searchWord: state.searchText
+                    )
+                )
+            }
             return .none
         case .refreshResponse:
             return .none
@@ -135,7 +140,7 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             state.searchResult = state.dayToTimetable.mapValues { timetable in
                 timetable.filtered(
                     filters: Filters(
-                        days: state.filterDay.toArray(),
+                        days: state.filterDays,
                         categories: state.filterCategories,
                         filterFavorite: state.filterFavorite,
                         filterSession: false,
@@ -161,12 +166,18 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             state.filterCategories.remove(at: index)
             return .none
         case .selectDay(let day):
-            state.filterDay = day
-            state.showDayFilterSheet = false
+            state.filterDays.append(day)
+            return .none
+        case .deselectDay(let day):
+            let index = state.filterDays.firstIndex(of: day)
+            guard let index = index else { return .none }
+            state.filterDays.remove(at: index)
+            return .none
+        case .filter:
             state.searchResult = state.dayToTimetable.mapValues { timetable in
                 timetable.filtered(
                     filters: Filters(
-                        days: state.filterDay.toArray(),
+                        days: state.filterDays,
                         categories: state.filterCategories,
                         filterFavorite: state.filterFavorite,
                         filterSession: false,
@@ -180,7 +191,7 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             state.searchResult = state.dayToTimetable.mapValues { timetable in
                 timetable.filtered(
                     filters: Filters(
-                        days: state.filterDay.toArray(),
+                        days: state.filterDays,
                         categories: state.filterCategories,
                         filterFavorite: state.filterFavorite,
                         filterSession: false,
@@ -197,13 +208,24 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             return .none
         case .hideDayFilterSheet:
             state.showDayFilterSheet = false
+            state.searchResult = state.dayToTimetable.mapValues { timetable in
+                timetable.filtered(
+                    filters: Filters(
+                        days: state.filterDays,
+                        categories: state.filterCategories,
+                        filterFavorite: state.filterFavorite,
+                        filterSession: false,
+                        searchWord: state.searchText
+                    )
+                )
+            }
             return .none
         case .hideCategoryFilterSheet:
             state.showCategoryFilterSheet = false
             state.searchResult = state.dayToTimetable.mapValues { timetable in
                 timetable.filtered(
                     filters: Filters(
-                        days: state.filterDay.toArray(),
+                        days: state.filterDays,
                         categories: state.filterCategories,
                         filterFavorite: state.filterFavorite,
                         filterSession: false,
@@ -227,12 +249,10 @@ public struct SearchView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 Group {
-                    VStack(alignment: .leading) {
-                        SearchFiltersSectionView(store: store)
-                            .padding(.top, 16)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 16)
+                    SearchFiltersSectionView(store: store)
+                        .padding(.top, 16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16)
                     if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
                         VStack(alignment: .center) {
                             EmptyResultView()
@@ -311,11 +331,15 @@ public struct SearchView: View {
                 content: {
                     DayFilterSheetView(
                         days: viewStore.eventDays,
-                        selectedDay: viewStore.filterDay,
+                        selectedDays: viewStore.filterDays,
                         onClose: {
                             viewStore.send(.hideDayFilterSheet)
-                        }, onTap: { day in
+                        },
+                        onSelect: { day in
                             viewStore.send(.selectDay(day))
+                        },
+                        onDeselect: { day in
+                            viewStore.send(.deselectDay(day))
                         }
                     )
                     .presentationDetents([.medium, .fraction(0.3)])
