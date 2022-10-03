@@ -176,8 +176,10 @@ fun KaigiApp(
             }
         }
 
-        sessionIdFromNotification?.let {
-            kaigiAppScaffoldState.onTimeTableClick(TimetableItemId(it))
+        LaunchedEffect(sessionIdFromNotification) {
+            sessionIdFromNotification?.let {
+                kaigiAppScaffoldState.onTimeTableClick(TimetableItemId(it))
+            }
         }
     }
 }
