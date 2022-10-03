@@ -20,17 +20,8 @@ import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.core.designsystem.R
 import io.github.droidkaigi.confsched2022.core.designsystem.R.font
 
-@OptIn(ExperimentalTextApi::class)
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
-
-@OptIn(ExperimentalTextApi::class)
 val montserratFonts = FontFamily(
-    Font(googleFont = GoogleFont("Montserrat"), fontProvider = provider, weight = FontWeight(400)),
-    Font(googleFont = GoogleFont("Montserrat"), fontProvider = provider, weight = FontWeight(500)),
+    Font(font.montserrat_medium)
 )
 
 val robotoFonts = FontFamily(
