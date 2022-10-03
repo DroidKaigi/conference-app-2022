@@ -17,15 +17,9 @@ class BaselineProfileGenerator {
     @Test
     fun startup() =
         baselineProfileRule.collectBaselineProfile(
-            packageName = "io.github.droidkaigi.confsched2022.dev"
-        ) {
-            pressHome()
-            startActivityAndWait()
-            device.waitForIdle()
-
-            device.run {
-               device.findObject(By.res("sessionDayTab")).click()
-               waitForIdle()
+            packageName = "io.github.droidkaigi.confsched2022.dev",
+            profileBlock = {
+                startActivityAndWait()
             }
-        }
+        )
 }
