@@ -64,3 +64,5 @@ app-android/src/prod/google-services.json
 keystore.properties
 prod.keystore
 
+# Baseline profile
+app-android/src/main/baseline-prof.txt
