@@ -1,11 +1,8 @@
 import appioscombined
-import Firebase
 import FirebaseAuth
 
 public class Authenticator: appioscombined.Authenticator {
-    public init() {
-        FirebaseApp.configure()
-    }
+    public init() {}
 
     public func currentUser() async throws -> appioscombined.User? {
         let idTokenResult = try await Auth.auth().currentUser?.getIDTokenResult()

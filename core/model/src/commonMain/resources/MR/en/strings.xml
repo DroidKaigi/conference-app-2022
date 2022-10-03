@@ -16,6 +16,7 @@
         It\'s scheduled to take place on the 5 to 7 of October 2022.
     </string>
     <string name="about_access">Access</string>
+    <string name="about_access_detail">Tokyo Dome Prism Hall (Day 1, Day 2)\nBellesalle Iidabashi First (Day 3)</string>
     <string name="about_staff">Staff List</string>
     <string name="about_privacy">Privacy Policy</string>
     <string name="about_license">License</string>
@@ -23,7 +24,7 @@
     <string name="about_app_version">App Version</string>
 
     <!-- Announcement -->
-    <string name="announcement_top_app_bar_title">News</string>
+    <string name="announcement_top_app_bar_title">Announcement</string>
     <string name="announcement_content_header_title_today">Today</string>
     <string name="announcement_content_header_title_yesterday">Yesterday</string>
     <string name="announcement_content_empty">There is no information we need to inform you about at this time.</string>

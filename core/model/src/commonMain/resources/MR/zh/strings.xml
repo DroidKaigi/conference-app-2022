@@ -15,6 +15,7 @@
     <string name="about_description">DroidKaigi 是为 Android 开发者量身定制的会议。计划于 2022 年 10 月 5 日至 7 日举行。
     </string>
     <string name="about_access">怎么走？</string>
+    <string name="about_access_detail">Tokyo Dome Prism Hall (Day 1, Day 2)\nBellesalle Iidabashi First (Day 3)</string>
     <string name="about_staff">工作人员</string>
     <string name="about_privacy">隐私政策</string>
     <string name="about_license">许可</string>

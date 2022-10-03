@@ -50,7 +50,11 @@ import io.github.droidkaigi.confsched2022.designsystem.components.KaigiScaffold
 import io.github.droidkaigi.confsched2022.designsystem.components.KaigiTopAppBar
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
+import io.github.droidkaigi.confsched2022.model.DroidKaigi2022Day
+import io.github.droidkaigi.confsched2022.model.KaigiPlace.Bellesalle
+import io.github.droidkaigi.confsched2022.model.KaigiPlace.Prism
 import io.github.droidkaigi.confsched2022.strings.Strings
+import kotlinx.datetime.Clock
 
 @Composable
 fun AboutScreenRoot(
@@ -165,14 +169,28 @@ fun About(
                 color = Color(KaigiColors.neutralVariantKeyColor50)
             )
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                val googleMapUrl = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
+                val googleMapUrlDay12 = "https://goo.gl/maps/NnqJr2zUVdrAJseH7"
+                val googleMapUrlDay3 = "https://goo.gl/maps/vUYQvUFE4XSrD6R97"
                 val codeConductUrl = "https://portal.droidkaigi.jp/about/code-of-conduct"
                 val context = LocalContext.current
                 AuxiliaryInformationRow(
                     imageVector = Icons.Outlined.Train,
                     textRes = Strings.about_access,
+                    detailTextRes = Strings.about_access_detail,
                     onClick = {
-                        onLinkClick(googleMapUrl, null)
+                        val time = Clock.System.now()
+                        val day = DroidKaigi2022Day.ofOrNull(time)
+                        when (day?.kaigiPlace) {
+                            Prism -> {
+                                onLinkClick(googleMapUrlDay12, null)
+                            }
+                            Bellesalle -> {
+                                onLinkClick(googleMapUrlDay3, null)
+                            }
+                            else -> {
+                                onLinkClick(googleMapUrlDay12, null)
+                            }
+                        }
                     }
                 )
 
@@ -240,6 +258,7 @@ private fun AuxiliaryInformationRow(
     textRes: StringResource,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    detailTextRes: StringResource? = null,
 ) {
     Row(
         modifier = modifier
@@ -255,11 +274,18 @@ private fun AuxiliaryInformationRow(
         )
 
         Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            text = stringResource(textRes)
-        )
+        Column {
+            Text(
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                text = stringResource(textRes)
+            )
+            if (detailTextRes != null) {
+                Text(
+                    style = MaterialTheme.typography.bodySmall,
+                    text = stringResource(detailTextRes)
+                )
+            }
+        }
     }
 }
 
@@ -286,6 +312,7 @@ private fun versionName(context: Context) = runCatching {
 }.getOrNull()
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, locale = "en")
 @Composable
 fun AboutPreview() {
     KaigiTheme {
