@@ -13,22 +13,20 @@ struct FavoriteToggleButtonView: View {
                 if isFavorite {
                     Image(systemName: "checkmark")
                         .resizable()
-                        .frame(width: 8, height: 8)
-                        .foregroundColor(isFavorite ? AssetColors.onSurface.swiftUIColor :
-                                         AssetColors.white.swiftUIColor)
+                        .frame(width: 12, height: 12)
                 }
                 Text(StringsKt.shared.search_filter_favorites.localized())
-                    .foregroundColor(isFavorite ? AssetColors.onSurface.swiftUIColor : AssetColors.white.swiftUIColor)
                     .font(.system(size: 14, weight: .semibold))
             }
             .animation(.linear(duration: 0.1), value: isFavorite)
-            .padding(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 20))
+            .padding(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .foregroundColor(isFavorite ? AssetColors.onSurface.swiftUIColor : AssetColors.onSurfaceVariant.swiftUIColor)
             .background(isFavorite ? AssetColors.secondaryContainer.swiftUIColor : AssetColors.background.swiftUIColor
             )
             .cornerRadius(8)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(isFavorite ? AssetColors.secondaryContainer.swiftUIColor : AssetColors.white.swiftUIColor, lineWidth: 1)
+                    .stroke(isFavorite ? AssetColors.secondaryContainer.swiftUIColor : AssetColors.outline.swiftUIColor, lineWidth: 1)
             )
         }
     }
