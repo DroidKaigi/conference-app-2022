@@ -3,6 +3,7 @@ package io.github.droidkaigi.confsched2022.notification
 import android.Manifest.permission
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -17,7 +18,8 @@ object NotificationUtil {
         context: Context,
         title: String,
         text: String,
-        channelId: String
+        channelId: String,
+        pendingIntent: PendingIntent,
     ) {
         val notificationBuilder = notificationBuilder(
             context,
@@ -27,7 +29,8 @@ object NotificationUtil {
                 showBundleNotification(
                     context,
                     title,
-                    channelId
+                    channelId,
+                    pendingIntent,
                 )
                 setGroup(channelId)
             } else {
@@ -38,6 +41,7 @@ object NotificationUtil {
                 NotificationCompat.BigTextStyle()
                     .bigText(text)
             )
+            setContentIntent(pendingIntent)
             setAutoCancel(true)
             setSmallIcon(io.github.droidkaigi.confsched2022.core.designsystem.R.drawable.ic_app)
         }
@@ -61,7 +65,12 @@ object NotificationUtil {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun showBundleNotification(context: Context, title: String, channelId: String) {
+    private fun showBundleNotification(
+        context: Context,
+        title: String,
+        channelId: String,
+        pendingIntent: PendingIntent,
+    ) {
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         val notification = notificationBuilder(
             context,
@@ -74,6 +83,7 @@ object NotificationUtil {
             .setSmallIcon(io.github.droidkaigi.confsched2022.core.designsystem.R.drawable.ic_app)
             .setGroup(channelId)
             .setGroupSummary(true)
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
         notificationManager.notify(channelId.hashCode(), notification)
