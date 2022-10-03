@@ -9,7 +9,6 @@ private extension DateFormatter {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateStyle = .long
-        formatter.dateFormat = "YYYY EEEE d"
         return formatter
     }()
 }
@@ -18,64 +17,52 @@ private extension DroidKaigi2022Day {
     // NOTE: This implementation is not good, but it is acceptable for this use case.
     func eventDate() -> String {
         let eventDateFormatter = DateFormatter.eventDateFormatter
-        return "\(name) (\(eventDateFormatter.string(from: start.toDate()))th)"
+        let languageCode = Locale.current.language.languageCode?.identifier
+        guard let languageCode = languageCode else { return name }
+        if languageCode == "ja" {
+            eventDateFormatter.dateFormat = "YYYY年MM月d日"
+            return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
+        }
+        if languageCode == "en" {
+            eventDateFormatter.dateFormat = "YYYY EEEE d"
+            return "\(name) (\(eventDateFormatter.string(from: start.toDate()))th)"
+        }
+        return name
     }
 }
 
 struct DayFilterSheetView: View {
     let days: [DroidKaigi2022Day]
-    let selectedDay: DroidKaigi2022Day?
+    let selectedDays: [DroidKaigi2022Day]
     let onClose: () -> Void
-    let onTap: (DroidKaigi2022Day) -> Void
+    let onSelect: (DroidKaigi2022Day) -> Void
+    let onDeselect: (DroidKaigi2022Day) -> Void
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(spacing: 16) {
-                Button {
-                    onClose()
-                } label: {
-                    Assets.close.swiftUIImage
-                }
-                Text(StringsKt.shared.search_filter_select_day.localized())
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(AssetColors.white.swiftUIColor)
-                Spacer()
+            FilterSheetHeaderView(title: StringsKt.shared.search_filter_select_category.localized()) {
+                   onClose()
             }
+            .padding(.bottom, 20)
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(days) { day in
-                    DayFilterRadioButtonView(
-                        day: day,
-                        selected: selectedDay?.name == day.name,
-                        onTap: { day in
-                            onTap(day)
+                    SelectButtonView(
+                        title: "\(day.eventDate())",
+                        selected: selectedDays.contains(day),
+                        onSelect: {
+                            onSelect(day)
+                        },
+                        onDeselect: {
+                           onDeselect(day)
                         }
                     )
                 }
-                Spacer()
             }
-            .padding(.top, 24)
         }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(32)
         .background(AssetColors.surface.swiftUIColor)
-    }
-}
-
-struct DayFilterRadioButtonView: View {
-    let day: DroidKaigi2022Day
-    let selected: Bool
-    let onTap: @Sendable (DroidKaigi2022Day) -> Void
-    var body: some View {
-        HStack(spacing: 16) {
-            Button {
-                onTap(day)
-            } label: {
-                Image(systemName: selected ? "circle.inset.filled" : "circle")
-                    .foregroundColor(AssetColors.onPrimaryContainer.swiftUIColor)
-                Text(day.eventDate())
-                    .foregroundColor(AssetColors.onBackground.swiftUIColor)
-            }
-        }
     }
 }
 
