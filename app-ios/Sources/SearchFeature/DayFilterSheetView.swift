@@ -72,15 +72,17 @@ struct DayFilterSheet_Previews: PreviewProvider {
     static var previews: some View {
         DayFilterSheetView(
             days: days,
-            selectedDay: days[0],
-            onClose: {},
-            onTap: { _ in }
+            selectedDays: days,
+            onClose: {  },
+            onSelect: { _ in },
+            onDeselect: { _ in }
         )
         DayFilterSheetView(
             days: days,
-            selectedDay: nil,
-            onClose: {},
-            onTap: { _ in }
+            selectedDays: [],
+            onClose: {  },
+            onSelect: { _ in },
+            onDeselect: { _ in }
         )
     }
 }
