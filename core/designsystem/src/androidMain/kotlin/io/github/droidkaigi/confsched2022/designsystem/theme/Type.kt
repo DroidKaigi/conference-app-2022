@@ -17,20 +17,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import io.github.droidkaigi.confsched2022.core.designsystem.R.font
 
-public val montserratFonts = FontFamily(
+public val montserratFonts: FontFamily = FontFamily(
     Font(font.montserrat_medium)
 )
 
-public val robotoFonts = FontFamily(
+public val robotoFonts: FontFamily = FontFamily(
     Font(font.roboto_regular)
 )
 
-public val robotoMediumFonts = FontFamily(
+public val robotoMediumFonts: FontFamily = FontFamily(
     Font(font.roboto_medium)
 )
 
 // Set of Material typography styles to start with
-public val Typography = Typography(
+public val Typography: Typography = Typography(
     displayLarge = TextStyle(
         fontSize = 57.sp,
         fontFamily = montserratFonts,
