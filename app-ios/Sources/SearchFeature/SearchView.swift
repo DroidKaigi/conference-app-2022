@@ -161,16 +161,14 @@ public let searchReducer = Reducer<SearchState, SearchAction, SearchEnvironment>
             state.filterCategories.append(category)
             return .none
         case .deselectCategory(let category):
-            let index = state.filterCategories.firstIndex(of: category)
-            guard let index = index else { return .none }
+            guard let index = state.filterCategories.firstIndex(of: category) else { return .none }
             state.filterCategories.remove(at: index)
             return .none
         case .selectDay(let day):
             state.filterDays.append(day)
             return .none
         case .deselectDay(let day):
-            let index = state.filterDays.firstIndex(of: day)
-            guard let index = index else { return .none }
+            guard let index = state.filterDays.firstIndex(of: day) else { return .none }
             state.filterDays.remove(at: index)
             return .none
         case .filter:
@@ -254,10 +252,8 @@ public struct SearchView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 16)
                     if viewStore.searchResult.values.allSatisfy(\.timetableItems.isEmpty) {
-                        VStack(alignment: .center) {
-                            EmptyResultView()
-                        }
-                        .frame(maxHeight: .infinity)
+                        EmptyResultView()
+                            .frame(maxHeight: .infinity, alignment: .center)
                     } else {
                         List {
                             ForEach(viewStore.eventDays) { day in
