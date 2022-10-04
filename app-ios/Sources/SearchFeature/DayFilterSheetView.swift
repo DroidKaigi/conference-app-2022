@@ -47,7 +47,7 @@ struct DayFilterSheetView: View {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(days) { day in
                     SelectButtonView(
-                        title: "\(day.eventDate())",
+                        title: day.eventDate(),
                         selected: selectedDays.contains(day),
                         onSelect: {
                             onSelect(day)
