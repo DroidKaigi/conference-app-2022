@@ -1,7 +1,10 @@
 package io.github.droidkaigi.confsched2022.feature.about
 
 import android.content.Context
+import android.content.pm.PackageManager.PackageInfoFlags
 import android.net.Uri
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -304,11 +307,18 @@ private fun ExternalServiceImage(
 }
 
 private fun versionName(context: Context) = runCatching {
-    context.packageManager
-        .getPackageInfo(
+    val info = if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+        context.packageManager.getPackageInfo(
+            context.packageName,
+            PackageInfoFlags.of(0)
+        )
+    } else {
+        context.packageManager.getPackageInfo(
             context.packageName,
             0
-        ).versionName
+        )
+    }
+    info.versionName
 }.getOrNull()
 
 @Preview(showBackground = true)

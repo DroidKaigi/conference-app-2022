@@ -47,6 +47,6 @@ fun Project.setupAndroid() {
             }
         }
 
-        defaultConfig.targetSdk = 32
+        defaultConfig.targetSdk = 33
     }
 }
