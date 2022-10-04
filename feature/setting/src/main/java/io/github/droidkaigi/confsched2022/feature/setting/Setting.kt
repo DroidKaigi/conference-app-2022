@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.Language
@@ -26,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
@@ -101,7 +104,8 @@ private fun LanguageSetting(
     Row(
         modifier = modifier
             .clickable { openDialog.value = true }
-            .padding(16.dp)
+            .heightIn(min = 56.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -183,7 +187,13 @@ private fun DynamicColorSetting(
 ) {
     Row(
         modifier = modifier
-            .padding(16.dp)
+            .toggleable(
+                value = isDynamicColorEnabled,
+                role = Role.Switch,
+                onValueChange = { onDynamicColorToggle(it) }
+            )
+            .heightIn(min = 56.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(28.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -195,9 +205,7 @@ private fun DynamicColorSetting(
         )
         Switch(
             checked = isDynamicColorEnabled,
-            onCheckedChange = {
-                onDynamicColorToggle(it)
-            },
+            onCheckedChange = null,
         )
     }
 }
