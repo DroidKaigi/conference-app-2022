@@ -20,6 +20,7 @@ struct FilterSheetHeaderView: View {
     }
 }
 
+#if DEBUG
 struct FilterSheetHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         FilterSheetHeaderView(title: "title") {}
@@ -27,3 +28,4 @@ struct FilterSheetHeaderView_Previews: PreviewProvider {
             .padding(.horizontal, 24)
     }
 }
+#endif
