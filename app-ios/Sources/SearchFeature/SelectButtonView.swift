@@ -13,16 +13,18 @@ struct SelectButtonView: View {
             Button {
                 selected ? onDeselect() : onSelect()
             } label: {
-                selected ?
-                    Image(systemName: "checkmark.square.fill")
-                        .resizable()
-                        .frame(width: 18, height: 18)
-                        .foregroundColor(AssetColors.primary.swiftUIColor)
-                    :
-                    Image(systemName: "square")
-                        .resizable()
-                        .frame(width: 18, height: 18)
-                        .foregroundColor(AssetColors.primary.swiftUIColor)
+                Group {
+                    selected ?
+                        Image(systemName: "checkmark.square.fill")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundColor(AssetColors.primary.swiftUIColor)
+                        :
+                        Image(systemName: "square")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundColor(AssetColors.primary.swiftUIColor)
+                }
             }
             Text(title)
                 .foregroundColor(AssetColors.onBackground.swiftUIColor)
