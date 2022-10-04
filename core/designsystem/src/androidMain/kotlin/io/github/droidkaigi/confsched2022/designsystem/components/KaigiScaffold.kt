@@ -16,7 +16,7 @@ import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KaigiScaffold(
+public fun KaigiScaffold(
     topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -56,7 +56,7 @@ public fun KaigiSnackBar(
 
 @Preview
 @Composable
-fun KaigiScaffoldPreview() {
+private fun KaigiScaffoldPreview() {
     KaigiTheme {
         KaigiScaffold(
             content = {},

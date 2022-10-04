@@ -28,7 +28,7 @@ import com.google.accompanist.placeholder.shimmer
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiColors
 
 @Composable
-fun UsernameRow(
+public fun UsernameRow(
     username: String,
     profileUrl: String?,
     iconUrl: String,

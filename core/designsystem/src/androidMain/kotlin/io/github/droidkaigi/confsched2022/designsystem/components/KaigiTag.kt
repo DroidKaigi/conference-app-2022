@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import io.github.droidkaigi.confsched2022.designsystem.theme.KaigiTheme
 
 @Composable
-fun KaigiTag(
+public fun KaigiTag(
     modifier: Modifier = Modifier,
     labelColor: Color = Color.White,
     labelTextStyle: TextStyle = MaterialTheme.typography.labelMedium,
@@ -48,7 +48,7 @@ fun KaigiTag(
 
 @Preview
 @Composable
-public fun KaigiTagPreview() {
+private fun KaigiTagPreview() {
     KaigiTheme {
         KaigiTag(backgroundColor = MaterialTheme.colorScheme.secondaryContainer) {
             Text(text = "sample")

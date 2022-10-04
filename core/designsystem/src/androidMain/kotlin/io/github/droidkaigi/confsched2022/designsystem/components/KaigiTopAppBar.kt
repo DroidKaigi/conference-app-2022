@@ -26,7 +26,7 @@ import io.github.droidkaigi.confsched2022.strings.Strings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KaigiTopAppBar(
+public fun KaigiTopAppBar(
     showNavigationIcon: Boolean,
     onNavigationIconClick: () -> Unit,
     title: (@Composable RowScope.() -> Unit),
