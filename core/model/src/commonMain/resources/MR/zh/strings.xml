@@ -95,6 +95,7 @@
     <string name="notification_title_session_start">Notice of favorite session start</string>
     <string name="notification_message_session_title">%1$s will start soon</string>
     <string name="notification_message_session_start_time">%1$s - %2$s @ %3$s</string>
+    <string name="notification_not_granted_message">Please allow notification permissions to receive notifications</string>
 
     <!-- Error -->
     <!-- TODO:Translation into Chinese -->
