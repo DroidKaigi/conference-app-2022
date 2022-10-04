@@ -80,6 +80,8 @@ import io.github.droidkaigi.confsched2022.ui.UiLoadState.Error
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Loading
 import io.github.droidkaigi.confsched2022.ui.UiLoadState.Success
 import io.github.droidkaigi.confsched2022.ui.pagerTabIndicatorOffset
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -200,9 +202,10 @@ fun Sessions(
                         Timetable(
                             pagerState = pagerState,
                             schedule = schedule,
-                            timetableListStates = pagerContentsScrollState.timetableStates,
+                            timetableListStates =
+                            pagerContentsScrollState.timetableStates.toImmutableList(),
                             timeLine = uiModel.timeLine,
-                            days = days,
+                            days = days.toList().toImmutableList(),
                             onTimetableClick = onTimetableClick,
                             contentPadding = innerPadding,
                         )
@@ -236,10 +239,10 @@ fun Sessions(
 @Composable
 fun Timetable(
     pagerState: PagerState,
-    timetableListStates: List<TimetableState>,
+    timetableListStates: ImmutableList<TimetableState>,
     timeLine: TimeLine?,
     schedule: DroidKaigiSchedule,
-    days: Array<DroidKaigi2022Day>,
+    days: ImmutableList<DroidKaigi2022Day>,
     onTimetableClick: (TimetableItemId) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -298,9 +301,7 @@ fun Timetable(
                         verticalScale = timetableState.screenScaleState.verticalScale,
                         modifier = Modifier
                             .padding(end = 4.dp)
-                            .clickable(
-                                onClick = { onTimetableClick(timetableItem.id) }
-                            ),
+                            .clickable(onClick = { onTimetableClick(timetableItem.id) }),
                     )
                 }
             }
@@ -425,8 +426,7 @@ fun SessionsTopBar(
                 selectedTabIndex = pagerState.currentPage,
                 modifier = Modifier
                     .background(
-                        color = MaterialTheme.colorScheme
-                            .surfaceColorAtElevation(2.dp)
+                        color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
                     )
                     .padding(16.dp)
                     .windowInsetsPadding(
