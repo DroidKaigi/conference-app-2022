@@ -649,31 +649,31 @@ fun SessionDetailAssets(
 
         Spacer(modifier = Modifier.padding(16.dp))
 
-        SessionDetailAssetsItem(
-            modifier = Modifier,
-            painter = painterResource(id = R.drawable.ic_video_cam),
-            text = stringResource(Strings.session_movie),
-            onClick = {
-                val videoUrl = asset.videoUrl
-                if (videoUrl != null) {
+        val videoUrl = asset.videoUrl
+        if (videoUrl != null) {
+            SessionDetailAssetsItem(
+                modifier = Modifier,
+                painter = painterResource(id = R.drawable.ic_video_cam),
+                text = stringResource(Strings.session_movie),
+                onClick = {
                     uriHandler.openUri(videoUrl)
-                }
-            },
-        )
+                },
+            )
 
-        Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
+        }
 
-        SessionDetailAssetsItem(
-            modifier = Modifier,
-            painter = painterResource(id = R.drawable.ic_photo_library),
-            text = stringResource(Strings.session_slide),
-            onClick = {
-                val slideUrl = asset.slideUrl
-                if (slideUrl != null) {
+        val slideUrl = asset.slideUrl
+        if (slideUrl != null) {
+            SessionDetailAssetsItem(
+                modifier = Modifier,
+                painter = painterResource(id = R.drawable.ic_photo_library),
+                text = stringResource(Strings.session_slide),
+                onClick = {
                     uriHandler.openUri(slideUrl)
-                }
-            },
-        )
+                },
+            )
+        }
 
         Spacer(modifier = Modifier.padding(16.dp))
     }
