@@ -26,6 +26,7 @@ kotlin {
                 api(libs.mokoResourcesCompose)
 
                 implementation(libs.composeRuntime)
+                implementation(libs.androidxAppCompat)
             }
         }
     }
