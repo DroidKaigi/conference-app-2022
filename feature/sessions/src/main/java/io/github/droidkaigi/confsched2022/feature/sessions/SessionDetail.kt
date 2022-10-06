@@ -227,9 +227,12 @@ fun SessionDetailScreen(
                             SessionDetailSpeakers(
                                 speakers = item.speakers,
                             )
-                        SessionDetailAssets(
-                            asset = item.asset
-                        )
+
+                        if (item.asset.isAvailable) {
+                            SessionDetailAssets(
+                                asset = item.asset
+                            )
+                        }
                     }
                 }
             }
