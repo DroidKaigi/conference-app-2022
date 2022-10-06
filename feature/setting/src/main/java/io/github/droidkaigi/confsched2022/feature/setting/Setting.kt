@@ -79,7 +79,7 @@ fun Setting(
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(start = 28.dp, top = 40.dp, end = 28.dp)
+                .padding(top = 40.dp)
                 .padding(innerPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
@@ -105,7 +105,7 @@ private fun LanguageSetting(
         modifier = modifier
             .clickable { openDialog.value = true }
             .heightIn(min = 56.dp)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 44.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -193,7 +193,7 @@ private fun DynamicColorSetting(
                 onValueChange = { onDynamicColorToggle(it) }
             )
             .heightIn(min = 56.dp)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 44.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(28.dp),
         verticalAlignment = Alignment.CenterVertically
