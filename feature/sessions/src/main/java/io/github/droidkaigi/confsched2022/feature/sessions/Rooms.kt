@@ -158,7 +158,7 @@ private data class RoomsLayout(
 ) {
     var roomsWidth = 0
     var roomsHeight = 0
-    val roomsLayouts = rooms.mapIndexed { index, _ ->
+    val roomsLayouts = List(rooms.size) { index ->
         val itemLayout = RoomItemLayout(
             index = index,
             density = density
