@@ -192,11 +192,13 @@ fun Timetable(
                 scrollBy(
                     action = { x: Float, y: Float ->
                         coroutineScope.launch {
-                            scrollState.scroll(
-                                amount = Offset(x, y),
-                                timeMillis = 0,
-                                position = Offset.Zero
-                            )
+                            if (x.isNaN().not() && y.isNaN().not()) {
+                                scrollState.scroll(
+                                    amount = Offset(x, y),
+                                    timeMillis = 0,
+                                    position = Offset.Zero
+                                )
+                            }
                         }
                         return@scrollBy true
                     }
@@ -594,11 +596,13 @@ private class TimetableScreen(
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.scroll(
-            Offset(nextPossibleX, nextPossibleY),
-            timeMillis,
-            position
-        )
+        if (nextPossibleX.isNaN().not() && nextPossibleY.isNaN().not()) {
+            scrollState.scroll(
+                Offset(nextPossibleX, nextPossibleY),
+                timeMillis,
+                position
+            )
+        }
     }
 
     fun enableHorizontalScroll(dragX: Float): Boolean {

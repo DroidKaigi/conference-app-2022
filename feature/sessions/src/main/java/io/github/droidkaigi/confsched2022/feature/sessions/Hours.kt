@@ -269,11 +269,13 @@ private class HoursScreen(
         position: Offset,
     ) {
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.scroll(
-            Offset(scrollState.scrollX, nextPossibleY),
-            timeMillis,
-            position
-        )
+        if (scrollState.scrollX.isNaN().not() && nextPossibleY.isNaN().not()) {
+            scrollState.scroll(
+                Offset(scrollState.scrollX, nextPossibleY),
+                timeMillis,
+                position
+            )
+        }
     }
 
     private fun calculatePossibleScrollY(scrollY: Float): Float {
