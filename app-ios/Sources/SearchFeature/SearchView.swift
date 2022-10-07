@@ -325,20 +325,25 @@ public struct SearchView: View {
                     viewStore.send(.hideDayFilterSheet)
                 },
                 content: {
-                    DayFilterSheetView(
-                        days: viewStore.eventDays,
-                        selectedDays: viewStore.filterDays,
-                        onClose: {
-                            viewStore.send(.hideDayFilterSheet)
-                        },
-                        onSelect: { day in
-                            viewStore.send(.selectDay(day))
-                        },
-                        onDeselect: { day in
-                            viewStore.send(.deselectDay(day))
-                        }
-                    )
-                    .presentationDetents([.medium, .fraction(0.3)])
+                    VStack {
+                        Spacer()
+                        DayFilterSheetView(
+                            days: viewStore.eventDays,
+                            selectedDays: viewStore.filterDays,
+                            onClose: {
+                                viewStore.send(.hideDayFilterSheet)
+                            },
+                            onSelect: { day in
+                                viewStore.send(.selectDay(day))
+                            },
+                            onDeselect: { day in
+                                viewStore.send(.deselectDay(day))
+                            }
+                        )
+                        .frame(maxHeight: 200)
+                        .cornerRadius(10)
+                    }
+                    .clearModalBackground()
                 }
             )
             .sheet(
