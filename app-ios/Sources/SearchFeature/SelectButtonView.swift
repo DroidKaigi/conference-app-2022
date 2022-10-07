@@ -17,14 +17,12 @@ struct SelectButtonView: View {
                     selected ?
                         Image(systemName: "checkmark.square.fill")
                             .resizable()
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(AssetColors.primary.swiftUIColor)
                         :
                         Image(systemName: "square")
                             .resizable()
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(AssetColors.primary.swiftUIColor)
                 }
+                .foregroundColor(AssetColors.primary.swiftUIColor)
+                .frame(width: 18, height: 18)
             }
             Text(title)
                 .foregroundColor(AssetColors.onBackground.swiftUIColor)
