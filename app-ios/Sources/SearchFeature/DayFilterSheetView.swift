@@ -24,8 +24,7 @@ private extension DroidKaigi2022Day {
             return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
         }
         if languageCode == "en" {
-            eventDateFormatter.dateFormat = "YYYY EEEE d"
-            return "\(name) (\(eventDateFormatter.string(from: start.toDate()))th)"
+            return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
         }
         return name
     }
@@ -40,7 +39,7 @@ struct DayFilterSheetView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            FilterSheetHeaderView(title: StringsKt.shared.search_filter_select_category.localized()) {
+            FilterSheetHeaderView(title: StringsKt.shared.search_filter_select_day.localized()) {
                    onClose()
             }
             .padding(.bottom, 20)
