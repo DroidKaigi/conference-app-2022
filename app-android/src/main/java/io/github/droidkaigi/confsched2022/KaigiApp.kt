@@ -324,7 +324,7 @@ enum class DrawerGroup {
 }
 
 enum class DrawerItem(
-    val group: DrawerGroup,
+    private val group: DrawerGroup,
     val titleStringRes: StringResource,
     val icon: ImageVector,
     val navRoute: String
