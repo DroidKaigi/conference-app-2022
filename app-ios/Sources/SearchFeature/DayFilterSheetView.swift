@@ -7,26 +7,16 @@ import Theme
 private extension DateFormatter {
     static let eventDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.calendar = Calendar(identifier: .gregorian)
         formatter.dateStyle = .long
+        formatter.timeStyle = .none
         return formatter
     }()
 }
 
 private extension DroidKaigi2022Day {
-    // NOTE: This implementation is not good, but it is acceptable for this use case.
     func eventDate() -> String {
         let eventDateFormatter = DateFormatter.eventDateFormatter
-        let languageCode = Locale.current.language.languageCode?.identifier
-        guard let languageCode = languageCode else { return name }
-        if languageCode == "ja" {
-            eventDateFormatter.dateFormat = "YYYY年MM月d日"
-            return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
-        }
-        if languageCode == "en" {
-            return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
-        }
-        return name
+        return "\(name) (\(eventDateFormatter.string(from: start.toDate())))"
     }
 }
 
