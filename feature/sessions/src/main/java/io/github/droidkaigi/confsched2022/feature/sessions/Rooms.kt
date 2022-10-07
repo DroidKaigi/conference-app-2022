@@ -188,7 +188,6 @@ private data class RoomItemLayout(
     val left = index * width
     val top = 0
     val right = left + width
-    val bottom = top + height
 
     fun isVisible(
         screenWidth: Int,
