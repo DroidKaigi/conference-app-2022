@@ -167,7 +167,7 @@ private data class HoursLayout(
     var hoursHeight = 0
     var hoursWidth = 0
     val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).toPx() }
-    val hoursLayouts = hours.mapIndexed { index, it ->
+    val hoursLayouts = List(hours.size) { index ->
         val hoursItemLayout = HoursItemLayout(
             index = index,
             density = density,
