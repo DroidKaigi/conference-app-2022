@@ -365,7 +365,12 @@ private fun SearchTextField(
                 },
                 singleLine = true,
                 enabled = true,
-                colors = TextFieldDefaults.textFieldColors(),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent,
+                ),
                 interactionSource = remember { MutableInteractionSource() },
                 contentPadding = PaddingValues(
                     top = 16.dp,
