@@ -325,8 +325,7 @@ public struct SearchView: View {
                     viewStore.send(.hideDayFilterSheet)
                 },
                 content: {
-                    VStack {
-                        Spacer()
+                    if UIDevice.current.userInterfaceIdiom == .pad {
                         DayFilterSheetView(
                             days: viewStore.eventDays,
                             selectedDays: viewStore.filterDays,
@@ -342,8 +341,23 @@ public struct SearchView: View {
                         )
                         .frame(maxHeight: 200)
                         .cornerRadius(10)
+                        .background(ClearBackgroundView())
+                    } else {
+                        DayFilterSheetView(
+                            days: viewStore.eventDays,
+                            selectedDays: viewStore.filterDays,
+                            onClose: {
+                                viewStore.send(.hideDayFilterSheet)
+                            },
+                            onSelect: { day in
+                                viewStore.send(.selectDay(day))
+                            },
+                            onDeselect: { day in
+                                viewStore.send(.deselectDay(day))
+                            }
+                        )
+                        .presentationDetents([.fraction(0.3)])
                     }
-                    .clearModalBackground()
                 }
             )
             .sheet(
