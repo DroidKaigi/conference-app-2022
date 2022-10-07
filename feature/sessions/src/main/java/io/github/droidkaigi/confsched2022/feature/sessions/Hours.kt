@@ -201,7 +201,6 @@ private data class HoursItemLayout(
     val width = with(density) { hoursWidth.roundToPx() }
     val left = 0
     val top = index * height + topOffset - itemOffset
-    val right = left + width
     val bottom = top + height
 
     fun isVisible(
