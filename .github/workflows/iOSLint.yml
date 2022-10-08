@@ -2,6 +2,8 @@ name: iOS Lint
 
 on:
   pull_request:
+    paths:
+      - 'app-ios/**'
 
 jobs:
   build-ios:
