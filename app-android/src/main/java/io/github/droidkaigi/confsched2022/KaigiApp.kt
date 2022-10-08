@@ -307,7 +307,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         navController.navigate(StaffNavGraph.staffRoute)
     }
 
-    private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)
+    private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf(null)
     val selectedDrawerItem get() = _selectedDrawerItem.value
 
     init {
