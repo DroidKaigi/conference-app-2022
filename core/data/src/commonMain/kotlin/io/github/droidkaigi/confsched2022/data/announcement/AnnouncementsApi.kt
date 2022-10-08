@@ -37,7 +37,7 @@ private fun AnnouncementsResponse.toAnnouncementsByDate(): PersistentList<Announ
                         id = response.id,
                         title = response.title,
                         content = response.content,
-                        type = response.type.lowercase().replaceFirstChar { it.uppercase() },
+                        type = response.type.lowercase().replaceFirstChar(Char::uppercase),
                         language = response.language,
                     )
                 }.toPersistentList()
