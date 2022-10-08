@@ -382,7 +382,7 @@ enum class DrawerItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.DrawerSheetContent(
+fun DrawerSheetContent(
     selectedDrawerItem: DrawerItem?,
     onClickDrawerItem: (DrawerItem) -> Unit
 ) {
