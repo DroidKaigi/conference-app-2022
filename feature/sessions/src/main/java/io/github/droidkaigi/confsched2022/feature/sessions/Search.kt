@@ -372,7 +372,8 @@ private fun SearchTextField(
                     bottom = 16.dp,
                     start = 0.dp,
                     end = 16.dp
-                )
+                ),
+                container = {},
             )
         }
     )
