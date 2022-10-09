@@ -2,10 +2,9 @@ package io.github.droidkaigi.confsched2022.feature.sessions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -103,8 +102,6 @@ fun FilterDaySheet(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -114,6 +111,7 @@ fun FilterCategoriesSheet(
     categories: List<TimetableCategory>,
     onCategoriesSelected: (TimetableCategory, Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     onDismiss: () -> Unit
 ) {
     val onCategoriesSelectedUpdated by rememberUpdatedState(newValue = onCategoriesSelected)
@@ -125,7 +123,7 @@ fun FilterCategoriesSheet(
             onDismissClicked = onDismiss
         )
 
-        LazyColumn {
+        LazyColumn(contentPadding = contentPadding) {
             items(categories) { category ->
                 Row(
                     modifier = Modifier
@@ -158,10 +156,6 @@ fun FilterCategoriesSheet(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
