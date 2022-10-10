@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -129,6 +133,7 @@ fun SearchRoot(
             when (val sheetState = state.filterSheetState) {
                 is SearchFilterSheetState.ShowDayFilter -> {
                     FilterDaySheet(
+                        modifier = Modifier.navigationBarsPadding(),
                         selectedDays = state.filter.selectedDays,
                         kaigiDays = sheetState.days,
                         onDaySelected = viewModel::onDaySelected,
@@ -141,7 +146,8 @@ fun SearchRoot(
                         selectedCategories = state.filter.selectedCategories,
                         categories = sheetState.categories,
                         onCategoriesSelected = viewModel::onCategoriesSelected,
-                        onDismiss = viewModel::onFilterSheetDismissed
+                        onDismiss = viewModel::onFilterSheetDismissed,
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
                     )
                 }
 
