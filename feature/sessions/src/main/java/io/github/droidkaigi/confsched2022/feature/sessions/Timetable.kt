@@ -192,13 +192,12 @@ fun Timetable(
                 scrollBy(
                     action = { x: Float, y: Float ->
                         coroutineScope.launch {
-                            if (x.isNaN().not() && y.isNaN().not()) {
-                                scrollState.scroll(
-                                    amount = Offset(x, y),
-                                    timeMillis = 0,
-                                    position = Offset.Zero
-                                )
-                            }
+                            scrollState.safeScroll(
+                                scrollX = x,
+                                scrollY = y,
+                                timeMillis = 0,
+                                position = Offset.Zero
+                            )
                         }
                         return@scrollBy true
                     }
@@ -404,7 +403,7 @@ class ScreenScrollState(
     val maxY: Float
         get() = _scrollY.lowerBound ?: 0f
 
-    suspend fun scroll(
+    private suspend fun scroll(
         amount: Offset,
         timeMillis: Long,
         position: Offset,
@@ -415,6 +414,21 @@ class ScreenScrollState(
         }
         launch {
             _scrollY.snapTo(amount.y)
+        }
+    }
+
+    suspend fun safeScroll(
+        scrollX: Float,
+        scrollY: Float,
+        timeMillis: Long,
+        position: Offset,
+    ) {
+        if (scrollX.isNaN().not() && scrollY.isNaN().not()) {
+            scroll(
+                amount = Offset(scrollX, scrollY),
+                timeMillis = timeMillis,
+                position = position,
+            )
         }
     }
 
@@ -596,13 +610,12 @@ private class TimetableScreen(
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        if (nextPossibleX.isNaN().not() && nextPossibleY.isNaN().not()) {
-            scrollState.scroll(
-                Offset(nextPossibleX, nextPossibleY),
-                timeMillis,
-                position
-            )
-        }
+        scrollState.safeScroll(
+            scrollX = nextPossibleX,
+            scrollY = nextPossibleY,
+            timeMillis = timeMillis,
+            position = position,
+        )
     }
 
     fun enableHorizontalScroll(dragX: Float): Boolean {

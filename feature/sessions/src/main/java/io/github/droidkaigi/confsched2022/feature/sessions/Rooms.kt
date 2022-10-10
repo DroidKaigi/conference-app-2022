@@ -252,13 +252,12 @@ private class RoomScreen(
         position: Offset,
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
-        if (nextPossibleX.isNaN().not() && scrollState.scrollY.isNaN().not()) {
-            scrollState.scroll(
-                Offset(nextPossibleX, scrollState.scrollY),
-                timeMillis,
-                position
-            )
-        }
+        scrollState.safeScroll(
+            scrollX = nextPossibleX,
+            scrollY = scrollState.scrollY,
+            timeMillis = timeMillis,
+            position = position
+        )
     }
 
     private fun calculatePossibleScrollX(scrollX: Float): Float {
