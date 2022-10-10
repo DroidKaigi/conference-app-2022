@@ -30,7 +30,7 @@ var package = Package(
         .plugin(name: "swiftlint", targets: ["SwiftLintCommandPlugin"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.6.0"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.40.2"),
         .package(url: "https://github.com/cybozu/LicenseList", from: "0.2.0"),
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.4.0"),
