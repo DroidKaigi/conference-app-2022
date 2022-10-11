@@ -167,7 +167,7 @@ private data class HoursLayout(
     var hoursHeight = 0
     var hoursWidth = 0
     val minutePx = with(density) { TimetableSizes.minuteHeight.times(verticalScale).toPx() }
-    val hoursLayouts = hours.mapIndexed { index, it ->
+    val hoursLayouts = List(hours.size) { index ->
         val hoursItemLayout = HoursItemLayout(
             index = index,
             density = density,
@@ -201,7 +201,6 @@ private data class HoursItemLayout(
     val width = with(density) { hoursWidth.roundToPx() }
     val left = 0
     val top = index * height + topOffset - itemOffset
-    val right = left + width
     val bottom = top + height
 
     fun isVisible(
@@ -269,10 +268,11 @@ private class HoursScreen(
         position: Offset,
     ) {
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.scroll(
-            Offset(scrollState.scrollX, nextPossibleY),
-            timeMillis,
-            position
+        scrollState.safeScroll(
+            scrollX = scrollState.scrollX,
+            scrollY = nextPossibleY,
+            timeMillis = timeMillis,
+            position = position,
         )
     }
 

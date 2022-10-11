@@ -307,7 +307,7 @@ class KaigiAppScaffoldState @OptIn(ExperimentalMaterial3Api::class) constructor(
         navController.navigate(StaffNavGraph.staffRoute)
     }
 
-    private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf<DrawerItem?>(null)
+    private var _selectedDrawerItem: MutableState<DrawerItem?> = mutableStateOf(null)
     val selectedDrawerItem get() = _selectedDrawerItem.value
 
     init {
@@ -324,7 +324,7 @@ enum class DrawerGroup {
 }
 
 enum class DrawerItem(
-    val group: DrawerGroup,
+    private val group: DrawerGroup,
     val titleStringRes: StringResource,
     val icon: ImageVector,
     val navRoute: String
@@ -382,7 +382,7 @@ enum class DrawerItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.DrawerSheetContent(
+fun DrawerSheetContent(
     selectedDrawerItem: DrawerItem?,
     onClickDrawerItem: (DrawerItem) -> Unit
 ) {
