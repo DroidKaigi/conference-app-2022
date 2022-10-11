@@ -1,6 +1,8 @@
 package io.github.droidkaigi.confsched2022.zipline
 
 import app.cash.zipline.EventListener
+import app.cash.zipline.loader.LoadResult.Failure
+import app.cash.zipline.loader.LoadResult.Success
 import app.cash.zipline.loader.ManifestVerifier
 import app.cash.zipline.loader.ZiplineLoader
 import co.touchlab.kermit.Logger
@@ -72,14 +74,21 @@ internal class SessionsZiplineImpl(
             if (cached != null) {
                 return@withLock cached
             }
-            val loadedZipline = ziplineLoader.loadOnce(
+            val ziplineLoadResult = ziplineLoader.loadOnce(
                 applicationName = "timeline",
                 manifestUrl = manifestUrl,
                 initializer = { },
             )
-            val taken = loadedZipline.zipline.take<ScheduleModifier>("sessionsModifier")
-            cachedScheduleModifier = taken
-            taken
+            when (ziplineLoadResult) {
+                is Success -> {
+                    val taken = ziplineLoadResult.zipline.take<ScheduleModifier>("sessionsModifier")
+                    cachedScheduleModifier = taken
+                    taken
+                }
+                is Failure -> {
+                    throw ziplineLoadResult.exception
+                }
+            }
         }
     }
 

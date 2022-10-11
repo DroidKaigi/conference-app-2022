@@ -13,6 +13,14 @@ class AboutScreenRobot @Inject constructor() {
         composeTestRule.onNodeWithContentDescription("Twitter").assertExists()
         composeTestRule.onNodeWithContentDescription("YouTube").assertExists()
         composeTestRule.onNodeWithContentDescription("Medium").assertExists()
+
+        // AuxiliaryInformation
+        composeTestRule.onNodeWithText("Access")
+        composeTestRule.onNodeWithText("Staff List")
+        composeTestRule.onNodeWithText("License")
+        composeTestRule.onNodeWithText("Code Conduct")
+        composeTestRule.onNodeWithText("Privacy Policy")
+        composeTestRule.onNodeWithText("App Version")
     }
 
     operator fun invoke(

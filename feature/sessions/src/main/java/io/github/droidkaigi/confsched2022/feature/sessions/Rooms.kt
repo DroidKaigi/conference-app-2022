@@ -158,7 +158,7 @@ private data class RoomsLayout(
 ) {
     var roomsWidth = 0
     var roomsHeight = 0
-    val roomsLayouts = rooms.mapIndexed { index, _ ->
+    val roomsLayouts = List(rooms.size) { index ->
         val itemLayout = RoomItemLayout(
             index = index,
             density = density
@@ -188,7 +188,6 @@ private data class RoomItemLayout(
     val left = index * width
     val top = 0
     val right = left + width
-    val bottom = top + height
 
     fun isVisible(
         screenWidth: Int,
@@ -252,10 +251,11 @@ private class RoomScreen(
         position: Offset,
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
-        scrollState.scroll(
-            Offset(nextPossibleX, scrollState.scrollY),
-            timeMillis,
-            position
+        scrollState.safeScroll(
+            scrollX = nextPossibleX,
+            scrollY = scrollState.scrollY,
+            timeMillis = timeMillis,
+            position = position
         )
     }
 

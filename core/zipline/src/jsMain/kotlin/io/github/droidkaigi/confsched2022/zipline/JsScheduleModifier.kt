@@ -2,7 +2,9 @@ package io.github.droidkaigi.confsched2022.zipline
 
 import co.touchlab.kermit.Logger
 import io.github.droidkaigi.confsched2022.model.DroidKaigiSchedule
+import io.github.droidkaigi.confsched2022.model.MultiLangText
 import io.github.droidkaigi.confsched2022.model.TimetableItem
+import io.github.droidkaigi.confsched2022.model.TimetableItem.Session
 import io.github.droidkaigi.confsched2022.model.TimetableItem.Special
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemList
@@ -37,6 +39,17 @@ private fun TimetableItem.modified(): TimetableItem {
     ) {
         copy(
             targetAudience = "To be written.",
+        )
+    } else if (
+        this is Session &&
+        // Day 3 "Codelabs & Pathways"
+        id == TimetableItemId("4cc517f7-11be-4681-8f6a-762786f98a63")
+    ) {
+        this.copy(
+            message = MultiLangText(
+                enTitle = "Thank you for your participation.",
+                jaTitle = "参加いただきありがとうございました。",
+            )
         )
     } else {
         this
