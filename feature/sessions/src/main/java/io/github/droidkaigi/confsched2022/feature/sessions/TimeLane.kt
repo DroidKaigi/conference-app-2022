@@ -23,6 +23,23 @@ fun TimeLane(
         }
     }
     var currentDurationTime: DurationTime? = null
+
+    if (visibleItemsInfo.value.isEmpty()) {
+        // For preview
+        val durationTime = timetable[0].first
+        Box(
+            modifier = modifier.offset {
+                IntOffset(
+                    x = 0,
+                    y = 0,
+                )
+            }
+        ) {
+            content(durationTime)
+        }
+        return
+    }
+
     visibleItemsInfo.value.forEachIndexed { visibleItemIndex, visibleItemInfo ->
         val durationTime = timetable[visibleItemInfo.index].first
         if (currentDurationTime != durationTime) {
