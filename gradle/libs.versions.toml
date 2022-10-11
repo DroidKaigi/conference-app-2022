@@ -55,7 +55,7 @@ testParameterInjector = "1.9"
 mokoResources = "0.20.1"
 detekt = '1.22.0-RC1'
 androidxSplashScreen = "1.0.0"
-twitterComposeRulesDetekt = "0.0.19"
+twitterComposeRulesDetekt = "0.0.20"
 playOssLicenses = "17.0.0"
 playOssLicensesPlugin = "0.10.5"
 
