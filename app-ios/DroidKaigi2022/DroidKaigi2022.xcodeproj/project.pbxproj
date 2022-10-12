@@ -339,7 +339,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.droidkaigi.DroidKaigi2022;
 				PRODUCT_NAME = DroidKaigi2022;
 				SDKROOT = iphoneos;
@@ -372,7 +372,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.droidkaigi.DroidKaigi2022;
 				PRODUCT_NAME = DroidKaigi2022;
 				SDKROOT = iphoneos;
