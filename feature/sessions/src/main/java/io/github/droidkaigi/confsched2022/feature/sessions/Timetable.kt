@@ -192,7 +192,7 @@ fun Timetable(
                 scrollBy(
                     action = { x: Float, y: Float ->
                         coroutineScope.launch {
-                            scrollState.safeScroll(
+                            scrollState.scroll(
                                 scrollX = x,
                                 scrollY = y,
                                 timeMillis = 0,
@@ -403,32 +403,22 @@ class ScreenScrollState(
     val maxY: Float
         get() = _scrollY.lowerBound ?: 0f
 
-    private suspend fun scroll(
-        amount: Offset,
-        timeMillis: Long,
-        position: Offset,
-    ) = coroutineScope {
-        velocityTracker.addPosition(timeMillis = timeMillis, position = position)
-        launch {
-            _scrollX.snapTo(amount.x)
-        }
-        launch {
-            _scrollY.snapTo(amount.y)
-        }
-    }
-
-    suspend fun safeScroll(
+    suspend fun scroll(
         scrollX: Float,
         scrollY: Float,
         timeMillis: Long,
         position: Offset,
     ) {
         if (scrollX.isNaN().not() && scrollY.isNaN().not()) {
-            scroll(
-                amount = Offset(scrollX, scrollY),
-                timeMillis = timeMillis,
-                position = position,
-            )
+            coroutineScope {
+                velocityTracker.addPosition(timeMillis = timeMillis, position = position)
+                launch {
+                    _scrollX.snapTo(scrollX)
+                }
+                launch {
+                    _scrollY.snapTo(scrollY)
+                }
+            }
         }
     }
 
@@ -610,7 +600,7 @@ private class TimetableScreen(
     ) {
         val nextPossibleX = calculatePossibleScrollX(dragAmount.x)
         val nextPossibleY = calculatePossibleScrollY(dragAmount.y)
-        scrollState.safeScroll(
+        scrollState.scroll(
             scrollX = nextPossibleX,
             scrollY = nextPossibleY,
             timeMillis = timeMillis,
