@@ -142,8 +142,8 @@ coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" 
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
 mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
 playOssLicenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref="playOssLicenses" }
-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.2.13" }
-crashlyticsAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.1.1" }
+crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.3.0" }
+crashlyticsAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.2.0" }
 
 twitterComposeRulesDetekt = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRulesDetekt" }
 
