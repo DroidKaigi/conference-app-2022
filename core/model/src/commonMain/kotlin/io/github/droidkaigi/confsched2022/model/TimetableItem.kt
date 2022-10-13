@@ -76,7 +76,7 @@ public sealed class TimetableItem {
     }
 }
 
-public fun TimetableItem.Session.Companion.fake(): Session {
+public fun Session.Companion.fake(): Session {
     return Session(
         id = TimetableItemId("2"),
         title = MultiLangText("DroidKaigiのアプリのアーキテクチャ", "DroidKaigi App Architecture"),

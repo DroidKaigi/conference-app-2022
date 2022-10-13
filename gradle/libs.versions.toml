@@ -10,7 +10,7 @@ androidDesugarJdkLibs = "2.0.0"
 compose = "1.3.0-rc01"
 composeCompiler = "1.3.1"
 composeMaterial3WindowSizeClass = "1.0.0-rc01"
-composeMaterial3 = "1.0.0-beta03"
+composeMaterial3 = "1.0.0-rc01"
 androidxFragment = "1.5.3"
 androidxLifecycle = "2.5.1"
 androidxActivity = "1.6.0"
@@ -41,7 +41,7 @@ kotlinxDatetime = "0.4.0"
 accompanist = "0.26.2-beta"
 firebasePlugin = "4.3.14"
 multiplatformFirebaseAuth = "1.6.2"
-firebaseCommon = "20.1.2"
+firebaseCommon = "20.2.0"
 firebaseAuth = "21.0.8"
 androidxStartup = "1.1.1"
 kluent = "1.69"
@@ -55,7 +55,7 @@ testParameterInjector = "1.9"
 mokoResources = "0.20.1"
 detekt = '1.22.0-RC1'
 androidxSplashScreen = "1.0.0"
-twitterComposeRulesDetekt = "0.0.19"
+twitterComposeRulesDetekt = "0.0.20"
 playOssLicenses = "17.0.0"
 playOssLicensesPlugin = "0.10.5"
 
@@ -142,8 +142,8 @@ coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" 
 mokoResources = { module = "dev.icerock.moko:resources", version.ref = "mokoResources" }
 mokoResourcesCompose = { module = "dev.icerock.moko:resources-compose", version.ref = "mokoResources" }
 playOssLicenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref="playOssLicenses" }
-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.2.13" }
-crashlyticsAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.1.1" }
+crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.3.0" }
+crashlyticsAnalytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.2.0" }
 
 twitterComposeRulesDetekt = { module = "com.twitter.compose.rules:detekt", version.ref = "twitterComposeRulesDetekt" }
 

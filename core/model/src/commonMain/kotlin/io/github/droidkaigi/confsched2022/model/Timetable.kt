@@ -135,7 +135,7 @@ public fun Timetable.Companion.fake(): Timetable {
                     TimeZone.of("UTC+9")
                 )
 
-                val fake = TimetableItem.Session.fake()
+                val fake = Session.fake()
                 add(
                     fake
                         .copy(
