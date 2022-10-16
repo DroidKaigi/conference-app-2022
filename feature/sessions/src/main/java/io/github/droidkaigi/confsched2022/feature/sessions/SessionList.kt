@@ -27,10 +27,11 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.strings.Strings
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun SessionList(
-    timetable: List<Pair<DurationTime, TimetableItemWithFavorite>>,
+    timetable: ImmutableList<Pair<DurationTime, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItem, Boolean) -> Unit,

@@ -339,7 +339,7 @@ fun SessionsList(
                 val endTime = endLocalDateTime.time.toString()
                 list.add(Pair(DurationTime(startTime, endTime), timetableItemWithFavorite))
             }
-            list.toList()
+            list.toImmutableList()
         }
         SessionList(
             timetable = timeHeaderAndTimetableItems,
