@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -27,22 +31,36 @@ import io.github.droidkaigi.confsched2022.model.TimetableItem
 import io.github.droidkaigi.confsched2022.model.TimetableItemId
 import io.github.droidkaigi.confsched2022.model.TimetableItemWithFavorite
 import io.github.droidkaigi.confsched2022.strings.Strings
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun SessionList(
-    timetable: List<Pair<DurationTime, TimetableItemWithFavorite>>,
+    timetable: ImmutableList<Pair<DurationTime, TimetableItemWithFavorite>>,
     sessionsListListState: LazyListState,
     onTimetableClick: (timetableItemId: TimetableItemId) -> Unit,
     onFavoriteClick: (TimetableItem, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (Pair<DurationTime?, TimetableItemWithFavorite>) -> Unit,
 ) {
+    val visibleItemsInfo by remember {
+        derivedStateOf {
+            sessionsListListState.layoutInfo.visibleItemsInfo
+        }
+    }
+    val visibleItemIndices by remember {
+        derivedStateOf {
+            visibleItemsInfo.map(LazyListItemInfo::index)
+                .toImmutableList()
+        }
+    }
     Box(
         modifier = modifier,
     ) {
         TimeLane(
             timetable = timetable,
-            sessionsListListState = sessionsListListState
+            visibleItemIndices = visibleItemIndices,
+            getVisibleItemOffset = { visibleItemsInfo[it].offset },
         ) { durationTime ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
