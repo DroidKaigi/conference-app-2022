@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "7.4.0-beta02"
+androidGradlePlugin = "7.4.0-beta04"
 kotlin = "1.7.10"
 molecule = "0.5.0"
 buildkonfig = "0.13.3"
