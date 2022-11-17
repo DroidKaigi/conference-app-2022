@@ -284,6 +284,23 @@ We are trying to draw a timetable using LazyLayout, a base implementation of Laz
 
 https://github.com/DroidKaigi/conference-app-2022/blob/91715b461b3162eb04ac58b79ba39ccdf21cf222/feature-sessions/src/main/java/io/github/droidkaigi/confsched2022/feature/sessions/Timetable.kt#L73
 
+## Jetpack Compose preview in GitHub comments
+
+If we can review the Compose's Preview during GitHub code review, we can address the issue effectively.  
+For the DroidKaigi app, we have addressed several issues in addition to the existing Paparazzi + Showkase approach.
+
+* Committing Preview images to the GitHub repository increases the GitHub repository size.
+* When uploading preview images to the cloud, the images may not be viewable depending on their permissions.
+
+In the DroidKaigi app, you can use GitHub Actions to save a golden snapshot of the main branch using GitHub Actions Artifacts, create a companion branch for the pull request, upload the preview image there, and commit the image to GitHub. Comment the URL of the image.
+
+<img src="https://user-images.githubusercontent.com/1386930/191486713-178afc67-91a7-47e3-9213-81f1326367e6.png" width="650px" />
+
+This function was developed mainly by these two people.
+
+* [@eneim](https://github.com/eneim)
+* [@sobaya-0141](https://github.com/sobaya-0141)
+
 ## Special Thanks
 
 * [Contributors](https://github.com/DroidKaigi/conference-app-2022/graphs/contributors)
