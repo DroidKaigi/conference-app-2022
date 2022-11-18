@@ -17,6 +17,23 @@ fun TimeLane(
     content: @Composable (DurationTime) -> Unit,
 ) {
     var currentDurationTime: DurationTime? = null
+
+    if (visibleItemsInfo.value.isEmpty()) {
+        // For preview
+        val durationTime = timetable[0].first
+        Box(
+            modifier = modifier.offset {
+                IntOffset(
+                    x = 0,
+                    y = 0,
+                )
+            }
+        ) {
+            content(durationTime)
+        }
+        return
+    }
+
     visibleItemIndices.forEachIndexed { relativeIndex, absoluteIndex ->
         val durationTime = timetable[absoluteIndex].first
         if (currentDurationTime != durationTime) {
