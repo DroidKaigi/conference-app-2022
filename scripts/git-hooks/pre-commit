@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+formatFileList="$(git --no-pager diff --name-status --no-color --cached | awk '$1 != "D" && $2 ~ /\.kts|\.kt/ { print $NF}')"
+
+echo "spotlesscheck start..."
+for filePath in $formatFileList
+do
+  ./gradlew spotlessApply -PspotlessIdeHook="$(pwd)/$filePath"
+  echo "git add $filePath"
+  git add "$filePath"
+done;
+echo "spotlesscheck finish."
