@@ -60,6 +60,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -300,7 +301,8 @@ fun SearchTextFieldTopAppBar(
             title = {
                 SearchTextField(
                     modifier = Modifier
-                        .background(color = backgroundColor),
+                        .background(color = backgroundColor)
+                        .testTag("search"),
                     searchWord = searchWord,
                     onSearchWordChange = onSearchWordChange,
                     onSearchTextAreaClicked = onSearchTextAreaClicked
@@ -361,6 +363,7 @@ private fun SearchTextField(
                 placeholder = { Text(stringResource(Strings.search_placeholder)) },
                 trailingIcon = {
                     IconButton(
+                        modifier = Modifier.testTag("clearInput"),
                         onClick = { onSearchWordChange("") }
                     ) {
                         Icon(
