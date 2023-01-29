@@ -1,14 +1,16 @@
 [versions]
-androidGradlePlugin = "7.4.0-beta05"
-kotlin = "1.7.10"
+androidGradlePlugin = "7.4.0"
+kotlin = "1.7.20"
 molecule = "0.5.0"
 buildkonfig = "0.13.3"
 
 androidxCore = "1.9.0"
 androidxAppCompat = "1.6.0-rc01"
 androidDesugarJdkLibs = "2.0.0"
-compose = "1.3.1"
-composeCompiler = "1.3.1"
+compose = "1.3.2"
+composeMaterial = "1.3.1"
+composeFoundation = "1.3.1"
+composeCompiler = "1.3.2"
 composeMaterial3WindowSizeClass = "1.0.0-rc01"
 composeMaterial3 = "1.0.0-rc01"
 androidxFragment = "1.5.3"
@@ -29,7 +31,7 @@ ktlint = "0.45.2"
 kotlinxCollectionsImmutable = "0.3.5"
 ktor = "2.1.2"
 kotlinxCoroutines = "1.6.4"
-zipline = "0.9.5"
+zipline = "0.9.8"
 ziplineSnapshot = "1.0.0-SNAPSHOT"
 okHttp = "4.10.0"
 sqldelight = "1.5.4"
@@ -48,7 +50,7 @@ kluent = "1.69"
 coilCompose = "2.2.2"
 koin = "3.2.2"
 androidXChromeCustomTabs = "1.4.0"
-ksp = "1.7.10-1.0.6"
+ksp = "1.7.20-1.0.6"
 paparazzi = "1.0.0"
 showkase = "1.0.0-beta13"
 testParameterInjector = "1.9"
@@ -82,7 +84,8 @@ crashlyticsPlugin = { module = "com.google.firebase:firebase-crashlytics-gradle"
 composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 composeUiGoogleFonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "compose" }
-composeMaterial = { module = "androidx.compose.material:material", version.ref = "compose" }
+composeMaterial = { module = "androidx.compose.material:material", version.ref = "composeMaterial" }
+composeFoundation = { module = "androidx.compose.foundation:foundation", version.ref = "composeFoundation" }
 composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
