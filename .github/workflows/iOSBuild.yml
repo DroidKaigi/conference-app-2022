@@ -26,7 +26,7 @@ jobs:
           java-version: 11
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
       - name: Build KMM Module
         run: ./gradlew appioscombined:assembleAppioscombinedDebugXCFramework
       - name: Zip xcframework artifact
